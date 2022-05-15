@@ -42,12 +42,7 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: [
-    { src: "~/plugins/vue-meeting-selector.js", mode: "client" },
-    { src: "~/plugins/v-calendar.js", mode: "client" },
-    "~/plugins/tel-input.js",
-    //{ src: "~/plugins/date-picker.js", ssr: false },
-  ],
+  plugins: [],
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
@@ -73,25 +68,6 @@ export default {
   axios: {
     proxy: true,
   },
-  proxy: {
-    "/payment/": {
-      target: "https://secure.networkmerchants.com/api/transact.php",
-      pathRewrite: { "^/payment/": "" },
-      changeOrigin: true,
-    },
-  },
-  strapi: {
-    url: process.env.API_URL || "http://localhost:1337",
-    entities: [
-      "products",
-      "locations",
-      "appointments",
-      "categories",
-      "sizes",
-      "purchase-types",
-      "subscription-types",
-    ],
-  },
   env: {
     storeUrl: process.env.STORE_URL || "http://localhost:1337",
   },
@@ -110,13 +86,5 @@ export default {
       compact: true,
     },
     extractCSS: true,
-    /*optimization: {
-      splitChunks: {
-        chunks: "all",
-        automaticNameDelimiter: ".",
-        name: "test",
-        maxSize: 256000,
-      },
-    },*/
   },
 };
