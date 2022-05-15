@@ -2,7 +2,7 @@
   <div
     class="footer d-flex flex-column justify-content-center align-items-center"
   >
-    <p class="mb-3">
+    <p class="mb-3 text-center">
       Contact us | Shipping & Returns | Terms & Conditions | Privacy Policy |
       About Us
     </p>
