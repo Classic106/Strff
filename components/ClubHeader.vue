@@ -1,0 +1,262 @@
+<template>
+  <header
+    class="
+      d-flex
+      flex-column
+      p-0
+      m-0
+      justify-content-center
+      align-items-center
+      w-100
+      position-sticky
+    "
+  >
+    <div
+      class="
+        row
+        head
+        p-0
+        m-3
+        justify-content-center
+        text-uppercase
+        position-relative
+        w-100
+      "
+    >
+      <div
+        ref="menuButton"
+        class="nav-menu-arrow d-flex d-lg-none position-absolute"
+        :class="isOpenMenu && 'open'"
+        v-on:click="isOpenMenu = !isOpenMenu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div
+        class="d-flex align-items-center position-relative"
+        :class="
+          isMobile ? 'w-75 justify-content-end' : 'w-50 justify-content-center'
+        "
+      >
+        <h6 class="mr-5">strff</h6>
+        <span
+          class="icon icon-search mr-3"
+          :class="!isMobile && ' position-absolute'"
+        ></span>
+        <span
+          class="icon icon-bag"
+          :class="!isMobile && ' position-absolute'"
+        ></span>
+      </div>
+    </div>
+    <div
+      class="d-flex w-100"
+      :class="
+        isMobile
+          ? 'position-absolute ' +
+            (isOpenMenu ? ' menu-mobile open' : 'menu-mobile')
+          : 'position-relative'
+      "
+    >
+      <ul
+        ref="menu"
+        class="
+          text-uppercase
+          d-flex
+          w-100
+          h-100
+          m-0
+          flex-column flex-lg-row
+          justify-content-center
+        "
+        :class="isMobile ? 'ul-mobile' : ''"
+      >
+        <li v-for="item in menu" :key="item.to" class="px-3 py-2">
+          <NuxtLink :to="item.to" class="dark-orange">{{ item.name }}</NuxtLink>
+        </li>
+      </ul>
+    </div>
+    <span class="p-3 text-center m-0 w-100">
+      Last chance to shop holiday gifts. Buy online and pick up at an STRFF
+      Store or choose two‑hour courier or free delivery. Shop now
+    </span>
+  </header>
+</template>
+
+<script>
+export default {
+  name: "ClubHeader",
+  data: () => ({
+    isOpenMenu: false,
+    isMobile: true,
+    menu: [
+      {
+        name: "bundless",
+        to: "/",
+      },
+      {
+        name: "beard",
+        to: "/",
+      },
+      {
+        name: "hair",
+        to: "/",
+      },
+      {
+        name: "shave",
+        to: "/",
+      },
+      {
+        name: "skincare",
+        to: "/",
+      },
+      {
+        name: "accessories",
+        to: "/",
+      },
+    ],
+  }),
+  methods: {
+    handlerResize(e) {
+      this.isMobile = !(e.target.innerWidth > 992);
+    },
+    closeOutsideMenu(e) {
+      const { menu, menuButton } = this.$refs;
+      const { target } = e;
+
+      if (!menu || !menuButton || !target) {
+        return;
+      }
+      if (
+        menu !== target &&
+        !menu.contains(target) &&
+        menuButton !== target &&
+        !menuButton.contains(target)
+      ) {
+        this.isOpenMenu = false;
+      }
+    },
+  },
+  mounted() {
+    this.handlerResize({ target: window });
+    window.addEventListener("resize", this.handlerResize);
+    document.addEventListener("click", this.closeOutsideMenu);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.handlerResize);
+    document.addEventListener("click", this.closeOutsideMenu);
+  },
+};
+</script>
+
+<style>
+header {
+  max-height: 220px;
+  background-color: #1f2020;
+  color: #fff;
+  z-index: 2;
+}
+
+header > span {
+  color: #fff;
+  background-color: #2b2b2b;
+  border-top: 1px solid #707070;
+  border-bottom: 1px solid #707070;
+}
+
+.head {
+  width: 56%;
+}
+
+.menu-mobile {
+  display: flex !important;
+  height: 100vh;
+  position: absolute;
+  width: 80vw !important;
+  top: 77px;
+  left: -100vw;
+  background-color: #1f2020;
+  z-index: 2;
+  transition: all 0.5s ease, top 0.5s ease;
+}
+
+.menu-mobile.open {
+  left: 0vw;
+}
+
+.ul-mobile {
+  margin-top: 15px !important;
+  justify-content: flex-start !important;
+}
+
+li > a {
+  font-family: "Roboto", sans-serif;
+}
+
+.icon {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  filter: brightness(0) invert(1);
+  background-size: cover;
+}
+
+.icon-search {
+  right: 60px;
+  background-image: url("@/assets/icons/iconmonstr-search-thin.svg");
+}
+
+.icon-bag {
+  right: 0;
+  background-image: url("@/assets/icons/shopping-bag.svg");
+}
+
+.icon-bag::after {
+  top: 4px;
+  display: flex;
+  content: "0";
+  width: 30px;
+  height: 38px;
+  color: #9e7d24;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-menu-arrow {
+  width: 50px;
+  height: 50px;
+  left: 20px;
+  position: relative;
+  cursor: pointer;
+}
+.nav-menu-arrow span {
+  transform: rotate(0deg);
+  transition: all 0.5s ease, top 0.5s ease;
+  width: 50px;
+  position: absolute;
+  height: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+  left: 0;
+}
+.nav-menu-arrow span:nth-child(1) {
+  top: 0px;
+}
+.nav-menu-arrow span:nth-child(2) {
+  top: 20px;
+}
+.nav-menu-arrow span:nth-child(3) {
+  top: 40px;
+}
+.nav-menu-arrow.open span:nth-child(1) {
+  transform: rotate(-45deg);
+  top: 10px;
+  width: 30px;
+}
+.nav-menu-arrow.open span:nth-child(3) {
+  transform: rotate(45deg);
+  top: 30px;
+  width: 30px;
+}
+</style>

@@ -1,0 +1,404 @@
+[
+  {
+    "id": 1,
+    "continent": "Asia",
+    "newRow": [
+      {
+        "id": 1,
+        "tz": "Asia/Dubai",
+        "offset": 4,
+        "value": "Arabian Standard Time"
+      },
+      {
+        "id": 2,
+        "tz": "Asia/Kabul",
+        "offset": 4.5,
+        "value": "Afghanistan Standard Time"
+      },
+      {
+        "id": 4,
+        "tz": "Asia/Baku",
+        "offset": 5,
+        "value": "Azerbaijan Standard Time"
+      },
+      {
+        "id": 5,
+        "tz": "Asia/Dhaka",
+        "offset": 6,
+        "value": "Bangladesh Standard Time"
+      },
+      {
+        "id": 6,
+        "tz": "Asia/Brunei",
+        "offset": 8,
+        "value": "Singapore Standard Time"
+      },
+      {
+        "id": 10,
+        "tz": "Asia/Nicosia",
+        "offset": 3,
+        "value": "GTB Standard Time"
+      },
+      {
+        "id": 11,
+        "tz": "Asia/Famagusta",
+        "offset": 13,
+        "value": "Samoa Standard Time"
+      },
+      {
+        "id": 14,
+        "tz": "Asia/Jakarta",
+        "offset": 7,
+        "value": "SE Asia Standard Time"
+      },
+      {
+        "id": 17,
+        "tz": "Asia/Jayapura",
+        "offset": 9,
+        "value": "Japan Standard Time"
+      },
+      {
+        "id": 19,
+        "tz": "Asia/Kolkata",
+        "offset": 5.5,
+        "value": "India Standard Time"
+      },
+      {
+        "id": 46,
+        "tz": "Asia/Kathmandu",
+        "offset": 5.75,
+        "value": "Nepal Standard Time"
+      },
+      {
+        "id": 59,
+        "tz": "Asia/Vladivostok",
+        "offset": 11,
+        "value": "Vladivostok Standard Time"
+      },
+      {
+        "id": 62,
+        "tz": "Asia/Magadan",
+        "offset": 12,
+        "value": "Magadan Standard Time"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "continent": "Europe",
+    "newRow": [
+      {
+        "id": 1,
+        "tz": "Europe/Andorra",
+        "offset": 2,
+        "value": "W. Europe Standard Time"
+      },
+      {
+        "id": 5,
+        "tz": "Europe/Sofia",
+        "offset": 3,
+        "value": "E. Europe Standard Time"
+      },
+      {
+        "id": 15,
+        "tz": "Europe/London",
+        "offset": 0,
+        "value": "GMT Standard Time"
+      },
+      {
+        "id": 19,
+        "tz": "Europe/Dublin",
+        "offset": 1,
+        "value": "GMT Standard Time"
+      },
+      {
+        "id": 38,
+        "tz": "Europe/Astrakhan",
+        "offset": 4,
+        "value": "Samara Time"
+      },
+      {
+        "id": 40,
+        "tz": "Europe/Saratov",
+        "offset": 13,
+        "value": "Samoa Standard Time"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "continent": "America",
+    "newRow": [
+      {
+        "id": 1,
+        "tz": "America/Argentina/Buenos_Aires",
+        "offset": 13,
+        "value": "Samoa Standard Time"
+      },
+      {
+        "id": 3,
+        "tz": "America/Argentina/Salta",
+        "offset": -3,
+        "value": "Argentina Standard Time"
+      },
+      {
+        "id": 13,
+        "tz": "America/Barbados",
+        "offset": -4,
+        "value": "SA Western Standard Time"
+      },
+      {
+        "id": 27,
+        "tz": "America/Eirunepe",
+        "offset": -5,
+        "value": "SA Pacific Standard Time"
+      },
+      {
+        "id": 30,
+        "tz": "America/Belize",
+        "offset": -6,
+        "value": "Central America Standard Time"
+      },
+      {
+        "id": 31,
+        "tz": "America/St_Johns",
+        "offset": -2.5,
+        "value": "Newfoundland Standard Time"
+      },
+      {
+        "id": 53,
+        "tz": "America/Creston",
+        "offset": -7,
+        "value": "US Mountain Standard Time"
+      },
+      {
+        "id": 69,
+        "tz": "America/Danmarkshavn",
+        "offset": 0,
+        "value": "UTC"
+      },
+      {
+        "id": 87,
+        "tz": "America/Caracas",
+        "offset": -4.5,
+        "value": "Venezuela Standard Time"
+      },
+      {
+        "id": 125,
+        "tz": "America/Anchorage",
+        "offset": -8,
+        "value": "Alaskan Standard Time"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "continent": "Pacific",
+    "newRow": [
+      {
+        "id": 1,
+        "tz": "Pacific/Pago_Pago",
+        "offset": -11,
+        "value": "UTC-11"
+      },
+      {
+        "id": 2,
+        "tz": "Pacific/Rarotonga",
+        "offset": -10,
+        "value": "Hawaiian Standard Time"
+      },
+      {
+        "id": 3,
+        "tz": "Pacific/Easter",
+        "offset": 13,
+        "value": "Samoa Standard Time"
+      },
+      {
+        "id": 4,
+        "tz": "Pacific/Galapagos",
+        "offset": -6,
+        "value": "Central America Standard Time"
+      },
+      {
+        "id": 5,
+        "tz": "Pacific/Fiji",
+        "offset": 12,
+        "value": "Fiji Standard Time"
+      },
+      {
+        "id": 8,
+        "tz": "Pacific/Kosrae",
+        "offset": 11,
+        "value": "Central Pacific Standard Time"
+      },
+      {
+        "id": 9,
+        "tz": "Pacific/Guam",
+        "offset": 10,
+        "value": "West Pacific Standard Time"
+      },
+      {
+        "id": 27,
+        "tz": "Pacific/Palau",
+        "offset": 9,
+        "value": "Japan Standard Time"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "continent": "Australia",
+    "newRow": [
+      {
+        "id": 1,
+        "tz": "Australia/Lord_Howe",
+        "offset": 13,
+        "value": "Samoa Standard Time"
+      },
+      {
+        "id": 2,
+        "tz": "Australia/Hobart",
+        "offset": 10,
+        "value": "Tasmania Standard Time"
+      },
+      {
+        "id": 6,
+        "tz": "Australia/Broken_Hill",
+        "offset": 9.5,
+        "value": "Cen. Australia Standard Time"
+      },
+      {
+        "id": 11,
+        "tz": "Australia/Perth",
+        "offset": 8,
+        "value": "W. Australia Standard Time"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "continent": "Africa",
+    "newRow": [
+      {
+        "id": 1,
+        "tz": "Africa/Abidjan",
+        "offset": 0,
+        "value": "Greenwich Standard Time"
+      },
+      {
+        "id": 2,
+        "tz": "Africa/Algiers",
+        "offset": 1,
+        "value": "W. Central Africa Standard Time"
+      },
+      {
+        "id": 3,
+        "tz": "Africa/Cairo",
+        "offset": 2,
+        "value": "Egypt Standard Time"
+      },
+      {
+        "id": 8,
+        "tz": "Africa/Nairobi",
+        "offset": 3,
+        "value": "E. Africa Standard Time"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "continent": "Atlantic",
+    "newRow": [
+      {
+        "id": 1,
+        "tz": "Atlantic/Azores",
+        "offset": 0,
+        "value": "Azores Standard Time"
+      },
+      {
+        "id": 2,
+        "tz": "Atlantic/Bermuda",
+        "offset": -3,
+        "value": "Atlantic Standard Time"
+      },
+      {
+        "id": 3,
+        "tz": "Atlantic/Madeira",
+        "offset": 1,
+        "value": "GMT Standard Time"
+      },
+      {
+        "id": 1,
+        "tz": "Atlantic/Cape_Verde",
+        "offset": -1,
+        "value": "Cape Verde Standard Time"
+      },
+      {
+        "id": 2,
+        "tz": "Atlantic/Canary",
+        "offset": 1,
+        "value": "GMT Standard Time"
+      },
+      {
+        "id": 3,
+        "tz": "Atlantic/Stanley",
+        "offset": -3,
+        "value": "SA Eastern Standard Time"
+      },
+      {
+        "id": 4,
+        "tz": "Atlantic/Faroe",
+        "offset": 13,
+        "value": "Samoa Standard Time"
+      },
+      {
+        "id": 5,
+        "tz": "Atlantic/South_Georgia",
+        "offset": -2,
+        "value": "UTC-02"
+      },
+      {
+        "id": 6,
+        "tz": "Atlantic/Reykjavik",
+        "offset": 0,
+        "value": "Greenwich Standard Time"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "continent": "Indian",
+    "newRow": [
+      {
+        "id": 1,
+        "tz": "Indian/Cocos",
+        "offset": 6.5,
+        "value": "Myanmar Standard Time"
+      },
+      {
+        "id": 2,
+        "tz": "Indian/Christmas",
+        "offset": 7,
+        "value": "SE Asia Standard Time"
+      },
+      {
+        "id": 3,
+        "tz": "Indian/Chagos",
+        "offset": 6,
+        "value": "Central Asia Standard Time"
+      },
+      {
+        "id": 4,
+        "tz": "Indian/Mauritius",
+        "offset": 4,
+        "value": "Mauritius Standard Time"
+      },
+      {
+        "id": 5,
+        "tz": "Indian/Maldives",
+        "offset": 5,
+        "value": "West Asia Standard Time"
+      }
+    ]
+  }
+]
