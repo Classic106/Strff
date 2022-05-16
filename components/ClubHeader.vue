@@ -44,10 +44,26 @@
           class="icon icon-search mr-3"
           :class="!isMobile && ' position-absolute'"
         ></span>
-        <span
-          class="icon icon-bag"
-          :class="!isMobile && ' position-absolute'"
-        ></span>
+        <div
+          class="icon-bag-wrap"
+          :class="!isMobile ? 'position-absolute' : 'position-relative'"
+        >
+          <span
+            class="
+              position-absolute
+              w-100
+              d-flex
+              justify-content-center
+              align-items-center
+              dark-orange
+            "
+            >{{ countItemsInBag }}</span
+          >
+          <span
+            class="icon icon-bag position-relative"
+            :class="!isMobile && ' position-absolute'"
+          ></span>
+        </div>
       </div>
     </div>
     <div
@@ -90,6 +106,7 @@ export default {
   data: () => ({
     isOpenMenu: false,
     isMobile: true,
+    countItemsInBag: 0,
     menu: [
       {
         name: "bundless",
@@ -207,20 +224,20 @@ li > a {
   background-image: url("@/assets/icons/iconmonstr-search-thin.svg");
 }
 
+.icon-bag-wrap {
+  right: 0;
+  width: 30px;
+  height: 30px;
+}
+
 .icon-bag {
   right: 0;
   background-image: url("@/assets/icons/shopping-bag.svg");
 }
 
-.icon-bag::after {
-  top: 4px;
-  display: flex;
-  content: "0";
-  width: 30px;
-  height: 38px;
-  color: #9e7d24;
-  justify-content: center;
-  align-items: center;
+.icon-bag > span {
+  filter: invert(50%) sepia(56%) saturate(571%) hue-rotate(6deg) brightness(88%)
+    contrast(86%);
 }
 
 .nav-menu-arrow {
