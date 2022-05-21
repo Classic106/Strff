@@ -1,8 +1,15 @@
 <template>
-  <div class="flex justify-center bg-gray-200">
+  <div class="flex justify-center bg-gray-200 h-100">
     <div
       v-if="loading"
-      class="loading w-100 d-flex justify-content-center align-items-center"
+      class="
+        loading
+        w-100
+        h-100
+        d-flex
+        justify-content-center
+        align-items-center
+      "
     >
       <Loader />
     </div>
@@ -11,6 +18,11 @@
       <Nuxt class="flex-grow" />
       <ClubFooter />
     </div>
+    <div
+      hidden
+      id="snipcart"
+      data-api-key="ODhhNWUxOGEtNTk0OC00OTQwLWJkOWMtM2M1ZmNjODU1ZDJhNjM3MzMyNzM0NjM1OTMyNjcz"
+    ></div>
   </div>
 </template>
 
@@ -25,7 +37,7 @@ export default {
     ClubFooter,
     Loader,
   },
-  
+
   data: () => ({ loading: true }),
   mounted() {
     this.loading = false;
@@ -33,6 +45,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.h-100 {
+  height: 100vh !important;
+}
 </style>
 

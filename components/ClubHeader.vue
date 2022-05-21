@@ -47,6 +47,7 @@
         <div
           class="icon-bag-wrap"
           :class="!isMobile ? 'position-absolute' : 'position-relative'"
+          v-on:click="goToCheckout"
         >
           <span
             class="
@@ -88,8 +89,10 @@
         "
         :class="isMobile ? 'ul-mobile' : ''"
       >
-        <li v-for="item in menu" :key="item.to" class="px-3 py-2">
-          <NuxtLink :to="item.to" class="dark-orange">{{ item.name }}</NuxtLink>
+        <li v-for="category in categories" :key="category.id" class="px-3 py-2">
+          <NuxtLink :to="`/categories/${category.slug}`" class="dark-orange">{{
+            category.name
+          }}</NuxtLink>
         </li>
       </ul>
     </div>
@@ -101,40 +104,32 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "ClubHeader",
   data: () => ({
     isOpenMenu: false,
     isMobile: true,
     countItemsInBag: 0,
-    menu: [
-      {
-        name: "bundless",
-        to: "/",
-      },
-      {
-        name: "beard",
-        to: "/",
-      },
-      {
-        name: "hair",
-        to: "/",
-      },
-      {
-        name: "shave",
-        to: "/",
-      },
-      {
-        name: "skincare",
-        to: "/",
-      },
-      {
-        name: "accessories",
-        to: "/",
-      },
-    ],
+    categories: [],
+    error: null,
   }),
+  computed: {
+    ...mapGetters({
+      numberOfItems: "cart/numberOfItems",
+      username: "auth/username",
+    }),
+  },
   methods: {
+    goToCheckout() {
+      const isConnected = this.$store.getters["auth/username"];
+      if (!isConnected) {
+        this.$router.push("/signin");
+        return;
+      }
+      this.$router.push("/checkout");
+    },
     handlerResize(e) {
       this.isMobile = !(e.target.innerWidth > 992);
     },
@@ -155,10 +150,16 @@ export default {
       }
     },
   },
-  mounted() {
+  async mounted() {
     this.handlerResize({ target: window });
     window.addEventListener("resize", this.handlerResize);
     document.addEventListener("click", this.closeOutsideMenu);
+
+    try {
+      this.categories = await this.$strapi.find("categories");
+    } catch (error) {
+      this.error = error;
+    }
   },
   destroyed() {
     window.removeEventListener("resize", this.handlerResize);
@@ -221,7 +222,7 @@ li > a {
 
 .icon-search {
   right: 60px;
-  background-image: url("@/assets/icons/iconmonstr-search-thin.svg");
+  background-image: url("../assets/icons/iconmonstr-search-thin.svg");
 }
 
 .icon-bag-wrap {
@@ -232,7 +233,7 @@ li > a {
 
 .icon-bag {
   right: 0;
-  background-image: url("@/assets/icons/shopping-bag.svg");
+  background-image: url("../assets/icons/shopping-bag.svg");
 }
 
 .icon-bag > span {

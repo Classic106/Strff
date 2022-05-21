@@ -29,30 +29,17 @@
       <div class="d-flex justify-content-center w-100">
         <img
           class="position-absolute header-image"
-          src="@/assets/images/iStock-1018779998.jpg"
+          src="@/assets/img/iStock-1018779998.jpg"
           alt="iStock"
         />
       </div>
     </div>
     <div class="p-1 p-md-5 m-0 mx-md-5">
-      <div class="d-flex flex-column">
-        <h6 class="p-3 pb-5 text-center col-black">BEST SELLERS</h6>
-        <div class="row flex-column flex-md-row justify-content-center">
-          <div
-            v-for="item in bestSales"
-            :key="item.image"
-            class="col col-md-5 col-lg-3"
-          >
-            <img class="mb-3" :src="item.image" alt="cream" />
-            <div
-              class="card-info col-black d-flex justify-content-between mb-4"
-            >
-              <span>{{ item.price }} $</span>
-              <span class="text-upprcase">{{ item.name }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Products
+        :products="products"
+        :error="error"
+        :storeUrl="storeUrl"
+      />
       <div class="position-relative text-center">
         <div
           class="
@@ -86,38 +73,41 @@
   </main>
 </template>
 
-<script scoped>
+<script>
+import Products from "./Products.vue";
+
 export default {
   name: "Club",
   layout: "club",
+  components: { Products },
   data: () => ({
-    bestSales: [
-      {
-        image:
-          "https://www.gentlemansgazette.com/wp-content/uploads/2013/10/Proraso-Italys-1-shave-cream.jpg",
-        price: 40,
-        name: "chaved cream",
-      },
-      {
-        image:
-          "https://www.gentlemansgazette.com/wp-content/uploads/2013/10/Proraso-Italys-1-shave-cream.jpg",
-        price: 40,
-        name: "chaved cream",
-      },
-      {
-        image:
-          "https://www.gentlemansgazette.com/wp-content/uploads/2013/10/Proraso-Italys-1-shave-cream.jpg",
-        price: 40,
-        name: "chaved cream",
-      },
-      {
-        image:
-          "https://www.gentlemansgazette.com/wp-content/uploads/2013/10/Proraso-Italys-1-shave-cream.jpg",
-        price: 40,
-        name: "chaved cream",
-      },
-    ],
+    products: [],
+    storeUrl: process.env.storeUrl,
+    error: null,
   }),
+  async mounted() {
+    try {
+      this.products = await this.$strapi.$products.find();
+    } catch (error) {
+      this.error = error;
+    }
+  },
+  directives: {
+    lazy: {
+      inserted: (el) => {
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              let lazyImage = entry.target;
+              lazyImage.src = lazyImage.dataset.src;
+              observer.unobserve(el);
+            }
+          });
+        });
+        observer.observe(el);
+      },
+    },
+  },
 };
 </script>
 
@@ -161,10 +151,6 @@ export default {
 
 .grey {
   color: #cecece;
-}
-
-.col-black {
-  color: #000;
 }
 
 .header-image {
@@ -217,18 +203,18 @@ h6,
 }
 
 .icon-twitter {
-  background-image: url("@/assets/icons/icons8-twitter.svg");
+  background-image: url("../assets/icons/icons8-twitter.svg");
 }
 
 .icon-facebook {
-  background-image: url("@/assets/icons/icons8-facebook.svg");
+  background-image: url("../assets/icons/icons8-facebook.svg");
 }
 
 .icon-pinterest {
-  background-image: url("@/assets/icons/icons8-pinterest.svg");
+  background-image: url("../assets/icons/icons8-pinterest.svg");
 }
 
 .icon-instagram {
-  background-image: url("@/assets/icons/icons8-instagram.svg");
+  background-image: url("../assets/icons/icons8-instagram.svg");
 }
 </style>
