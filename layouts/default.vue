@@ -11,9 +11,13 @@ export default {};
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 .dark-orange {
   color: #9e7d24;
+}
+
+.col-black {
+  color: #000;
 }
 
 img {
