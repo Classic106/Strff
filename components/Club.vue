@@ -35,11 +35,7 @@
       </div>
     </div>
     <div class="p-1 p-md-5 m-0 mx-md-5">
-      <Products
-        :products="products"
-        :error="error"
-        :storeUrl="storeUrl"
-      />
+      <Products :products="products" :error="error" :storeUrl="storeUrl" />
       <div class="position-relative text-center">
         <div
           class="
@@ -55,10 +51,7 @@
           <p>Indulge in a moment of perfect nostalgia</p>
           <h4 class="grey">SHOP NOW</h4>
         </div>
-        <img
-          src="https://media.istockphoto.com/photos/men-beauty-and-health-concept-various-shaving-and-bauty-care-placed-picture-id1251674339?s=612x612"
-          alt="istockphoto"
-        />
+        <img src="@/assets/img/iStock-1251674339.jpg" alt="istockphoto" />
       </div>
       <div class="d-flex flex-column align-items-center">
         <h6 class="text-center col-black p-3">FOLLOW US</h6>
