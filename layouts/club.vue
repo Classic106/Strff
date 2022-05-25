@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center bg-gray-200 h-100">
+  <div class="flex justify-center h-100">
     <div
       v-if="loading"
       class="
@@ -13,7 +13,7 @@
     >
       <Loader />
     </div>
-    <div v-else class="max-w-screen-lg flex flex-col min-h-screen w-full">
+    <div v-else class="flex flex-col">
       <ClubHeader />
       <Nuxt class="flex-grow" />
       <ClubFooter />
@@ -27,8 +27,8 @@
 </template>
 
 <script>
-import ClubHeader from "@/components/ClubHeader";
-import ClubFooter from "@/components/ClubFooter";
+import ClubHeader from "@/components/club/Header";
+import ClubFooter from "@/components/club/Footer";
 import Loader from "@/components/Loader.vue";
 
 export default {

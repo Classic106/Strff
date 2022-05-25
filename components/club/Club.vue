@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import Products from "./Products.vue";
+import Products from "./Products";
 
 export default {
   name: "Club",
@@ -84,22 +84,6 @@ export default {
     } catch (error) {
       this.error = error;
     }
-  },
-  directives: {
-    lazy: {
-      inserted: (el) => {
-        const observer = new IntersectionObserver((entries, observer) => {
-          entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-              let lazyImage = entry.target;
-              lazyImage.src = lazyImage.dataset.src;
-              observer.unobserve(el);
-            }
-          });
-        });
-        observer.observe(el);
-      },
-    },
   },
 };
 </script>
@@ -149,6 +133,7 @@ export default {
 .header-image {
   width: auto;
   height: 117%;
+  max-width: none;
 }
 
 main {
@@ -196,18 +181,18 @@ h6,
 }
 
 .icon-twitter {
-  background-image: url("../assets/icons/icons8-twitter.svg");
+  background-image: url("@/assets/icons/icons8-twitter.svg");
 }
 
 .icon-facebook {
-  background-image: url("../assets/icons/icons8-facebook.svg");
+  background-image: url("@/assets/icons/icons8-facebook.svg");
 }
 
 .icon-pinterest {
-  background-image: url("../assets/icons/icons8-pinterest.svg");
+  background-image: url("@/assets/icons/icons8-pinterest.svg");
 }
 
 .icon-instagram {
-  background-image: url("../assets/icons/icons8-instagram.svg");
+  background-image: url("@/assets/icons/icons8-instagram.svg");
 }
 </style>

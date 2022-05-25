@@ -3,24 +3,26 @@
 </template>
 
 <script>
-import Products from "~/components/Products.vue"
+import Products from "~/components/products/Products";
 
 export default {
   data() {
     return {
       category: {},
-      error: null
-    }
+      error: null,
+    };
   },
   async mounted() {
     try {
-      this.category = await this.$strapi.$categories.findOne(this.$route.params.id)
+      this.category = await this.$strapi.$categories.findOne(
+        this.$route.params.id
+      );
     } catch (error) {
-      this.error = error
+      this.error = error;
     }
   },
   components: {
-    Products
-  }
-}
+    Products,
+  },
+};
 </script>
