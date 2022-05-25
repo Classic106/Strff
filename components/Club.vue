@@ -35,7 +35,7 @@
       </div>
     </div>
     <div class="p-1 p-md-5 m-0 mx-md-5">
-      <Products :products="products" :error="error" :storeUrl="storeUrl" />
+      <ClubProducts :products="products" :error="error" :storeUrl="storeUrl" />
       <div class="position-relative text-center">
         <div
           class="
@@ -67,12 +67,12 @@
 </template>
 
 <script>
-import Products from "./Products.vue";
+import ClubProducts from "./ClubProducts.vue";
 
 export default {
   name: "Club",
   layout: "club",
-  components: { Products },
+  components: { ClubProducts },
   data: () => ({
     products: [],
     storeUrl: process.env.storeUrl,
@@ -149,6 +149,7 @@ export default {
 .header-image {
   width: auto;
   height: 117%;
+  max-width: none;
 }
 
 main {
