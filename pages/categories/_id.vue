@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Products from "~/components/Products.vue";
+import Products from "~/components/products/Products";
 
 export default {
   data() {

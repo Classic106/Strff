@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import Cart from "./icons/cart.vue";
+import Cart from "@/components/icons/cart";
 import { mapGetters } from "vuex";
 import { mapMutations } from "vuex";
 

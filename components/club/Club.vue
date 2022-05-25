@@ -35,7 +35,7 @@
       </div>
     </div>
     <div class="p-1 p-md-5 m-0 mx-md-5">
-      <ClubProducts :products="products" :error="error" :storeUrl="storeUrl" />
+      <Products :products="products" :error="error" :storeUrl="storeUrl" />
       <div class="position-relative text-center">
         <div
           class="
@@ -67,12 +67,12 @@
 </template>
 
 <script>
-import ClubProducts from "./ClubProducts.vue";
+import Products from "./Products";
 
 export default {
   name: "Club",
   layout: "club",
-  components: { ClubProducts },
+  components: { Products },
   data: () => ({
     products: [],
     storeUrl: process.env.storeUrl,
@@ -181,18 +181,18 @@ h6,
 }
 
 .icon-twitter {
-  background-image: url("../assets/icons/icons8-twitter.svg");
+  background-image: url("@/assets/icons/icons8-twitter.svg");
 }
 
 .icon-facebook {
-  background-image: url("../assets/icons/icons8-facebook.svg");
+  background-image: url("@/assets/icons/icons8-facebook.svg");
 }
 
 .icon-pinterest {
-  background-image: url("../assets/icons/icons8-pinterest.svg");
+  background-image: url("@/assets/icons/icons8-pinterest.svg");
 }
 
 .icon-instagram {
-  background-image: url("../assets/icons/icons8-instagram.svg");
+  background-image: url("@/assets/icons/icons8-instagram.svg");
 }
 </style>

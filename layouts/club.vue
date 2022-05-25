@@ -27,8 +27,8 @@
 </template>
 
 <script>
-import ClubHeader from "@/components/ClubHeader";
-import ClubFooter from "@/components/ClubFooter";
+import ClubHeader from "@/components/club/Header";
+import ClubFooter from "@/components/club/Footer";
 import Loader from "@/components/Loader.vue";
 
 export default {

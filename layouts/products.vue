@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import NavBar from "@/components/Navbar";
-import ProductsFooter from "@/components/ProductsFooter";
+import NavBar from "@/components/products/Navbar";
+import ProductsFooter from "@/components/products/Footer";
 import Buttons from "@/components/Buttons";
 
 export default {
