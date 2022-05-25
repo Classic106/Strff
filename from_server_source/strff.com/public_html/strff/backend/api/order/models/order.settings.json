@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "name": "Order",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "order_no": {
+      "type": "string"
+    },
+    "order_date": {
+      "type": "datetime"
+    },
+    "order_items": {
+      "via": "order",
+      "collection": "order-item"
+    },
+    "total": {
+      "type": "decimal"
+    },
+    "order_status": {
+      "model": "order-statuses"
+    },
+    "user": {
+      "plugin": "users-permissions",
+      "model": "user"
+    },
+    "cart_token": {
+      "type": "string"
+    }
+  }
+}
