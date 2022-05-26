@@ -112,14 +112,21 @@ export default {
     isOpenMenu: false,
     isMobile: true,
     countItemsInBag: 0,
-    categories: [],
     error: null,
   }),
   computed: {
     ...mapGetters({
       numberOfItems: "cart/numberOfItems",
       username: "auth/username",
+      //categories: "categories/categories",
     }),
+    categories: {
+      //return this.$store.getters["categories/categories"];
+      get: function () {
+        return this.$store.getters["categories/categories"];
+      },
+      set: function (newValue) {},
+    },
   },
   methods: {
     goToCheckout() {
