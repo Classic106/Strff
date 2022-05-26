@@ -1,8 +1,7 @@
 <template>
   <div class="flex justify-center bg-gray-200">
     <div class="max-w-screen-lg flex flex-col min-h-screen w-full">
-      <NavBar />
-      <Buttons />
+      <Header />
       <Nuxt class="flex-grow" />
       <ProductsFooter />
     </div>
@@ -15,15 +14,13 @@
 </template>
 
 <script>
-import NavBar from "@/components/products/Navbar";
+import Header from "@/components/Header";
 import ProductsFooter from "@/components/products/Footer";
-import Buttons from "@/components/Buttons";
 
 export default {
   components: {
-    NavBar,
+    Header,
     ProductsFooter,
-    Buttons,
   },
 };
 </script>
