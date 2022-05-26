@@ -229,7 +229,7 @@ li > a {
 
 .icon-search {
   right: 60px;
-  background-image: url("@/assets/icons/iconmonstr-search-thin.svg");
+  background-image: url("../assets/icons/iconmonstr-search-thin.svg");
 }
 
 .icon-bag-wrap {
@@ -240,7 +240,7 @@ li > a {
 
 .icon-bag {
   right: 0;
-  background-image: url("@/assets/icons/shopping-bag.svg");
+  background-image: url("../assets/icons/shopping-bag.svg");
 }
 
 .icon-bag > span {

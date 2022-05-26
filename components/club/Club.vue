@@ -181,18 +181,18 @@ h6,
 }
 
 .icon-twitter {
-  background-image: url("@/assets/icons/icons8-twitter.svg");
+  background-image: url("../../assets/icons/icons8-twitter.svg");
 }
 
 .icon-facebook {
-  background-image: url("@/assets/icons/icons8-facebook.svg");
+  background-image: url("../../assets/icons/icons8-facebook.svg");
 }
 
 .icon-pinterest {
-  background-image: url("@/assets/icons/icons8-pinterest.svg");
+  background-image: url("../../assets/icons/icons8-pinterest.svg");
 }
 
 .icon-instagram {
-  background-image: url("@/assets/icons/icons8-instagram.svg");
+  background-image: url("../../assets/icons/icons8-instagram.svg");
 }
 </style>
