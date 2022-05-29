@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-center bg-gray-200">
-    <div class="max-w-screen-lg flex flex-col min-h-screen w-full">
+  <div class="d-flex justify-center">
+    <div class="d-flex flex-column">
       <Header />
       <Nuxt class="flex-grow" />
       <ProductsFooter />
