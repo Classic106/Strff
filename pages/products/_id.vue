@@ -3,7 +3,6 @@
     <div
       class="
         m-6
-        mt-56
         grid grid-cols-1
         sm:grid-cols-2
         md:grid-cols-2
