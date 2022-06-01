@@ -29,7 +29,7 @@
       <div class="d-flex justify-content-center w-100">
         <img
           class="position-absolute header-image"
-          src="@/assets/img/iStock-1018779998.jpg"
+          src="@/assets/img/iStock-1018779998-min.jpg"
           alt="iStock"
         />
       </div>
@@ -51,7 +51,7 @@
           <p>Indulge in a moment of perfect nostalgia</p>
           <h4 class="grey">SHOP NOW</h4>
         </div>
-        <img src="@/assets/img/iStock-1251674339.jpg" alt="istockphoto" />
+        <img src="@/assets/img/iStock-1251674339-min.jpg" alt="istockphoto" />
       </div>
       <div class="d-flex flex-column align-items-center">
         <h6 class="text-center col-black p-3">FOLLOW US</h6>
