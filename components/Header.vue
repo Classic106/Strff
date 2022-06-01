@@ -58,7 +58,7 @@
               align-items-center
               dark-orange
             "
-            >{{ countItemsInBag }}</span
+            >{{ numberOfItems }}</span
           >
           <span
             class="icon icon-bag position-relative"
@@ -111,7 +111,6 @@ export default {
   data: () => ({
     isOpenMenu: false,
     isMobile: true,
-    countItemsInBag: 0,
     error: null,
   }),
   computed: {
