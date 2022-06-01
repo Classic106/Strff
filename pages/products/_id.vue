@@ -35,24 +35,25 @@
           <div class="flex items-baseline mt-1 mb-6 space-y-4">
             <fieldset>
               <div class="space-x-2 flex">
-                <div v-for="size in sizes" :key="size.id">
+                <div v-for="quantity in quantities" :key="quantity.title">
                   <label
                     :class="
-                      (size.id == selected.sizeId ? `border-indigo-500` : ``) +
+                      (quantity.quantity === selected.quantity &&
+                        `active-quantity`) +
                       ` border group relative border rounded-md py-3 px-4 flex items-center justify-center text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6 bg-white shadow-sm text-gray-900 cursor-pointer`
                     "
                   >
                     <input
                       type="radio"
                       name="size-choice"
-                      value="LG"
                       class="sr-only"
                       aria-labelledby="size-choice-2-label"
-                      v-on:click="selectOption($event, size)"
+                      v-on:click="selectOption(quantity)"
                     />
                     <p id="size-choice-2-label">
-                      {{ size.title }}<br />${{
-                        (product.price + size.price) | formatNumber
+                      {{ quantity.title }}<br />${{
+                        calcPrice(product.price, quantity.quantity)
+                          | formatNumber
                       }}
                     </p>
                   </label>
@@ -61,36 +62,6 @@
             </fieldset>
           </div>
           <div>
-            <fieldset>
-              <div class="flex items-center">
-                <input
-                  type="text"
-                  class="
-                    relative
-                    w-full
-                    bg-white
-                    border border-gray-300
-                    rounded-md
-                    shadow-sm
-                    pl-3
-                    pr-10
-                    py-2
-                    text-left
-                    cursor-default
-                    focus:outline-none
-                    focus:ring-1
-                    focus:ring-indigo-500
-                    focus:border-indigo-500
-                    sm:text-sm
-                  "
-                  aria-haspopup="listbox"
-                  aria-expanded="true"
-                  aria-labelledby="listbox-label"
-                  placeholder="Quantity"
-                  v-model="selected.quantity"
-                />
-              </div>
-            </fieldset>
             <fieldset>
               <div
                 class="mt-4 space-y-4"
@@ -108,12 +79,14 @@
                       text-indigo-600
                       border-gray-300
                     "
+                    :id="purchaseType.title"
                     :value="purchaseType.id"
                     v-model="selected.purchaseTypeId"
+                    v-on:change="setOptions(purchaseType.id)"
                   />
                   <label
-                    for="push-email"
-                    class="ml-3 block text-sm font-medium text-gray-700"
+                    :for="purchaseType.title"
+                    class="w-100 ml-3 block text-sm font-medium text-gray-700"
                   >
                     {{ purchaseType.title }}
                     <p
@@ -124,38 +97,35 @@
                     </p>
                   </label>
                 </div>
-                <div
-                  class="mt-1 relative"
-                  v-if="purchaseType.subscription_types.length"
+              </div>
+              <div class="mt-1 relative" v-if="options.length">
+                <select
+                  class="
+                    relative
+                    w-full
+                    bg-white
+                    border border-gray-300
+                    rounded-md
+                    shadow-sm
+                    text-left
+                    cursor-default
+                    focus:outline-none
+                    focus:ring-1
+                    focus:ring-indigo-500
+                    focus:border-indigo-500
+                    sm:text-sm
+                  "
+                  v-model="selected.subscriptionTypeId"
+                  v-on:change="change"
                 >
-                  <select
-                    class="
-                      relative
-                      w-full
-                      bg-white
-                      border border-gray-300
-                      rounded-md
-                      shadow-sm
-                      text-left
-                      cursor-default
-                      focus:outline-none
-                      focus:ring-1
-                      focus:ring-indigo-500
-                      focus:border-indigo-500
-                      sm:text-sm
-                    "
-                    v-model="selected.subscriptionTypeId"
-                    :disabled="purchaseType.id != selected.purchaseTypeId"
+                  <option
+                    v-for="option in options"
+                    :value="option.id"
+                    :key="option.title"
                   >
-                    <option
-                      :value="subscriptionType.id"
-                      v-for="subscriptionType in purchaseType.subscription_types"
-                      :key="subscriptionType.title"
-                    >
-                      {{ subscriptionType.title }}
-                    </option>
-                  </select>
-                </div>
+                    {{ option.title }}
+                  </option>
+                </select>
               </div>
             </fieldset>
           </div>
@@ -176,7 +146,7 @@
             rounded
             shadow
           "
-          v-on:click="addToCart($event)"
+          v-on:click="addToCart"
         >
           Add to cart
         </button>
@@ -233,16 +203,24 @@ export default {
   data() {
     return {
       product: null,
-      sizes: null,
-      purchaseTypes: null,
+      quantities: [
+        {
+          title: "1 bottle",
+          quantity: 1,
+        },
+        {
+          title: "2 bottles",
+          quantity: 2,
+        },
+      ],
+      purchaseTypes: [],
       options: [],
       error: null,
       selected: {
-        productId: 0,
-        sizeId: 0,
-        quantity: null,
-        purchaseTypeId: 0,
-        subscriptionTypeId: 0,
+        productId: null,
+        quantity: 1,
+        purchaseTypeId: null,
+        subscriptionTypeId: null,
       },
     };
   },
@@ -252,19 +230,75 @@ export default {
         "products",
         this.$route.params.id
       );
-      this.sizes = await this.$strapi.find("sizes");
       this.purchaseTypes = await this.$strapi.find("purchase-types");
       this.selected.productId = this.product.id;
     } catch (error) {
       this.error = error;
     }
   },
-  computed: {},
   methods: {
-    selectOption: function (event, item) {
-      this.selected.sizeId = item.id;
+    change: function (e) {
+      const { selectedIndex } = e.target.options;
+
+      if (selectedIndex > -1) {
+        const { id } = this.options[selectedIndex];
+        this.selected.subscriptionTypeId = id;
+        return;
+      }
+      this.selected.subscriptionTypeId = null;
     },
-    addToCart: async function (event) {
+    setOptions: function (purchaseTypeId) {
+      const item = this.purchaseTypes.filter(
+        (item) => item.id === purchaseTypeId
+      )[0];
+
+      if (item && item.subscription_types.length) {
+        const { id } = item.subscription_types[0];
+
+        this.selected.subscriptionTypeId = id;
+        this.options = [...item.subscription_types];
+        return;
+      }
+      this.selected.subscriptionTypeId = null;
+      this.options = [];
+    },
+    calcPrice: function (itemPrice, quantity) {
+      const purchaseType = this.purchaseTypes.filter(
+        (item) => item.id === this.selected.purchaseTypeId
+      );
+
+      const price = +itemPrice * +quantity;
+
+      if (purchaseType.length && purchaseType[0].title) {
+        const { description } = purchaseType[0];
+
+        if (!description) return price;
+
+        if (description.includes("%")) {
+          let per = description.match(/(?<!\d)\d{1,2}(?=%)/gi)[0];
+
+          if (per && +per > 0) {
+            per = +per;
+          }
+
+          const value = (price / 100) * per;
+          return price - value;
+        } else if (description.includes("$")) {
+          let val = description.match(/(?<!\d)\d{1,2}(?=$)/gi)[0];
+
+          if (val && +val > 0) {
+            val = +val;
+          }
+          return price - val;
+        }
+        return price;
+      }
+      return price;
+    },
+    selectOption: function (size) {
+      this.selected.quantity = size.quantity;
+    },
+    addToCart: async function () {
       this.$store.dispatch("cart/add", this.selected);
     },
     getStrapiMedia,
@@ -273,6 +307,10 @@ export default {
 </script>
 
 <style scoped>
+.active-quantity {
+  background: #dad8da !important;
+}
+
 select {
   margin: 5px 0;
   width: 100%;
