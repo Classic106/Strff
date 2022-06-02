@@ -115,10 +115,15 @@
       >
         <p
           v-on:click="isOpen = !isOpen"
-          class="text-nowrap dark-orange"
+          class="text-nowrap dark-orange d-flex align-items-center"
           :class="isMobile ? 'pl-4' : ''"
         >
-          MAN`S CARE
+          <span class="mr-2">MAN`S CARE</span>
+          <Icon
+            v-if="!isMobile"
+            :icon="isOpen ? 'angle-up' : 'angle-down'"
+            class="angle"
+          />
         </p>
         <ul
           v-if="isMobile ? true : isOpen"
@@ -142,9 +147,11 @@
 
 <script>
 import { mapGetters } from "vuex";
+import Icon from "@/assets/icons";
 
 export default {
   name: "Header",
+  components: { Icon },
   data: () => ({
     isOpenMenu: false,
     isMobile: true,
@@ -307,6 +314,11 @@ li > a {
 .icon-bag > span {
   filter: invert(50%) sepia(56%) saturate(571%) hue-rotate(6deg) brightness(88%)
     contrast(86%);
+}
+
+.angle {
+  width: 0.8rem !important;
+  height: 0.8rem !important;
 }
 
 .nav-menu-arrow {
