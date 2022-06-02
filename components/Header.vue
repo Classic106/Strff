@@ -68,33 +68,70 @@
       </div>
     </div>
     <div
-      class="d-flex w-100"
+      class="row w-100"
       :class="
         isMobile
-          ? 'position-absolute ' +
-            (isOpenMenu ? ' menu-mobile open' : 'menu-mobile')
-          : 'position-relative'
+          ? isOpenMenu
+            ? 'menu-mobile open flex-column'
+            : 'menu-mobile'
+          : 'position-relative justify-content-between'
       "
     >
-      <ul
-        ref="menu"
-        class="
-          text-uppercase
-          d-flex
-          w-100
-          h-100
-          m-0
-          flex-column flex-lg-row
-          justify-content-center
+      <div class="col-lg row">
+        <ul
+          ref="menu"
+          class="
+            pl-4
+            text-uppercase
+            d-flex
+            w-100
+            m-0
+            flex-column flex-lg-row
+            justify-content-center
+          "
+          :class="isMobile ? 'ul-mobile' : ''"
+        >
+          <li
+            v-for="category in categories"
+            :key="category.id"
+            class="px-3 py-2"
+          >
+            <NuxtLink
+              :to="`/categories/${category.slug}`"
+              class="dark-orange"
+              >{{ category.name }}</NuxtLink
+            >
+          </li>
+        </ul>
+      </div>
+      <div
+        class="d-flex"
+        :class="
+          isMobile
+            ? 'row flex-column m-0 mt-4 pl-3'
+            : 'mr-4 justify-content-center align-items-center position-relative'
         "
-        :class="isMobile ? 'ul-mobile' : ''"
+        ref="additionalMenu"
       >
-        <li v-for="category in categories" :key="category.id" class="px-3 py-2">
-          <NuxtLink :to="`/categories/${category.slug}`" class="dark-orange">{{
-            category.name
-          }}</NuxtLink>
-        </li>
-      </ul>
+        <p
+          v-on:click="isOpen = !isOpen"
+          class="text-nowrap dark-orange"
+          :class="isMobile ? 'pl-4' : ''"
+        >
+          MAN`S CARE
+        </p>
+        <ul
+          v-if="isMobile ? true : isOpen"
+          class="rounded px-2 py-3"
+          :class="isMobile ? 'pl-5' : 'position-absolute additional_menu'"
+        >
+          <li v-for="item in additionalMenu" :key="item.title">
+            <NuxtLink :to="item.link" class="text-nowrap dark-orange">{{
+              item.title
+            }}</NuxtLink>
+          </li>
+        </ul>
+      </div>
     </div>
     <span class="p-3 text-center m-0 w-100">
       Last chance to shop holiday gifts. Buy online and pick up at an STRFF
@@ -112,6 +149,21 @@ export default {
     isOpenMenu: false,
     isMobile: true,
     error: null,
+    isOpen: false,
+    additionalMenu: [
+      {
+        title: "Body Care & Deodorant",
+        link: "/",
+      },
+      {
+        title: "Facial Care",
+        link: "/",
+      },
+      {
+        title: "Body Care",
+        link: "/",
+      },
+    ],
   }),
   computed: {
     ...mapGetters({
@@ -140,17 +192,19 @@ export default {
       this.isMobile = !(e.target.innerWidth > 992);
     },
     closeOutsideMenu(e) {
-      const { menu, menuButton } = this.$refs;
+      const { menu, menuButton, additionalMenu } = this.$refs;
       const { target } = e;
 
-      if (!menu || !menuButton || !target) {
+      if (!menu || !menuButton || !additionalMenu || !target) {
         return;
       }
       if (
         menu !== target &&
         !menu.contains(target) &&
         menuButton !== target &&
-        !menuButton.contains(target)
+        !menuButton.contains(target) &&
+        additionalMenu !== target &&
+        !additionalMenu.contains(target)
       ) {
         this.isOpenMenu = false;
       }
@@ -216,6 +270,14 @@ header > span {
 
 li > a {
   font-family: "Roboto", sans-serif;
+  display: block;
+  width: 100%;
+}
+
+.additional_menu {
+  top: 100%;
+  right: 0;
+  background: #000;
 }
 
 .icon {
