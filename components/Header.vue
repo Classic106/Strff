@@ -214,6 +214,7 @@ export default {
         !additionalMenu.contains(target)
       ) {
         this.isOpenMenu = false;
+        this.isOpen = false;
       }
     },
   },
