@@ -3,6 +3,7 @@
     <div class="row m-1 m-md-5">
       <div class="col-md-6 col-12 rounded pt-2 pb-2">
         <img :src="`${getStrapiMedia(product.image.url)}`" class="m-auto" />
+        <RelatedProducts :product="product" />
       </div>
       <div
         class="col-md-6 col-12 pt-0 px-5 flex flex-col justify-content-between"
@@ -143,10 +144,11 @@ import { getStrapiMedia } from "~/utils/medias";
 //import Vue from 'vue'
 import "~/utils/filters";
 import Icon from "@/assets/icons";
+import RelatedProducts from "~/components/products/RelatedProducts";
 
 export default {
   layout: "products",
-  components: { Icon },
+  components: { Icon, RelatedProducts },
   data() {
     return {
       product: null,
