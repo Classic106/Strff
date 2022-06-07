@@ -12,6 +12,13 @@ export default {};
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+a:hover,
+a:visited,
+a:link,
+a:active {
+  text-decoration: none;
+}
+
 .dark-orange {
   color: #9e7d24;
 }
