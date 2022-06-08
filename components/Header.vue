@@ -104,38 +104,37 @@
               >{{ category.name }}</NuxtLink
             >
           </li>
-        </ul>
-      </div>
-      <div
-        class="d-flex"
-        :class="
-          isMobile
-            ? 'row flex-column m-0 mt-4 pl-3'
-            : 'mr-4 justify-content-center align-items-center position-relative'
-        "
-        ref="additionalMenu"
-      >
-        <p
-          v-on:click="isOpen = !isOpen"
-          class="text-nowrap dark-orange d-flex align-items-center"
-          :class="isMobile ? 'pl-4' : ''"
-        >
-          <span class="mr-2">MAN`S CARE</span>
-          <Icon
-            v-if="!isMobile"
-            :icon="isOpen ? 'angle-up' : 'angle-down'"
-            class="angle"
-          />
-        </p>
-        <ul
-          v-if="isMobile ? true : isOpen"
-          class="rounded px-2 py-3"
-          :class="isMobile ? 'pl-5' : 'position-absolute additional_menu'"
-        >
-          <li v-for="item in additionalMenu" :key="item.title">
-            <NuxtLink :to="item.link" class="text-nowrap dark-orange">{{
-              item.title
-            }}</NuxtLink>
+          <li
+            class="d-flex"
+            :class="
+              isMobile
+                ? 'row flex-column m-0 pl-3'
+                : 'justify-content-center align-items-center position-relative'
+            "
+            ref="additionalMenu"
+          >
+            <a
+              v-on:click.prevent="isOpen = !isOpen"
+              class="text-nowrap dark-orange d-flex align-items-center m-0"
+            >
+              MAN`S CARE
+              <Icon
+                v-if="!isMobile"
+                :icon="isOpen ? 'angle-up' : 'angle-down'"
+                class="angle ml-1"
+              />
+            </a>
+            <ul
+              v-if="isMobile ? true : isOpen"
+              class="rounded p-3"
+              :class="isMobile ? '' : 'position-absolute additional_menu'"
+            >
+              <li v-for="item in additionalMenu" :key="item.title">
+                <NuxtLink :to="item.link" class="text-nowrap dark-orange">{{
+                  item.title
+                }}</NuxtLink>
+              </li>
+            </ul>
           </li>
         </ul>
       </div>
