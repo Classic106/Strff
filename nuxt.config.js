@@ -83,6 +83,7 @@ export default {
       "products",
       "categories",
       "sizes",
+      "bundles",
       "purchase-types",
       "subscription-types",
     ],

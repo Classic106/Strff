@@ -44,15 +44,14 @@ export default {
   async mounted() {
     const products = await this.$strapi.find("products");
     this.relatedProducts = products;
-    /*if (this.product.categories.length && products.length) {
+    if (this.product.categories.length && products.length) {
       this.relatedProducts = products.filter((item) => {
         const result = item.cat.filter(
           (i) => this.product.categories.indexOf(i) > -1
         );
         return result.length ? item : false;
       });
-    }*/
-    console.log(this.relatedProducts);
+    }
   },
 };
 </script>
