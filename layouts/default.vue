@@ -36,23 +36,27 @@ li {
 }
 
 span {
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 
 h1 {
-  font-size: 117px;
+  font-size: 7.3rem;
 }
 
 h3 {
-  font-size: 43px;
+  font-size: 2.6rem;
 }
 
 h4 {
-  font-size: 61px;
+  font-size: 3.8rem;
+}
+
+h5 {
+  font-size: 2.2rem;
 }
 
 h6 {
-  font-size: 35px;
+  font-size: 1.25rem;
 }
 </style>
 

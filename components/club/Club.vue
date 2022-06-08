@@ -35,7 +35,7 @@
       </div>
     </div>
     <div class="p-1 p-md-5 m-0 mx-md-5">
-      <Products :products="products" :error="error" :storeUrl="storeUrl" />
+      <BestSellers :products="products" :error="error" :storeUrl="storeUrl" />
       <div class="position-relative text-center">
         <div
           class="
@@ -67,12 +67,12 @@
 </template>
 
 <script>
-import Products from "./Products";
+import BestSellers from "./BestSellers";
 
 export default {
   name: "Club",
   layout: "club",
-  components: { Products },
+  components: { BestSellers },
   data: () => ({
     products: [],
     storeUrl: process.env.storeUrl,
