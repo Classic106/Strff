@@ -1,8 +1,5 @@
 <template>
   <div class="bg-white mg-20">
-    <div class="m-6">
-      <img src="~/assets/img/banner.jpg" />
-    </div>
     <div v-if="error">
       {{ error }}
     </div>

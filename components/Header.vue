@@ -39,7 +39,9 @@
           isMobile ? 'w-75 justify-content-end' : 'w-50 justify-content-center'
         "
       >
-        <h6 class="mr-5">strff</h6>
+        <h6 class="mr-5">
+          <nuxt-link to="/" class="dark-orange">strff</nuxt-link>
+        </h6>
         <span
           class="icon icon-search mr-3"
           :class="!isMobile && ' position-absolute'"

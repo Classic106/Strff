@@ -6,6 +6,7 @@
 import Products from "~/components/products/Products";
 
 export default {
+  layout: "club",
   data() {
     return {
       category: {},
