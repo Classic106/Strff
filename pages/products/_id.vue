@@ -129,7 +129,7 @@
           <div class="mt-1 items-baseline text-gray-600">
             {{ product.description }}
           </div>
-          <BundleProducts :product="product"/>
+          <BundleProducts :product="product" />
         </div>
       </div>
     </div>
@@ -149,7 +149,7 @@ import RelatedProducts from "~/components/products/RelatedProducts";
 import BundleProducts from "~/components/products/BundleProducts";
 
 export default {
-  layout: "products",
+  layout: "club",
   components: { Icon, RelatedProducts, BundleProducts },
   data() {
     return {
