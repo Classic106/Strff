@@ -15,10 +15,10 @@
             :data-src="`${getStrapiMedia(product.image.url)}`"
           />
 
-          <div class="card-info col-black d-flex justify-content-between mb-4">
+          <a class="card-info col-black d-flex justify-content-between mb-4">
             <span>{{ product.price }} $</span>
             <span class="text-upprcase">{{ product.title }}</span>
-          </div>
+          </a>
         </nuxt-link>
       </div>
     </div>

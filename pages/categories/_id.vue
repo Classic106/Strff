@@ -1,5 +1,5 @@
 <template>
-  <Products :products="this.category.products" :error="error" />
+  <Products :products="this.products" :error="error" />
 </template>
 
 <script>
@@ -9,15 +9,16 @@ export default {
   layout: "club",
   data() {
     return {
-      category: {},
+      products: [],
       error: null,
     };
   },
   async mounted() {
     try {
-      this.category = await this.$strapi.$categories.findOne(
+      /*this.products = await this.$strapi.$categories.findOne(
         this.$route.params.id
-      );
+      );*/
+      this.products = await this.$strapi.$products.find();
     } catch (error) {
       this.error = error;
     }

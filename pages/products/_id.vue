@@ -1,142 +1,150 @@
 <template>
-  <div v-if="this.product !== null">
-    <div class="row m-1 m-md-5">
-      <div class="col-md-6 col-12 rounded pt-2 pb-2">
-        <img :src="`${getStrapiMedia(product.image.url)}`" class="m-auto" />
-        <RelatedProducts :product="product" />
-      </div>
-      <div
-        class="col-md-6 col-12 pt-0 px-5 flex flex-col justify-content-between"
-      >
-        <div>
-          <h6 class="font-weight-bold text-md-left text-center">
-            {{ product.title }}
-          </h6>
-          <h6 class="mt-3 font-weight-normal text-md-left text-center">
-            ${{ product.price | formatNumber }}
-          </h6>
-          <div
-            class="
-              d-flex
-              mt-1
-              mb-5
-              justify-content-md-start justify-content-center
-            "
-          >
-            <div class="d-flex">
-              <div class="d-flex border position-relative quantity mr-2">
-                <input
-                  type="number"
-                  :value="selected.quantity"
-                  class="px-2 w-100"
-                />
-                <div
-                  class="
-                    d-flex
-                    flex-column
-                    position-absolute
-                    number-input-buttons
-                    justify-content-center
-                  "
-                >
-                  <button
-                    v-on:click="quantityPlus"
-                    class="m-0 p-0 btn btn-light"
-                  >
-                    <Icon icon="angle-up" class="angle-up" />
-                  </button>
-                  <button
-                    v-on:click="quantityMinus"
-                    class="m-0 p-0 btn btn-light"
-                  >
-                    <Icon icon="angle-down" class="angle-down" />
-                  </button>
-                </div>
-              </div>
-              <button
-                v-if="product.status === 'published'"
-                class="
-                  py-2
-                  px-4
-                  rounded
-                  btn btn-dark
-                  d-flex
-                  justify-content-center
-                  align-items-center
-                  text-uppercase text-nowrap
-                "
-                v-on:click="addToCart"
-              >
-                <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
-                Add to cart
-              </button>
-
-              <div class="text-center mr-5 mb-1" v-else>
-                <div class="p-2" role="alert">
-                  <span class="d-flex uppercase px-2 py-1 mr-3"
-                    >Coming soon...</span
-                  >
-                  <span class="mr-2 text-left d-flex"
-                    >This article is not available yet.</span
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="content">
+    <div v-if="error">
+      {{ error }}
+    </div>
+    <div v-if="this.product !== null">
+      <div class="row m-1 m-md-5">
+        <div class="col-md-6 col-12 rounded pt-2 pb-2">
+          <img :src="`${getStrapiMedia(product.image.url)}`" class="m-auto" />
+          <RelatedProducts :product="product" />
+        </div>
+        <div
+          class="
+            col-md-6 col-12
+            pt-0
+            px-5
+            flex flex-col
+            justify-content-between
+          "
+        >
           <div>
+            <h6 class="font-weight-bold text-md-left text-center">
+              {{ product.title }}
+            </h6>
+            <h6 class="mt-3 font-weight-normal text-md-left text-center">
+              ${{ product.price | formatNumber }}
+            </h6>
             <div
-              class="mt-4"
-              v-for="purchaseType in purchaseTypes"
-              :key="purchaseType.title"
+              class="
+                d-flex
+                mt-1
+                mb-5
+                justify-content-md-start justify-content-center
+              "
             >
-              <div class="d-flex align-items-center">
-                <input
-                  name="push-notifications"
-                  type="radio"
-                  class="mt-2 align-self-start"
-                  :id="purchaseType.title"
-                  :value="purchaseType.id"
-                  v-model="selected.purchaseTypeId"
-                  v-on:change="setOptions(purchaseType.id)"
-                />
-                <label
-                  :for="purchaseType.title"
-                  class="w-100 ml-3 d-flex flex-column"
+              <div class="d-flex">
+                <div class="d-flex border position-relative quantity mr-2">
+                  <input
+                    type="number"
+                    :value="selected.quantity"
+                    class="px-2 w-100"
+                  />
+                  <div
+                    class="
+                      d-flex
+                      flex-column
+                      position-absolute
+                      number-input-buttons
+                      justify-content-center
+                    "
+                  >
+                    <button
+                      v-on:click="quantityPlus"
+                      class="m-0 p-0 btn btn-light"
+                    >
+                      <Icon icon="angle-up" class="angle-up" />
+                    </button>
+                    <button
+                      v-on:click="quantityMinus"
+                      class="m-0 p-0 btn btn-light"
+                    >
+                      <Icon icon="angle-down" class="angle-down" />
+                    </button>
+                  </div>
+                </div>
+                <button
+                  v-if="product.status === 'published'"
+                  class="
+                    py-2
+                    px-4
+                    rounded
+                    btn btn-dark
+                    d-flex
+                    justify-content-center
+                    align-items-center
+                    text-uppercase text-nowrap
+                    add-cart-button
+                  "
+                  v-on:click="addToCart"
                 >
-                  {{ purchaseType.title }}
-                  <p class="mt-1" v-if="purchaseType.description">
-                    {{ purchaseType.description }}
-                  </p>
-                </label>
+                  <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
+                  Add to cart
+                </button>
+
+                <div class="text-center mr-5 mb-1" v-else>
+                  <div class="p-2" role="alert">
+                    <span class="d-flex uppercase px-2 py-1 mr-3"
+                      >Coming soon...</span
+                    >
+                    <span class="mr-2 text-left d-flex"
+                      >This article is not available yet.</span
+                    >
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="mt-1 position-relative" v-if="options.length">
-              <select
-                class="position-relative"
-                v-model="selected.subscriptionTypeId"
-                v-on:change="change"
+            <div>
+              <div
+                class="mt-4"
+                v-for="purchaseType in purchaseTypes"
+                :key="purchaseType.title"
               >
-                <option
-                  v-for="option in options"
-                  :value="option.id"
-                  :key="option.title"
+                <div class="d-flex align-items-center">
+                  <input
+                    name="push-notifications"
+                    type="radio"
+                    class="mt-2 align-self-start"
+                    :id="purchaseType.title"
+                    :value="purchaseType.id"
+                    v-model="selected.purchaseTypeId"
+                    v-on:change="setOptions(purchaseType.id)"
+                  />
+                  <label
+                    :for="purchaseType.title"
+                    class="w-100 ml-3 d-flex flex-column"
+                  >
+                    {{ purchaseType.title }}
+                    <p class="mt-1" v-if="purchaseType.description">
+                      {{ purchaseType.description }}
+                    </p>
+                  </label>
+                </div>
+              </div>
+              <div class="mt-1 position-relative" v-if="options.length">
+                <select
+                  class="position-relative"
+                  v-model="selected.subscriptionTypeId"
+                  v-on:change="change"
                 >
-                  {{ option.title }}
-                </option>
-              </select>
+                  <option
+                    v-for="option in options"
+                    :value="option.id"
+                    :key="option.title"
+                  >
+                    {{ option.title }}
+                  </option>
+                </select>
+              </div>
             </div>
+            <div class="mt-1 items-baseline text-gray-600">
+              {{ product.description }}
+            </div>
+            <BundleProducts :product="product" />
           </div>
-          <div class="mt-1 items-baseline text-gray-600">
-            {{ product.description }}
-          </div>
-          <BundleProducts :product="product" />
         </div>
       </div>
     </div>
-  </div>
-
-  <div v-else>
-    {{ error }}
   </div>
 </template>
 
@@ -268,6 +276,15 @@ export default {
 </script>
 
 <style scoped>
+.content {
+  min-height: 80vh;
+}
+
+.add-cart-button {
+  background-color: #1f2020;
+  color: #fff;
+}
+
 .quantity {
   width: 56px;
 }
