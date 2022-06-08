@@ -129,6 +129,7 @@
           <div class="mt-1 items-baseline text-gray-600">
             {{ product.description }}
           </div>
+          <BundleProducts :product="product"/>
         </div>
       </div>
     </div>
@@ -145,10 +146,11 @@ import { getStrapiMedia } from "~/utils/medias";
 import "~/utils/filters";
 import Icon from "@/assets/icons";
 import RelatedProducts from "~/components/products/RelatedProducts";
+import BundleProducts from "~/components/products/BundleProducts";
 
 export default {
   layout: "products",
-  components: { Icon, RelatedProducts },
+  components: { Icon, RelatedProducts, BundleProducts },
   data() {
     return {
       product: null,
