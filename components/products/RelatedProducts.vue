@@ -13,16 +13,18 @@
       <div
         v-for="product in relatedProducts"
         :key="product.id"
-        class="col-8 col-lg-5"
+        class="col-8 col-lg-6"
       >
         <nuxt-link :to="`/products/${product.slug}`">
           <img :src="`${getStrapiMedia(product.image.url)}`" class="m-auto" />
-          <span class="font-weight-light mt-3 text-center col-black">
-            ${{ product.price | formatNumber }}
-          </span>
-          <span class="font-weight-light text-center col-black">
-            {{ product.title }}
-          </span>
+          <div class="d-flex justify-content-between mt-3">
+            <span class="font-weight-light text-center col-black text-nowrap">
+              ${{ product.price | formatNumber }}
+            </span>
+            <span class="font-weight-light text-center col-black text-nowrap">
+              {{ product.title }}
+            </span>
+          </div>
         </nuxt-link>
       </div>
     </div>
