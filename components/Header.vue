@@ -161,15 +161,15 @@ export default {
     additionalMenu: [
       {
         title: "Body Care & Deodorant",
-        link: "/",
+        link: "/article/1",
       },
       {
         title: "Facial Care",
-        link: "/",
+        link: "/article/2",
       },
       {
         title: "Body Care",
-        link: "/",
+        link: "/article/3",
       },
     ],
   }),
