@@ -18,7 +18,7 @@ export default {
 
 <style scoped>
 .footer {
-  height: 248px;
+  min-height: 248px;
   background: #000;
 }
 
