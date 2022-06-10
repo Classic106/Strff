@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div>
     <div v-if="error">
       {{ error }}
     </div>
@@ -100,10 +100,6 @@ export default {
 </script>
 
 <style scoped>
-.content {
-  min-height: 80vh;
-}
-
 button {
   background-color: #1f2020;
   color: #fff;
