@@ -11,9 +11,17 @@
           </h6>
         </div>
       </div>
-      <div class="px-5">
+      <div
+        class="
+          d-flex
+          flex-column
+          justify-content-center
+          align-items-center
+          px-5
+        "
+      >
         <p class="text-center">{{ article.title }}</p>
-        <hr />
+        <hr class="m-3" />
         <p class="text-center">{{ article.article }}</p>
       </div>
     </div>
