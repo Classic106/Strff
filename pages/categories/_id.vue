@@ -18,7 +18,8 @@ export default {
       /*this.products = await this.$strapi.$categories.findOne(
         this.$route.params.id
       );*/
-      this.products = await this.$strapi.$products.find();
+      const a = await this.$strapi.$products.find();
+      this.products = new Array(120).fill(a[0]);
     } catch (error) {
       this.error = error;
     }
