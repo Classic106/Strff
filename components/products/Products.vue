@@ -7,7 +7,7 @@
       <div
         v-for="product in products"
         :key="product.id"
-        class="col col-md-5 col-lg-3 m-auto product p-4"
+        class="col col-md-5 col-lg-3 m-0 mb-3 m-md-1 m-lg-3 product p-4 m-2"
       >
         <nuxt-link :to="`/products/${product.slug}`">
           <img
