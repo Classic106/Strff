@@ -80,7 +80,6 @@ export default {
   strapi: {
     url: process.env.API_URL || "http://localhost:1337",
     entities: [
-      "products",
       "categories",
       "sizes",
       "bundles",
