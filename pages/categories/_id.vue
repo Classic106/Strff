@@ -3,29 +3,27 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import Products from "~/components/products/Products";
 
 export default {
   layout: "club",
+  components: { Products },
   data() {
     return {
       products: [],
       error: null,
     };
   },
-  async mounted() {
-    try {
-      /*this.products = await this.$strapi.$categories.findOne(
-        this.$route.params.id
-      );*/
-      const a = await this.$strapi.$products.find();
-      this.products = new Array(120).fill(a[0]);
-    } catch (error) {
-      this.error = error;
+  computed: { ...mapGetters({ categories: "categories/categories" }) },
+  mounted() {
+    const catgory = this.categories.filter(
+      (item) => item.slug === this.$route.params.id
+    );
+
+    if (catgory.length) {
+      this.products = catgory[0].products;
     }
-  },
-  components: {
-    Products,
   },
 };
 </script>
