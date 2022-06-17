@@ -1,5 +1,8 @@
 <template>
-  <div class="d-flex flex-column mt-5 d-none d-md-flex">
+  <div
+    v-if="relatedProducts.length"
+    class="d-flex flex-column mt-5 d-none d-md-flex"
+  >
     <h6
       class="
         text-uppercase
@@ -45,13 +48,28 @@ export default {
   methods: { getStrapiMedia },
   async mounted() {
     const products = await this.$strapi.find("products");
+
     this.relatedProducts = products;
     if (this.product.categories.length && products.length) {
       this.relatedProducts = products.filter((item) => {
-        const result = item.cat.filter(
-          (i) => this.product.categories.indexOf(i) > -1
+        const itemCategoryIds = item.categories.reduce((acc, next) => {
+          acc.push(next.id);
+          return acc;
+        }, []);
+
+        const productCategoryIds = this.product.categories.reduce(
+          (acc, next) => {
+            acc.push(next.id);
+            return acc;
+          },
+          []
         );
-        return result.length ? item : false;
+
+        const result = productCategoryIds.filter((item) =>
+          itemCategoryIds.includes(item)
+        );
+
+        return result.length && item.id !== this.product.id ? item : false;
       });
     }
   },
