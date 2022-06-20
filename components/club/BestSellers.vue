@@ -29,10 +29,17 @@
 import { getStrapiMedia } from "~/utils/medias";
 
 export default {
-  props: {
-    products: Array,
-    error: Object,
-    storeUrl: String,
+  data: () => ({
+    products: [],
+    error: null,
+  }),
+  async mounted() {
+    try {
+      const result = await this.$strapi.$bestsellers.find();
+      this.products = result[0].products;
+    } catch (error) {
+      this.error = error;
+    }
   },
   directives: {
     lazy: {
@@ -50,9 +57,7 @@ export default {
       },
     },
   },
-  methods: {
-    getStrapiMedia,
-  },
+  methods: { getStrapiMedia },
 };
 </script>
 
