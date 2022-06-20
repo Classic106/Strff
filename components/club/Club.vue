@@ -35,7 +35,7 @@
       </div>
     </div>
     <div class="p-1 p-md-5 m-0 mx-md-5">
-      <BestSellers :products="products" :error="error" :storeUrl="storeUrl" />
+      <BestSellers />
       <div class="position-relative text-center">
         <div
           class="
@@ -73,18 +73,6 @@ export default {
   name: "Club",
   layout: "club",
   components: { BestSellers },
-  data: () => ({
-    products: [],
-    storeUrl: process.env.storeUrl,
-    error: null,
-  }),
-  async mounted() {
-    try {
-      this.products = await this.$strapi.$products.find();
-    } catch (error) {
-      this.error = error;
-    }
-  },
 };
 </script>
 
