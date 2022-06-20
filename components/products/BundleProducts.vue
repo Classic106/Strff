@@ -117,16 +117,7 @@ export default {
   }),
   methods: { getStrapiMedia },
   async mounted() {
-    const bundle = await this.$strapi.find("products");
-    //const bundle = await this.$strapi.find("bundle");
-    const a = {};
-    a.products = new Array(3).fill(bundle[0]);
-    a.price = 30;
-    a.description = "description";
-    a.title = "title";
-    a.id = "sdfdfg";
-    this.bundleProducts.push(a);
-    //console.log(this.bundleProducts);
+    this.bundleProducts = await this.$strapi.find("bundles");
   },
 };
 </script>
