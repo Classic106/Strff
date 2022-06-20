@@ -1,9 +1,18 @@
 <template>
   <div>
-    <Loader v-if="!article" />
-    <div v-else class="d-flex flex-column justivy-content-center m-5 p-5">
+    <Loader v-if="loading" />
+    <div
+      v-if="!article"
+      class="d-flex justify-content-center align-items-center article"
+    >
+      Article not found
+    </div>
+    <div
+      v-else
+      class="article d-flex flex-column justify-content-center m-5 p-5"
+    >
       <div class="d-flex position-relative mb-5">
-        <img :src="article.image" alt="image" />
+        <img :src="`${getStrapiMedia(article.image.url)}`" alt="image" />
         <div class="date d-flex flex-column position-absolute px-5 py-2 mb-5">
           <h6 class="text-center text-uppercase">{{ 9 | formatDate }}</h6>
           <h6 class="text-center text-uppercase">
@@ -30,29 +39,25 @@
 
 <script>
 import "~/utils/filters";
+import { getStrapiMedia } from "~/utils/medias";
 import Loader from "@/components/Loader.vue";
 
 export default {
   layout: "club",
   components: { Loader },
-  data: () => ({
-    article: null,
-  }),
-  mounted() {
-    //console.log(this.$route.params.id);
-    this.article = {
-      id: 1,
-      date: new Date(),
-      image:
-        "https://cdn.cnn.com/cnnnext/dam/assets/200910131009-mensskincarelead.jpg",
-      title: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione aut
-      perferendis omnis, aspernatur corrupti magni dicta illo? Itaque illum
-      accusantium quaerat, assumenda, adipisci aliquam facere laborum explicabo
-      nulla delectus sit?`,
-      article: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos, fugit
-      doloribus ex ad nesciunt consectetur eius! Saepe quae, eveniet consequatur
-      dolores aliquid vitae, incidunt expedita hic corporis vel rerum labore.`,
-    };
+  data: () => ({ article: null, loading: true }),
+  methods: { getStrapiMedia },
+  async mounted() {
+    try {
+      const result = await this.$strapi.$articles.findOne(
+        this.$route.params.id
+      );
+      result.date = new Date(result.date);
+      this.article = result;
+      this.loading = false;
+    } catch (error) {
+      this.loading = false;
+    }
   },
 };
 </script>
@@ -62,6 +67,10 @@ export default {
   background-color: #9e7d24;
   color: #fff;
   bottom: 0;
+}
+
+.article {
+  min-height: 54vh;
 }
 
 hr {
