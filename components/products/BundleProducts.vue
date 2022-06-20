@@ -1,11 +1,11 @@
 <template>
-  <div class="border-black mt-5">
+  <div v-if="bundleProducts" class="border-black mt-5">
     <div
       class="text-uppercase font-weight-bold p-2 w-100 bundle-products-title"
     >
       check out this bundle:
     </div>
-    <div v-if="bundleProducts.length" class="p-1">
+    <div class="p-1">
       <div
         v-for="bundleProduct in bundleProducts"
         :key="bundleProduct.id"
@@ -113,11 +113,16 @@ export default {
     product: Object,
   },
   data: () => ({
-    bundleProducts: [],
+    bundleProducts: null,
   }),
   methods: { getStrapiMedia },
   async mounted() {
-    this.bundleProducts = await this.$strapi.find("bundles");
+    try {
+      const result = await this.$strapi.$bundles.findOne(
+        this.product.bundle.id
+      );
+      this.bundleProducts = [result];
+    } catch (error) {}
   },
 };
 </script>
