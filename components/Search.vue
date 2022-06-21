@@ -6,6 +6,7 @@
         type="text"
         class="mr-2"
         :class="isOpen && 'open'"
+        ref="search"
       />
       <ul
         v-if="result.length"
@@ -18,7 +19,11 @@
         </li>
       </ul>
     </div>
-    <span class="icon icon-search mr-3" v-on:click="isOpen = !isOpen"></span>
+    <span
+      class="icon icon-search mr-3"
+      v-on:click="isOpen = !isOpen"
+      ref="searchBtn"
+    ></span>
   </div>
 </template>
 
@@ -56,6 +61,31 @@ export default {
         this.text = "";
       }
     },
+  },
+  methods: {
+    close_Search_Outside(e) {
+      const { search, searchBtn } = this.$refs;
+      const { target } = e;
+
+      if (!search || !target) {
+        return;
+      }
+
+      if (
+        search !== target &&
+        !search.contains(target) &&
+        searchBtn !== target &&
+        !searchBtn.contains(target)
+      ) {
+        this.isOpen = false;
+      }
+    },
+  },
+  mounted() {
+    document.addEventListener("click", this.close_Search_Outside);
+  },
+  destroyed() {
+    document.addEventListener("click", this.close_Search_Outside);
   },
 };
 </script>
