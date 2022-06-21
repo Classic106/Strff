@@ -18,6 +18,12 @@
           }}</nuxt-link>
         </li>
       </ul>
+      <div
+        v-if="isOpen && text.length && !result.length"
+        class="search-list text-uppercase text-center p-3 position-absolute"
+      >
+        nothing not found
+      </div>
     </div>
     <span
       class="icon icon-search mr-3"
@@ -31,9 +37,6 @@
 export default {
   name: "Search",
   data: () => ({ isOpen: false, text: "", result: [], products: [] }),
-  async mounted() {
-    this.products = await this.$strapi.find("products");
-  },
   watch: {
     text: function () {
       if (this.text === "") {
@@ -81,7 +84,8 @@ export default {
       }
     },
   },
-  mounted() {
+  async mounted() {
+    this.products = await this.$strapi.find("products");
     document.addEventListener("click", this.close_Search_Outside);
   },
   destroyed() {
