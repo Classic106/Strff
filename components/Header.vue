@@ -34,38 +34,34 @@
         <span></span>
       </div>
       <div
-        class="d-flex align-items-center position-relative"
-        :class="
-          isMobile ? 'w-75 justify-content-end' : 'w-50 justify-content-center'
-        "
+        class="row align-items-center w-75"
+        :class="isMobile ? ' justify-content-end' : ' justify-content-center'"
       >
-        <h6 class="mr-5">
+        <h6 class="col-7 d-flex justify-content-center">
           <nuxt-link to="/" class="dark-orange">strff</nuxt-link>
         </h6>
-        <span
-          class="icon icon-search mr-3"
-          :class="!isMobile && ' position-absolute'"
-        ></span>
-        <div
-          class="icon-bag-wrap"
-          :class="!isMobile ? 'position-absolute' : 'position-relative'"
-          v-on:click="goToCheckout"
-        >
-          <span
-            class="
-              position-absolute
-              w-100
-              d-flex
-              justify-content-center
-              align-items-center
-              dark-orange
-            "
-            >{{ numberOfItems }}</span
+        <div class="col-5 d-flex">
+          <Search />
+          <div
+            class="icon-bag-wrap position-relative"
+            v-on:click="goToCheckout"
           >
-          <span
-            class="icon icon-bag position-relative"
-            :class="!isMobile && ' position-absolute'"
-          ></span>
+            <span
+              class="
+                position-absolute
+                w-100
+                d-flex
+                justify-content-center
+                align-items-center
+                dark-orange
+              "
+              >{{ numberOfItems }}</span
+            >
+            <span
+              class="icon icon-bag position-relative"
+              :class="!isMobile && ' position-absolute'"
+            ></span>
+          </div>
         </div>
       </div>
     </div>
@@ -149,10 +145,11 @@
 <script>
 import { mapGetters } from "vuex";
 import Icon from "@/assets/icons";
+import Search from "@/components/Search";
 
 export default {
   name: "Header",
-  components: { Icon },
+  components: { Icon, Search },
   data: () => ({
     isOpenMenu: false,
     isMobile: true,
@@ -297,11 +294,6 @@ li > a {
   background-size: cover;
 }
 
-.icon-search {
-  right: 60px;
-  background-image: url("../assets/icons/iconmonstr-search-thin.svg");
-}
-
 .icon-bag-wrap {
   right: 0;
   width: 30px;
@@ -309,7 +301,8 @@ li > a {
 }
 
 .icon-bag {
-  right: 0;
+  right: -1px;
+  top: -1px;
   background-image: url("../assets/icons/shopping-bag.svg");
 }
 
