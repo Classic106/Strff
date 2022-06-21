@@ -23,7 +23,7 @@
 <script>
 export default {
   name: "Search",
-  data: () => ({ isOpen: true, text: "", result: [], products: [] }),
+  data: () => ({ isOpen: false, text: "", result: [], products: [] }),
   async mounted() {
     this.products = await this.$strapi.find("products");
   },
