@@ -17,7 +17,7 @@
         head
         p-0
         m-3
-        justify-content-center
+        justify-content-md-center justify-content-end
         text-uppercase
         position-relative
         w-100
@@ -37,10 +37,10 @@
         class="row align-items-center w-75"
         :class="isMobile ? ' justify-content-end' : ' justify-content-center'"
       >
-        <h6 class="col-7 d-flex justify-content-end">
+        <h6 class="col-md-7 col-3 d-flex justify-content-end">
           <nuxt-link to="/" class="dark-orange mr-4">strff</nuxt-link>
         </h6>
-        <div class="col-5 d-flex">
+        <div class="col-md-5 col-9 d-flex">
           <Search />
           <div
             class="icon-bag-wrap position-relative"

@@ -4,7 +4,7 @@
       <input
         v-model.trim="text"
         type="text"
-        class="mr-2"
+        class="mr-2 w-100"
         :class="isOpen && 'open'"
         ref="search"
       />
