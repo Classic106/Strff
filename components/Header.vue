@@ -37,8 +37,8 @@
         class="row align-items-center w-75"
         :class="isMobile ? ' justify-content-end' : ' justify-content-center'"
       >
-        <h6 class="col-7 d-flex justify-content-center">
-          <nuxt-link to="/" class="dark-orange">strff</nuxt-link>
+        <h6 class="col-7 d-flex justify-content-end">
+          <nuxt-link to="/" class="dark-orange mr-4">strff</nuxt-link>
         </h6>
         <div class="col-5 d-flex">
           <Search />
@@ -301,7 +301,7 @@ li > a {
 }
 
 .icon-bag {
-  right: -1px;
+  right: 0;
   top: -1px;
   background-image: url("../assets/icons/shopping-bag.svg");
 }
