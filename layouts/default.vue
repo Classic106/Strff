@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center">
-    <div class="max-w-screen-lg flex flex-col min-h-screen w-full">
-      <Nuxt class="flex-grow" />
+    <div class="flex flex-col">
+      <Nuxt />
     </div>
   </div>
 </template>
@@ -17,6 +17,10 @@ a:visited,
 a:link,
 a:active {
   text-decoration: none;
+}
+
+form {
+  z-index: 0;
 }
 
 .dark-orange {

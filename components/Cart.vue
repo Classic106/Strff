@@ -36,7 +36,6 @@ export default {
   top: 100%;
   height: 100vh;
   width: 100vw;
-  z-index: 2;
 }
 
 .icon {
