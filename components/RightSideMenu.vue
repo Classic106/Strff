@@ -2,11 +2,12 @@
   <div
     class="menu h-100 position-fixed w-100"
     :class="isOpen && 'open'"
-    v-on:click="isOpen = false"
+    v-on:click.self="isOpen = false"
   >
     <div class="container w-50 position-absolute">
       <div class="content" :class="isOpen && 'open'">
-        <h3>custom header</h3>
+        <SignIn v-if="username" />
+        <h3 v-else>custom header</h3>
       </div>
     </div>
   </div>
@@ -14,10 +15,12 @@
 
 <script>
 import { mapGetters } from "vuex";
+import SignIn from "@/components/SignIn";
 
 export default {
   name: "RightSideMenu",
-  data: () => ({ isOpen: false }),
+  components: { SignIn },
+  data: () => ({ isOpen: false, a: true }),
   computed: {
     ...mapGetters({
       username: "auth/username",
@@ -34,10 +37,14 @@ export default {
   top: 0;
   bottom: 0;
   z-index: -1;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.9);
+  transition: all 0.5s ease-in-out;
 }
 
 .menu.open {
   z-index: 5;
+  opacity: 1;
 }
 
 .container {
