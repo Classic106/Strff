@@ -1,13 +1,13 @@
 <template>
-  <div
-    class="footer d-flex flex-column justify-content-center align-items-center"
+  <footer
+    class="d-flex flex-column justify-content-center align-items-center"
   >
     <p class="mb-3 text-center">
       Contact us | Shipping & Returns | Terms & Conditions | Privacy Policy |
       About Us
     </p>
     <p class="mt-3">© 2022 STRFF MAN'S CLUB</p>
-  </div>
+  </footer>
 </template>
 
 <script>
@@ -17,7 +17,7 @@ export default {
 </script>
 
 <style scoped>
-.footer {
+footer {
   min-height: 248px;
   background: #000;
 }
