@@ -42,26 +42,7 @@
         </h6>
         <div class="col-md-5 col-9 d-flex">
           <Search />
-          <div
-            class="icon-bag-wrap position-relative"
-            v-on:click="goToCheckout"
-          >
-            <span
-              class="
-                position-absolute
-                w-100
-                d-flex
-                justify-content-center
-                align-items-center
-                dark-orange
-              "
-              >{{ numberOfItems }}</span
-            >
-            <span
-              class="icon icon-bag position-relative"
-              :class="!isMobile && ' position-absolute'"
-            ></span>
-          </div>
+          <Cart />
         </div>
       </div>
     </div>
@@ -146,10 +127,11 @@
 import { mapGetters } from "vuex";
 import Icon from "@/assets/icons";
 import Search from "@/components/Search";
+import Cart from "@/components/Cart";
 
 export default {
   name: "Header",
-  components: { Icon, Search },
+  components: { Icon, Search, Cart },
   data: () => ({
     isOpenMenu: false,
     isMobile: true,
@@ -172,8 +154,6 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      numberOfItems: "cart/numberOfItems",
-      username: "auth/username",
       //categories: "categories/categories",
     }),
     categories: {
@@ -185,14 +165,6 @@ export default {
     },
   },
   methods: {
-    goToCheckout() {
-      const isConnected = this.$store.getters["auth/username"];
-      if (!isConnected) {
-        this.$router.push("/signin");
-        return;
-      }
-      this.$router.push("/checkout");
-    },
     handlerResize(e) {
       this.isMobile = !(e.target.innerWidth > 992);
     },
@@ -292,23 +264,6 @@ li > a {
   height: 30px;
   filter: brightness(0) invert(1);
   background-size: cover;
-}
-
-.icon-bag-wrap {
-  right: 0;
-  width: 30px;
-  height: 30px;
-}
-
-.icon-bag {
-  right: 0;
-  top: -1px;
-  background-image: url("../assets/icons/shopping-bag.svg");
-}
-
-.icon-bag > span {
-  filter: invert(50%) sepia(56%) saturate(571%) hue-rotate(6deg) brightness(88%)
-    contrast(86%);
 }
 
 .angle {

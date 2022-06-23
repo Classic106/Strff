@@ -7,6 +7,7 @@
         class="mr-2 w-100"
         :class="isOpen && 'open'"
         ref="search"
+        placeholder="Enter name or price"
       />
       <ul
         v-if="result.length"
