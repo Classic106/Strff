@@ -47,7 +47,7 @@ export default {
 
 .content {
   width: 50vw;
-  margin-left: 100%;
+  margin-left: 110%;
   transition: all 0.5s ease-in-out;
 }
 
