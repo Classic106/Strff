@@ -1,5 +1,8 @@
 <template>
-  <div class="icon-bag-wrap position-relative" v-on:click="goToCheckout">
+  <div
+    class="icon-bag-wrap position-relative"
+    v-on:click="$nuxt.$emit('rightSideMenu')"
+  >
     <span
       class="
         position-absolute
@@ -11,10 +14,7 @@
       "
       >{{ numberOfItems }}</span
     >
-    <span
-      class="icon icon-bag position-relative"
-      :class="!isMobile && ' position-absolute'"
-    ></span>
+    <span class="icon icon-bag position-relative"></span>
   </div>
 </template>
 
@@ -26,23 +26,19 @@ export default {
   computed: {
     ...mapGetters({
       numberOfItems: "cart/numberOfItems",
-      username: "auth/username",
     }),
-  },
-  methods: {
-    goToCheckout() {
-      const isConnected = this.$store.getters["auth/username"];
-      if (!isConnected) {
-        this.$router.push("/signin");
-        return;
-      }
-      this.$router.push("/checkout");
-    },
   },
 };
 </script>
 
 <style scoped>
+.container {
+  top: 100%;
+  height: 100vh;
+  width: 100vw;
+  z-index: 2;
+}
+
 .icon {
   display: inline-block;
   width: 30px;

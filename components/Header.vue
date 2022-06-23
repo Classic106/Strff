@@ -120,6 +120,8 @@
       Last chance to shop holiday gifts. Buy online and pick up at an STRFF
       Store or choose two‑hour courier or free delivery. Shop now
     </span>
+
+    <RightSideMenu />
   </header>
 </template>
 
@@ -128,10 +130,11 @@ import { mapGetters } from "vuex";
 import Icon from "@/assets/icons";
 import Search from "@/components/Search";
 import Cart from "@/components/Cart";
+import RightSideMenu from "@/components/RightSideMenu";
 
 export default {
   name: "Header",
-  components: { Icon, Search, Cart },
+  components: { Icon, Search, Cart, RightSideMenu },
   data: () => ({
     isOpenMenu: false,
     isMobile: true,
