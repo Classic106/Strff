@@ -15,7 +15,7 @@
     </div>
     <div v-else class="flex flex-col">
       <ClubHeader />
-      <Nuxt class="flex-grow" />
+      <Nuxt />
       <ClubFooter />
     </div>
     <div

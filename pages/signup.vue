@@ -1,12 +1,12 @@
 <template>
-  <SignUp />
+  <Sign :isUp="false"/>
 </template>
 
 <script>
-import SignUp from "@/components/SignUp";
+import Sign from "@/components/Sign";
 
 export default {
   layout: "club",
-  components: { SignUp },
+  components: { Sign },
 };
 </script>
