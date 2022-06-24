@@ -5,10 +5,16 @@
     v-on:click.self="isOpen = false"
   >
     <div class="container w-50 position-absolute">
-      <div class="content" :class="isOpen && 'open'">
+      <div class="content d-flex flex-column" :class="isOpen && 'open'">
+        <div class="close d-flex justify-content-end pr-3">
+          <span class="p-4 text-center" v-on:click.self="isOpen = false"
+            >+</span
+          >
+        </div>
         <Sign
           v-if="username && link !== 'signin' && link !== 'signup'"
           :isMenu="true"
+          :isUp="true"
         />
         <h3 v-else>custom header</h3>
       </div>
@@ -23,7 +29,7 @@ import Sign from "@/components/Sign";
 export default {
   name: "RightSideMenu",
   components: { Sign },
-  data: () => ({ isOpen: false, link: "", a: true }),
+  data: () => ({ isOpen: false, link: "" }),
   computed: {
     ...mapGetters({
       username: "auth/username",
@@ -46,7 +52,7 @@ export default {
   z-index: -1;
   opacity: 0;
   background: rgba(0, 0, 0, 0.9);
-  transition: opacity 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
 }
 
 .menu.open {
@@ -59,9 +65,18 @@ export default {
   height: 100%;
 }
 
+.close > span {
+  color: #fff;
+  font-size: 3rem;
+  transform: rotate(45deg);
+}
+
 .content {
   width: 50vw;
   margin-left: 100%;
+  height: 100%;
+  color: #fff;
+  background: #333333;
   transition: all 0.5s ease-in-out;
 }
 
