@@ -1,7 +1,7 @@
-<template>
-  <div>
-    <SignIn v-if="is" />
-    <SignUp v-else />
+<template >
+  <div v-on:toggle="toggle">
+    <SignIn v-if="is" :isMenu="isMenu" :toggle="toggle" />
+    <SignUp v-else :isMenu="isMenu" :toggle="toggle" />
   </div>
 </template>
 
@@ -10,12 +10,16 @@ import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 
 export default {
-  props: ["isUp"],
   components: { SignIn, SignUp },
+  props: { isUp: Boolean, isMenu: Boolean },
   data: () => ({ is: false }),
+  methods: {
+    toggle() {
+      this.is = !this.is;
+    },
+  },
   mounted() {
     this.is = this.isUp;
-    console.log(this.is);
   },
 };
 </script>

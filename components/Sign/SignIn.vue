@@ -74,7 +74,9 @@
           </div>
           <p class="text-center mt-3">
             Don't have account?
-            <nuxt-link to="/signup"> Registration </nuxt-link>
+            <nuxt-link event="" v-on:click.native="linkClick" to="/signup">
+              Registration
+            </nuxt-link>
           </p>
         </form>
       </div>
@@ -86,6 +88,8 @@
 import { mapMutations } from "vuex";
 
 export default {
+  name: "SingIn",
+  props: { isMenu: Boolean, toggle: Function },
   data() {
     return {
       email: "",
@@ -94,6 +98,13 @@ export default {
     };
   },
   methods: {
+    linkClick() {
+      if (this.isMenu) {
+        this.toggle();
+        return;
+      }
+      this.$router.push("/signup");
+    },
     async handleSubmit() {
       try {
         this.loading = true;
