@@ -6,7 +6,10 @@
   >
     <div class="container w-50 position-absolute">
       <div class="content" :class="isOpen && 'open'">
-        <Sign v-if="a" />
+        <Sign
+          v-if="username && link !== 'signin' && link !== 'signup'"
+          :isMenu="true"
+        />
         <h3 v-else>custom header</h3>
       </div>
     </div>
@@ -20,11 +23,15 @@ import Sign from "@/components/Sign";
 export default {
   name: "RightSideMenu",
   components: { Sign },
-  data: () => ({ isOpen: false, a: true }),
+  data: () => ({ isOpen: false, link: "", a: true }),
   computed: {
     ...mapGetters({
       username: "auth/username",
     }),
+  },
+  mounted() {
+    this.link = this.$route.name;
+    console.log(this.link !== "signin" && this.link !== "signup");
   },
   created() {
     this.$nuxt.$on("rightSideMenu", () => (this.isOpen = !this.isOpen));
