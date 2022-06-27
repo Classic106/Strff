@@ -1,7 +1,6 @@
 <template>
   <div
     class="icon-bag-wrap position-relative"
-    v-on:click="$nuxt.$emit('rightSideMenu')"
   >
     <span
       class="
