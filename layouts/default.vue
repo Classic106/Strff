@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center">
-    <div class="max-w-screen-lg flex flex-col min-h-screen w-full">
-      <Nuxt class="flex-grow" />
+    <div class="flex flex-col">
+      <Nuxt />
     </div>
   </div>
 </template>
@@ -12,6 +12,17 @@ export default {};
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+a:hover,
+a:visited,
+a:link,
+a:active {
+  text-decoration: none;
+}
+
+form {
+  z-index: 0;
+}
+
 .dark-orange {
   color: #9e7d24;
 }
@@ -29,23 +40,27 @@ li {
 }
 
 span {
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 
 h1 {
-  font-size: 117px;
+  font-size: 7.3rem;
 }
 
 h3 {
-  font-size: 43px;
+  font-size: 2.6rem;
 }
 
 h4 {
-  font-size: 61px;
+  font-size: 3.8rem;
+}
+
+h5 {
+  font-size: 2.2rem;
 }
 
 h6 {
-  font-size: 35px;
+  font-size: 1.25rem;
 }
 </style>
 

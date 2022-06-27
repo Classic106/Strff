@@ -1,84 +1,110 @@
 <template>
-  <div v-if="this.product !== null">
-    <div
-      class="
-        m-6
-        grid grid-cols-1
-        sm:grid-cols-2
-        md:grid-cols-2
-        lg:grid-cols-2
-        xl:grid-cols-2
-        gap-4
-        mt-8
-      "
-    >
-      <div class="rounded-t-lg pt-2 pb-2">
-        <img :src="`${getStrapiMedia(product.image.url)}`" class="m-auto" />
-      </div>
-      <div class="w-full p-5 flex flex-col justify-between">
-        <div>
-          <h4
-            class="
-              mt-1
-              font-semibold
-              text-lg
-              leading-tight
-              truncate
-              text-gray-700
-            "
-          >
-            {{ product.title }} - ${{ product.price | formatNumber }} / LB
-          </h4>
-          <div class="mt-1 items-baseline text-gray-600">
-            {{ product.description }}
-          </div>
-          <div class="flex items-baseline mt-1 mb-6 space-y-4">
-            <fieldset>
-              <div class="space-x-2 flex">
-                <div v-for="quantity in quantities" :key="quantity.title">
-                  <label
-                    :class="
-                      (quantity.quantity === selected.quantity &&
-                        `active-quantity`) +
-                      ` border group relative border rounded-md py-3 px-4 flex items-center justify-center text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6 bg-white shadow-sm text-gray-900 cursor-pointer`
+  <div>
+    <div v-if="error">
+      {{ error }}
+    </div>
+    <div v-if="this.product !== null">
+      <div class="row m-1 m-md-5">
+        <div class="col-md-6 col-12 rounded pt-2 pb-2">
+          <img :src="`${getStrapiMedia(product.image.url)}`" class="m-auto" />
+          <RelatedProducts :product="product" />
+        </div>
+        <div
+          class="
+            col-md-6 col-12
+            pt-0
+            px-5
+            flex flex-col
+            justify-content-between
+          "
+        >
+          <div>
+            <h6 class="font-weight-bold text-md-left text-center">
+              {{ product.title }}
+            </h6>
+            <h6 class="mt-3 font-weight-normal text-md-left text-center">
+              ${{ product.price | formatNumber }}
+            </h6>
+            <div
+              class="
+                d-flex
+                mt-1
+                mb-5
+                justify-content-md-start justify-content-center
+              "
+            >
+              <div class="d-flex">
+                <div class="d-flex border position-relative quantity mr-2">
+                  <input
+                    type="number"
+                    :value="selected.quantity"
+                    class="px-2 w-100"
+                  />
+                  <div
+                    class="
+                      d-flex
+                      flex-column
+                      position-absolute
+                      number-input-buttons
+                      justify-content-center
                     "
                   >
-                    <input
-                      type="radio"
-                      name="size-choice"
-                      class="sr-only"
-                      aria-labelledby="size-choice-2-label"
-                      v-on:click="selectOption(quantity)"
-                    />
-                    <p id="size-choice-2-label">
-                      {{ quantity.title }}<br />${{
-                        calcPrice(product.price, quantity.quantity)
-                          | formatNumber
-                      }}
-                    </p>
-                  </label>
+                    <button
+                      v-on:click="quantityPlus"
+                      class="m-0 p-0 btn btn-light"
+                    >
+                      <Icon icon="angle-up" class="angle-up" />
+                    </button>
+                    <button
+                      v-on:click="quantityMinus"
+                      class="m-0 p-0 btn btn-light"
+                    >
+                      <Icon icon="angle-down" class="angle-down" />
+                    </button>
+                  </div>
+                </div>
+                <button
+                  v-if="product.status === 'published'"
+                  class="
+                    py-2
+                    px-4
+                    rounded
+                    btn btn-dark
+                    d-flex
+                    justify-content-center
+                    align-items-center
+                    text-uppercase text-nowrap
+                    add-cart-button
+                  "
+                  v-on:click="addToCart"
+                >
+                  <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
+                  Add to cart
+                </button>
+
+                <div class="text-center mr-5 mb-1" v-else>
+                  <div class="p-2" role="alert">
+                    <span class="d-flex uppercase px-2 py-1 mr-3"
+                      >Coming soon...</span
+                    >
+                    <span class="mr-2 text-left d-flex"
+                      >This article is not available yet.</span
+                    >
+                  </div>
                 </div>
               </div>
-            </fieldset>
-          </div>
-          <div>
-            <fieldset>
+            </div>
+            <div>
               <div
-                class="mt-4 space-y-4"
+                class="mt-4"
                 v-for="purchaseType in purchaseTypes"
                 :key="purchaseType.title"
               >
-                <div class="flex items-center">
+                <div class="d-flex align-items-center">
                   <input
                     name="push-notifications"
                     type="radio"
-                    class="
-                      focus:ring-indigo-500
-                      h-4
-                      w-4
-                      text-indigo-600
-                      border-gray-300
-                    "
+                    class="mt-2 align-self-start"
                     :id="purchaseType.title"
                     :value="purchaseType.id"
                     v-model="selected.purchaseTypeId"
@@ -86,35 +112,18 @@
                   />
                   <label
                     :for="purchaseType.title"
-                    class="w-100 ml-3 block text-sm font-medium text-gray-700"
+                    class="w-100 ml-3 d-flex flex-column"
                   >
                     {{ purchaseType.title }}
-                    <p
-                      class="text-sm text-gray-500 mt-1"
-                      v-if="purchaseType.description"
-                    >
+                    <p class="mt-1" v-if="purchaseType.description">
                       {{ purchaseType.description }}
                     </p>
                   </label>
                 </div>
               </div>
-              <div class="mt-1 relative" v-if="options.length">
+              <div class="mt-1 position-relative" v-if="options.length">
                 <select
-                  class="
-                    relative
-                    w-full
-                    bg-white
-                    border border-gray-300
-                    rounded-md
-                    shadow-sm
-                    text-left
-                    cursor-default
-                    focus:outline-none
-                    focus:ring-1
-                    focus:ring-indigo-500
-                    focus:border-indigo-500
-                    sm:text-sm
-                  "
+                  class="position-relative"
                   v-model="selected.subscriptionTypeId"
                   v-on:change="change"
                 >
@@ -127,69 +136,15 @@
                   </option>
                 </select>
               </div>
-            </fieldset>
-          </div>
-        </div>
-
-        <button
-          v-if="product.status === 'published'"
-          class="
-            mt-4
-            bg-white
-            border border-gray-200
-            d
-            hover:shadow-lg
-            text-gray-700
-            font-semibold
-            py-2
-            px-4
-            rounded
-            shadow
-          "
-          v-on:click="addToCart"
-        >
-          Add to cart
-        </button>
-
-        <div class="text-center mr-10 mb-1" v-else>
-          <div
-            class="
-              p-2
-              bg-indigo-800
-              items-center
-              text-indigo-100
-              leading-none
-              lg:rounded-full
-              flex
-              lg:inline-flex
-            "
-            role="alert"
-          >
-            <span
-              class="
-                flex
-                rounded-full
-                bg-indigo-500
-                uppercase
-                px-2
-                py-1
-                text-xs
-                font-bold
-                mr-3
-              "
-              >Coming soon...</span
-            >
-            <span class="font-semibold mr-2 text-left flex-auto"
-              >This article is not available yet.</span
-            >
+            </div>
+            <div class="mt-1 items-baseline text-gray-600">
+              {{ product.description }}
+            </div>
+            <BundleProducts :product="product" />
           </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <div v-else>
-    {{ error }}
   </div>
 </template>
 
@@ -197,9 +152,13 @@
 import { getStrapiMedia } from "~/utils/medias";
 //import Vue from 'vue'
 import "~/utils/filters";
+import Icon from "@/assets/icons";
+import RelatedProducts from "~/components/products/RelatedProducts";
+import BundleProducts from "~/components/products/BundleProducts";
 
 export default {
-  layout: "products",
+  layout: "club",
+  components: { Icon, RelatedProducts, BundleProducts },
   data() {
     return {
       product: null,
@@ -237,6 +196,16 @@ export default {
     }
   },
   methods: {
+    quantityPlus: function () {
+      if (this.selected.quantity < 99) {
+        this.selected.quantity = this.selected.quantity + 1;
+      }
+    },
+    quantityMinus: function () {
+      if (this.selected.quantity > 1) {
+        this.selected.quantity = this.selected.quantity - 1;
+      }
+    },
     change: function (e) {
       const { selectedIndex } = e.target.options;
 
@@ -307,8 +276,37 @@ export default {
 </script>
 
 <style scoped>
-.active-quantity {
-  background: #dad8da !important;
+.add-cart-button {
+  background-color: #1f2020;
+  color: #fff;
+}
+
+.quantity {
+  width: 56px;
+}
+
+.icon-bag {
+  width: 14px;
+  height: 14px;
+  background-image: url("../../assets/icons/shopping-bag.svg");
+}
+
+.angle-up,
+.angle-down {
+  width: 20px;
+  height: 12px;
+  filter: invert(0%) sepia(100%) saturate(27%) hue-rotate(33deg)
+    brightness(105%) contrast(106%);
+}
+
+.number-input-buttons {
+  right: 2px;
+  top: 1px;
+  bottom: 1px;
+}
+
+.number-input-buttons > button {
+  font-size: 11.5px;
 }
 
 select {

@@ -1,28 +1,29 @@
 <template>
-  <Products :products="this.category.products" :error="error" />
+  <Products :products="this.products" :error="error" />
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import Products from "~/components/products/Products";
 
 export default {
+  layout: "club",
+  components: { Products },
   data() {
     return {
-      category: {},
+      products: [],
       error: null,
     };
   },
-  async mounted() {
-    try {
-      this.category = await this.$strapi.$categories.findOne(
-        this.$route.params.id
-      );
-    } catch (error) {
-      this.error = error;
+  computed: { ...mapGetters({ categories: "categories/categories" }) },
+  mounted() {
+    const catgory = this.categories.filter(
+      (item) => item.slug === this.$route.params.id
+    );
+
+    if (catgory.length) {
+      this.products = catgory[0].products;
     }
-  },
-  components: {
-    Products,
   },
 };
 </script>

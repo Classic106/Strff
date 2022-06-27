@@ -17,7 +17,7 @@
         head
         p-0
         m-3
-        justify-content-center
+        justify-content-md-center justify-content-end
         text-uppercase
         position-relative
         w-100
@@ -34,36 +34,15 @@
         <span></span>
       </div>
       <div
-        class="d-flex align-items-center position-relative"
-        :class="
-          isMobile ? 'w-75 justify-content-end' : 'w-50 justify-content-center'
-        "
+        class="row align-items-center w-75"
+        :class="isMobile ? ' justify-content-end' : ' justify-content-center'"
       >
-        <h6 class="mr-5">strff</h6>
-        <span
-          class="icon icon-search mr-3"
-          :class="!isMobile && ' position-absolute'"
-        ></span>
-        <div
-          class="icon-bag-wrap"
-          :class="!isMobile ? 'position-absolute' : 'position-relative'"
-          v-on:click="goToCheckout"
-        >
-          <span
-            class="
-              position-absolute
-              w-100
-              d-flex
-              justify-content-center
-              align-items-center
-              dark-orange
-            "
-            >{{ numberOfItems }}</span
-          >
-          <span
-            class="icon icon-bag position-relative"
-            :class="!isMobile && ' position-absolute'"
-          ></span>
+        <h6 class="col-md-7 col-3 d-flex justify-content-end">
+          <nuxt-link to="/" class="dark-orange mr-4">strff</nuxt-link>
+        </h6>
+        <div class="col-md-5 col-9 d-flex">
+          <Search />
+          <Cart />
         </div>
       </div>
     </div>
@@ -102,38 +81,37 @@
               >{{ category.name }}</NuxtLink
             >
           </li>
-        </ul>
-      </div>
-      <div
-        class="d-flex"
-        :class="
-          isMobile
-            ? 'row flex-column m-0 mt-4 pl-3'
-            : 'mr-4 justify-content-center align-items-center position-relative'
-        "
-        ref="additionalMenu"
-      >
-        <p
-          v-on:click="isOpen = !isOpen"
-          class="text-nowrap dark-orange d-flex align-items-center"
-          :class="isMobile ? 'pl-4' : ''"
-        >
-          <span class="mr-2">MAN`S CARE</span>
-          <Icon
-            v-if="!isMobile"
-            :icon="isOpen ? 'angle-up' : 'angle-down'"
-            class="angle"
-          />
-        </p>
-        <ul
-          v-if="isMobile ? true : isOpen"
-          class="rounded px-2 py-3"
-          :class="isMobile ? 'pl-5' : 'position-absolute additional_menu'"
-        >
-          <li v-for="item in additionalMenu" :key="item.title">
-            <NuxtLink :to="item.link" class="text-nowrap dark-orange">{{
-              item.title
-            }}</NuxtLink>
+          <li
+            class="d-flex"
+            :class="
+              isMobile
+                ? 'row flex-column m-0 pl-3'
+                : 'justify-content-center align-items-center position-relative'
+            "
+            ref="additionalMenu"
+          >
+            <a
+              v-on:click.prevent="isOpen = !isOpen"
+              class="text-nowrap dark-orange d-flex align-items-center m-0"
+            >
+              MAN`S CARE
+              <Icon
+                v-if="!isMobile"
+                :icon="isOpen ? 'angle-up' : 'angle-down'"
+                class="angle ml-1"
+              />
+            </a>
+            <ul
+              v-if="isMobile ? true : isOpen"
+              class="rounded p-3"
+              :class="isMobile ? '' : 'position-absolute additional_menu'"
+            >
+              <li v-for="item in additionalMenu" :key="item.title">
+                <NuxtLink :to="item.link" class="text-nowrap dark-orange">{{
+                  item.title
+                }}</NuxtLink>
+              </li>
+            </ul>
           </li>
         </ul>
       </div>
@@ -148,10 +126,12 @@
 <script>
 import { mapGetters } from "vuex";
 import Icon from "@/assets/icons";
+import Search from "@/components/Search";
+import Cart from "@/components/Cart";
 
 export default {
   name: "Header",
-  components: { Icon },
+  components: { Icon, Search, Cart },
   data: () => ({
     isOpenMenu: false,
     isMobile: true,
@@ -160,22 +140,20 @@ export default {
     additionalMenu: [
       {
         title: "Body Care & Deodorant",
-        link: "/",
+        link: "/article/1",
       },
       {
         title: "Facial Care",
-        link: "/",
+        link: "/article/2",
       },
       {
         title: "Body Care",
-        link: "/",
+        link: "/article/3",
       },
     ],
   }),
   computed: {
     ...mapGetters({
-      numberOfItems: "cart/numberOfItems",
-      username: "auth/username",
       //categories: "categories/categories",
     }),
     categories: {
@@ -187,14 +165,6 @@ export default {
     },
   },
   methods: {
-    goToCheckout() {
-      const isConnected = this.$store.getters["auth/username"];
-      if (!isConnected) {
-        this.$router.push("/signin");
-        return;
-      }
-      this.$router.push("/checkout");
-    },
     handlerResize(e) {
       this.isMobile = !(e.target.innerWidth > 992);
     },
@@ -294,27 +264,6 @@ li > a {
   height: 30px;
   filter: brightness(0) invert(1);
   background-size: cover;
-}
-
-.icon-search {
-  right: 60px;
-  background-image: url("../assets/icons/iconmonstr-search-thin.svg");
-}
-
-.icon-bag-wrap {
-  right: 0;
-  width: 30px;
-  height: 30px;
-}
-
-.icon-bag {
-  right: 0;
-  background-image: url("../assets/icons/shopping-bag.svg");
-}
-
-.icon-bag > span {
-  filter: invert(50%) sepia(56%) saturate(571%) hue-rotate(6deg) brightness(88%)
-    contrast(86%);
 }
 
 .angle {

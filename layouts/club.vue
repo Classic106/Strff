@@ -15,7 +15,7 @@
     </div>
     <div v-else class="flex flex-col">
       <ClubHeader />
-      <Nuxt class="flex-grow" />
+      <Nuxt />
       <ClubFooter />
     </div>
     <div
@@ -28,7 +28,7 @@
 
 <script>
 import ClubHeader from "@/components/Header";
-import ClubFooter from "@/components/club/Footer";
+import ClubFooter from "@/components/Footer";
 import Loader from "@/components/Loader.vue";
 
 export default {

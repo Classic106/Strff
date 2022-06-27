@@ -1,53 +1,55 @@
 <template>
-  <div class="bg-white mg-20">
-    <div class="m-6">
-      <img src="~/assets/img/banner.jpg" />
-    </div>
+  <div>
     <div v-if="error">
       {{ error }}
     </div>
-    <div
-      class="
-        m-6
-        grid grid-cols-1
-        sm:grid-cols-3
-        md:grid-cols-3
-        lg:grid-cols-3
-        xl:grid-cols-3
-        gap-4
-        mt-8
-      "
-      v-else
-    >
+    <div v-else class="row justify-content-center p-5 content m-0">
       <div
         v-for="product in products"
         :key="product.id"
-        class="border rounded-lg bg-gray-100 hover:shadow-md"
+        class="col col-md-5 col-lg-3 m-0 mb-3 m-md-1 m-lg-3 product p-4 m-2"
       >
         <nuxt-link :to="`/products/${product.slug}`">
-          <div class="rounded-t-lg bg-white pt-2 pb-2">
-            <img
-              v-lazy
-              class="crop mx-auto rounded-lg"
-              src="~/assets/img/placeholder-image.png"
-              :data-src="`${getStrapiMedia(product.image.url)}`"
-            />
-          </div>
-          <div class="pl-4 pr-4 pb-4 pt-4 rounded-lg">
-            <h4
-              class="
-                mt-1
-                font-semibold
-                text-base
-                leading-tight
-                truncate
-                text-gray-700
-              "
-            >
-              {{ product.title }}
-            </h4>
-            <div class="mt-1 text-sm text-gray-700">${{ product.price }}</div>
-          </div>
+          <img
+            v-lazy
+            class="mb-2 w-100"
+            src="~/assets/img/placeholder-image.png"
+            :data-src="`${getStrapiMedia(product.image.url)}`"
+          />
+          <h6
+            class="
+              col-black
+              text-upprcase
+              d-flex
+              justify-content-center
+              m-2
+              mb-4
+              text-uppercase text-nowrap
+            "
+          >
+            {{ product.title }}
+          </h6>
+          <h5 class="dark-orange d-flex justify-content-center m-3 price">
+            {{ product.price }} $
+          </h5>
+          <button
+            v-if="product.status === 'published'"
+            class="
+              py-2
+              px-4
+              rounded
+              btn
+              d-flex
+              justify-content-center
+              align-items-center
+              text-uppercase text-nowrap
+              w-100
+            "
+            v-on:click="addToCart(product)"
+          >
+            <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
+            Add to cart
+          </button>
         </nuxt-link>
       </div>
     </div>
@@ -65,17 +67,63 @@ export default {
   },
   methods: {
     getStrapiMedia,
+    addToCart(product) {
+      const selected = {
+        productId: product.id,
+        sizeId: item.size.id,
+        quantity: 1,
+        purchaseTypeId: product.purchase_type.id,
+        subscriptionTypeId: product.subscription_type
+          ? product.subscription_type.id
+          : null,
+      };
+      this.$store.dispatch("cart/add", selected);
+    },
+  },
+  directives: {
+    lazy: {
+      inserted: (el) => {
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              let lazyImage = entry.target;
+              lazyImage.src = lazyImage.dataset.src;
+              observer.unobserve(el);
+            }
+          });
+        });
+        observer.observe(el);
+      },
+    },
   },
 };
 </script>
 
-<style>
-.crop {
-  width: 300px;
-  height: 300px;
+<style scoped>
+button {
+  background-color: #1f2020;
+  color: #fff;
 }
 
-.mg-20 {
-  margin-top: 20px;
+.btn:hover {
+  color: none;
+}
+
+.price {
+  font-size: 1.5rem;
+}
+
+.product {
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.17);
+  border-radius: 5%;
+}
+
+.product:hover {
+  transform: scale(1.01);
+}
+
+img {
+  box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.06);
+  border-radius: 5%;
 }
 </style>

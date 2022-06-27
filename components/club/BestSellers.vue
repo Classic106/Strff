@@ -15,10 +15,10 @@
             :data-src="`${getStrapiMedia(product.image.url)}`"
           />
 
-          <div class="card-info col-black d-flex justify-content-between mb-4">
+          <a class="card-info col-black d-flex justify-content-between mb-4">
             <span>{{ product.price }} $</span>
             <span class="text-upprcase">{{ product.title }}</span>
-          </div>
+          </a>
         </nuxt-link>
       </div>
     </div>
@@ -29,10 +29,17 @@
 import { getStrapiMedia } from "~/utils/medias";
 
 export default {
-  props: {
-    products: Array,
-    error: Object,
-    storeUrl: String,
+  data: () => ({
+    products: [],
+    error: null,
+  }),
+  async mounted() {
+    try {
+      const result = await this.$strapi.$bestsellers.find();
+      this.products = result[0].products;
+    } catch (error) {
+      this.error = error;
+    }
   },
   directives: {
     lazy: {
@@ -50,9 +57,7 @@ export default {
       },
     },
   },
-  methods: {
-    getStrapiMedia,
-  },
+  methods: { getStrapiMedia },
 };
 </script>
 
