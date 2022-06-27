@@ -12,7 +12,7 @@
           >
         </div>
         <Sign
-          v-if="username && link !== 'signin' && link !== 'signup'"
+          v-if="!username && link !== 'signin' && link !== 'signup'"
           :isMenu="true"
           :isUp="true"
         />
@@ -37,7 +37,6 @@ export default {
   },
   mounted() {
     this.link = this.$route.name;
-    console.log(this.link !== "signin" && this.link !== "signup");
   },
   created() {
     this.$nuxt.$on("rightSideMenu", () => (this.isOpen = !this.isOpen));
