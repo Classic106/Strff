@@ -25,6 +25,7 @@
     "nuxt-session": "^1.0.3",
     "square-web-sdk": "^0.2.2",
     "uuid": "^8.3.2",
+    "v-calendar": "^2.4.1",
     "vue-meta": "^2.4.0"
   },
   "devDependencies": {

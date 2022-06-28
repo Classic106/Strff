@@ -1,7 +1,14 @@
 <template>
   <div class="d-flex flex-column">
-    <div class="close d-flex pr-3 align-items-center justify-content-between">
-      <span class="m-4 icon icon-reply" v-on:click="backStep"></span>
+    <div
+      class="close d-flex pr-3 align-items-center"
+      :class="step > 1 ? 'justify-content-between' : 'justify-content-end'"
+    >
+      <span
+        v-if="step > 1"
+        class="m-4 icon icon-reply"
+        v-on:click="backStep"
+      ></span>
       <span
         class="p-4 text-center close-button"
         v-on:click.self="isOpen = false"
@@ -22,7 +29,6 @@ export default {
   data: () => ({ step: 1 }),
   methods: {
     nextStep: function () {
-      console.log("sdf");
       if (this.step < 5) {
         this.step = this.step + 1;
       }
