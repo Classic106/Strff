@@ -1,10 +1,10 @@
 <template>
   <div
-    class="menu h-100 w-100 position-fixed"
+    class="menu h-100 w-100 position-fixed d-flex justify-content-end"
     :class="isOpen && 'open'"
     v-on:click.self="close"
   >
-    <div class="container w-50 position-absolute">
+    <div class="container d-flex col-12 col-lg-6 m-0 p-0">
       <div class="content d-flex flex-column" :class="isOpen && 'open'">
         <div v-if="username && link !== 'signin' && link !== 'signup'">
           <div class="close d-flex justify-content-end">
@@ -71,7 +71,6 @@ export default {
 }
 
 .container {
-  left: 50%;
   height: 100%;
 }
 
@@ -82,7 +81,7 @@ export default {
 }
 
 .content {
-  width: 50vw;
+  width: 100%;
   margin-left: 100%;
   height: 100%;
   color: #fff;
