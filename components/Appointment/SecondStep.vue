@@ -2,7 +2,7 @@
   <div class="d-flex flex-column justify-content-center align-items-center">
     <p>{{ minDate.toLocaleString("en-us", { weekday: "long" }) }}</p>
     <h1>{{ minDate.getDate() }}</h1>
-    <h2>{{ months[minDate.getMonth()] }} {{ minDate.getFullYear() }}</h2>
+    <h2>{{ parseMonth(minDate.getMonth()) }} {{ minDate.getFullYear() }}</h2>
     <DatePicker
       :min-date="minDate"
       :max-date="maxDate"
@@ -27,27 +27,11 @@
 
 <script>
 import { mapMutations } from "vuex";
-import { configCalendar } from "@/helpers";
+import { configCalendar, parseMonth } from "@/helpers";
 
 export default {
   name: "AppointmentSecondStep",
-  data: () => ({
-    months: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ],
-    ...configCalendar(),
-  }),
+  data: () => ({ ...configCalendar() }),
   computed: {
     date: {
       get: function () {
@@ -59,6 +43,7 @@ export default {
     },
   },
   methods: {
+    parseMonth,
     ...mapMutations({
       setAppointmentDate: "appointment/setAppointmentDate",
     }),
