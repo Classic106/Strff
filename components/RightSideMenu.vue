@@ -90,6 +90,6 @@ export default {
 }
 
 .content.open {
-  margin-left: 0;
+  margin-left: -4%;
 }
 </style>

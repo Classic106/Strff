@@ -17,15 +17,17 @@
     </div>
     <FirstStep v-if="step === 1" v-on:nextStep="nextStep" />
     <SecondStep v-if="step === 2" v-on:nextStep="nextStep" />
+    <ThirdStep v-if="step === 3" v-on:nextStep="nextStep" />
   </div>
 </template>
 
 <script>
 import FirstStep from "./FirstStep.vue";
 import SecondStep from "./SecondStep.vue";
+import ThirdStep from "./ThirdStep.vue";
 
 export default {
-  components: { FirstStep, SecondStep },
+  components: { FirstStep, SecondStep, ThirdStep },
   data: () => ({ step: 1 }),
   methods: {
     nextStep: function () {
