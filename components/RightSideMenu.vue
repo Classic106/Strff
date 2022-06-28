@@ -2,38 +2,49 @@
   <div
     class="menu h-100 w-100 position-fixed"
     :class="isOpen && 'open'"
-    v-on:click.self="isOpen = false"
+    v-on:click.self="close"
   >
     <div class="container w-50 position-absolute">
       <div class="content d-flex flex-column" :class="isOpen && 'open'">
-        <div class="close d-flex justify-content-end pr-3">
-          <span class="p-4 text-center" v-on:click.self="isOpen = false"
-            >+</span
-          >
+        <div v-if="username && link !== 'signin' && link !== 'signup'">
+          <div class="close d-flex justify-content-end">
+            <span
+              class="p-4 text-center close-button"
+              v-on:click.self="isOpen = false"
+              >+</span
+            >
+          </div>
+          <Sign :isMenu="true" :isUp="true" />
         </div>
-        <Sign
-          v-if="!username && link !== 'signin' && link !== 'signup'"
-          :isMenu="true"
-          :isUp="true"
-        />
-        <h3 v-else>custom header</h3>
+        <Appointment v-else />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import Sign from "@/components/Sign";
+import Appointment from "@/components/Appointment";
 
 export default {
   name: "RightSideMenu",
-  components: { Sign },
+  components: { Sign, Appointment },
   data: () => ({ isOpen: false, link: "" }),
   computed: {
     ...mapGetters({
       username: "auth/username",
+      appointmentId: "appointment/getAppointment",
     }),
+  },
+  methods: {
+    ...mapMutations({
+      clearAll: "appointment/clearAll",
+    }),
+    close: function () {
+      this.isOpen = false;
+      this.clearAll();
+    },
   },
   mounted() {
     this.link = this.$route.name;
