@@ -5,7 +5,7 @@
       <li
         v-for="appointment in appointments"
         :key="appointment.id"
-        v-on:click="$emit('nextStep')"
+        v-on:click="chosedAppoinment(appointment.id)"
       >
         <p>{{ appointment.name }}</p>
         <p>{{ appointment.description }}</p>
@@ -15,11 +15,22 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   name: "AppointmentFirstStep",
   data: () => ({
     appointments: [{ id: 1, name: "name", description: "description" }],
   }),
+  methods: {
+    ...mapMutations({
+      setAppointment: "appointment/setAppointment",
+    }),
+    chosedAppoinment: function (id) {
+      this.setAppointment(id);
+      this.$emit("nextStep");
+    },
+  },
   async mounted() {
     try {
       //this.appointments = await this.$strapi.find("appointments");
