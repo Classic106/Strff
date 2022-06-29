@@ -4,7 +4,7 @@
       <h1 class="text-uppercase px-4 mr-2 text-nowrap">{{ parseDay() }}</h1>
       <p class="text-uppercase p-2 text-nowrap">{{ showDate() }}</p>
     </div>
-    <button class="text-center text-uppercase p-4 mt-4">
+    <button class="text-center text-uppercase p-4 mt-4" v-on:click="send">
       <span>shedule this appointment</span>
     </button>
   </div>
@@ -19,10 +19,22 @@ export default {
   computed: {
     ...mapGetters({
       date: "appointment/getAppointmentDate",
+      order: "appointment/getData",
     }),
   },
   methods: {
     parseMonth,
+    send: async function () {
+      try {
+        await this.$strapi.create(
+          "appointment-orders",
+          this.order
+        );
+        this.$emit("nextStep");
+      } catch (error) {
+        console.log(error);
+      }
+    },
     showDate: function () {
       const date = new Date(this.date);
       const day = date.toLocaleString("en-us", { weekday: "long" }).slice(0, 3);
