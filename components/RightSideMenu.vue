@@ -10,13 +10,13 @@
           <div class="close d-flex justify-content-end">
             <span
               class="p-4 text-center close-button"
-              v-on:click.self="isOpen = false"
+              v-on:click.self="close"
               >+</span
             >
           </div>
           <Sign :isMenu="true" :isUp="true" />
         </div>
-        <Appointment v-else />
+        <Appointment v-else :isOpen="isOpen" v-on:isRightSide="close" />
       </div>
     </div>
   </div>
@@ -30,7 +30,8 @@ import Appointment from "@/components/Appointment";
 export default {
   name: "RightSideMenu",
   components: { Sign, Appointment },
-  data: () => ({ isOpen: false, link: "" }),
+  props: ["isOpen"],
+  data: () => ({ link: "" }),
   computed: {
     ...mapGetters({
       username: "auth/username",
@@ -42,15 +43,12 @@ export default {
       clearAll: "appointment/clearAll",
     }),
     close: function () {
-      this.isOpen = false;
       this.clearAll();
+      this.$emit("isRightSide");
     },
   },
   mounted() {
     this.link = this.$route.name;
-  },
-  created() {
-    this.$nuxt.$on("rightSideMenu", () => (this.isOpen = !this.isOpen));
   },
 };
 </script>
@@ -58,6 +56,8 @@ export default {
 <style scoped>
 .menu {
   top: 0;
+  left: 0;
+  right: 0;
   bottom: 0;
   z-index: -1;
   opacity: 0;
@@ -90,6 +90,6 @@ export default {
 }
 
 .content.open {
-  margin-left: -4%;
+  margin-left: 0;
 }
 </style>
