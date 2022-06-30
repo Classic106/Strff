@@ -14,7 +14,7 @@
           </div>
           <Sign :isMenu="true" :isUp="true" />
         </div>
-        <Appointment v-else :isOpen="isOpen" v-on:isRightSide="close" />
+        <Cart v-else :isOpen="isOpen" v-on:isRightSide="close" />
       </div>
     </div>
   </div>
@@ -23,11 +23,11 @@
 <script>
 import { mapGetters } from "vuex";
 import Sign from "@/components/Sign";
-import Appointment from "@/components/Appointment";
+import Cart from "@/components/Cart";
 
 export default {
   name: "RightSideMenu",
-  components: { Sign, Appointment },
+  components: { Sign, Cart },
   props: ["isOpen"],
   data: () => ({ link: "" }),
   computed: {

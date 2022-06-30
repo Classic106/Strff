@@ -43,7 +43,6 @@
         <div class="col-md-5 col-9 d-flex">
           <Search />
           <Cart />
-          <Elipsis />
         </div>
       </div>
     </div>
@@ -127,13 +126,12 @@
 <script>
 import { mapGetters } from "vuex";
 import Icon from "@/assets/icons";
-import Search from "@/components/Search";
-import Cart from "@/components/Cart";
-import Elipsis from "@/components/Elipsis";
+import Search from "./Search";
+import Cart from "./Cart";
 
 export default {
   name: "Header",
-  components: { Icon, Search, Cart, Elipsis },
+  components: { Icon, Search, Cart },
   data: () => ({
     isOpenMenu: false,
     isMobile: true,

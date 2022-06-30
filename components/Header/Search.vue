@@ -114,7 +114,7 @@ input {
 }
 
 .icon-search {
-  background-image: url("../assets/icons/iconmonstr-search-thin.svg");
+  background-image: url("../../assets/icons/iconmonstr-search-thin.svg");
 }
 
 .search-input {
