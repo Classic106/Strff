@@ -26,10 +26,7 @@ export default {
     parseMonth,
     send: async function () {
       try {
-        /*await this.$strapi.create(
-          "appointment-orders",
-          this.order
-        );*/
+        await this.$strapi.create("appointment-orders", this.order);
         this.$emit("nextStep");
       } catch (error) {
         console.log(error);
