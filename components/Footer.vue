@@ -9,16 +9,13 @@
       </p>
       <p class="mt-3">© 2022 STRFF MAN'S CLUB</p>
     </footer>
-    <RightSideMenu />
   </div>
 </template>
 
 <script>
-import RightSideMenu from "@/components/RightSideMenu";
 
 export default {
   name: "ClubFooter",
-  components: { RightSideMenu },
 };
 </script>
 
