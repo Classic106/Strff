@@ -38,7 +38,10 @@ export default {
   watch: {
     isOpen: function () {
       if (!this.isOpen) {
-        setTimeout(() => (this.step = 1), 500);
+        setTimeout(() => {
+          this.step = 1;
+          this.clearAll();
+        }, 500);
       }
     },
   },

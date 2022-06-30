@@ -8,9 +8,7 @@
       <div class="content d-flex flex-column" :class="isOpen && 'open'">
         <div v-if="username && link !== 'signin' && link !== 'signup'">
           <div class="close d-flex justify-content-end">
-            <span
-              class="p-4 text-center close-button"
-              v-on:click.self="close"
+            <span class="p-4 text-center close-button" v-on:click.self="close"
               >+</span
             >
           </div>
@@ -23,7 +21,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters } from "vuex";
 import Sign from "@/components/Sign";
 import Appointment from "@/components/Appointment";
 
@@ -39,11 +37,7 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations({
-      clearAll: "appointment/clearAll",
-    }),
     close: function () {
-      this.clearAll();
       this.$emit("isRightSide");
     },
   },
