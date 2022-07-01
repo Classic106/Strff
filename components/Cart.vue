@@ -1,64 +1,28 @@
 <template>
-  <div
-    class="icon-bag-wrap position-relative"
-  >
-    <span
-      class="
-        position-absolute
-        w-100
-        d-flex
-        justify-content-center
-        align-items-center
-        dark-orange
-      "
-      >{{ numberOfItems }}</span
-    >
-    <span class="icon icon-bag position-relative"></span>
-  </div>
+  <div class="d-flex flex-column"></div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 
 export default {
-  name: "Cart",
+  components: {},
+  props: ["isOpen"],
   computed: {
     ...mapGetters({
-      numberOfItems: "cart/numberOfItems",
+      cart: "cart/cart",
     }),
   },
+  mounted(){
+    console.log(this.cart);
+  }
 };
 </script>
 
 <style scoped>
-.container {
-  top: 100%;
-  height: 100vh;
-  width: 100vw;
-}
-
-.icon {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  filter: brightness(0) invert(1);
-  background-size: cover;
-}
-
-.icon-bag-wrap {
-  right: 0;
-  width: 30px;
-  height: 30px;
-}
-
-.icon-bag {
-  right: 0;
-  top: -1px;
-  background-image: url("../assets/icons/shopping-bag.svg");
-}
-
-.icon-bag > span {
-  filter: invert(50%) sepia(56%) saturate(571%) hue-rotate(6deg) brightness(88%)
-    contrast(86%);
+.close-button {
+  color: #fff;
+  font-size: 3rem;
+  transform: rotate(45deg);
 }
 </style>

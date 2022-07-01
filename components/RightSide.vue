@@ -2,19 +2,18 @@
   <div
     class="menu h-100 w-100 position-fixed d-flex justify-content-end"
     :class="isOpen && 'open'"
-    v-on:click.self="close"
+    v-on:click.self="$nuxt.$emit('rightSide')"
   >
     <div class="container d-flex col-12 col-lg-6 m-0 p-0">
       <div class="content d-flex flex-column" :class="isOpen && 'open'">
-        <div v-if="username && link !== 'signin' && link !== 'signup'">
-          <div class="close d-flex justify-content-end">
-            <span class="p-4 text-center close-button" v-on:click.self="close"
-              >+</span
-            >
-          </div>
-          <Sign :isMenu="true" :isUp="true" />
+        <div class="close d-flex justify-content-end">
+          <span
+            class="p-4 text-center close-button"
+            v-on:click.self="$nuxt.$emit('rightSide')"
+            >+</span
+          >
         </div>
-        <Appointment v-else :isOpen="isOpen" v-on:isRightSide="close" />
+        <Cart :isOpen="isOpen"/>
       </div>
     </div>
   </div>
@@ -22,27 +21,19 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Sign from "@/components/Sign";
-import Appointment from "@/components/Appointment";
+import Cart from "@/components/Cart";
 
 export default {
-  name: "RightSideMenu",
-  components: { Sign, Appointment },
-  props: ["isOpen"],
-  data: () => ({ link: "" }),
+  name: "RightSide",
+  components: { Cart },
+  data: () => ({ isOpen: false }),
   computed: {
     ...mapGetters({
       username: "auth/username",
-      appointmentId: "appointment/getAppointment",
     }),
   },
-  methods: {
-    close: function () {
-      this.$emit("isRightSide");
-    },
-  },
-  mounted() {
-    this.link = this.$route.name;
+  created() {
+    this.$nuxt.$on("rightSide", () => (this.isOpen = !this.isOpen));
   },
 };
 </script>
