@@ -38,7 +38,13 @@
               </div>
               <div class="d-flex">
                 <p class="w-25 mb-2 grey">quantity</p>
-                <p class="mb-2">{{ product.quantity }}</p>
+                <div class="d-flex">
+                  <button v-if="edit">-</button>
+                  <p class="my-auto" :class="edit && 'mx-3'">
+                    {{ product.quantity }}
+                  </p>
+                  <button v-if="edit">+</button>
+                </div>
               </div>
               <div class="d-flex">
                 <p class="w-25 mb-2 grey">category</p>
@@ -56,7 +62,10 @@
               </div>
             </div>
             <div class="w-100 d-flex justify-content-between">
-              <div class="d-flex align-items-center pen">
+              <div
+                class="d-flex align-items-center pen"
+                v-on:click="edit = !edit"
+              >
                 <span class="icon icon-pen m-2"></span>
                 <p class="m-0 pl-1">edit</p>
               </div>
@@ -79,6 +88,7 @@ import { getStrapiMedia } from "~/utils/medias";
 
 export default {
   props: ["isOpen"],
+  data: () => ({ edit: false }),
   computed: {
     ...mapGetters({
       order_items: "cart/getOrderItems",
@@ -115,7 +125,6 @@ li {
 h6,
 p {
   text-transform: uppercase;
-  white-space: nowrap;
 }
 
 .icon {
