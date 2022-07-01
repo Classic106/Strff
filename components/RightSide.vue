@@ -47,7 +47,7 @@ export default {
   z-index: -1;
   opacity: 0;
   background: rgba(0, 0, 0, 0.9);
-  transition: all 0.5s ease-in-out;
+  transition: all 1s ease-in-out;
 }
 
 .menu.open {
@@ -66,12 +66,12 @@ export default {
 }
 
 .content {
-  width: 100%;
+  min-width: 100%;
   margin-left: 100%;
   height: 100%;
   color: #fff;
   background: #333333;
-  transition: all 0.5s ease-in-out;
+  transition: all 1s ease-in-out;
 }
 
 .content.open {

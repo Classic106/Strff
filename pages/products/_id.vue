@@ -107,7 +107,7 @@
                     class="mt-2 align-self-start"
                     :id="purchaseType.title"
                     :value="purchaseType.id"
-                    v-model="selected.purchaseTypeId"
+                    v-model="selected.purchase_type"
                     v-on:change="setOptions(purchaseType.id)"
                   />
                   <label
@@ -124,7 +124,7 @@
               <div class="mt-1 position-relative" v-if="options.length">
                 <select
                   class="position-relative"
-                  v-model="selected.subscriptionTypeId"
+                  v-model="selected.subscription_type"
                   v-on:change="change"
                 >
                   <option
@@ -162,24 +162,15 @@ export default {
   data() {
     return {
       product: null,
-      quantities: [
-        {
-          title: "1 bottle",
-          quantity: 1,
-        },
-        {
-          title: "2 bottles",
-          quantity: 2,
-        },
-      ],
       purchaseTypes: [],
       options: [],
       error: null,
       selected: {
-        productId: null,
+        product: null,
         quantity: 1,
-        purchaseTypeId: null,
-        subscriptionTypeId: null,
+        purchase_type: null,
+        subscription_type: null,
+        item: null,
       },
     };
   },
@@ -190,7 +181,8 @@ export default {
         this.$route.params.id
       );
       this.purchaseTypes = await this.$strapi.find("purchase-types");
-      this.selected.productId = this.product.id;
+      this.selected.product = this.product.id;
+      this.selected.item = this.product;
     } catch (error) {
       this.error = error;
     }
@@ -211,10 +203,10 @@ export default {
 
       if (selectedIndex > -1) {
         const { id } = this.options[selectedIndex];
-        this.selected.subscriptionTypeId = id;
+        this.selected.subscription_type = id;
         return;
       }
-      this.selected.subscriptionTypeId = null;
+      this.selected.subscription_type = null;
     },
     setOptions: function (purchaseTypeId) {
       const item = this.purchaseTypes.filter(
@@ -224,16 +216,16 @@ export default {
       if (item && item.subscription_types.length) {
         const { id } = item.subscription_types[0];
 
-        this.selected.subscriptionTypeId = id;
+        this.selected.subscription_type = id;
         this.options = [...item.subscription_types];
         return;
       }
-      this.selected.subscriptionTypeId = null;
+      this.selected.subscription_type = null;
       this.options = [];
     },
     calcPrice: function (itemPrice, quantity) {
       const purchaseType = this.purchaseTypes.filter(
-        (item) => item.id === this.selected.purchaseTypeId
+        (item) => item.id === this.selected.purchase_type
       );
 
       const price = +itemPrice * +quantity;
@@ -268,7 +260,7 @@ export default {
       this.selected.quantity = size.quantity;
     },
     addToCart: async function () {
-      this.$store.dispatch("cart/add", this.selected);
+      this.$store.commit("cart/addProduct", this.selected);
     },
     getStrapiMedia,
   },
