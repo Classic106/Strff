@@ -1,35 +1,27 @@
 <template>
-  <div>
-    <div class="icon-bag-wrap position-relative" v-on:click="isOpen = !isOpen">
-      <span
-        class="
-          position-absolute
-          w-100
-          d-flex
-          justify-content-center
-          align-items-center
-          dark-orange
-        "
-        >{{ numberOfItems }}</span
-      >
-      <span class="icon icon-bag position-relative"></span>
-    </div>
-    <RightSideMenu :isOpen="isOpen" v-on:isRightSide="close" />
+  <div
+    class="icon-bag-wrap position-relative"
+    v-on:click="$nuxt.$emit('rightSide')"
+  >
+    <span
+      class="
+        position-absolute
+        w-100
+        d-flex
+        justify-content-center
+        align-items-center
+        dark-orange
+      "
+      >{{ numberOfItems }}</span
+    >
+    <span class="icon icon-bag position-relative"></span>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import RightSideMenu from "@/components/RightSideMenu";
 
 export default {
-  components: { RightSideMenu },
-  data: () => ({ isOpen: false }),
-  methods: {
-    close: function () {
-      this.isOpen = !this.isOpen;
-    },
-  },
   computed: {
     ...mapGetters({
       numberOfItems: "cart/numberOfItems",
