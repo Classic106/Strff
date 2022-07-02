@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column overflow-auto">
     <div
-      v-if="!orderItems.length"
+      v-if="!order_items.length"
       class="cart p-4 d-flex justify-content-center align-items-center"
     >
       <h5 class="text-uppercase text-center">put something in the cart</h5>
@@ -9,7 +9,7 @@
     <div v-else class="cart d-flex flex-column px-3">
       <ul class="p-0">
         <li
-          v-for="product in orderItems"
+          v-for="product in order_items"
           :key="product.product"
           class="p-3 mb-3"
         >
@@ -67,8 +67,19 @@
                 </p>
               </div>
               <div class="d-flex">
-                <p class="w-25 mb-2 grey">Purchase Type</p>
-                <p class="mb-2">{{ product.purchase_type }}</p>
+                <p class="w-25 mb-2 grey">Purchase</p>
+                <p class="mb-2" v-if="!edit">
+                  {{
+                    purchaseTypes.filter(
+                      (item) => product.purchase_type === item.id
+                    )[0].title
+                  }}
+                </p>
+                <PurchaseTypes
+                  v-else
+                  cart="cart"
+                  v-on:setTypes="(types) => setTypes(types, product.item.id)"
+                />
               </div>
             </div>
             <div class="w-100 d-flex justify-content-between">
@@ -87,7 +98,9 @@
           </div>
         </li>
       </ul>
-      <button class="text-uppercase p-3 mt-auto">go to checkout</button>
+      <button class="text-uppercase p-3 mt-auto" v-on:click="$emit('nextStep')">
+        go to checkout
+      </button>
     </div>
   </div>
 </template>
@@ -95,19 +108,17 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
+import PurchaseTypes from "~/components/common/PurchaseTypes";
 
 export default {
   props: ["isOpen"],
-  data: () => ({ edit: false, orderItems: [] }),
+  components: { PurchaseTypes },
+  data: () => ({ edit: false }),
   computed: {
     ...mapGetters({
       order_items: "cart/getOrderItems",
+      purchaseTypes: "purchase-types/getTypes",
     }),
-  },
-  watch: {
-    order_items: function () {
-      this.orderItems = this.order_items;
-    },
   },
   methods: {
     getStrapiMedia,
@@ -115,6 +126,13 @@ export default {
       removeProduct: "cart/removeProduct",
       updateProduct: "cart/updateProduct",
     }),
+    setTypes: function (types, id) {
+      const index = this.order_items.findIndex((item) => item.product === id);
+      if (index !== -1) {
+        const item = { ...this.order_items[index], ...types };
+        this.updateProduct(item);
+      }
+    },
     quantityPlus: function (id) {
       const index = this.order_items.findIndex((item) => item.product === id);
       if (index !== -1 && this.order_items[index].quantity < 99) {
@@ -172,13 +190,13 @@ p {
 
 .icon-pen {
   width: 20px;
-  background-image: url("../assets/icons/pen-solid.svg");
+  background-image: url("../../assets/icons/pen-solid.svg");
   filter: invert(66%) sepia(93%) saturate(4318%) hue-rotate(160deg)
     brightness(93%) contrast(103%);
 }
 
 .icon-trash {
-  background-image: url("../assets/icons/trash-can-solid.svg");
+  background-image: url("../../assets/icons/trash-can-solid.svg");
   filter: invert(39%) sepia(20%) saturate(3094%) hue-rotate(318deg)
     brightness(94%) contrast(92%);
 }
