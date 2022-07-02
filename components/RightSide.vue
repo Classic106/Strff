@@ -36,7 +36,7 @@ export default {
   data: () => ({ isOpen: false, step: 1 }),
   methods: {
     nextStep: function () {
-      if (this.step < 2) {
+      if (this.step < 4) {
         this.step = this.step + 1;
       }
     },
