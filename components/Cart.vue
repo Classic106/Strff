@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column overflow-auto">
     <div
-      v-if="!order_items.length"
+      v-if="!orderItems.length"
       class="cart p-4 d-flex justify-content-center align-items-center"
     >
       <h5 class="text-uppercase text-center">put something in the cart</h5>
@@ -9,7 +9,7 @@
     <div v-else class="cart d-flex flex-column px-3">
       <ul class="p-0">
         <li
-          v-for="product in order_items"
+          v-for="product in orderItems"
           :key="product.product"
           class="p-3 mb-3"
         >
@@ -39,11 +39,21 @@
               <div class="d-flex">
                 <p class="w-25 mb-2 grey">quantity</p>
                 <div class="d-flex">
-                  <button v-if="edit">-</button>
+                  <button
+                    v-if="edit"
+                    v-on:click="quantityMinus(product.item.id)"
+                  >
+                    -
+                  </button>
                   <p class="my-auto" :class="edit && 'mx-3'">
                     {{ product.quantity }}
                   </p>
-                  <button v-if="edit">+</button>
+                  <button
+                    v-if="edit"
+                    v-on:click="quantityPlus(product.item.id)"
+                  >
+                    +
+                  </button>
                 </div>
               </div>
               <div class="d-flex">
@@ -88,17 +98,39 @@ import { getStrapiMedia } from "~/utils/medias";
 
 export default {
   props: ["isOpen"],
-  data: () => ({ edit: false }),
+  data: () => ({ edit: false, orderItems: [] }),
   computed: {
     ...mapGetters({
       order_items: "cart/getOrderItems",
     }),
   },
+  watch: {
+    order_items: function () {
+      this.orderItems = this.order_items;
+    },
+  },
   methods: {
     getStrapiMedia,
     ...mapMutations({
       removeProduct: "cart/removeProduct",
+      updateProduct: "cart/updateProduct",
     }),
+    quantityPlus: function (id) {
+      const index = this.order_items.findIndex((item) => item.product === id);
+      if (index !== -1 && this.order_items[index].quantity < 99) {
+        const item = { ...this.order_items[index] };
+        item.quantity = item.quantity + 1;
+        this.updateProduct(item);
+      }
+    },
+    quantityMinus: function (id) {
+      const index = this.order_items.findIndex((item) => item.product === id);
+      if (index !== -1 && this.order_items[index].quantity > 1) {
+        const item = { ...this.order_items[index] };
+        item.quantity = item.quantity - 1;
+        this.updateProduct(item);
+      }
+    },
   },
 };
 </script>
