@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column overflow-auto">
     <div
-      v-if="!orderItems.length"
+      v-if="!order_items.length"
       class="cart p-4 d-flex justify-content-center align-items-center"
     >
       <h5 class="text-uppercase text-center">put something in the cart</h5>
@@ -9,7 +9,7 @@
     <div v-else class="cart d-flex flex-column px-3">
       <ul class="p-0">
         <li
-          v-for="product in orderItems"
+          v-for="product in order_items"
           :key="product.product"
           class="p-3 mb-3"
         >
@@ -98,7 +98,9 @@
           </div>
         </li>
       </ul>
-      <button class="text-uppercase p-3 mt-auto">go to checkout</button>
+      <button class="text-uppercase p-3 mt-auto" v-on:click="$emit('nextStep')">
+        go to checkout
+      </button>
     </div>
   </div>
 </template>
@@ -111,17 +113,12 @@ import PurchaseTypes from "~/components/common/PurchaseTypes";
 export default {
   props: ["isOpen"],
   components: { PurchaseTypes },
-  data: () => ({ edit: false, orderItems: [] }),
+  data: () => ({ edit: false }),
   computed: {
     ...mapGetters({
       order_items: "cart/getOrderItems",
       purchaseTypes: "purchase-types/getTypes",
     }),
-  },
-  watch: {
-    order_items: function () {
-      this.orderItems = this.order_items;
-    },
   },
   methods: {
     getStrapiMedia,
@@ -193,13 +190,13 @@ p {
 
 .icon-pen {
   width: 20px;
-  background-image: url("../assets/icons/pen-solid.svg");
+  background-image: url("../../assets/icons/pen-solid.svg");
   filter: invert(66%) sepia(93%) saturate(4318%) hue-rotate(160deg)
     brightness(93%) contrast(103%);
 }
 
 .icon-trash {
-  background-image: url("../assets/icons/trash-can-solid.svg");
+  background-image: url("../../assets/icons/trash-can-solid.svg");
   filter: invert(39%) sepia(20%) saturate(3094%) hue-rotate(318deg)
     brightness(94%) contrast(92%);
 }
