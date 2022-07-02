@@ -48,6 +48,16 @@ export const mutations = {
       state.order_items.push(order_item);
     }
   },
+  updateProduct(state, newItem) {
+    const index = state.order_items.findIndex(
+      (item) => item.product === newItem.product
+    );
+    if (index !== -1) {
+      const oi = [...state.order_items];
+      oi[index] = newItem;
+      state.order_items = oi;
+    }
+  },
   removeProduct(state, id) {
     state.order_items = state.order_items.filter((item) => item.product !== id);
   },
