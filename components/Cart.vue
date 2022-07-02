@@ -67,8 +67,19 @@
                 </p>
               </div>
               <div class="d-flex">
-                <p class="w-25 mb-2 grey">Purchase Type</p>
-                <p class="mb-2">{{ product.purchase_type }}</p>
+                <p class="w-25 mb-2 grey">Purchase</p>
+                <p class="mb-2" v-if="!edit">
+                  {{
+                    purchaseTypes.filter(
+                      (item) => product.purchase_type === item.id
+                    )[0].title
+                  }}
+                </p>
+                <PurchaseTypes
+                  v-else
+                  cart="cart"
+                  v-on:setTypes="(types) => setTypes(types, product.item.id)"
+                />
               </div>
             </div>
             <div class="w-100 d-flex justify-content-between">
@@ -95,13 +106,16 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
+import PurchaseTypes from "~/components/common/PurchaseTypes";
 
 export default {
   props: ["isOpen"],
+  components: { PurchaseTypes },
   data: () => ({ edit: false, orderItems: [] }),
   computed: {
     ...mapGetters({
       order_items: "cart/getOrderItems",
+      purchaseTypes: "purchase-types/getTypes",
     }),
   },
   watch: {
@@ -115,6 +129,13 @@ export default {
       removeProduct: "cart/removeProduct",
       updateProduct: "cart/updateProduct",
     }),
+    setTypes: function (types, id) {
+      const index = this.order_items.findIndex((item) => item.product === id);
+      if (index !== -1) {
+        const item = { ...this.order_items[index], ...types };
+        this.updateProduct(item);
+      }
+    },
     quantityPlus: function (id) {
       const index = this.order_items.findIndex((item) => item.product === id);
       if (index !== -1 && this.order_items[index].quantity < 99) {

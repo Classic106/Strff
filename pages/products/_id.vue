@@ -94,49 +94,7 @@
                 </div>
               </div>
             </div>
-            <div>
-              <div
-                class="mt-4"
-                v-for="purchaseType in purchaseTypes"
-                :key="purchaseType.title"
-              >
-                <div class="d-flex align-items-center">
-                  <input
-                    name="push-notifications"
-                    type="radio"
-                    class="mt-2 align-self-start"
-                    :id="purchaseType.title"
-                    :value="purchaseType.id"
-                    v-model="selected.purchase_type"
-                    v-on:change="setOptions(purchaseType.id)"
-                  />
-                  <label
-                    :for="purchaseType.title"
-                    class="w-100 ml-3 d-flex flex-column"
-                  >
-                    {{ purchaseType.title }}
-                    <p class="mt-1" v-if="purchaseType.description">
-                      {{ purchaseType.description }}
-                    </p>
-                  </label>
-                </div>
-              </div>
-              <div class="mt-1 position-relative" v-if="options.length">
-                <select
-                  class="position-relative"
-                  v-model="selected.subscription_type"
-                  v-on:change="change"
-                >
-                  <option
-                    v-for="option in options"
-                    :value="option.id"
-                    :key="option.title"
-                  >
-                    {{ option.title }}
-                  </option>
-                </select>
-              </div>
-            </div>
+            <PurchaseTypes v-on:setTypes="setTypes" />
             <div class="mt-1 items-baseline text-gray-600">
               {{ product.description }}
             </div>
@@ -149,20 +107,21 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
 //import Vue from 'vue'
 import "~/utils/filters";
 import Icon from "@/assets/icons";
 import RelatedProducts from "~/components/products/RelatedProducts";
 import BundleProducts from "~/components/products/BundleProducts";
+import PurchaseTypes from "~/components/common/PurchaseTypes";
 
 export default {
   layout: "club",
-  components: { Icon, RelatedProducts, BundleProducts },
+  components: { Icon, RelatedProducts, BundleProducts, PurchaseTypes },
   data() {
     return {
       product: null,
-      purchaseTypes: [],
       options: [],
       error: null,
       selected: {
@@ -174,13 +133,17 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapGetters({
+      purchaseTypes: "purchase-types/getTypes",
+    }),
+  },
   async mounted() {
     try {
       this.product = await this.$strapi.findOne(
         "products",
         this.$route.params.id
       );
-      this.purchaseTypes = await this.$strapi.find("purchase-types");
       this.selected.product = this.product.id;
       this.selected.item = this.product;
     } catch (error) {
@@ -188,6 +151,9 @@ export default {
     }
   },
   methods: {
+    setTypes: function (types) {
+      this.selected = { ...this.selected, ...types };
+    },
     quantityPlus: function () {
       if (this.selected.quantity < 99) {
         this.selected.quantity = this.selected.quantity + 1;
@@ -197,31 +163,6 @@ export default {
       if (this.selected.quantity > 1) {
         this.selected.quantity = this.selected.quantity - 1;
       }
-    },
-    change: function (e) {
-      const { selectedIndex } = e.target.options;
-
-      if (selectedIndex > -1) {
-        const { id } = this.options[selectedIndex];
-        this.selected.subscription_type = id;
-        return;
-      }
-      this.selected.subscription_type = null;
-    },
-    setOptions: function (purchaseTypeId) {
-      const item = this.purchaseTypes.filter(
-        (item) => item.id === purchaseTypeId
-      )[0];
-
-      if (item && item.subscription_types.length) {
-        const { id } = item.subscription_types[0];
-
-        this.selected.subscription_type = id;
-        this.options = [...item.subscription_types];
-        return;
-      }
-      this.selected.subscription_type = null;
-      this.options = [];
     },
     calcPrice: function (itemPrice, quantity) {
       const purchaseType = this.purchaseTypes.filter(
@@ -256,11 +197,10 @@ export default {
       }
       return price;
     },
-    selectOption: function (size) {
-      this.selected.quantity = size.quantity;
-    },
     addToCart: async function () {
-      this.$store.commit("cart/addProduct", this.selected);
+      if (this.selected.purchase_type) {
+        this.$store.commit("cart/addProduct", this.selected);
+      }
     },
     getStrapiMedia,
   },
