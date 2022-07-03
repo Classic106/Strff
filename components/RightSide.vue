@@ -8,16 +8,20 @@
       <div class="content d-flex flex-column" :class="isOpen && 'open'">
         <div
           class="close d-flex align-items-center"
-          :class="step > 1 ? 'justify-content-between' : 'justify-content-end'"
+          :class="
+            step > 1 && step !== 4
+              ? 'justify-content-between'
+              : 'justify-content-end'
+          "
         >
           <span
             class="m-4 icon-share"
-            v-if="step > 1"
+            v-if="step > 1 && step !== 4"
             v-on:click="backStep"
           ></span>
           <span
             class="p-4 text-center close-button"
-            v-on:click.self="$nuxt.$emit('rightSide')"
+            v-on:click.self="$nuxt.$emit('rightSide', 'close')"
             >+</span
           >
         </div>
@@ -47,7 +51,14 @@ export default {
     },
   },
   created() {
-    this.$nuxt.$on("rightSide", () => (this.isOpen = !this.isOpen));
+    this.$nuxt.$on("rightSide", (val) => {
+      if (val) {
+        this.isOpen = false;
+        setTimeout(() => (this.step = 1), 1000);
+        return;
+      }
+      this.isOpen = !this.isOpen;
+    });
   },
 };
 </script>
