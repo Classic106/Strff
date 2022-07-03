@@ -77,7 +77,9 @@
                 </p>
                 <PurchaseTypes
                   v-else
-                  cart="cart"
+                  cart
+                  :purType="product.purchase_type"
+                  :subType="product.subscription_type"
                   v-on:setTypes="(types) => setTypes(types, product.item.id)"
                 />
               </div>
@@ -88,7 +90,7 @@
                 v-on:click="edit = !edit"
               >
                 <span class="icon icon-pen m-2"></span>
-                <p class="m-0 pl-1">edit</p>
+                <p class="m-0 pl-1">{{ edit ? "save" : "edit" }}</p>
               </div>
               <span
                 class="icon icon-trash m-2"
