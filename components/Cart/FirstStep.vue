@@ -158,10 +158,6 @@ export default {
   color: #919191;
 }
 
-.cart {
-  height: 90vh;
-}
-
 .close-button {
   color: #fff;
   font-size: 3rem;

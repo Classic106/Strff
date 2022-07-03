@@ -6,7 +6,10 @@
       :trans="translations"
       :noCard="true"
     />
-    <button class="text-uppercase w-100 mt-4 p-2 finalize-order">
+    <button
+      class="text-uppercase w-100 mt-4 p-2 finalize-order"
+      v-on:click="$emit('nextStep')"
+    >
       finalize and place order
     </button>
   </div>
