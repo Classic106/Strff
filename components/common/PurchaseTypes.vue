@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div
-      v-for="purchaseType in purchaseTypes"
-      :key="purchaseType.title"
-    >
+    <div v-for="purchaseType in purchaseTypes" :key="purchaseType.title">
       <div class="d-flex align-items-center">
         <input
           name="push-notifications"
@@ -47,9 +44,26 @@
 import { mapGetters } from "vuex";
 
 export default {
-  props: ["cart"],
+  props: {
+    cart: {
+      type: Boolean,
+      required: false,
+    },
+    purType: {
+      type: Number,
+      required: false,
+    },
+    subType: {
+      type: Number,
+      required: false,
+    },
+  },
   data() {
-    return { options: [], purchase_type: null, subscription_type: null };
+    return {
+      options: [],
+      purchase_type: this.purType ? this.purType : null,
+      subscription_type: this.subType ? this.subType : null,
+    };
   },
   computed: {
     ...mapGetters({

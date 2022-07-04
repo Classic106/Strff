@@ -2,6 +2,7 @@ export const state = () => ({
   //cart: null,
   //token: null,
   order_items: [],
+  bundle_items: [],
 });
 
 export const actions = {
@@ -53,13 +54,24 @@ export const mutations = {
       (item) => item.product === newItem.product
     );
     if (index !== -1) {
-      const oi = [...state.order_items];
-      oi[index] = newItem;
-      state.order_items = oi;
+      const new_order_items = [...state.order_items];
+      new_order_items[index] = newItem;
+      state.order_items = new_order_items;
     }
   },
   removeProduct(state, id) {
     state.order_items = state.order_items.filter((item) => item.product !== id);
+  },
+  addBundle(state, bundleProduct) {
+    const item = state.bundle_items.filter(
+      (item) => item.id === bundleProduct.id
+    );
+    if (!item.length) {
+      state.bundle_items.push(bundleProduct);
+    }
+  },
+  removeBundle(state, id) {
+    state.bundle_items = state.bundle_items.filter((item) => item.id !== id);
   },
   /*setCart(state, newCart) {
     if (newCart) {
@@ -119,8 +131,11 @@ export const getters = {
   getOrderItems(state) {
     return state.order_items;
   },
+  getBundleItems(state) {
+    return state.bundle_items;
+  },
   numberOfItems(state) {
-    return state.order_items.length;
+    return state.order_items.length + state.bundle_items.length;
     /*return state.cart
       ? state.cart.order_items.reduce(
           (accumulator, item) => accumulator + item.quantity,

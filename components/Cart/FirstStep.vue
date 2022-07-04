@@ -1,13 +1,16 @@
 <template>
   <div class="d-flex flex-column overflow-auto">
     <div
-      v-if="!order_items.length"
+      v-if="!order_items.length && !bundles.length"
       class="cart p-4 d-flex justify-content-center align-items-center"
     >
       <h5 class="text-uppercase text-center">put something in the cart</h5>
     </div>
     <div v-else class="cart d-flex flex-column px-3">
-      <ul class="p-0">
+      <h6 class="text-uppercase text-center mb-3">
+        total price: {{ totalPrice | formatNumber }} $
+      </h6>
+      <ul v-if="order_items.length" class="p-0">
         <li
           v-for="product in order_items"
           :key="product.product"
@@ -24,10 +27,13 @@
               <div class="d-flex flex-column px-3">
                 <h6>{{ product.item.title }}</h6>
                 <div>
-                  <p class="mb-2 grey">price {{ product.item.price }} $</p>
+                  <p class="mb-2 grey">
+                    price {{ product.item.price | formatNumber }} $
+                  </p>
                 </div>
                 <p v-if="product.quantity > 1">
-                  total price {{ product.item.price * product.quantity }} $
+                  total price
+                  {{ (product.item.price * product.quantity) | formatNumber }} $
                 </p>
               </div>
             </div>
@@ -77,7 +83,9 @@
                 </p>
                 <PurchaseTypes
                   v-else
-                  cart="cart"
+                  cart
+                  :purType="product.purchase_type"
+                  :subType="product.subscription_type"
                   v-on:setTypes="(types) => setTypes(types, product.item.id)"
                 />
               </div>
@@ -88,11 +96,113 @@
                 v-on:click="edit = !edit"
               >
                 <span class="icon icon-pen m-2"></span>
-                <p class="m-0 pl-1">edit</p>
+                <p class="m-0 pl-1">{{ edit ? "save" : "edit" }}</p>
               </div>
               <span
                 class="icon icon-trash m-2"
                 v-on:click="removeProduct(product.item.id)"
+              ></span>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <ul v-if="bundles.length" class="p-0">
+        <li
+          v-for="(bundle, index) in bundles"
+          :key="bundle.id"
+          class="p-3 mb-3"
+        >
+          <div class="d-flex flex-column">
+            <div class="d-flex row">
+              <div v-if="(index - 1) % 2" class="col-4">
+                <div v-if="bundle.products[index + 1]" class="row p-2">
+                  <div class="col-5 p-0">
+                    <div class="m-auto p-2">
+                      <img
+                        :src="`${getStrapiMedia(
+                          bundle.products[index].image.url
+                        )}`"
+                        class="m-auto"
+                      />
+                    </div>
+                    <div
+                      class="d-flex flex-column justify-content-between mt-3"
+                    >
+                      <span class="font-weight-light text-center">
+                        {{ bundle.products[index].title }}
+                      </span>
+                      <span class="font-weight-light text-center grey">
+                        ${{ bundle.products[index].price | formatNumber }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-2 p-0 mx-auto mt-3">
+                    <p class="text-center plus grey">+</p>
+                  </div>
+                  <div class="col-5 p-0">
+                    <div class="m-auto p-2">
+                      <img
+                        :src="`${getStrapiMedia(
+                          bundle.products[index + 1].image.url
+                        )}`"
+                        class="m-auto"
+                      />
+                    </div>
+                    <div
+                      class="d-flex flex-column justify-content-between mt-3"
+                    >
+                      <span class="font-weight-light text-center">
+                        {{ bundle.products[index + 1].title }}
+                      </span>
+                      <span class="font-weight-light text-center grey">
+                        ${{ bundle.products[index + 1].price | formatNumber }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div v-else class="d-flex justify-content-center">
+                  <div class="col-5 p-0">
+                    <div class="m-auto p-2">
+                      <img
+                        :src="`${getStrapiMedia(
+                          bundle.products[index].image.url
+                        )}`"
+                        class="m-auto"
+                      />
+                    </div>
+                    <div
+                      class="d-flex flex-column justify-content-between mt-3"
+                    >
+                      <span class="font-weight-light text-center">
+                        {{ bundle.products[index].title }}
+                      </span>
+                      <span class="font-weight-light text-center grey">
+                        ${{ bundle.products[index].price | formatNumber }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-4 d-flex flex-column col-7">
+                <p class="text-uppercase font-weight-bold m-0">
+                  bundle price: ${{ bundle.price }}
+                </p>
+                <p class="save-price">
+                  You save: $
+                  {{
+                    bundle.price -
+                    bundle.products.reduce(
+                      (prVal, curVal) => prVal + curVal.price,
+                      0
+                    )
+                  }}!
+                </p>
+              </div>
+            </div>
+            <div class="w-100 d-flex justify-content-end">
+              <span
+                class="icon icon-trash m-2"
+                v-on:click="removeBundle(bundle.id)"
               ></span>
             </div>
           </div>
@@ -113,18 +223,28 @@ import PurchaseTypes from "~/components/common/PurchaseTypes";
 export default {
   props: ["isOpen"],
   components: { PurchaseTypes },
-  data: () => ({ edit: false }),
+  data: () => ({ edit: false, totalPrice: 0 }),
   computed: {
     ...mapGetters({
       order_items: "cart/getOrderItems",
+      bundles: "cart/getBundleItems",
       purchaseTypes: "purchase-types/getTypes",
     }),
+  },
+  watch: {
+    order_items: function () {
+      this.calcTotalPrice();
+    },
+    bundles: function () {
+      this.calcTotalPrice();
+    },
   },
   methods: {
     getStrapiMedia,
     ...mapMutations({
       removeProduct: "cart/removeProduct",
       updateProduct: "cart/updateProduct",
+      removeBundle: "cart/removeBundle",
     }),
     setTypes: function (types, id) {
       const index = this.order_items.findIndex((item) => item.product === id);
@@ -148,6 +268,22 @@ export default {
         item.quantity = item.quantity - 1;
         this.updateProduct(item);
       }
+    },
+    calcTotalPrice: function () {
+      const orderItemsTotalPrice = this.order_items.reduce(
+        (acc, item) => (acc += item.item.price * item.quantity),
+        0
+      );
+
+      const bundlesTotalPrice = this.bundles.reduce(
+        (acc, item) => (acc += item.price),
+        0
+      );
+
+      this.totalPrice = orderItemsTotalPrice + bundlesTotalPrice;
+    },
+    mounted() {
+      this.calcTotalPrice();
     },
   },
 };
@@ -195,6 +331,10 @@ p {
   background-image: url("../../assets/icons/trash-can-solid.svg");
   filter: invert(39%) sepia(20%) saturate(3094%) hue-rotate(318deg)
     brightness(94%) contrast(92%);
+}
+
+.save-price {
+  color: #5bb85d;
 }
 
 button {
