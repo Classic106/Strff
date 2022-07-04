@@ -84,7 +84,7 @@
             </div>
           </div>
         </div>
-        <div class="mt-4">
+        <div class="mt-4 d-flex flex-column">
           <p class="text-uppercase font-weight-bold text-center m-0">
             bundle price: ${{ bundleProduct.price }}
           </p>
@@ -98,6 +98,24 @@
               )
             }}!
           </p>
+          <button
+            v-if="product.status === 'published'"
+            class="
+              py-2
+              px-4
+              rounded
+              btn btn-dark
+              d-flex
+              justify-content-center
+              align-items-center
+              text-uppercase text-nowrap
+              add-cart-button
+            "
+            v-on:click="addToCart(bundleProduct)"
+          >
+            <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
+            Add to cart
+          </button>
         </div>
       </div>
     </div>
@@ -115,7 +133,12 @@ export default {
   data: () => ({
     bundleProducts: null,
   }),
-  methods: { getStrapiMedia },
+  methods: {
+    getStrapiMedia,
+    addToCart(bundleProduct) {
+      this.$store.commit("cart/addBundle", bundleProduct);
+    },
+  },
   async mounted() {
     try {
       const result = await this.$strapi.$bundles.findOne(
@@ -145,5 +168,16 @@ img,
 .bundle-products-title {
   border-bottom: 1px solid #000;
   background-color: #f5f5f5;
+}
+
+.add-cart-button {
+  background-color: #1f2020;
+  color: #fff;
+}
+
+.icon-bag {
+  width: 14px;
+  height: 14px;
+  background-image: url("../../assets/icons/shopping-bag.svg");
 }
 </style>
