@@ -1,14 +1,75 @@
 export const state = () => ({
-  //cart: null,
-  //token: null,
+  cart: null,
+  token: null,
   order_items: [],
-  bundle_items: [],
+  order_bundles: [],
 });
 
 export const actions = {
-  async add({ commit, state }, data) {
-    //let cart = await this.$strapi.$http.$post("/order-items", data);
-    //console.log(cart)
+  async addOrder({ commit, state }, data = {}) {
+    const order = {
+      ...data,
+      order_items: state.order_items.map((item) => item.id),
+      bundle_items: state.order_bundles.map((item) => item.id),
+      order_date: new Date(),
+    };
+
+    try {
+      const result = await this.$strapi.create("orders", order);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  async addProduct({ commit, state }, order_item) {
+    const item = state.order_items.filter(
+      (item) => item.product.id === order_item.product
+    );
+
+    if (!item.length) {
+      const result = await this.$strapi.$http.$post("/order-items", order_item);
+      commit("addProduct", result);
+    }
+  },
+  async updateProduct({ commit }, order_item) {
+    try {
+      const result = await this.$strapi.update(
+        "order-items",
+        order_item.id,
+        order_item
+      );
+      commit("updateProduct", result);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  async removeProduct({ commit }, id) {
+    try {
+      const result = await this.$strapi.delete("order-items", id);
+      commit("removeProduct", result.id);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  async addBundle({ commit, state }, order_bundle) {
+    const item = state.order_bundles.filter(
+      (item) => item.id === order_bundle.id
+    );
+
+    if (!item.length) {
+      const result = await this.$strapi.$http.$post("/order-bundles", {
+        bundle: order_bundle.id,
+      });
+      result.bundle = order_bundle;
+      commit("addBundle", result);
+    }
+  },
+  async removeBundle({ commit }, id) {
+    try {
+      const result = await this.$strapi.delete("order-bundles", id);
+      commit("removeBundle", result.id);
+    } catch (e) {
+      console.log(e);
+    }
   },
   /*async add({ commit, state }, data) {
     if (data.quantity == null) {
@@ -42,17 +103,10 @@ export const actions = {
 
 export const mutations = {
   addProduct(state, order_item) {
-    const item = state.order_items.filter(
-      (item) => item.product === order_item.product
-    );
-    if (!item.length) {
-      state.order_items.push(order_item);
-    }
+    state.order_items.push(order_item);
   },
   updateProduct(state, newItem) {
-    const index = state.order_items.findIndex(
-      (item) => item.product === newItem.product
-    );
+    const index = state.order_items.findIndex((item) => item.id === newItem.id);
     if (index !== -1) {
       const new_order_items = [...state.order_items];
       new_order_items[index] = newItem;
@@ -60,18 +114,14 @@ export const mutations = {
     }
   },
   removeProduct(state, id) {
-    state.order_items = state.order_items.filter((item) => item.product !== id);
+    state.order_items = state.order_items.filter((item) => item.id !== id);
   },
-  addBundle(state, bundleProduct) {
-    const item = state.bundle_items.filter(
-      (item) => item.id === bundleProduct.id
-    );
-    if (!item.length) {
-      state.bundle_items.push(bundleProduct);
-    }
+  addBundle(state, bundle) {
+    state.order_bundles.push(bundle);
+    console.log(state.order_bundles);
   },
   removeBundle(state, id) {
-    state.bundle_items = state.bundle_items.filter((item) => item.id !== id);
+    state.order_bundles = state.order_bundles.filter((item) => item.id !== id);
   },
   /*setCart(state, newCart) {
     if (newCart) {
@@ -132,10 +182,10 @@ export const getters = {
     return state.order_items;
   },
   getBundleItems(state) {
-    return state.bundle_items;
+    return state.order_bundles;
   },
   numberOfItems(state) {
-    return state.order_items.length + state.bundle_items.length;
+    return state.order_items.length + state.order_bundles.length;
     /*return state.cart
       ? state.cart.order_items.reduce(
           (accumulator, item) => accumulator + item.quantity,

@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column overflow-auto">
     <div
-      v-if="!order_items.length && !bundles.length"
+      v-if="!order_items.length && !order_bundles.length"
       class="cart p-4 d-flex justify-content-center align-items-center"
     >
       <h5 class="text-uppercase text-center">put something in the cart</h5>
@@ -11,53 +11,43 @@
         total price: {{ totalPrice | formatNumber }} $
       </h6>
       <ul v-if="order_items.length" class="p-0">
-        <li
-          v-for="product in order_items"
-          :key="product.product"
-          class="p-3 mb-3"
-        >
+        <li v-for="item in order_items" :key="item.product.id" class="p-3 mb-3">
           <div class="d-flex flex-column">
             <div class="d-flex">
               <div class="w-25">
                 <img
-                  :src="`${getStrapiMedia(product.item.image.url)}`"
+                  :src="`${getStrapiMedia(item.product.image.url)}`"
                   class="m-auto"
                 />
               </div>
               <div class="d-flex flex-column px-3">
-                <h6>{{ product.item.title }}</h6>
+                <h6>{{ item.product.title }}</h6>
                 <div>
                   <p class="mb-2 grey">
-                    price {{ product.item.price | formatNumber }} $
+                    price {{ item.product.price | formatNumber }} $
                   </p>
                 </div>
-                <p v-if="product.quantity > 1">
+                <p v-if="item.quantity > 1">
                   total price
-                  {{ (product.item.price * product.quantity) | formatNumber }} $
+                  {{ (item.product.price * item.quantity) | formatNumber }} $
                 </p>
               </div>
             </div>
             <div class="d-flex flex-column mt-3">
               <div class="d-flex">
                 <p class="w-25 mb-2 grey">description</p>
-                <p class="mb-2">{{ product.item.description }}</p>
+                <p class="mb-2">{{ item.product.description }}</p>
               </div>
               <div class="d-flex">
                 <p class="w-25 mb-2 grey">quantity</p>
                 <div class="d-flex">
-                  <button
-                    v-if="edit"
-                    v-on:click="quantityMinus(product.item.id)"
-                  >
+                  <button v-if="edit" v-on:click="quantityMinus(item.id)">
                     -
                   </button>
                   <p class="my-auto" :class="edit && 'mx-3'">
-                    {{ product.quantity }}
+                    {{ item.quantity }}
                   </p>
-                  <button
-                    v-if="edit"
-                    v-on:click="quantityPlus(product.item.id)"
-                  >
+                  <button v-if="edit" v-on:click="quantityPlus(item.id)">
                     +
                   </button>
                 </div>
@@ -65,7 +55,7 @@
               <div class="d-flex">
                 <p class="w-25 mb-2 grey">category</p>
                 <p
-                  v-for="category in product.item.categories"
+                  v-for="category in item.product.categories"
                   :key="category.id"
                   class="mr-2 mb-2"
                 >
@@ -77,16 +67,18 @@
                 <p class="mb-2" v-if="!edit">
                   {{
                     purchaseTypes.filter(
-                      (item) => product.purchase_type === item.id
+                      (type) => item.purchase_type.id === type.id
                     )[0].title
                   }}
                 </p>
                 <PurchaseTypes
                   v-else
                   cart
-                  :purType="product.purchase_type"
-                  :subType="product.subscription_type"
-                  v-on:setTypes="(types) => setTypes(types, product.item.id)"
+                  :purType="item.purchase_type ? item.purchase_type.id : null"
+                  :subType="
+                    item.subscription_type ? item.subscription_type.id : null
+                  "
+                  v-on:setTypes="(types) => setTypes(types, item.id)"
                 />
               </div>
             </div>
@@ -100,27 +92,30 @@
               </div>
               <span
                 class="icon icon-trash m-2"
-                v-on:click="removeProduct(product.item.id)"
+                v-on:click="removeProduct(item.id)"
               ></span>
             </div>
           </div>
         </li>
       </ul>
-      <ul v-if="bundles.length" class="p-0">
+      <ul v-if="order_bundles.length" class="p-0">
         <li
-          v-for="(bundle, index) in bundles"
-          :key="bundle.id"
+          v-for="(order_bundle, index) in order_bundles"
+          :key="order_bundle.id"
           class="p-3 mb-3"
         >
           <div class="d-flex flex-column">
             <div class="d-flex row">
               <div v-if="(index - 1) % 2" class="col-4">
-                <div v-if="bundle.products[index + 1]" class="row p-2">
+                <div
+                  v-if="order_bundle.bundle.products[index + 1]"
+                  class="row p-2"
+                >
                   <div class="col-5 p-0">
                     <div class="m-auto p-2">
                       <img
                         :src="`${getStrapiMedia(
-                          bundle.products[index].image.url
+                          order_bundle.bundle.products[index].image.url
                         )}`"
                         class="m-auto"
                       />
@@ -129,10 +124,13 @@
                       class="d-flex flex-column justify-content-between mt-3"
                     >
                       <span class="font-weight-light text-center">
-                        {{ bundle.products[index].title }}
+                        {{ order_bundle.bundle.products[index].title }}
                       </span>
                       <span class="font-weight-light text-center grey">
-                        ${{ bundle.products[index].price | formatNumber }}
+                        ${{
+                          order_bundle.bundle.products[index].price
+                            | formatNumber
+                        }}
                       </span>
                     </div>
                   </div>
@@ -143,7 +141,7 @@
                     <div class="m-auto p-2">
                       <img
                         :src="`${getStrapiMedia(
-                          bundle.products[index + 1].image.url
+                          order_bundle.bundle.products[index + 1].image.url
                         )}`"
                         class="m-auto"
                       />
@@ -152,10 +150,13 @@
                       class="d-flex flex-column justify-content-between mt-3"
                     >
                       <span class="font-weight-light text-center">
-                        {{ bundle.products[index + 1].title }}
+                        {{ order_bundle.bundle.products[index + 1].title }}
                       </span>
                       <span class="font-weight-light text-center grey">
-                        ${{ bundle.products[index + 1].price | formatNumber }}
+                        ${{
+                          order_bundle.bundle.products[index + 1].price
+                            | formatNumber
+                        }}
                       </span>
                     </div>
                   </div>
@@ -165,7 +166,7 @@
                     <div class="m-auto p-2">
                       <img
                         :src="`${getStrapiMedia(
-                          bundle.products[index].image.url
+                          order_bundle.bundle.products[index].image.url
                         )}`"
                         class="m-auto"
                       />
@@ -174,10 +175,13 @@
                       class="d-flex flex-column justify-content-between mt-3"
                     >
                       <span class="font-weight-light text-center">
-                        {{ bundle.products[index].title }}
+                        {{ order_bundle.bundle.products[index].title }}
                       </span>
                       <span class="font-weight-light text-center grey">
-                        ${{ bundle.products[index].price | formatNumber }}
+                        ${{
+                          order_bundle.bundle.products[index].price
+                            | formatNumber
+                        }}
                       </span>
                     </div>
                   </div>
@@ -185,13 +189,13 @@
               </div>
               <div class="mt-4 d-flex flex-column col-7">
                 <p class="text-uppercase font-weight-bold m-0">
-                  bundle price: ${{ bundle.price }}
+                  bundle price: ${{ order_bundle.bundle.price }}
                 </p>
                 <p class="save-price">
                   You save: $
                   {{
-                    bundle.price -
-                    bundle.products.reduce(
+                    order_bundle.bundle.price -
+                    order_bundle.bundle.products.reduce(
                       (prVal, curVal) => prVal + curVal.price,
                       0
                     )
@@ -202,7 +206,7 @@
             <div class="w-100 d-flex justify-content-end">
               <span
                 class="icon icon-trash m-2"
-                v-on:click="removeBundle(bundle.id)"
+                v-on:click="removeBundle(order_bundle.id)"
               ></span>
             </div>
           </div>
@@ -216,7 +220,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
 import PurchaseTypes from "~/components/common/PurchaseTypes";
 
@@ -227,7 +231,7 @@ export default {
   computed: {
     ...mapGetters({
       order_items: "cart/getOrderItems",
-      bundles: "cart/getBundleItems",
+      order_bundles: "cart/getBundleItems",
       purchaseTypes: "purchase-types/getTypes",
     }),
   },
@@ -235,26 +239,26 @@ export default {
     order_items: function () {
       this.calcTotalPrice();
     },
-    bundles: function () {
+    order_bundles: function () {
       this.calcTotalPrice();
     },
   },
   methods: {
     getStrapiMedia,
-    ...mapMutations({
+    ...mapActions({
       removeProduct: "cart/removeProduct",
       updateProduct: "cart/updateProduct",
       removeBundle: "cart/removeBundle",
     }),
     setTypes: function (types, id) {
-      const index = this.order_items.findIndex((item) => item.product === id);
+      const index = this.order_items.findIndex((item) => item.id === id);
       if (index !== -1) {
         const item = { ...this.order_items[index], ...types };
         this.updateProduct(item);
       }
     },
     quantityPlus: function (id) {
-      const index = this.order_items.findIndex((item) => item.product === id);
+      const index = this.order_items.findIndex((item) => item.id === id);
       if (index !== -1 && this.order_items[index].quantity < 99) {
         const item = { ...this.order_items[index] };
         item.quantity = item.quantity + 1;
@@ -262,7 +266,7 @@ export default {
       }
     },
     quantityMinus: function (id) {
-      const index = this.order_items.findIndex((item) => item.product === id);
+      const index = this.order_items.findIndex((item) => item.id === id);
       if (index !== -1 && this.order_items[index].quantity > 1) {
         const item = { ...this.order_items[index] };
         item.quantity = item.quantity - 1;
@@ -271,12 +275,12 @@ export default {
     },
     calcTotalPrice: function () {
       const orderItemsTotalPrice = this.order_items.reduce(
-        (acc, item) => (acc += item.item.price * item.quantity),
+        (acc, item) => (acc += item.product.price * item.quantity),
         0
       );
 
-      const bundlesTotalPrice = this.bundles.reduce(
-        (acc, item) => (acc += item.price),
+      const bundlesTotalPrice = this.order_bundles.reduce(
+        (acc, item) => (acc += item.bundle.price),
         0
       );
 
