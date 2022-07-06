@@ -28,9 +28,9 @@ export const actions = {
       cart = await this.$strapi.$http.$get("/cart/getcart?" + query);
     }
 
-    commit("cart/setToken", token);
+    //commit("cart/setToken", token);
     commit("auth/setUser", user);
-    commit("cart/setCart", cart);
+    //commit("cart/setCart", cart);
 
     const categories = await this.$strapi.find("categories");
     const purchaseTypes = await this.$strapi.find("purchase-types");

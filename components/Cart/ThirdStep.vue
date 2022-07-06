@@ -8,7 +8,7 @@
     />
     <button
       class="text-uppercase w-100 mt-4 p-2 finalize-order"
-      v-on:click="$emit('nextStep')"
+      v-on:click="finalize"
     >
       finalize and place order
     </button>
@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   data: () => ({
     translations: {
@@ -37,9 +39,22 @@ export default {
       },
     },
   }),
+  computed: {
+    ...mapGetters({
+      username: "auth/username",
+    }),
+  },
   methods: {
+    ...mapActions({
+      addOrder: "cart/addOrder",
+    }),
     creditInfoChanged(values) {
       console.log("Credit card fields", values);
+    },
+    finalize: function () {
+      const data = { user: this.username };
+      this.addOrder(data);
+      this.$emit("nextStep");
     },
   },
 };

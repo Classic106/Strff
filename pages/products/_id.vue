@@ -129,7 +129,7 @@ export default {
         quantity: 1,
         purchase_type: null,
         subscription_type: null,
-        item: null,
+        total: 0,
       },
     };
   },
@@ -145,7 +145,7 @@ export default {
         this.$route.params.id
       );
       this.selected.product = this.product.id;
-      this.selected.item = this.product;
+      this.selected.total = this.product.price;
     } catch (error) {
       this.error = error;
     }
@@ -157,11 +157,13 @@ export default {
     quantityPlus: function () {
       if (this.selected.quantity < 99) {
         this.selected.quantity = this.selected.quantity + 1;
+        this.selected.total = this.selected.quantity * this.product.price;
       }
     },
     quantityMinus: function () {
       if (this.selected.quantity > 1) {
         this.selected.quantity = this.selected.quantity - 1;
+        this.selected.total = this.selected.quantity * this.product.price;
       }
     },
     calcPrice: function (itemPrice, quantity) {
@@ -199,7 +201,7 @@ export default {
     },
     addToCart: async function () {
       if (this.selected.purchase_type) {
-        this.$store.commit("cart/addProduct", this.selected);
+        this.$store.dispatch("cart/addProduct", this.selected);
       }
     },
     getStrapiMedia,

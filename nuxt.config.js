@@ -119,7 +119,7 @@ export default {
       "categories",
       "sizes",
       "bundles",
-      "order",
+      "orders",
       "order-items",
       "purchase-types",
       "subscription-types",

@@ -123,6 +123,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
 
 export default {
@@ -135,8 +136,11 @@ export default {
   }),
   methods: {
     getStrapiMedia,
-    addToCart(bundleProduct) {
-      this.$store.commit("cart/addBundle", bundleProduct);
+    ...mapActions({
+      addBundle: "cart/addBundle",
+    }),
+    addToCart(bundle) {
+      this.addBundle(bundle);
     },
   },
   async mounted() {
