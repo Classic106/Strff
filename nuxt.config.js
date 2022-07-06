@@ -43,7 +43,6 @@ export default {
    ** https://nuxtjs.org/guide/plugins
    */
   plugins: [
-    { src: "~/plugins/v-calendar.js", mode: "client" },
     { src: "~/plugins/v-credit-card-form.js", mode: "client" },
   ],
   /*

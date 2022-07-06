@@ -137,7 +137,7 @@ export default {
   methods: {
     getStrapiMedia,
     ...mapActions({
-      addBundle: "cart/addBundle",
+      addBundle: "order/addBundle",
     }),
     addToCart(bundle) {
       this.addBundle(bundle);

@@ -201,7 +201,7 @@ export default {
     },
     addToCart: async function () {
       if (this.selected.purchase_type) {
-        this.$store.dispatch("cart/addProduct", this.selected);
+        this.$store.dispatch("order/addProduct", this.selected);
       }
     },
     getStrapiMedia,
