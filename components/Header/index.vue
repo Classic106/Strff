@@ -211,7 +211,7 @@ header {
   max-height: 220px;
   background-color: #1f2020;
   color: #fff;
-
+  z-index: 2;
 }
 
 header > span {
