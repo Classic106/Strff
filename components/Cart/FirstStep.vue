@@ -17,7 +17,7 @@
               <div class="w-25">
                 <img
                   :src="`${getStrapiMedia(item.product.image.url)}`"
-                  class="m-auto"
+                  class="m-auto gold-border"
                 />
               </div>
               <div class="d-flex flex-column px-3">
@@ -117,7 +117,7 @@
                         :src="`${getStrapiMedia(
                           order_bundle.bundle.products[index].image.url
                         )}`"
-                        class="m-auto"
+                        class="m-auto gold-border"
                       />
                     </div>
                     <div
@@ -143,7 +143,7 @@
                         :src="`${getStrapiMedia(
                           order_bundle.bundle.products[index + 1].image.url
                         )}`"
-                        class="m-auto"
+                        class="m-auto gold-border"
                       />
                     </div>
                     <div
@@ -168,7 +168,7 @@
                         :src="`${getStrapiMedia(
                           order_bundle.bundle.products[index].image.url
                         )}`"
-                        class="m-auto"
+                        class="m-auto gold-border"
                       />
                     </div>
                     <div

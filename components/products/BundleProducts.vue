@@ -11,7 +11,7 @@
         :key="bundleProduct.id"
         class="border-black p-3"
       >
-        <h6 class="text-center dark-orange">{{ bundleProduct.title }}</h6>
+        <h6 class="text-center gold">{{ bundleProduct.title }}</h6>
         <p class="text-center">{{ bundleProduct.description }}</p>
         <div
           v-for="(product, index) in bundleProduct.products"
@@ -26,7 +26,7 @@
                     :src="`${getStrapiMedia(
                       bundleProduct.products[index].image.url
                     )}`"
-                    class="m-auto"
+                    class="m-auto gold-border"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
@@ -47,7 +47,7 @@
                     :src="`${getStrapiMedia(
                       bundleProduct.products[index + 1].image.url
                     )}`"
-                    class="m-auto"
+                    class="m-auto gold-border"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
@@ -69,7 +69,7 @@
                     :src="`${getStrapiMedia(
                       bundleProduct.products[index].image.url
                     )}`"
-                    class="m-auto"
+                    class="m-auto gold-border"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">

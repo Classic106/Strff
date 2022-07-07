@@ -12,7 +12,7 @@
         <nuxt-link :to="`/products/${product.slug}`">
           <img
             v-lazy
-            class="mb-2 w-100"
+            class="mb-2 w-100 gold-border"
             src="~/assets/img/placeholder-image.png"
             :data-src="`${getStrapiMedia(product.image.url)}`"
           />
@@ -29,7 +29,7 @@
           >
             {{ product.title }}
           </h6>
-          <h5 class="dark-orange d-flex justify-content-center m-3 price">
+          <h5 class="gold d-flex justify-content-center m-3 price">
             {{ product.price }} $
           </h5>
         </nuxt-link>

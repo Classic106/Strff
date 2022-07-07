@@ -6,7 +6,10 @@
     <div v-if="this.product !== null">
       <div class="row m-1 m-md-5">
         <div class="col-md-6 col-12 rounded pt-2 pb-2">
-          <img :src="`${getStrapiMedia(product.image.url)}`" class="m-auto" />
+          <img
+            :src="`${getStrapiMedia(product.image.url)}`"
+            class="m-auto gold-border"
+          />
           <RelatedProducts :product="product" />
         </div>
         <div
@@ -19,9 +22,10 @@
           "
         >
           <div>
-            <h6 class="font-weight-bold text-md-left text-center">
-              {{ product.title }}
-            </h6>
+            <h6
+              v-html="colorTitleNumbers(product.title)"
+              class="font-weight-bold text-md-left text-center"
+            ></h6>
             <h6 class="mt-3 font-weight-normal text-md-left text-center">
               ${{ product.price | formatNumber }}
             </h6>
@@ -94,8 +98,13 @@
                 </div>
               </div>
             </div>
-            <PurchaseTypes v-on:setTypes="setTypes" />
+            <PurchaseTypes
+              v-on:setTypes="setTypes"
+              :purType="selected.purchase_type"
+              :subType="selected.subscription_type"
+            />
             <div class="mt-1 items-baseline text-gray-600">
+              <span class="gold font-weight-bold">Description:</span>
               {{ product.description }}
             </div>
             <BundleProducts :product="product" />
@@ -109,6 +118,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
+import { colorTitleNumbers } from "~/helpers";
 //import Vue from 'vue'
 import "~/utils/filters";
 import Icon from "@/assets/icons";
@@ -127,7 +137,7 @@ export default {
       selected: {
         product: null,
         quantity: 1,
-        purchase_type: null,
+        purchase_type: 1,
         subscription_type: null,
         total: 0,
       },
@@ -151,6 +161,7 @@ export default {
     }
   },
   methods: {
+    colorTitleNumbers,
     setTypes: function (types) {
       this.selected = { ...this.selected, ...types };
     },
@@ -200,9 +211,7 @@ export default {
       return price;
     },
     addToCart: async function () {
-      if (this.selected.purchase_type) {
-        this.$store.dispatch("order/addProduct", this.selected);
-      }
+      this.$store.dispatch("order/addProduct", this.selected);
     },
     getStrapiMedia,
   },

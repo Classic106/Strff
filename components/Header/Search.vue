@@ -14,7 +14,7 @@
         class="search-list col position-absolute rounded"
       >
         <li v-for="item in result" :key="item.id" class="py-2">
-          <nuxt-link :to="`/products/${item.slug}`" class="dark-orange">{{
+          <nuxt-link :to="`/products/${item.slug}`" class="gold">{{
             item.title
           }}</nuxt-link>
         </li>

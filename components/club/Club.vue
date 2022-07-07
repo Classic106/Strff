@@ -21,13 +21,13 @@
           align-self-center
         "
       >
-        <h1 class="dark-orange">Discover</h1>
+        <h1 class="gold">Discover</h1>
         <h3 class="mb-5">our best Selling BEARD</h3>
         <h3 class="mt-5">hair and Skin CARE PRODUCTS</h3>
       </div>
-      <div class="d-flex justify-content-center w-100">
+      <div class="d-flex justify-content-center w-100 gold-border">
         <img
-          class="position-absolute header-image"
+          class="position-absolute header-image gold-border"
           src="@/assets/img/iStock-1018779998-min.jpg"
           alt="iStock"
         />
@@ -46,11 +46,15 @@
             container
           "
         >
-          <h4 class="dark-orange">Traditional Shaving</h4>
+          <h4 class="gold">Traditional Shaving</h4>
           <p>Indulge in a moment of perfect nostalgia</p>
           <h4 class="grey">SHOP NOW</h4>
         </div>
-        <img src="@/assets/img/iStock-1251674339-min.jpg" alt="istockphoto" />
+        <img
+          src="@/assets/img/iStock-1251674339-min.jpg"
+          alt="istockphoto"
+          class="gold-border"
+        />
       </div>
       <div class="d-flex flex-column align-items-center">
         <h6 class="text-center col-black p-3">FOLLOW US</h6>
