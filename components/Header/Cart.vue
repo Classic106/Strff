@@ -10,7 +10,7 @@
         d-flex
         justify-content-center
         align-items-center
-        dark-orange
+        gold
       "
       >{{ numberOfItems }}</span
     >
@@ -24,7 +24,7 @@ import { mapGetters } from "vuex";
 export default {
   computed: {
     ...mapGetters({
-      numberOfItems: "cart/numberOfItems",
+      numberOfItems: "order/numberOfItems",
     }),
   },
 };

@@ -23,8 +23,12 @@ form {
   z-index: 0;
 }
 
-.dark-orange {
+.gold {
   color: #9e7d24;
+}
+
+.gold-border {
+  border: 1px solid #9e7d24;
 }
 
 .col-black {

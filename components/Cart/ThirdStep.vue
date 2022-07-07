@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      addOrder: "cart/addOrder",
+      addOrder: "order/addOrder",
     }),
     creditInfoChanged(values) {
       console.log("Credit card fields", values);

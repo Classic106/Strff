@@ -10,7 +10,7 @@
         <nuxt-link :to="`/products/${product.slug}`">
           <img
             v-lazy
-            class="mb-2"
+            class="mb-2 gold-border"
             src="~/assets/img/placeholder-image.png"
             :data-src="`${getStrapiMedia(product.image.url)}`"
           />

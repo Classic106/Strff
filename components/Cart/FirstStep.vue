@@ -17,7 +17,7 @@
               <div class="w-25">
                 <img
                   :src="`${getStrapiMedia(item.product.image.url)}`"
-                  class="m-auto"
+                  class="m-auto gold-border"
                 />
               </div>
               <div class="d-flex flex-column px-3">
@@ -117,7 +117,7 @@
                         :src="`${getStrapiMedia(
                           order_bundle.bundle.products[index].image.url
                         )}`"
-                        class="m-auto"
+                        class="m-auto gold-border"
                       />
                     </div>
                     <div
@@ -143,7 +143,7 @@
                         :src="`${getStrapiMedia(
                           order_bundle.bundle.products[index + 1].image.url
                         )}`"
-                        class="m-auto"
+                        class="m-auto gold-border"
                       />
                     </div>
                     <div
@@ -168,7 +168,7 @@
                         :src="`${getStrapiMedia(
                           order_bundle.bundle.products[index].image.url
                         )}`"
-                        class="m-auto"
+                        class="m-auto gold-border"
                       />
                     </div>
                     <div
@@ -230,8 +230,8 @@ export default {
   data: () => ({ edit: false, totalPrice: 0 }),
   computed: {
     ...mapGetters({
-      order_items: "cart/getOrderItems",
-      order_bundles: "cart/getBundleItems",
+      order_items: "order/getOrderItems",
+      order_bundles: "order/getBundleItems",
       purchaseTypes: "purchase-types/getTypes",
     }),
   },
@@ -246,9 +246,9 @@ export default {
   methods: {
     getStrapiMedia,
     ...mapActions({
-      removeProduct: "cart/removeProduct",
-      updateProduct: "cart/updateProduct",
-      removeBundle: "cart/removeBundle",
+      removeProduct: "order/removeProduct",
+      updateProduct: "order/updateProduct",
+      removeBundle: "order/removeBundle",
     }),
     setTypes: function (types, id) {
       const index = this.order_items.findIndex((item) => item.id === id);

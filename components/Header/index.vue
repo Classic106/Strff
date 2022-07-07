@@ -38,7 +38,7 @@
         :class="isMobile ? ' justify-content-end' : ' justify-content-center'"
       >
         <h6 class="col-md-7 col-3 d-flex justify-content-end">
-          <nuxt-link to="/" class="dark-orange mr-4">strff</nuxt-link>
+          <nuxt-link to="/" class="gold mr-4">strff</nuxt-link>
         </h6>
         <div class="col-md-5 col-9 d-flex">
           <Search />
@@ -77,7 +77,7 @@
           >
             <NuxtLink
               :to="`/categories/${category.slug}`"
-              class="dark-orange"
+              class="gold"
               >{{ category.name }}</NuxtLink
             >
           </li>
@@ -92,7 +92,7 @@
           >
             <a
               v-on:click.prevent="isOpen = !isOpen"
-              class="text-nowrap dark-orange d-flex align-items-center m-0"
+              class="text-nowrap gold d-flex align-items-center m-0"
             >
               MAN`S CARE
               <Icon
@@ -107,7 +107,7 @@
               :class="isMobile ? '' : 'position-absolute additional_menu'"
             >
               <li v-for="item in additionalMenu" :key="item.title">
-                <NuxtLink :to="item.link" class="text-nowrap dark-orange">{{
+                <NuxtLink :to="item.link" class="text-nowrap gold">{{
                   item.title
                 }}</NuxtLink>
               </li>
@@ -211,7 +211,7 @@ header {
   max-height: 220px;
   background-color: #1f2020;
   color: #fff;
-
+  z-index: 2;
 }
 
 header > span {

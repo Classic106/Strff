@@ -1,45 +1,8 @@
-const configCalendar = () => {
-  const minDate = new Date();
-  const maxDate = new Date(
-    minDate.getFullYear(),
-    minDate.getMonth() + 2,
-    minDate.getDate()
+const colorTitleNumbers = (title) => {
+  return title.replace(
+    /(\d+\.\d+)|\d+/g,
+    (val) => `<span class="gold">${val}</span>`
   );
-  const dates = [];
-  let date = minDate;
-  do {
-    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
-    dates.push(d);
-    date = d;
-  } while (date < maxDate);
-  return {
-    minDate,
-    maxDate,
-    attributes: [
-      {
-        dates: [minDate, ...dates],
-      },
-    ],
-  };
 };
 
-const parseMonth = (month) => {
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  return monthNames[month];
-};
-
-export { configCalendar, parseMonth };
+export { colorTitleNumbers };

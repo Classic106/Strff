@@ -12,7 +12,7 @@
         <nuxt-link :to="`/products/${product.slug}`">
           <img
             v-lazy
-            class="mb-2 w-100"
+            class="mb-2 w-100 gold-border"
             src="~/assets/img/placeholder-image.png"
             :data-src="`${getStrapiMedia(product.image.url)}`"
           />
@@ -29,28 +29,28 @@
           >
             {{ product.title }}
           </h6>
-          <h5 class="dark-orange d-flex justify-content-center m-3 price">
+          <h5 class="gold d-flex justify-content-center m-3 price">
             {{ product.price }} $
           </h5>
-          <button
-            v-if="product.status === 'published'"
-            class="
-              py-2
-              px-4
-              rounded
-              btn
-              d-flex
-              justify-content-center
-              align-items-center
-              text-uppercase text-nowrap
-              w-100
-            "
-            v-on:click="addToCart(product)"
-          >
-            <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
-            Add to cart
-          </button>
         </nuxt-link>
+        <button
+          v-if="product.status === 'published'"
+          class="
+            py-2
+            px-4
+            rounded
+            btn
+            d-flex
+            justify-content-center
+            align-items-center
+            text-uppercase text-nowrap
+            w-100
+          "
+          v-on:click="addToCart(product)"
+        >
+          <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
+          Add to cart
+        </button>
       </div>
     </div>
   </div>
@@ -69,15 +69,13 @@ export default {
     getStrapiMedia,
     addToCart(product) {
       const selected = {
-        productId: product.id,
-        sizeId: item.size.id,
+        product,
         quantity: 1,
-        purchaseTypeId: product.purchase_type.id,
-        subscriptionTypeId: product.subscription_type
-          ? product.subscription_type.id
-          : null,
+        purchase_type: 1,
+        subscription_type: null,
+        total: product.price,
       };
-      this.$store.dispatch("cart/add", selected);
+      this.$store.dispatch("order/addProduct", selected);
     },
   },
   directives: {
