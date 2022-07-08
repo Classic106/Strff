@@ -44,6 +44,7 @@ export default {
    */
   plugins: [
     { src: "~/plugins/v-credit-card-form.js", mode: "client" },
+    { src: "~/plugins/lin-gallery.js", mode: "client" },
   ],
   /*
    ** Auto import components

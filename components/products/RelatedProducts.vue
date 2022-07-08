@@ -20,7 +20,7 @@
       >
         <nuxt-link :to="`/products/${product.slug}`">
           <img
-            :src="`${getStrapiMedia(product.image.url)}`"
+            :src="`${getFirstImage(product.image)}`"
             class="m-auto gold-border"
           />
           <div class="d-flex justify-content-between mt-3">
@@ -48,7 +48,15 @@ export default {
   data: () => ({
     relatedProducts: [],
   }),
-  methods: { getStrapiMedia },
+  methods: {
+    getStrapiMedia,
+    getFirstImage: function (images) {
+      if (images[0]) {
+        return this.getStrapiMedia(images[0].url);
+      }
+      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
+    },
+  },
   async mounted() {
     const products = await this.$strapi.find("products");
 

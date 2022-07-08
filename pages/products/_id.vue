@@ -6,10 +6,9 @@
     <div v-if="this.product !== null">
       <div class="row m-1 m-md-5">
         <div class="col-md-6 col-12 rounded pt-2 pb-2">
-          <img
-            :src="`${getStrapiMedia(product.image.url)}`"
-            class="m-auto gold-border"
-          />
+          <div class="m-auto">
+            <Lingallery :items="images" />
+          </div>
           <RelatedProducts :product="product" />
         </div>
         <div
@@ -119,7 +118,7 @@
 import { mapGetters } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
 import { colorTitleNumbers } from "~/helpers";
-//import Vue from 'vue'
+
 import "~/utils/filters";
 import Icon from "@/assets/icons";
 import RelatedProducts from "~/components/products/RelatedProducts";
@@ -134,6 +133,7 @@ export default {
       product: null,
       options: [],
       error: null,
+      images: [],
       selected: {
         product: null,
         quantity: 1,
@@ -154,8 +154,14 @@ export default {
         "products",
         this.$route.params.id
       );
+
       this.selected.product = this.product.id;
       this.selected.total = this.product.price;
+      this.images = this.product.image.map((item) => ({
+        id: item.id,
+        src: this.getStrapiMedia(item.url),
+        thumbnail: this.getStrapiMedia(item.url),
+      }));
     } catch (error) {
       this.error = error;
     }

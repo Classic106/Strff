@@ -70,5 +70,14 @@ h5 {
 h6 {
   font-size: 1.25rem;
 }
+
+.lingallery {
+  width: 100% !important;
+}
+
+.lingallery > figure {
+  width: 100% !important;
+  height: auto !important;
+}
 </style>
 

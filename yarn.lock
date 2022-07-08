@@ -3067,11 +3067,6 @@
   "resolved" "https://registry.npmjs.org/core-js/-/core-js-2.6.12.tgz"
   "version" "2.6.12"
 
-"core-js@^3.15.2":
-  "integrity" "sha512-oAKwkj9xcWNBAvGbT//WiCdOMpb9XQG92/Fe3ABFM/R16BsHgePG00mFOgKf7IsCtfj8tA1kHtf/VwErhriz5Q=="
-  "resolved" "https://registry.npmjs.org/core-js/-/core-js-3.23.3.tgz"
-  "version" "3.23.3"
-
 "core-util-is@~1.0.0":
   "integrity" "sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ=="
   "resolved" "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.3.tgz"
@@ -3394,16 +3389,6 @@
   "integrity" "sha512-NJGVKPS81XejHcLhaLJS7plab0fK3slPh11mESeeDq2W4ZI5kUKK/LRRdVDvjJseojbPB7ZwjnyOybg3Igea/A=="
   "resolved" "https://registry.npmjs.org/cyclist/-/cyclist-1.0.1.tgz"
   "version" "1.0.1"
-
-"date-fns-tz@^1.1.4":
-  "integrity" "sha512-SNhl/fWe7i2HoIB9ejLZhEEJ6ZtRRpOBbzizFrq11K2/iceS9Nk7fPN2VTYVOMgFB9u0f3eidSC4n1xaRONW2A=="
-  "resolved" "https://registry.npmjs.org/date-fns-tz/-/date-fns-tz-1.3.5.tgz"
-  "version" "1.3.5"
-
-"date-fns@^2.22.1":
-  "integrity" "sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw=="
-  "resolved" "https://registry.npmjs.org/date-fns/-/date-fns-2.28.0.tgz"
-  "version" "2.28.0"
 
 "de-indent@^1.0.2":
   "integrity" "sha512-e/1zu3xH5MQryN2zdVaF0OrdNLUbvWxzMbi+iNA6Bky7l1RoP8a2fIbRocyHclXt/arDrrR6lL3TqFD9pMQTsg=="
@@ -3761,6 +3746,11 @@
   "integrity" "sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A=="
   "resolved" "https://registry.npmjs.org/entities/-/entities-2.2.0.tgz"
   "version" "2.2.0"
+
+"epic-spinners@^1.1.0":
+  "integrity" "sha512-nFyHmFuBFO6LpT37Xu68lQqKDYK50gXoZ6Yj/mpoS1Uslku0YkMtAGDzH8nbeFSiifAIoT1rUDB3S7e/ifnnxg=="
+  "resolved" "https://registry.npmjs.org/epic-spinners/-/epic-spinners-1.1.0.tgz"
+  "version" "1.1.0"
 
 "errno@^0.1.3", "errno@~0.1.7":
   "integrity" "sha512-dJ6oBr5SQ1VSd9qkk7ByRgb/1SH4JZjCHSW/mr63/QcXO9zLVxvJ6Oy13nio03rxpSnVDDjFor75SjVeZWPW/A=="
@@ -4483,6 +4473,11 @@
   "integrity" "sha512-7+G0/2/COR8pwteYFqHIVYfQpuEiO2HXwJrhCBJVgrNrl9O5eaUoJVDGXUJX+0RpGncNVTuestexjk1afj01wQ=="
   "resolved" "https://registry.npmjs.org/hable/-/hable-3.0.0.tgz"
   "version" "3.0.0"
+
+"hammerjs@^2.0.8":
+  "integrity" "sha512-tSQXBXS/MWQOn/RKckawJ61vvsDpCom87JgxiYdGwHdOa0ht0vzUWDlfioofFCRU0L+6NGDt6XzbgoJvZkMeRQ=="
+  "resolved" "https://registry.npmjs.org/hammerjs/-/hammerjs-2.0.8.tgz"
+  "version" "2.0.8"
 
 "hard-source-webpack-plugin@^0.13.1":
   "integrity" "sha512-r9zf5Wq7IqJHdVAQsZ4OP+dcUSvoHqDMxJlIzaE2J0TZWn3UjMMrHqwDHR8Jr/pzPfG7XxSe36E7Y8QGNdtuAw=="
@@ -5488,6 +5483,15 @@
   "integrity" "sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg=="
   "resolved" "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz"
   "version" "1.2.4"
+
+"lingallery@^1.3.7":
+  "integrity" "sha512-7LmAzZcbl2g7OkKXbVSOANpyG0BN8kyAnTrFuID3ZWfbEBmel1VMn0MY4fg+dLLyY4nxMFXPimc48qTrSXQGgw=="
+  "resolved" "https://registry.npmjs.org/lingallery/-/lingallery-1.3.7.tgz"
+  "version" "1.3.7"
+  dependencies:
+    "epic-spinners" "^1.1.0"
+    "hammerjs" "^2.0.8"
+    "vue-async-computed" "^3.9.0"
 
 "loader-runner@^2.4.0":
   "integrity" "sha512-Jsmr89RcXGIwivFY21FcRrisYZfvLMTWx5kOLc+JTxtpBOG6xML0vzbc6SEQG2FO9/4Fc3wW4LVcB5DmGflaRw=="
@@ -9228,16 +9232,6 @@
   "resolved" "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
   "version" "8.3.2"
 
-"v-calendar@^2.4.1":
-  "integrity" "sha512-nhzOlHM2cinv+8jIcnAx+nTo63U40szv3Ig41uLMpGK1U5sApgCP6ggigprsnlMOM5VRq1G/1B8rNHkRrLbGjw=="
-  "resolved" "https://registry.npmjs.org/v-calendar/-/v-calendar-2.4.1.tgz"
-  "version" "2.4.1"
-  dependencies:
-    "core-js" "^3.15.2"
-    "date-fns" "^2.22.1"
-    "date-fns-tz" "^1.1.4"
-    "lodash" "^4.17.21"
-
 "v-credit-card-form@^1.2.8":
   "integrity" "sha512-cBLbwF3W0on9KKN9VFxNXE4cgEyPTqz99rZSEqlzJHzDNFudRmbqcI0uTdx0i3tKufi24PUN9hoN5Y2CE7gTIQ=="
   "resolved" "https://registry.npmjs.org/v-credit-card-form/-/v-credit-card-form-1.2.8.tgz"
@@ -9260,6 +9254,11 @@
   "integrity" "sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ=="
   "resolved" "https://registry.npmjs.org/vm-browserify/-/vm-browserify-1.1.2.tgz"
   "version" "1.1.2"
+
+"vue-async-computed@^3.9.0":
+  "integrity" "sha512-ac6m/9zxHHNGGKNOU1en8qNk+fAmEbJLuWL7qyQTFuH3vjv3V4urv//QHcVzCobROM6btnaDG2b+XYMncF/ETA=="
+  "resolved" "https://registry.npmjs.org/vue-async-computed/-/vue-async-computed-3.9.0.tgz"
+  "version" "3.9.0"
 
 "vue-client-only@^2.0.0":
   "integrity" "sha512-vKl1skEKn8EK9f8P2ZzhRnuaRHLHrlt1sbRmazlvsx6EiC3A8oWF8YCBrMJzoN+W3OnElwIGbVjsx6/xelY1AA=="

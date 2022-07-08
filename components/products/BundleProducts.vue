@@ -23,8 +23,8 @@
               <div class="col-5 p-0">
                 <div class="m-auto p-2">
                   <img
-                    :src="`${getStrapiMedia(
-                      bundleProduct.products[index].image.url
+                    :src="`${getFirstImage(
+                      bundleProduct.products[index].image
                     )}`"
                     class="m-auto gold-border"
                   />
@@ -44,8 +44,8 @@
               <div class="col-5 p-0">
                 <div class="m-auto p-2">
                   <img
-                    :src="`${getStrapiMedia(
-                      bundleProduct.products[index + 1].image.url
+                    :src="`${getFirstImage(
+                      bundleProduct.products[index].image
                     )}`"
                     class="m-auto gold-border"
                   />
@@ -66,8 +66,8 @@
               <div class="col-5 p-0">
                 <div class="m-auto p-2">
                   <img
-                    :src="`${getStrapiMedia(
-                      bundleProduct.products[index].image.url
+                    :src="`${getFirstImage(
+                      bundleProduct.products[index].image
                     )}`"
                     class="m-auto gold-border"
                   />
@@ -139,6 +139,12 @@ export default {
     ...mapActions({
       addBundle: "order/addBundle",
     }),
+    getFirstImage: function (images) {
+      if (images[0]) {
+        return this.getStrapiMedia(images[0].url);
+      }
+      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
+    },
     addToCart(bundle) {
       this.addBundle(bundle);
     },
