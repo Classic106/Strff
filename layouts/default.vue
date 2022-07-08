@@ -31,6 +31,10 @@ form {
   border: 1px solid #9e7d24;
 }
 
+.gold-background {
+  background-color: #9e7d24;
+}
+
 .col-black {
   color: #000;
 }
