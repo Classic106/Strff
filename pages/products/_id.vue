@@ -6,8 +6,38 @@
     <div v-if="this.product !== null">
       <div class="row m-1 m-md-5">
         <div class="col-md-6 col-12 rounded pt-2 pb-2">
-          <div class="m-auto">
-            <Lingallery :items="images" />
+          <div class="m-auto images-wrapper">
+            <CoolLightBox
+              :items="images"
+              :index="imageIndex"
+              :loop="true"
+              @close="imageIndex = null"
+            />
+            <div class="image-wrapper">
+              <div
+                class="image"
+                @click="imageIndex = index"
+                :style="{ backgroundImage: `url(${images[index]})` }"
+              ></div>
+              <ssr-carousel
+                class="all-images mt-3"
+                :show-arrows="images.length > 6"
+                :loop="true"
+              >
+                <div
+                  class="image-wrapper slide mr-2"
+                  v-for="(image, imageIndex) in images"
+                  :key="imageIndex"
+                  :index="imageIndex"
+                >
+                  <div
+                    class="image gold-border"
+                    v-on:click="index = imageIndex"
+                    :style="{ backgroundImage: `url(${image})` }"
+                  ></div>
+                </div>
+              </ssr-carousel>
+            </div>
           </div>
           <RelatedProducts :product="product" />
         </div>
@@ -116,6 +146,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import "vue-cool-lightbox/dist/vue-cool-lightbox.min.css";
 import { getStrapiMedia } from "~/utils/medias";
 import { colorTitleNumbers } from "~/helpers";
 
@@ -128,21 +159,21 @@ import PurchaseTypes from "~/components/common/PurchaseTypes";
 export default {
   layout: "club",
   components: { Icon, RelatedProducts, BundleProducts, PurchaseTypes },
-  data() {
-    return {
+  data: () => ({
+    product: null,
+    options: [],
+    error: null,
+    images: [],
+    selected: {
       product: null,
-      options: [],
-      error: null,
-      images: [],
-      selected: {
-        product: null,
-        quantity: 1,
-        purchase_type: 1,
-        subscription_type: null,
-        total: 0,
-      },
-    };
-  },
+      quantity: 1,
+      purchase_type: 1,
+      subscription_type: null,
+      total: 0,
+    },
+    index: 0,
+    imageIndex: null,
+  }),
   computed: {
     ...mapGetters({
       purchaseTypes: "purchase-types/getTypes",
@@ -157,17 +188,20 @@ export default {
 
       this.selected.product = this.product.id;
       this.selected.total = this.product.price;
-      this.images = this.product.image.map((item) => ({
-        id: item.id,
-        src: this.getStrapiMedia(item.url),
-        thumbnail: this.getStrapiMedia(item.url),
-      }));
+      this.images = this.product.image.map((item) => this.getImage(item));
     } catch (error) {
       this.error = error;
     }
   },
   methods: {
+    getStrapiMedia,
     colorTitleNumbers,
+    getImage: function (image) {
+      if (image.url) {
+        return this.getStrapiMedia(image.url);
+      }
+      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
+    },
     setTypes: function (types) {
       this.selected = { ...this.selected, ...types };
     },
@@ -219,7 +253,6 @@ export default {
     addToCart: async function () {
       this.$store.dispatch("order/addProduct", this.selected);
     },
-    getStrapiMedia,
   },
 };
 </script>
@@ -232,6 +265,10 @@ export default {
 
 .quantity {
   width: 56px;
+}
+
+.image-wrapper.slide {
+  width: 15%;
 }
 
 .icon-bag {

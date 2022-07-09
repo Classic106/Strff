@@ -19,15 +19,12 @@
         class="col-8 col-lg-6"
       >
         <nuxt-link :to="`/products/${product.slug}`">
-          <img
-            :src="`${getFirstImage(product.image)}`"
-            class="m-auto gold-border"
-          />
+          <img :src="`${getFirstImage(product.image)}`" class="m-auto" />
           <div class="d-flex justify-content-between mt-3">
             <span class="font-weight-light text-center col-black text-nowrap">
               ${{ product.price | formatNumber }}
             </span>
-            <span class="font-weight-light text-center col-black text-nowrap">
+            <span class="font-weight-light text-center gold text-nowrap ">
               {{ product.title }}
             </span>
           </div>

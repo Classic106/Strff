@@ -26,11 +26,11 @@
                     :src="`${getFirstImage(
                       bundleProduct.products[index].image
                     )}`"
-                    class="m-auto gold-border"
+                    class="m-auto"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
-                  <span class="font-weight-light text-center color-blue">
+                  <span class="font-weight-light text-center gold">
                     {{ bundleProduct.products[index].title }}
                   </span>
                   <span class="font-weight-light text-center col-black">
@@ -47,11 +47,11 @@
                     :src="`${getFirstImage(
                       bundleProduct.products[index].image
                     )}`"
-                    class="m-auto gold-border"
+                    class="m-auto"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
-                  <span class="font-weight-light text-center color-blue">
+                  <span class="font-weight-light text-center gold">
                     {{ bundleProduct.products[index + 1].title }}
                   </span>
                   <span class="font-weight-light text-center col-black">
@@ -69,7 +69,7 @@
                     :src="`${getFirstImage(
                       bundleProduct.products[index].image
                     )}`"
-                    class="m-auto gold-border"
+                    class="m-auto"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
@@ -161,7 +161,6 @@ export default {
 </script>
 
 <style csoped>
-img,
 .border-black {
   border: 1px solid #000;
 }

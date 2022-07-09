@@ -12,6 +12,14 @@ export default {};
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+@media (min-width: 1200px) {
+  .loaded {
+    margin: 0 auto !important;
+    widows: 100%;
+  }
+}
+
 a:hover,
 a:visited,
 a:link,
@@ -71,13 +79,16 @@ h6 {
   font-size: 1.25rem;
 }
 
-.lingallery {
-  width: 100% !important;
+.images-wrapper .image-wrapper .image {
+  cursor: pointer;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-top: 100%;
 }
 
-.lingallery > figure {
-  width: 100% !important;
-  height: auto !important;
+.loaded {
+  width: auto;
 }
 </style>
 
