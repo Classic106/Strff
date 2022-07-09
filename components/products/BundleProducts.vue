@@ -23,14 +23,14 @@
               <div class="col-5 p-0">
                 <div class="m-auto p-2">
                   <img
-                    :src="`${getStrapiMedia(
-                      bundleProduct.products[index].image.url
+                    :src="`${getFirstImage(
+                      bundleProduct.products[index].image
                     )}`"
-                    class="m-auto gold-border"
+                    class="m-auto"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
-                  <span class="font-weight-light text-center color-blue">
+                  <span class="font-weight-light text-center gold">
                     {{ bundleProduct.products[index].title }}
                   </span>
                   <span class="font-weight-light text-center col-black">
@@ -44,14 +44,14 @@
               <div class="col-5 p-0">
                 <div class="m-auto p-2">
                   <img
-                    :src="`${getStrapiMedia(
-                      bundleProduct.products[index + 1].image.url
+                    :src="`${getFirstImage(
+                      bundleProduct.products[index].image
                     )}`"
-                    class="m-auto gold-border"
+                    class="m-auto"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
-                  <span class="font-weight-light text-center color-blue">
+                  <span class="font-weight-light text-center gold">
                     {{ bundleProduct.products[index + 1].title }}
                   </span>
                   <span class="font-weight-light text-center col-black">
@@ -66,10 +66,10 @@
               <div class="col-5 p-0">
                 <div class="m-auto p-2">
                   <img
-                    :src="`${getStrapiMedia(
-                      bundleProduct.products[index].image.url
+                    :src="`${getFirstImage(
+                      bundleProduct.products[index].image
                     )}`"
-                    class="m-auto gold-border"
+                    class="m-auto"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
@@ -139,6 +139,12 @@ export default {
     ...mapActions({
       addBundle: "order/addBundle",
     }),
+    getFirstImage: function (images) {
+      if (images[0]) {
+        return this.getStrapiMedia(images[0].url);
+      }
+      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
+    },
     addToCart(bundle) {
       this.addBundle(bundle);
     },
@@ -155,7 +161,6 @@ export default {
 </script>
 
 <style csoped>
-img,
 .border-black {
   border: 1px solid #000;
 }

@@ -2250,6 +2250,11 @@
     "type-is" "~1.6.18"
     "unpipe" "1.0.0"
 
+"body-scroll-lock@^3.1.5":
+  "integrity" "sha512-Yi1Xaml0EvNA0OYWxXiYNqY24AfWkbA6w5vxE7GWxtKfzIbZM+Qw+aSmkgsbWzbHiy/RCSkUZBplVxTA+E4jJg=="
+  "resolved" "https://registry.npmjs.org/body-scroll-lock/-/body-scroll-lock-3.1.5.tgz"
+  "version" "3.1.5"
+
 "boolbase@^1.0.0", "boolbase@~1.0.0":
   "integrity" "sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww=="
   "resolved" "https://registry.npmjs.org/boolbase/-/boolbase-1.0.0.tgz"
@@ -2435,6 +2440,14 @@
   "integrity" "sha512-HpGFw18DgFWlncDfjTa2rcQ4W88O1mC8e8yZ2AvQY5KDaktSTwo+KRf6nHK6FRI5FyRyb/5T6+TSxfP7QyGsmQ=="
   "resolved" "https://registry.npmjs.org/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz"
   "version" "3.0.0"
+
+"bukwild-stylus-library@^3.1.0":
+  "integrity" "sha512-MgaFjTgd0oJO2dwOTzKMig0bSMjzqndhNOCkV05rsPoNlmY/8weCdWFVWUwujGWMTdgRqYsa+oVjGy76KGBwLA=="
+  "resolved" "https://registry.npmjs.org/bukwild-stylus-library/-/bukwild-stylus-library-3.2.1.tgz"
+  "version" "3.2.1"
+  dependencies:
+    "stylus-easing" "^1"
+    "stylus-type-utils" "^0"
 
 "bytes@3.0.0":
   "integrity" "sha512-pMhOfFDPiv9t5jjIXkHosWmkSyQbvsgEVNkz0ERHbuLh2T/7j4Mqqpz523Fe8MVY89KC6Sh/QfS2sM+SjgFDcw=="
@@ -3067,7 +3080,7 @@
   "resolved" "https://registry.npmjs.org/core-js/-/core-js-2.6.12.tgz"
   "version" "2.6.12"
 
-"core-js@^3.15.2":
+"core-js@^3.22.0":
   "integrity" "sha512-oAKwkj9xcWNBAvGbT//WiCdOMpb9XQG92/Fe3ABFM/R16BsHgePG00mFOgKf7IsCtfj8tA1kHtf/VwErhriz5Q=="
   "resolved" "https://registry.npmjs.org/core-js/-/core-js-3.23.3.tgz"
   "version" "3.23.3"
@@ -3390,20 +3403,15 @@
   "resolved" "https://registry.npmjs.org/cuint/-/cuint-0.2.2.tgz"
   "version" "0.2.2"
 
+"custom-event-polyfill@^1.0.7":
+  "integrity" "sha512-TDDkd5DkaZxZFM8p+1I3yAlvM3rSr1wbrOliG4yJiwinMZN8z/iGL7BTlDkrJcYTmgUSb4ywVCc3ZaUtOtC76w=="
+  "resolved" "https://registry.npmjs.org/custom-event-polyfill/-/custom-event-polyfill-1.0.7.tgz"
+  "version" "1.0.7"
+
 "cyclist@^1.0.1":
   "integrity" "sha512-NJGVKPS81XejHcLhaLJS7plab0fK3slPh11mESeeDq2W4ZI5kUKK/LRRdVDvjJseojbPB7ZwjnyOybg3Igea/A=="
   "resolved" "https://registry.npmjs.org/cyclist/-/cyclist-1.0.1.tgz"
   "version" "1.0.1"
-
-"date-fns-tz@^1.1.4":
-  "integrity" "sha512-SNhl/fWe7i2HoIB9ejLZhEEJ6ZtRRpOBbzizFrq11K2/iceS9Nk7fPN2VTYVOMgFB9u0f3eidSC4n1xaRONW2A=="
-  "resolved" "https://registry.npmjs.org/date-fns-tz/-/date-fns-tz-1.3.5.tgz"
-  "version" "1.3.5"
-
-"date-fns@^2.22.1":
-  "integrity" "sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw=="
-  "resolved" "https://registry.npmjs.org/date-fns/-/date-fns-2.28.0.tgz"
-  "version" "2.28.0"
 
 "de-indent@^1.0.2":
   "integrity" "sha512-e/1zu3xH5MQryN2zdVaF0OrdNLUbvWxzMbi+iNA6Bky7l1RoP8a2fIbRocyHclXt/arDrrR6lL3TqFD9pMQTsg=="
@@ -3761,6 +3769,11 @@
   "integrity" "sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A=="
   "resolved" "https://registry.npmjs.org/entities/-/entities-2.2.0.tgz"
   "version" "2.2.0"
+
+"epic-spinners@^1.1.0":
+  "integrity" "sha512-nFyHmFuBFO6LpT37Xu68lQqKDYK50gXoZ6Yj/mpoS1Uslku0YkMtAGDzH8nbeFSiifAIoT1rUDB3S7e/ifnnxg=="
+  "resolved" "https://registry.npmjs.org/epic-spinners/-/epic-spinners-1.1.0.tgz"
+  "version" "1.1.0"
 
 "errno@^0.1.3", "errno@~0.1.7":
   "integrity" "sha512-dJ6oBr5SQ1VSd9qkk7ByRgb/1SH4JZjCHSW/mr63/QcXO9zLVxvJ6Oy13nio03rxpSnVDDjFor75SjVeZWPW/A=="
@@ -4483,6 +4496,11 @@
   "integrity" "sha512-7+G0/2/COR8pwteYFqHIVYfQpuEiO2HXwJrhCBJVgrNrl9O5eaUoJVDGXUJX+0RpGncNVTuestexjk1afj01wQ=="
   "resolved" "https://registry.npmjs.org/hable/-/hable-3.0.0.tgz"
   "version" "3.0.0"
+
+"hammerjs@^2.0.8":
+  "integrity" "sha512-tSQXBXS/MWQOn/RKckawJ61vvsDpCom87JgxiYdGwHdOa0ht0vzUWDlfioofFCRU0L+6NGDt6XzbgoJvZkMeRQ=="
+  "resolved" "https://registry.npmjs.org/hammerjs/-/hammerjs-2.0.8.tgz"
+  "version" "2.0.8"
 
 "hard-source-webpack-plugin@^0.13.1":
   "integrity" "sha512-r9zf5Wq7IqJHdVAQsZ4OP+dcUSvoHqDMxJlIzaE2J0TZWn3UjMMrHqwDHR8Jr/pzPfG7XxSe36E7Y8QGNdtuAw=="
@@ -5489,6 +5507,15 @@
   "resolved" "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz"
   "version" "1.2.4"
 
+"lingallery@^1.3.7":
+  "integrity" "sha512-7LmAzZcbl2g7OkKXbVSOANpyG0BN8kyAnTrFuID3ZWfbEBmel1VMn0MY4fg+dLLyY4nxMFXPimc48qTrSXQGgw=="
+  "resolved" "https://registry.npmjs.org/lingallery/-/lingallery-1.3.7.tgz"
+  "version" "1.3.7"
+  dependencies:
+    "epic-spinners" "^1.1.0"
+    "hammerjs" "^2.0.8"
+    "vue-async-computed" "^3.9.0"
+
 "loader-runner@^2.4.0":
   "integrity" "sha512-Jsmr89RcXGIwivFY21FcRrisYZfvLMTWx5kOLc+JTxtpBOG6xML0vzbc6SEQG2FO9/4Fc3wW4LVcB5DmGflaRw=="
   "resolved" "https://registry.npmjs.org/loader-runner/-/loader-runner-2.4.0.tgz"
@@ -5534,6 +5561,11 @@
     "big.js" "^5.2.2"
     "emojis-list" "^3.0.0"
     "json5" "^2.1.2"
+
+"loadjs@^4.2.0":
+  "integrity" "sha512-AgQGZisAlTPbTEzrHPb6q+NYBMD+DP9uvGSIjSUM5uG+0jG15cb8axWpxuOIqrmQjn6scaaH8JwloiP27b2KXA=="
+  "resolved" "https://registry.npmjs.org/loadjs/-/loadjs-4.2.0.tgz"
+  "version" "4.2.0"
 
 "local-pkg@^0.4.1":
   "integrity" "sha512-lL87ytIGP2FU5PWwNDo0w3WhIo2gopIAxPg9RxDYF7m4rr5ahuZxP22xnJHIvaLTe4Z9P6uKKY2UHiwyB4pcrw=="
@@ -5595,7 +5627,7 @@
   "resolved" "https://registry.npmjs.org/lodash.uniq/-/lodash.uniq-4.5.0.tgz"
   "version" "4.5.0"
 
-"lodash@^4.15.0", "lodash@^4.17.14", "lodash@^4.17.19", "lodash@^4.17.20", "lodash@^4.17.21", "lodash@^4.17.5":
+"lodash@^4.15.0", "lodash@^4.17.14", "lodash@^4.17.19", "lodash@^4.17.20", "lodash@^4.17.21", "lodash@^4.17.5", "lodash@3 - 4":
   "integrity" "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
   "resolved" "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   "version" "4.17.21"
@@ -6654,6 +6686,17 @@
     "mlly" "^0.5.3"
     "pathe" "^0.3.0"
 
+"plyr@^3.6.7":
+  "integrity" "sha512-I0ZC/OI4oJ0iWG9s2rrnO0YFO6aLyrPiQBq9kum0FqITYljwTPBbYL3TZZu8UJQJUq7tUWN18Q7ACwNCkGKABQ=="
+  "resolved" "https://registry.npmjs.org/plyr/-/plyr-3.7.2.tgz"
+  "version" "3.7.2"
+  dependencies:
+    "core-js" "^3.22.0"
+    "custom-event-polyfill" "^1.0.7"
+    "loadjs" "^4.2.0"
+    "rangetouch" "^2.0.1"
+    "url-polyfill" "^1.1.12"
+
 "pnp-webpack-plugin@^1.6.4":
   "integrity" "sha512-2Rb3vm+EXble/sMXNSu6eoBx8e79gKqhNq9F5ZWW6ERNCTE/Q0wQNne5541tE5vKjfM8hpNCYL+LGc1YTfI0dg=="
   "resolved" "https://registry.npmjs.org/pnp-webpack-plugin/-/pnp-webpack-plugin-1.7.0.tgz"
@@ -7689,6 +7732,11 @@
   "resolved" "https://registry.npmjs.org/range-parser/-/range-parser-1.2.1.tgz"
   "version" "1.2.1"
 
+"rangetouch@^2.0.1":
+  "integrity" "sha512-sln+pNSc8NGaHoLzwNBssFSf/rSYkqeBXzX1AtJlkJiUaVSJSbRAWJk+4omsXkN+EJalzkZhWQ3th1m0FpR5xA=="
+  "resolved" "https://registry.npmjs.org/rangetouch/-/rangetouch-2.0.1.tgz"
+  "version" "2.0.1"
+
 "raw-body@2.5.1":
   "integrity" "sha512-qqJBtEyVgS0ZmPGdCFPWJ3FreoqvG4MVQln/kCgF7Olq95IbOp0/BWyMwbdtn4VTvkM8Y7khCQ2Xgk/tcrCXig=="
   "resolved" "https://registry.npmjs.org/raw-body/-/raw-body-2.5.1.tgz"
@@ -8610,6 +8658,16 @@
     "postcss" "^7.0.0"
     "postcss-selector-parser" "^3.0.0"
 
+"stylus-easing@^1":
+  "integrity" "sha512-M2/GG/RXnrVZpXlrWC1gs8JXCXXrLENF33W1KQMhcmxKwTbGup4a1cJh+uZalQL8mLtfegocM+6+u0YHqvcgyg=="
+  "resolved" "https://registry.npmjs.org/stylus-easing/-/stylus-easing-1.0.0.tgz"
+  "version" "1.0.0"
+
+"stylus-type-utils@^0":
+  "integrity" "sha512-E1yoznMW1fFSm2OUF+oEp41KWSXoTYPEBgpRVAASVPG45mrnCZzs7qmA+0bjegJ9vLRPoYeX38mU3RJFk6BphQ=="
+  "resolved" "https://registry.npmjs.org/stylus-type-utils/-/stylus-type-utils-0.0.3.tgz"
+  "version" "0.0.3"
+
 "supports-color@^2.0.0":
   "integrity" "sha512-KKNVtd6pCYgPIKU4cp2733HWYCpplQhddZLBUryaAHou723x+FRzQ5Df824Fj+IyyuiQTRoub4SnIFfIcrp70g=="
   "resolved" "https://registry.npmjs.org/supports-color/-/supports-color-2.0.0.tgz"
@@ -9163,6 +9221,11 @@
     "mime-types" "^2.1.27"
     "schema-utils" "^3.0.0"
 
+"url-polyfill@^1.1.12":
+  "integrity" "sha512-mYFmBHCapZjtcNHW0MDq9967t+z4Dmg5CJ0KqysK3+ZbyoNOWQHksGCTWwDhxGXllkWlOc10Xfko6v4a3ucM6A=="
+  "resolved" "https://registry.npmjs.org/url-polyfill/-/url-polyfill-1.1.12.tgz"
+  "version" "1.1.12"
+
 "url@^0.11.0":
   "integrity" "sha512-kbailJa29QrtXnxgq+DdCEGlbTeYM2eJUxsz6vjZavrCYPMIFHMKQmSKYAIuUK2i7hgPm28a8piX5NTUtM/LKQ=="
   "resolved" "https://registry.npmjs.org/url/-/url-0.11.0.tgz"
@@ -9228,16 +9291,6 @@
   "resolved" "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
   "version" "8.3.2"
 
-"v-calendar@^2.4.1":
-  "integrity" "sha512-nhzOlHM2cinv+8jIcnAx+nTo63U40szv3Ig41uLMpGK1U5sApgCP6ggigprsnlMOM5VRq1G/1B8rNHkRrLbGjw=="
-  "resolved" "https://registry.npmjs.org/v-calendar/-/v-calendar-2.4.1.tgz"
-  "version" "2.4.1"
-  dependencies:
-    "core-js" "^3.15.2"
-    "date-fns" "^2.22.1"
-    "date-fns-tz" "^1.1.4"
-    "lodash" "^4.17.21"
-
 "v-credit-card-form@^1.2.8":
   "integrity" "sha512-cBLbwF3W0on9KKN9VFxNXE4cgEyPTqz99rZSEqlzJHzDNFudRmbqcI0uTdx0i3tKufi24PUN9hoN5Y2CE7gTIQ=="
   "resolved" "https://registry.npmjs.org/v-credit-card-form/-/v-credit-card-form-1.2.8.tgz"
@@ -9261,10 +9314,24 @@
   "resolved" "https://registry.npmjs.org/vm-browserify/-/vm-browserify-1.1.2.tgz"
   "version" "1.1.2"
 
+"vue-async-computed@^3.9.0":
+  "integrity" "sha512-ac6m/9zxHHNGGKNOU1en8qNk+fAmEbJLuWL7qyQTFuH3vjv3V4urv//QHcVzCobROM6btnaDG2b+XYMncF/ETA=="
+  "resolved" "https://registry.npmjs.org/vue-async-computed/-/vue-async-computed-3.9.0.tgz"
+  "version" "3.9.0"
+
 "vue-client-only@^2.0.0":
   "integrity" "sha512-vKl1skEKn8EK9f8P2ZzhRnuaRHLHrlt1sbRmazlvsx6EiC3A8oWF8YCBrMJzoN+W3OnElwIGbVjsx6/xelY1AA=="
   "resolved" "https://registry.npmjs.org/vue-client-only/-/vue-client-only-2.1.0.tgz"
   "version" "2.1.0"
+
+"vue-cool-lightbox@^2.7.5":
+  "integrity" "sha512-WQoCYvJQF7y9DP8s7Pt6bZhWYIO/rx8020h3kkHJBa1+RpbfiwcFlMOPonfzaWsUH2mSYKXP0FWpmxr2obm2+Q=="
+  "resolved" "https://registry.npmjs.org/vue-cool-lightbox/-/vue-cool-lightbox-2.7.5.tgz"
+  "version" "2.7.5"
+  dependencies:
+    "body-scroll-lock" "^3.1.5"
+    "plyr" "^3.6.7"
+    "vue" "^2.6.10"
 
 "vue-functional-data-merge@^3.1.0":
   "integrity" "sha512-leT4kdJVQyeZNY1kmnS1xiUlQ9z1B/kdBFCILIjYYQDqZgLqCLa0UhjSSeRX6c3mUe6U5qYeM8LrEqkHJ1B4LA=="
@@ -9317,6 +9384,14 @@
     "resolve" "^1.2.0"
     "serialize-javascript" "^3.1.0"
     "source-map" "0.5.6"
+
+"vue-ssr-carousel@^1.4.0":
+  "integrity" "sha512-d9e3rL+gQYBep/QVIErmZSoRd0JARtVRVnVigHizS9aVA8GzANefu4SkigpLzN5rIxHfZYicWtFDLDzjmPrKRg=="
+  "resolved" "https://registry.npmjs.org/vue-ssr-carousel/-/vue-ssr-carousel-1.4.0.tgz"
+  "version" "1.4.0"
+  dependencies:
+    "bukwild-stylus-library" "^3.1.0"
+    "lodash" "3 - 4"
 
 "vue-style-loader@^4.1.0", "vue-style-loader@^4.1.3":
   "integrity" "sha512-sFuh0xfbtpRlKfm39ss/ikqs9AbKCoXZBpHeVZ8Tx650o0k0q/YCM7FRvigtxpACezfq6af+a7JeqVTWvncqDg=="

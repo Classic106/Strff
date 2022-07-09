@@ -25,9 +25,9 @@
         <h3 class="mb-5">our best Selling BEARD</h3>
         <h3 class="mt-5">hair and Skin CARE PRODUCTS</h3>
       </div>
-      <div class="d-flex justify-content-center w-100 gold-border">
+      <div class="d-flex justify-content-center w-100">
         <img
-          class="position-absolute header-image gold-border"
+          class="position-absolute header-image"
           src="@/assets/img/iStock-1018779998-min.jpg"
           alt="iStock"
         />
@@ -53,7 +53,6 @@
         <img
           src="@/assets/img/iStock-1251674339-min.jpg"
           alt="istockphoto"
-          class="gold-border"
         />
       </div>
       <div class="d-flex flex-column align-items-center">

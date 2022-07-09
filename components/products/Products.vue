@@ -10,12 +10,7 @@
         class="col col-md-5 col-lg-3 m-0 mb-3 m-md-1 m-lg-3 product p-4 m-2"
       >
         <nuxt-link :to="`/products/${product.slug}`">
-          <img
-            v-lazy
-            class="mb-2 w-100 gold-border"
-            src="~/assets/img/placeholder-image.png"
-            :data-src="`${getStrapiMedia(product.image.url)}`"
-          />
+          <img class="mb-2 w-100" :src="`${getFirstImage(product.image)}`" />
           <h6
             class="
               col-black
@@ -67,6 +62,12 @@ export default {
   },
   methods: {
     getStrapiMedia,
+    getFirstImage: function (images) {
+      if (images[0]) {
+        return this.getStrapiMedia(images[0].url);
+      }
+      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
+    },
     addToCart(product) {
       const selected = {
         product,
@@ -76,22 +77,6 @@ export default {
         total: product.price,
       };
       this.$store.dispatch("order/addProduct", selected);
-    },
-  },
-  directives: {
-    lazy: {
-      inserted: (el) => {
-        const observer = new IntersectionObserver((entries, observer) => {
-          entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-              let lazyImage = entry.target;
-              lazyImage.src = lazyImage.dataset.src;
-              observer.unobserve(el);
-            }
-          });
-        });
-        observer.observe(el);
-      },
     },
   },
 };

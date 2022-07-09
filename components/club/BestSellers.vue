@@ -8,17 +8,11 @@
         class="col col-md-5 col-lg-3"
       >
         <nuxt-link :to="`/products/${product.slug}`">
-          <img
-            v-lazy
-            class="mb-2 gold-border"
-            src="~/assets/img/placeholder-image.png"
-            :data-src="`${getStrapiMedia(product.image.url)}`"
-          />
-
-          <a class="card-info col-black d-flex justify-content-between mb-4">
+          <img class="mb-2" :src="`${getFirstImage(product.image)}`" />
+          <div class="card-info col-black d-flex justify-content-between mb-4">
             <span>{{ product.price }} $</span>
-            <span class="text-upprcase">{{ product.title }}</span>
-          </a>
+            <span class="text-upprcase gold">{{ product.title }}</span>
+          </div>
         </nuxt-link>
       </div>
     </div>
@@ -41,23 +35,15 @@ export default {
       this.error = error;
     }
   },
-  directives: {
-    lazy: {
-      inserted: (el) => {
-        const observer = new IntersectionObserver((entries, observer) => {
-          entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-              let lazyImage = entry.target;
-              lazyImage.src = lazyImage.dataset.src;
-              observer.unobserve(el);
-            }
-          });
-        });
-        observer.observe(el);
-      },
+  methods: {
+    getStrapiMedia,
+    getFirstImage: function (images) {
+      if (images[0]) {
+        return this.getStrapiMedia(images[0].url);
+      }
+      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
     },
   },
-  methods: { getStrapiMedia },
 };
 </script>
 

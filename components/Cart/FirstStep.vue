@@ -41,13 +41,21 @@
               <div class="d-flex">
                 <p class="w-25 mb-2 grey">quantity</p>
                 <div class="d-flex">
-                  <button v-if="edit" v-on:click="quantityMinus(item.id)">
+                  <button
+                    v-if="edit"
+                    v-on:click="quantityMinus(item.id)"
+                    class="gold-background"
+                  >
                     -
                   </button>
                   <p class="my-auto" :class="edit && 'mx-3'">
                     {{ item.quantity }}
                   </p>
-                  <button v-if="edit" v-on:click="quantityPlus(item.id)">
+                  <button
+                    v-if="edit"
+                    v-on:click="quantityPlus(item.id)"
+                    class="gold-background"
+                  >
                     +
                   </button>
                 </div>
@@ -88,7 +96,7 @@
                 v-on:click="edit = !edit"
               >
                 <span class="icon icon-pen m-2"></span>
-                <p class="m-0 pl-1">{{ edit ? "save" : "edit" }}</p>
+                <p class="m-0 pl-1 gold">{{ edit ? "save" : "edit" }}</p>
               </div>
               <span
                 class="icon icon-trash m-2"
@@ -212,7 +220,10 @@
           </div>
         </li>
       </ul>
-      <button class="text-uppercase p-3 mt-auto" v-on:click="$emit('nextStep')">
+      <button
+        class="text-uppercase p-3 mt-auto gold-background"
+        v-on:click="$emit('nextStep')"
+      >
         go to checkout
       </button>
     </div>
@@ -320,15 +331,11 @@ p {
   background-size: cover;
 }
 
-.pen {
-  color: #18b0e2;
-}
-
 .icon-pen {
   width: 20px;
   background-image: url("../../assets/icons/pen-solid.svg");
-  filter: invert(66%) sepia(93%) saturate(4318%) hue-rotate(160deg)
-    brightness(93%) contrast(103%);
+  filter: invert(45%) sepia(61%) saturate(475%) hue-rotate(6deg) brightness(96%)
+    contrast(95%);
 }
 
 .icon-trash {
@@ -342,7 +349,7 @@ p {
 }
 
 button {
-  background: #18b0e2;
   color: #fff;
+  border: none;
 }
 </style>

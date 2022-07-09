@@ -44,6 +44,7 @@ export default {
    */
   plugins: [
     { src: "~/plugins/v-credit-card-form.js", mode: "client" },
+    { src: "~/plugins/vue-cool-lightbox.js", mode: "client" },
   ],
   /*
    ** Auto import components
@@ -132,4 +133,5 @@ export default {
    ** See https://nuxtjs.org/api/configuration-build/
    */
   build: {},
+  buildModules: ["vue-ssr-carousel/nuxt"],
 };
