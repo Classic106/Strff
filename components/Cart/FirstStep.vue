@@ -16,7 +16,7 @@
             <div class="d-flex">
               <div class="w-25">
                 <img
-                  :src="`${getStrapiMedia(item.product.image.url)}`"
+                  :src="`${getFirstImage(item.product.image)}`"
                   class="m-auto gold-border"
                 />
               </div>
@@ -122,8 +122,8 @@
                   <div class="col-5 p-0">
                     <div class="m-auto p-2">
                       <img
-                        :src="`${getStrapiMedia(
-                          order_bundle.bundle.products[index].image.url
+                        :src="`${getFirstImage(
+                          order_bundle.bundle.products[index].image
                         )}`"
                         class="m-auto gold-border"
                       />
@@ -148,8 +148,8 @@
                   <div class="col-5 p-0">
                     <div class="m-auto p-2">
                       <img
-                        :src="`${getStrapiMedia(
-                          order_bundle.bundle.products[index + 1].image.url
+                        :src="`${getFirstImage(
+                          order_bundle.bundle.products[index + 1].image
                         )}`"
                         class="m-auto gold-border"
                       />
@@ -173,8 +173,8 @@
                   <div class="col-5 p-0">
                     <div class="m-auto p-2">
                       <img
-                        :src="`${getStrapiMedia(
-                          order_bundle.bundle.products[index].image.url
+                        :src="`${getFirstImage(
+                          order_bundle.bundle.products[index].image
                         )}`"
                         class="m-auto gold-border"
                       />
@@ -261,6 +261,12 @@ export default {
       updateProduct: "order/updateProduct",
       removeBundle: "order/removeBundle",
     }),
+    getFirstImage: function (images) {
+      if (images[0]) {
+        return this.getStrapiMedia(images[0].url);
+      }
+      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
+    },
     setTypes: function (types, id) {
       const index = this.order_items.findIndex((item) => item.id === id);
       if (index !== -1) {
