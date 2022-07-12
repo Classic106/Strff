@@ -75,11 +75,9 @@
             :key="category.id"
             class="px-3 py-2"
           >
-            <NuxtLink
-              :to="`/categories/${category.slug}`"
-              class="gold"
-              >{{ category.name }}</NuxtLink
-            >
+            <NuxtLink :to="`/categories/${category.slug}`" class="gold">{{
+              category.name
+            }}</NuxtLink>
           </li>
           <li
             class="d-flex"
@@ -238,6 +236,7 @@ header > span {
 
 .menu-mobile.open {
   left: 0vw;
+  top: 42%;
 }
 
 .ul-mobile {
@@ -274,15 +273,16 @@ li > a {
   width: 50px;
   height: 50px;
   left: 20px;
+  top: 4px;
   position: relative;
   cursor: pointer;
 }
 .nav-menu-arrow span {
   transform: rotate(0deg);
   transition: all 0.5s ease, top 0.5s ease;
-  width: 50px;
+  width: 30px;
   position: absolute;
-  height: 10px;
+  height: 4px;
   background-color: #fff;
   border-radius: 5px;
   left: 0;
@@ -291,19 +291,21 @@ li > a {
   top: 0px;
 }
 .nav-menu-arrow span:nth-child(2) {
-  top: 20px;
+  top: 10px;
 }
 .nav-menu-arrow span:nth-child(3) {
-  top: 40px;
+  top: 20px;
 }
 .nav-menu-arrow.open span:nth-child(1) {
   transform: rotate(-45deg);
-  top: 10px;
-  width: 30px;
+  top: 5px;
+  width: 20px;
+  left: -4px;
 }
 .nav-menu-arrow.open span:nth-child(3) {
   transform: rotate(45deg);
-  top: 30px;
-  width: 30px;
+  top: 17px;
+  width: 20px;
+  left: -4px;
 }
 </style>
