@@ -36,7 +36,7 @@ form {
 }
 
 .gold-border {
-  border: 1px solid #9e7d24;
+  border: 2px solid #9e7d24;
 }
 
 .gold-background {
