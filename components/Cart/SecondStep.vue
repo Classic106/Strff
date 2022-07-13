@@ -5,13 +5,15 @@
       <button v-on:click="$emit('nextStep')">next</button>
     </div>
     <div v-else>
-      <div v-if="!dontWantRegister">
+      <div v-if="haveAccount">
         <Sign :isMenu="true" :isUp="true" />
-        <button v-on:click="dontWantRegister = true">dont want register</button>
+        <button v-on:click="haveAccount = false">without registration</button>
       </div>
       <div v-else>
-        <UserForm />
-        <button v-on:click="$emit('nextStep')">next</button>
+        <UserForm
+          v-on:next="$emit('nextStep')"
+          v-on:haveAccount="haveAccount = true"
+        />
       </div>
     </div>
   </div>
@@ -24,7 +26,7 @@ import UserForm from "@/components/UserForm";
 
 export default {
   components: { Sign, UserForm },
-  data: () => ({ dontWantRegister: false }),
+  data: () => ({ haveAccount: false }),
   computed: {
     ...mapGetters({
       username: "auth/username",
