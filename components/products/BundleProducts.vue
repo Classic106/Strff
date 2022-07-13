@@ -11,7 +11,7 @@
         :key="bundleProduct.id"
         class="border-black p-3"
       >
-        <h6 class="text-center dark-orange">{{ bundleProduct.title }}</h6>
+        <h6 class="text-center gold">{{ bundleProduct.title }}</h6>
         <p class="text-center">{{ bundleProduct.description }}</p>
         <div
           v-for="(product, index) in bundleProduct.products"
@@ -23,14 +23,14 @@
               <div class="col-5 p-0">
                 <div class="m-auto p-2">
                   <img
-                    :src="`${getStrapiMedia(
-                      bundleProduct.products[index].image.url
+                    :src="`${getFirstImage(
+                      bundleProduct.products[index].image
                     )}`"
                     class="m-auto"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
-                  <span class="font-weight-light text-center color-blue">
+                  <span class="font-weight-light text-center gold">
                     {{ bundleProduct.products[index].title }}
                   </span>
                   <span class="font-weight-light text-center col-black">
@@ -44,14 +44,14 @@
               <div class="col-5 p-0">
                 <div class="m-auto p-2">
                   <img
-                    :src="`${getStrapiMedia(
-                      bundleProduct.products[index + 1].image.url
+                    :src="`${getFirstImage(
+                      bundleProduct.products[index].image
                     )}`"
                     class="m-auto"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
-                  <span class="font-weight-light text-center color-blue">
+                  <span class="font-weight-light text-center gold">
                     {{ bundleProduct.products[index + 1].title }}
                   </span>
                   <span class="font-weight-light text-center col-black">
@@ -66,8 +66,8 @@
               <div class="col-5 p-0">
                 <div class="m-auto p-2">
                   <img
-                    :src="`${getStrapiMedia(
-                      bundleProduct.products[index].image.url
+                    :src="`${getFirstImage(
+                      bundleProduct.products[index].image
                     )}`"
                     class="m-auto"
                   />
@@ -84,7 +84,7 @@
             </div>
           </div>
         </div>
-        <div class="mt-4">
+        <div class="mt-4 d-flex flex-column">
           <p class="text-uppercase font-weight-bold text-center m-0">
             bundle price: ${{ bundleProduct.price }}
           </p>
@@ -98,6 +98,24 @@
               )
             }}!
           </p>
+          <button
+            v-if="product.status === 'published'"
+            class="
+              py-2
+              px-4
+              rounded
+              btn btn-dark
+              d-flex
+              justify-content-center
+              align-items-center
+              text-uppercase text-nowrap
+              add-cart-button
+            "
+            v-on:click="addToCart(bundleProduct)"
+          >
+            <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
+            Add to cart
+          </button>
         </div>
       </div>
     </div>
@@ -105,6 +123,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
 
 export default {
@@ -115,7 +134,21 @@ export default {
   data: () => ({
     bundleProducts: null,
   }),
-  methods: { getStrapiMedia },
+  methods: {
+    getStrapiMedia,
+    ...mapActions({
+      addBundle: "order/addBundle",
+    }),
+    getFirstImage: function (images) {
+      if (images[0]) {
+        return this.getStrapiMedia(images[0].url);
+      }
+      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
+    },
+    addToCart(bundle) {
+      this.addBundle(bundle);
+    },
+  },
   async mounted() {
     try {
       const result = await this.$strapi.$bundles.findOne(
@@ -128,7 +161,6 @@ export default {
 </script>
 
 <style csoped>
-img,
 .border-black {
   border: 1px solid #000;
 }
@@ -145,5 +177,16 @@ img,
 .bundle-products-title {
   border-bottom: 1px solid #000;
   background-color: #f5f5f5;
+}
+
+.add-cart-button {
+  background-color: #1f2020;
+  color: #fff;
+}
+
+.icon-bag {
+  width: 14px;
+  height: 14px;
+  background-image: url("../../assets/icons/shopping-bag.svg");
 }
 </style>

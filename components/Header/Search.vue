@@ -14,7 +14,7 @@
         class="search-list col position-absolute rounded"
       >
         <li v-for="item in result" :key="item.id" class="py-2">
-          <nuxt-link :to="`/products/${item.slug}`" class="dark-orange">{{
+          <nuxt-link :to="`/products/${item.slug}`" class="gold">{{
             item.title
           }}</nuxt-link>
         </li>
@@ -114,7 +114,7 @@ input {
 }
 
 .icon-search {
-  background-image: url("../assets/icons/iconmonstr-search-thin.svg");
+  background-image: url("../../assets/icons/iconmonstr-search-thin.svg");
 }
 
 .search-input {

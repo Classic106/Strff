@@ -9,10 +9,8 @@ export default {
    ** See https://nuxtjs.org/api/configuration-head
    */
 
-  //  <script src="https://cdn.snipcart.com/themes/v3.0.16/default/snipcart.js"></script>
-
   head: {
-    title: "Buy stickers with Strapi, Nuxt.js and Snipcart",
+    title: "Strff",
     meta: [
       {
         charset: "utf-8",
@@ -24,33 +22,17 @@ export default {
       {
         hid: "description",
         name: "description",
-        content: "e-commerce starter using Strapi, Nuxt.js and Snipcart",
+        content: "e-commerce starter using Strapi and Nuxt",
       },
     ],
     link: [
-      {
-        rel: "preconnect",
-        href: "https://app.snipcart.com",
-      },
-      {
-        rel: "preconnect",
-        href: "https://cdn.snipcart.com",
-      },
-      {
-        rel: "stylesheet",
-        href: "https://cdn.snipcart.com/themes/v3.0.16/default/snipcart.css",
-      },
       {
         rel: "icon",
         type: "image/x-icon",
         href: "/favicon.ico",
       },
     ],
-    script: [
-      {
-        src: "https://cdn.snipcart.com/themes/v3.0.16/default/snipcart.js",
-      },
-    ],
+    script: [],
   },
   /*
    ** Global CSS
@@ -60,7 +42,10 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: [],
+  plugins: [
+    { src: "~/plugins/v-credit-card-form.js", mode: "client" },
+    { src: "~/plugins/vue-cool-lightbox.js", mode: "client" },
+  ],
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
@@ -76,16 +61,66 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ["bootstrap-vue/nuxt", "@nuxtjs/strapi", "nuxt-session"],
+  modules: [
+    "bootstrap-vue/nuxt",
+    "@nuxtjs/strapi",
+    "nuxt-session",
+    "@nuxtjs/axios",
+    "@nuxtjs/proxy",
+  ],
+  axios: {
+    proxy: true,
+  },
+  proxy: {
+    "/payment-nmi/": {
+      target: "https://secure.networkmerchants.com/api/transact.php",
+      pathRewrite: { "^/payment-nmi/": "" },
+      changeOrigin: true,
+    },
+    "/payment-square/": {
+      target: "https://connect.squareupsandbox.com/v2/payments",
+      pathRewrite: { "^/payment-square/": "" },
+      changeOrigin: true,
+    },
+    "/payment-authorize-net/": {
+      target: "https://apitest.authorize.net/xml/v1/request.api",
+      pathRewrite: { "^/payment-authorize-net/": "" },
+      changeOrigin: true,
+    },
+    "/payment-usa-epay/": {
+      target: "https://sandbox.usaepay.com/api/XXZR8SWS/transactions",
+      pathRewrite: { "^/payment-usa-epay/": "" },
+      changeOrigin: true,
+    },
+    "/payment-stripe/": {
+      target: "https://api.stripe.com/v1/payment_methods",
+      pathRewrite: { "^/payment-stripe/": "" },
+      changeOrigin: true,
+    },
+    "/payment-paypal/": {
+      target: "https://api-m.sandbox.paypal.com/v1/payments/payment",
+      pathRewrite: { "^/payment-paypal/": "" },
+      changeOrigin: true,
+    },
+    "/payment-klarna/": {
+      target:
+        "https://api-na.klarna.com/payments/v1/authorizations/{authorizationToken}/order",
+      pathRewrite: { "^/payment-klarna/": "" },
+      changeOrigin: true,
+    },
+  },
   strapi: {
     url: process.env.API_URL || "http://localhost:1337",
     entities: [
+      "appointment-orders",
+      "appointments",
       "bestsellers",
       "articles",
       "categories",
       "sizes",
       "bundles",
-      "cart",
+      "orders",
+      "order-items",
       "purchase-types",
       "subscription-types",
     ],
@@ -98,4 +133,5 @@ export default {
    ** See https://nuxtjs.org/api/configuration-build/
    */
   build: {},
+  buildModules: ["vue-ssr-carousel/nuxt"],
 };

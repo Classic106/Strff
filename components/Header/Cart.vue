@@ -1,7 +1,7 @@
 <template>
   <div
     class="icon-bag-wrap position-relative"
-    v-on:click="$nuxt.$emit('rightSideMenu')"
+    v-on:click="$nuxt.$emit('rightSide')"
   >
     <span
       class="
@@ -10,7 +10,7 @@
         d-flex
         justify-content-center
         align-items-center
-        dark-orange
+        gold
       "
       >{{ numberOfItems }}</span
     >
@@ -22,10 +22,9 @@
 import { mapGetters } from "vuex";
 
 export default {
-  name: "Cart",
   computed: {
     ...mapGetters({
-      numberOfItems: "cart/numberOfItems",
+      numberOfItems: "order/numberOfItems",
     }),
   },
 };
@@ -55,7 +54,7 @@ export default {
 .icon-bag {
   right: 0;
   top: -1px;
-  background-image: url("../assets/icons/shopping-bag.svg");
+  background-image: url("../../assets/icons/shopping-bag.svg");
 }
 
 .icon-bag > span {

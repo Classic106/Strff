@@ -21,9 +21,26 @@ export const actions = {
         let cart = await this.$strapi.$http.$post('/cart/remove', data)
         commit('setCart', cart)
     },
+    async empty({commit, state}) {
+        let currentUser = this.$cookies.get('user')
+        let data = {}
+        data.userId = currentUser? currentUser.id: null
+        data.cartToken = this.$cookies.get('cart_token')
+        let cart = await this.$strapi.$http.$post('/cart/empty', data)
+        commit('setCart', cart)
+    },
+    async release({commit, state}, data) {
+        let currentUser = this.$cookies.get('user')
+        data.userId = currentUser? currentUser.id: null
+        data.cartToken = this.$cookies.get('cart_token')
+        await this.$strapi.$http.$post('/cart/release', data)
+        commit('setCart', null)
+    },
     async syncByUser({commit, state}, userId) {
         let cart = null
-        let c = await this.$strapi.find('orders', { 'order_status.id': 1, 'user.id': userId })
+        let s = await this.$strapi.find('order-statuses', { 'code': 'cart' })
+        s = s[0]
+        let c = await this.$strapi.find('orders', { 'order_status.id': s.id, 'user.id': userId })
         if (c && c.length) {
             cart = c[0]
         }
@@ -40,7 +57,7 @@ export const mutations = {
                 order_date: newCart.order_date,
                 total: newCart.total,
                 cart_token: newCart.cart_token,
-                order_items: []
+                items: []
             }
 
             if (newCart.order_items) {
@@ -48,6 +65,7 @@ export const mutations = {
                     let d = {
                         product: {
                             id: newCart.order_items[i].product.id,
+                            code: newCart.order_items[i].product.code,
                             title: newCart.order_items[i].product.title
                         },
                         quantity: newCart.order_items[i].quantity,
@@ -69,11 +87,12 @@ export const mutations = {
                             title: newCart.order_items[i].subscription_type.title
                         }
                     }
-                    state.cart.order_items.push(d)
+                    state.cart.items.push(d)
                 }
             }
-            this.$cookies.set('cart', state.cart? JSON.stringify(state.cart): null)
+            this.$cookies.set('cart', JSON.stringify(state.cart))
         } else {
+            state.cart = null
             this.$cookies.set('cart', null)
         }
 	},
@@ -88,7 +107,7 @@ export const getters = {
         return state.cart
     },
     numberOfItems (state) {
-        return state.cart? (state.cart.order_items.reduce((accumulator, item) => accumulator + item.quantity, 0)): 0
+        return state.cart? (state.cart.items.reduce((accumulator, item) => accumulator + item.quantity, 0)): 0
     },
     cartToken (state) {
         return state.token

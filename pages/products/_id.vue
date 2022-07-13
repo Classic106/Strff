@@ -6,7 +6,39 @@
     <div v-if="this.product !== null">
       <div class="row m-1 m-md-5">
         <div class="col-md-6 col-12 rounded pt-2 pb-2">
-          <img :src="`${getStrapiMedia(product.image.url)}`" class="m-auto" />
+          <div class="m-auto images-wrapper">
+            <CoolLightBox
+              :items="images"
+              :index="imageIndex"
+              :loop="true"
+              @close="imageIndex = null"
+            />
+            <div class="image-wrapper">
+              <div
+                class="image"
+                @click="imageIndex = index"
+                :style="{ backgroundImage: `url(${images[index]})` }"
+              ></div>
+              <ssr-carousel
+                class="all-images mt-3"
+                :show-arrows="images.length > 6"
+                :loop="true"
+              >
+                <div
+                  class="image-wrapper slide mr-2"
+                  v-for="(image, imageIndex) in images"
+                  :key="imageIndex"
+                  :index="imageIndex"
+                >
+                  <div
+                    class="image gold-border"
+                    v-on:click="index = imageIndex"
+                    :style="{ backgroundImage: `url(${image})` }"
+                  ></div>
+                </div>
+              </ssr-carousel>
+            </div>
+          </div>
           <RelatedProducts :product="product" />
         </div>
         <div
@@ -19,9 +51,10 @@
           "
         >
           <div>
-            <h6 class="font-weight-bold text-md-left text-center">
-              {{ product.title }}
-            </h6>
+            <h6
+              v-html="colorTitleNumbers(product.title)"
+              class="font-weight-bold text-md-left text-center"
+            ></h6>
             <h6 class="mt-3 font-weight-normal text-md-left text-center">
               ${{ product.price | formatNumber }}
             </h6>
@@ -94,50 +127,13 @@
                 </div>
               </div>
             </div>
-            <div>
-              <div
-                class="mt-4"
-                v-for="purchaseType in purchaseTypes"
-                :key="purchaseType.title"
-              >
-                <div class="d-flex align-items-center">
-                  <input
-                    name="push-notifications"
-                    type="radio"
-                    class="mt-2 align-self-start"
-                    :id="purchaseType.title"
-                    :value="purchaseType.id"
-                    v-model="selected.purchaseTypeId"
-                    v-on:change="setOptions(purchaseType.id)"
-                  />
-                  <label
-                    :for="purchaseType.title"
-                    class="w-100 ml-3 d-flex flex-column"
-                  >
-                    {{ purchaseType.title }}
-                    <p class="mt-1" v-if="purchaseType.description">
-                      {{ purchaseType.description }}
-                    </p>
-                  </label>
-                </div>
-              </div>
-              <div class="mt-1 position-relative" v-if="options.length">
-                <select
-                  class="position-relative"
-                  v-model="selected.subscriptionTypeId"
-                  v-on:change="change"
-                >
-                  <option
-                    v-for="option in options"
-                    :value="option.id"
-                    :key="option.title"
-                  >
-                    {{ option.title }}
-                  </option>
-                </select>
-              </div>
-            </div>
+            <PurchaseTypes
+              v-on:setTypes="setTypes"
+              :purType="selected.purchase_type"
+              :subType="selected.subscription_type"
+            />
             <div class="mt-1 items-baseline text-gray-600">
+              <span class="gold font-weight-bold">Description:</span>
               {{ product.description }}
             </div>
             <BundleProducts :product="product" />
@@ -149,39 +145,39 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import "vue-cool-lightbox/dist/vue-cool-lightbox.min.css";
 import { getStrapiMedia } from "~/utils/medias";
-//import Vue from 'vue'
+import { colorTitleNumbers } from "~/helpers";
+
 import "~/utils/filters";
 import Icon from "@/assets/icons";
 import RelatedProducts from "~/components/products/RelatedProducts";
 import BundleProducts from "~/components/products/BundleProducts";
+import PurchaseTypes from "~/components/common/PurchaseTypes";
 
 export default {
   layout: "club",
-  components: { Icon, RelatedProducts, BundleProducts },
-  data() {
-    return {
+  components: { Icon, RelatedProducts, BundleProducts, PurchaseTypes },
+  data: () => ({
+    product: null,
+    options: [],
+    error: null,
+    images: [],
+    selected: {
       product: null,
-      quantities: [
-        {
-          title: "1 bottle",
-          quantity: 1,
-        },
-        {
-          title: "2 bottles",
-          quantity: 2,
-        },
-      ],
-      purchaseTypes: [],
-      options: [],
-      error: null,
-      selected: {
-        productId: null,
-        quantity: 1,
-        purchaseTypeId: null,
-        subscriptionTypeId: null,
-      },
-    };
+      quantity: 1,
+      purchase_type: 1,
+      subscription_type: null,
+      total: 0,
+    },
+    index: 0,
+    imageIndex: null,
+  }),
+  computed: {
+    ...mapGetters({
+      purchaseTypes: "purchase-types/getTypes",
+    }),
   },
   async mounted() {
     try {
@@ -189,51 +185,41 @@ export default {
         "products",
         this.$route.params.id
       );
-      this.purchaseTypes = await this.$strapi.find("purchase-types");
-      this.selected.productId = this.product.id;
+
+      this.selected.product = this.product.id;
+      this.selected.total = this.product.price;
+      this.images = this.product.image.map((item) => this.getImage(item));
     } catch (error) {
       this.error = error;
     }
   },
   methods: {
+    getStrapiMedia,
+    colorTitleNumbers,
+    getImage: function (image) {
+      if (image.url) {
+        return this.getStrapiMedia(image.url);
+      }
+      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
+    },
+    setTypes: function (types) {
+      this.selected = { ...this.selected, ...types };
+    },
     quantityPlus: function () {
       if (this.selected.quantity < 99) {
         this.selected.quantity = this.selected.quantity + 1;
+        this.selected.total = this.selected.quantity * this.product.price;
       }
     },
     quantityMinus: function () {
       if (this.selected.quantity > 1) {
         this.selected.quantity = this.selected.quantity - 1;
+        this.selected.total = this.selected.quantity * this.product.price;
       }
-    },
-    change: function (e) {
-      const { selectedIndex } = e.target.options;
-
-      if (selectedIndex > -1) {
-        const { id } = this.options[selectedIndex];
-        this.selected.subscriptionTypeId = id;
-        return;
-      }
-      this.selected.subscriptionTypeId = null;
-    },
-    setOptions: function (purchaseTypeId) {
-      const item = this.purchaseTypes.filter(
-        (item) => item.id === purchaseTypeId
-      )[0];
-
-      if (item && item.subscription_types.length) {
-        const { id } = item.subscription_types[0];
-
-        this.selected.subscriptionTypeId = id;
-        this.options = [...item.subscription_types];
-        return;
-      }
-      this.selected.subscriptionTypeId = null;
-      this.options = [];
     },
     calcPrice: function (itemPrice, quantity) {
       const purchaseType = this.purchaseTypes.filter(
-        (item) => item.id === this.selected.purchaseTypeId
+        (item) => item.id === this.selected.purchase_type
       );
 
       const price = +itemPrice * +quantity;
@@ -264,13 +250,9 @@ export default {
       }
       return price;
     },
-    selectOption: function (size) {
-      this.selected.quantity = size.quantity;
-    },
     addToCart: async function () {
-      this.$store.dispatch("cart/add", this.selected);
+      this.$store.dispatch("order/addProduct", this.selected);
     },
-    getStrapiMedia,
   },
 };
 </script>
@@ -283,6 +265,10 @@ export default {
 
 .quantity {
   width: 56px;
+}
+
+.image-wrapper.slide {
+  width: 15%;
 }
 
 .icon-bag {

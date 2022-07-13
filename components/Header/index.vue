@@ -38,7 +38,7 @@
         :class="isMobile ? ' justify-content-end' : ' justify-content-center'"
       >
         <h6 class="col-md-7 col-3 d-flex justify-content-end">
-          <nuxt-link to="/" class="dark-orange mr-4">strff</nuxt-link>
+          <nuxt-link to="/" class="gold mr-4">strff</nuxt-link>
         </h6>
         <div class="col-md-5 col-9 d-flex">
           <Search />
@@ -75,11 +75,9 @@
             :key="category.id"
             class="px-3 py-2"
           >
-            <NuxtLink
-              :to="`/categories/${category.slug}`"
-              class="dark-orange"
-              >{{ category.name }}</NuxtLink
-            >
+            <NuxtLink :to="`/categories/${category.slug}`" class="gold">{{
+              category.name
+            }}</NuxtLink>
           </li>
           <li
             class="d-flex"
@@ -92,7 +90,7 @@
           >
             <a
               v-on:click.prevent="isOpen = !isOpen"
-              class="text-nowrap dark-orange d-flex align-items-center m-0"
+              class="text-nowrap gold d-flex align-items-center m-0"
             >
               MAN`S CARE
               <Icon
@@ -107,7 +105,7 @@
               :class="isMobile ? '' : 'position-absolute additional_menu'"
             >
               <li v-for="item in additionalMenu" :key="item.title">
-                <NuxtLink :to="item.link" class="text-nowrap dark-orange">{{
+                <NuxtLink :to="item.link" class="text-nowrap gold">{{
                   item.title
                 }}</NuxtLink>
               </li>
@@ -126,8 +124,8 @@
 <script>
 import { mapGetters } from "vuex";
 import Icon from "@/assets/icons";
-import Search from "@/components/Search";
-import Cart from "@/components/Cart";
+import Search from "./Search";
+import Cart from "./Cart";
 
 export default {
   name: "Header",
@@ -233,12 +231,12 @@ header > span {
   top: 77px;
   left: -100vw;
   background-color: #1f2020;
-  z-index: 2;
   transition: all 0.5s ease, top 0.5s ease;
 }
 
 .menu-mobile.open {
   left: 0vw;
+  top: 42%;
 }
 
 .ul-mobile {
@@ -275,15 +273,16 @@ li > a {
   width: 50px;
   height: 50px;
   left: 20px;
+  top: 4px;
   position: relative;
   cursor: pointer;
 }
 .nav-menu-arrow span {
   transform: rotate(0deg);
   transition: all 0.5s ease, top 0.5s ease;
-  width: 50px;
+  width: 30px;
   position: absolute;
-  height: 10px;
+  height: 4px;
   background-color: #fff;
   border-radius: 5px;
   left: 0;
@@ -292,19 +291,21 @@ li > a {
   top: 0px;
 }
 .nav-menu-arrow span:nth-child(2) {
-  top: 20px;
+  top: 10px;
 }
 .nav-menu-arrow span:nth-child(3) {
-  top: 40px;
+  top: 20px;
 }
 .nav-menu-arrow.open span:nth-child(1) {
   transform: rotate(-45deg);
-  top: 10px;
-  width: 30px;
+  top: 5px;
+  width: 20px;
+  left: -4px;
 }
 .nav-menu-arrow.open span:nth-child(3) {
   transform: rotate(45deg);
-  top: 30px;
-  width: 30px;
+  top: 17px;
+  width: 20px;
+  left: -4px;
 }
 </style>
