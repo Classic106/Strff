@@ -2,32 +2,9 @@
   <div
     class="menu h-100 w-100 position-fixed d-flex justify-content-end"
     :class="isOpen && 'open'"
-    v-on:click.self="$nuxt.$emit('rightSide')"
+    v-on:click.self="isOpen = false"
   >
-    <div class="container d-flex col-12 col-lg-6 m-0 p-0">
-      <div class="content d-flex flex-column" :class="isOpen && 'open'">
-        <div
-          class="close d-flex align-items-center"
-          :class="
-            step > 1 && step !== 4
-              ? 'justify-content-between'
-              : 'justify-content-end'
-          "
-        >
-          <span
-            class="m-4 icon-share"
-            v-if="step > 1 && step !== 4"
-            v-on:click="backStep"
-          ></span>
-          <span
-            class="p-4 text-center close-button"
-            v-on:click.self="$nuxt.$emit('rightSide', 'close')"
-            >+</span
-          >
-        </div>
-        <Cart :step="step" v-on:nextStep="nextStep" v-on:backStep="backStep" />
-      </div>
-    </div>
+    <Cart v-on:close="isOpen = false" :isOpen="isOpen" />
   </div>
 </template>
 
@@ -37,26 +14,9 @@ import Cart from "@/components/Cart";
 export default {
   name: "RightSide",
   components: { Cart },
-  data: () => ({ isOpen: false, step: 1 }),
-  methods: {
-    nextStep: function () {
-      if (this.step < 4) {
-        this.step = this.step + 1;
-      }
-    },
-    backStep: function () {
-      if (this.step > 1) {
-        this.step = this.step - 1;
-      }
-    },
-  },
+  data: () => ({ isOpen: false }),
   created() {
-    this.$nuxt.$on("rightSide", (val) => {
-      if (val) {
-        this.isOpen = false;
-        setTimeout(() => (this.step = 1), 1000);
-        return;
-      }
+    this.$nuxt.$on("rightSide", () => {
       this.isOpen = !this.isOpen;
     });
   },
@@ -78,41 +38,5 @@ export default {
 .menu.open {
   z-index: 5;
   opacity: 1;
-}
-
-.container {
-  height: 100%;
-}
-
-.close > span {
-  color: #fff;
-  font-size: 3rem;
-}
-
-.content {
-  min-width: 100%;
-  margin-left: 100%;
-  height: 100%;
-  color: #fff;
-  background: #333333;
-  transition: all 1s ease-in-out;
-}
-
-.content.open {
-  margin-left: 0;
-}
-
-.close-button {
-  transform: rotate(45deg);
-}
-
-.icon-share {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  filter: brightness(0) invert(1);
-  transform: rotate(180deg);
-  background-size: cover;
-  background-image: url("../assets/icons/share-solid.svg");
 }
 </style>
