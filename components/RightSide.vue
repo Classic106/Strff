@@ -4,19 +4,26 @@
     :class="isOpen && 'open'"
     v-on:click.self="isOpen = false"
   >
-    <Cart v-on:close="isOpen = false" :isOpen="isOpen" />
+    <Cart v-if="component === 'cart'" v-on:close="isOpen = false" :isOpen="isOpen" />
+    <Search
+      v-if="component === 'search'"
+      v-on:close="isOpen = false"
+      :isOpen="isOpen"
+    />
   </div>
 </template>
 
 <script>
 import Cart from "@/components/Cart";
+import Search from "@/components/Search";
 
 export default {
   name: "RightSide",
-  components: { Cart },
-  data: () => ({ isOpen: false }),
+  components: { Cart, Search },
+  data: () => ({ isOpen: false, component: "cart" }),
   created() {
-    this.$nuxt.$on("rightSide", () => {
+    this.$nuxt.$on("rightSide", (val) => {
+      this.component = val ? val : "cart";
       this.isOpen = !this.isOpen;
     });
   },

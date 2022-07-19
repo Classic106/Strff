@@ -1,7 +1,7 @@
 <template>
   <div
     class="icon-bag-wrap position-relative"
-    v-on:click="$nuxt.$emit('rightSide')"
+    v-on:click="$nuxt.$emit('rightSide', 'cart')"
   >
     <span
       class="

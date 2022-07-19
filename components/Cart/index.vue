@@ -2,7 +2,7 @@
   <div class="container d-flex col-12 col-lg-6 m-0 p-0">
     <div class="content d-flex flex-column" :class="isOpen && 'open'">
       <div
-        class="close d-flex align-items-center"
+        class="header d-flex align-items-center"
         :class="
           step > 1 && step !== 4
             ? 'justify-content-between'
@@ -75,7 +75,7 @@ export default {
   height: 100%;
 }
 
-.close > span {
+.header > span {
   color: #fff;
   font-size: 3rem;
 }
