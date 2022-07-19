@@ -4,7 +4,11 @@
     :class="isOpen && 'open'"
     v-on:click.self="isOpen = false"
   >
-    <Cart v-if="component === 'cart'" v-on:close="isOpen = false" :isOpen="isOpen" />
+    <Cart
+      v-if="component === 'cart'"
+      v-on:close="isOpen = false"
+      :isOpen="isOpen"
+    />
     <Search
       v-if="component === 'search'"
       v-on:close="isOpen = false"
