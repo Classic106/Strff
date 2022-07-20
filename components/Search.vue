@@ -34,7 +34,7 @@
             "
           />
           <div v-else class="mt-3">
-            <h6 class="p-3 pb-5 text-center">BEST SELLERS</h6>
+            <h6 class="p-3 text-center">BEST SELLERS</h6>
             <div
               class="
                 items
@@ -59,7 +59,9 @@
                     :src="`${getFirstImage(bestSeller.image)}`"
                   />
                   <div class="card-info d-flex justify-content-between mb-4">
-                    <span class="col-white">{{ bestSeller.price }} $</span>
+                    <span class="col-white text-nowrap mr-3"
+                      >{{ bestSeller.price }} $</span
+                    >
                     <span class="text-upprcase gold">{{
                       bestSeller.title
                     }}</span>
@@ -104,10 +106,12 @@
               <a v-on:click.prevent="redirect(`/products/${product.slug}`)">
                 <img class="mb-2" :src="`${getFirstImage(product.image)}`" />
                 <div class="d-flex flex-column justify-content-between mb-4">
-                  <span class="text-upprcase col-white">{{
+                  <span class="text-uppercase col-white">{{
                     product.title
                   }}</span>
-                  <span class="gold">{{ product.price }} $</span>
+                  <span class="gold"
+                    >{{ product.price }} $</span
+                  >
                   <span class="col-white"
                     >in <span class="gold">{{ product.slug }}</span></span
                   >
@@ -280,7 +284,7 @@ h6 {
 }
 
 .items {
-  height: 73vh;
+  height: 70vh;
 }
 
 $primary: #9e7d24;
@@ -289,8 +293,6 @@ $white: #fff;
 
 .form__group {
   position: relative;
-  padding: 15px 0 0;
-  margin-top: 10px;
   width: 50%;
 }
 
@@ -313,7 +315,6 @@ $white: #fff;
   &:placeholder-shown ~ .form__label {
     font-size: 1.3rem;
     cursor: text;
-    top: 20px;
   }
 }
 
