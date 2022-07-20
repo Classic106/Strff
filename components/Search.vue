@@ -51,7 +51,9 @@
                 :key="bestSeller.id"
                 class="col-12 col-md-6"
               >
-                <nuxt-link :to="`/products/${bestSeller.slug}`">
+                <a
+                  v-on:click.prevent="redirect(`/products/${bestSeller.slug}`)"
+                >
                   <img
                     class="mb-2"
                     :src="`${getFirstImage(bestSeller.image)}`"
@@ -62,7 +64,7 @@
                       bestSeller.title
                     }}</span>
                   </div>
-                </nuxt-link>
+                </a>
               </div>
             </div>
           </div>
@@ -99,7 +101,7 @@
               :key="product.id"
               class="col-12 col-md-6"
             >
-              <nuxt-link :to="`/products/${product.slug}`">
+              <a v-on:click.prevent="redirect(`/products/${product.slug}`)">
                 <img class="mb-2" :src="`${getFirstImage(product.image)}`" />
                 <div class="d-flex flex-column justify-content-between mb-4">
                   <span class="text-upprcase col-white">{{
@@ -110,7 +112,7 @@
                     >in <span class="gold">{{ product.slug }}</span></span
                   >
                 </div>
-              </nuxt-link>
+              </a>
             </div>
           </div>
 
@@ -123,7 +125,7 @@
               :key="article.id"
               class="col"
             >
-              <nuxt-link :to="`/article/${article.id}`">
+              <a v-on:click.prevent="redirect(`/article/${article.id}`)">
                 <img
                   class="mb-2"
                   :src="`${getStrapiMedia(article.image.url)}`"
@@ -139,7 +141,7 @@
                     <span class="gold text-lowercase"> MAN`S CARE</span></span
                   >
                 </div>
-              </nuxt-link>
+              </a>
             </div>
           </div>
 
@@ -219,6 +221,10 @@ export default {
         return this.getStrapiMedia(images[0].url);
       }
       return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
+    },
+    redirect: function (to) {
+      this.$router.push(to);
+      this.$emit("close");
     },
   },
   async mounted() {

@@ -28,7 +28,7 @@ export default {
   created() {
     this.$nuxt.$on("rightSide", (val) => {
       this.component = val ? val : "cart";
-      this.isOpen = !this.isOpen;
+      setTimeout(() => (this.isOpen = true), 0);
     });
   },
 };

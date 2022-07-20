@@ -7,7 +7,7 @@
 <script>
 export default {
   mounted() {
-    setTimeout(() => this.$nuxt.$emit("rightSide", "close"), 2000);
+    setTimeout(() => this.$nuxt.$emit("rightSide"), 2000);
   },
 };
 </script>
