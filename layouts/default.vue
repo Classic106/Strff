@@ -12,6 +12,7 @@ export default {};
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+@import "vue-custom-scrollbar/dist/vueScrollbar.css";
 
 @media (min-width: 1200px) {
   .loaded {
