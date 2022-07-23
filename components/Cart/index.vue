@@ -8,7 +8,7 @@
           >+</span
         >
       </div>
-      <div v-if="step === 1" class="d-flex">
+      <div v-if="step === 1" class="d-flex flex-lg-row flex-column">
         <ShippingInf
           :isShipping="isShipping"
           v-on:nextStep="step = step + 1"
@@ -45,11 +45,6 @@ export default {
       order_items: "order/getOrderItems",
       order_bundles: "order/getBundleItems",
     }),
-  },
-  watch: {
-    step: function () {
-      console.log(this.step);
-    },
   },
   methods: {
     firstStep: function () {
