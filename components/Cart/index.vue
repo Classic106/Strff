@@ -1,70 +1,62 @@
 <template>
-  <div class="container d-flex col-12 col-lg-6 m-0 p-0">
+  <div class="container d-flex m-0 p-0">
     <div class="content d-flex flex-column" :class="isOpen && 'open'">
-      <div
-        class="header d-flex align-items-center"
-        :class="
-          step > 1 && step !== 4
-            ? 'justify-content-between'
-            : 'justify-content-end'
-        "
-      >
-        <span
-          class="m-4 icon-share"
-          v-if="step > 1 && step !== 4"
-          v-on:click="backStep"
-        ></span>
+      <div class="header d-flex align-items-center justify-content-end">
         <span
           class="p-4 text-center close-button"
           v-on:click.self="$emit('close')"
           >+</span
         >
       </div>
-      <div>
-        <FirstStep v-if="step === 1" v-on:nextStep="nextStep" />
-        <SecondStep
-          v-if="step === 2"
-          v-on:nextStep="$emit('nextStep')"
-          v-on:backStep="$emit('backStep')"
+      <div v-if="step === 1" class="d-flex">
+        <ShippingInf
+          :isShipping="isShipping"
+          v-on:nextStep="step = step + 1"
+          :class="
+            isShipping && (order_items.length || order_bundles.length) && 'open'
+          "
         />
-        <ThirdStep
-          v-if="step === 3"
-          v-on:nextStep="$emit('nextStep')"
-          v-on:backStep="$emit('backStep')"
+        <FirstStep
+          :isShipping="isShipping"
+          v-on:isShipping="isShipping = !isShipping"
         />
-        <FouthStep v-if="step === 4" />
       </div>
+      <SecondStep v-if="step === 2" v-on:firstStep="firstStep" />
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import FirstStep from "./FirstStep";
-import SecondStep from "./SecondStep";
-import ThirdStep from "./ThirdStep.vue";
-import FouthStep from "./FouthStep.vue";
+import SecondStep from "./SecondStep.vue";
+import ShippingInf from "./ShippingInf";
 
 export default {
-  components: { FirstStep, SecondStep, ThirdStep, FouthStep },
+  components: {
+    FirstStep,
+    SecondStep,
+    ShippingInf,
+  },
   props: ["isOpen"],
-  data: () => ({ step: 1 }),
+  data: () => ({ isShipping: false, step: 1 }),
+  computed: {
+    ...mapGetters({
+      order_items: "order/getOrderItems",
+      order_bundles: "order/getBundleItems",
+    }),
+  },
   watch: {
-    isOpen: function () {
-      if (this.isOpen === false) {
-        setTimeout(() => (this.step = 1), 1000);
-      }
+    step: function () {
+      console.log(this.step);
     },
   },
   methods: {
-    nextStep: function () {
-      if (this.step < 4) {
-        this.step = this.step + 1;
-      }
-    },
-    backStep: function () {
-      if (this.step > 1) {
-        this.step = this.step - 1;
-      }
+    firstStep: function () {
+      setTimeout(() => {
+        this.isShipping = false;
+        this.step = 1;
+      }, 2000);
     },
   },
 };
@@ -73,7 +65,7 @@ export default {
 <style scoped>
 .container {
   height: 100%;
-  max-width: 600px;
+  width: max-content;
 }
 
 .header > span {
@@ -96,6 +88,7 @@ export default {
 
 .close-button {
   transform: rotate(45deg);
+  cursor: pointer;
 }
 
 .icon-share {

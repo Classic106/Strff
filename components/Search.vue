@@ -109,9 +109,7 @@
                   <span class="text-uppercase col-white">{{
                     product.title
                   }}</span>
-                  <span class="gold"
-                    >{{ product.price }} $</span
-                  >
+                  <span class="gold">{{ product.price }} $</span>
                   <span class="col-white"
                     >in <span class="gold">{{ product.slug }}</span></span
                   >
@@ -277,6 +275,7 @@ h6 {
 
 .close-button {
   transform: rotate(45deg);
+  cursor: pointer;
 }
 
 .loader {

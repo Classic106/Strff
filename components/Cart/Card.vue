@@ -1,16 +1,15 @@
 <template>
-  <div class="mx-3">
-    <p class="text-uppercase">payment method</p>
+  <div class="mb-3 px-2">
     <v-credit-card-form
       v-on:change="creditInfoChanged"
       :trans="translations"
       :noCard="true"
     />
     <button
-      class="text-uppercase w-100 mt-4 p-2 finalize-order"
-      v-on:click="finalize"
+      class="text-uppercase w-100 mt-4 p-2 save gold-background"
+      v-on:click="save"
     >
-      finalize and place order
+      save
     </button>
   </div>
 </template>
@@ -19,7 +18,9 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
+  name: "Card",
   data: () => ({
+    cardData: null,
     translations: {
       name: {
         label: "Name",
@@ -49,12 +50,17 @@ export default {
       addOrder: "order/addOrder",
     }),
     creditInfoChanged(values) {
-      console.log("Credit card fields", values);
+      this.cardData = values;
     },
-    finalize: function () {
-      const data = { user: this.username };
-      this.addOrder(data);
-      this.$emit("nextStep");
+    save: function () {
+      const isCardNumber = this.cardData.cardNumber.length === 19;
+      const isExpiration = this.cardData.expiration.length === 5;
+      const isSecurity = this.cardData.security.length === 4;
+
+      if (isCardNumber && isExpiration && isSecurity) {
+        console.log(this.cardData);
+        this.$emit("setCard");
+      }
     },
   },
 };
@@ -96,9 +102,8 @@ label {
   margin-left: 8px;
 }
 
-.finalize-order {
+.save {
   color: #fff;
   border: none;
-  background: #5bb85d;
 }
 </style>

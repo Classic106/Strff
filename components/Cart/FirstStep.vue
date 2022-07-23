@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column overflow-auto">
+  <div class="first-step d-flex flex-column overflow-auto">
     <div
       v-if="!order_items.length && !order_bundles.length"
       class="cart p-4 d-flex justify-content-center align-items-center"
@@ -222,9 +222,9 @@
       </ul>
       <button
         class="text-uppercase p-3 mt-auto gold-background"
-        v-on:click="$emit('nextStep')"
+        v-on:click="$emit('isShipping')"
       >
-        go to checkout
+        {{ isShipping ? "close shipping" : "go to checkout" }}
       </button>
     </div>
   </div>
@@ -236,7 +236,7 @@ import { getStrapiMedia } from "~/utils/medias";
 import PurchaseTypes from "~/components/common/PurchaseTypes";
 
 export default {
-  props: ["isOpen"],
+  props: ["isOpen", "isShipping"],
   components: { PurchaseTypes },
   data: () => ({ edit: false, totalPrice: 0 }),
   computed: {
@@ -311,6 +311,13 @@ export default {
 </script>
 
 <style scoped>
+.first-step {
+  max-width: 600px;
+  background: #333333;
+  z-index: 1;
+  height: 90vh;
+}
+
 .grey {
   color: #919191;
 }
