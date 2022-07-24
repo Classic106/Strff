@@ -8,20 +8,10 @@
           >+</span
         >
       </div>
-      <div v-if="step === 1" class="d-flex flex-lg-row flex-column">
-        <ShippingInf
-          :isShipping="isShipping"
-          v-on:nextStep="step = step + 1"
-          :class="
-            isShipping && (order_items.length || order_bundles.length) && 'open'
-          "
-        />
-        <FirstStep
-          :isShipping="isShipping"
-          v-on:isShipping="isShipping = !isShipping"
-        />
+      <div>
+        <FirstStep v-if="step === 1" :nextStep="nextStep" />
+        <SecondStep v-if="step === 2" v-on:firstStep="firstStep" />
       </div>
-      <SecondStep v-if="step === 2" v-on:firstStep="firstStep" />
     </div>
   </div>
 </template>
@@ -30,16 +20,20 @@
 import { mapGetters } from "vuex";
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep.vue";
-import ShippingInf from "./ShippingInf";
 
 export default {
   components: {
     FirstStep,
     SecondStep,
-    ShippingInf,
   },
   props: ["isOpen"],
-  data: () => ({ isShipping: false, step: 1 }),
+  data: () => ({
+    step: 1,
+    settings: {
+      suppressScrollX: true,
+      wheelPropagation: false,
+    },
+  }),
   computed: {
     ...mapGetters({
       order_items: "order/getOrderItems",
@@ -47,6 +41,9 @@ export default {
     }),
   },
   methods: {
+    nextStep: function () {
+      this.step = this.step + 1;
+    },
     firstStep: function () {
       setTimeout(() => {
         this.isShipping = false;
