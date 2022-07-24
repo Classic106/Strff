@@ -1,7 +1,10 @@
 <template>
-  <div class="shipping_inf" :class="isShipping && 'open'">
+  <div
+    class="shipping_inf d-flex flex-column"
+    :class="isShipping ? 'show' : 'hide'"
+  >
     <vueCustomScrollbar
-      class="scroll-area position-realtive px-3"
+      class="scroll-area position-realtive px-3 mb-auto"
       :settings="settings"
     >
       <div class="d-flex flex-column">
@@ -54,11 +57,12 @@
         <Card v-if="isCardOpen" :setCard="setCard" />
       </div>
     </vueCustomScrollbar>
-    <div class="finalize-order mt-3">
-      <button class="finalize-btn text-nowrap w-100 p-2" v-on:click="finalize">
-        FINALIZE AND PLACE ORDER
-      </button>
-    </div>
+    <button
+      class="finalize-btn text-nowrap p-3 mt-4 mx-1"
+      v-on:click="finalize"
+    >
+      FINALIZE AND PLACE ORDER
+    </button>
   </div>
 </template>
 
@@ -78,7 +82,7 @@ export default {
     isCardOpen: false,
     settings: {
       suppressScrollX: true,
-      wheelPropagation: false,
+      wheelPropagation: true,
     },
   }),
   computed: {
@@ -97,30 +101,40 @@ export default {
       const isUserInfo = Object.keys(this.userInfo).length !== 0;
       const isCard = Object.keys(this.card).length !== 0;
 
-      //if (isUserInfo && isCard) {
+      if (isUserInfo && isCard) {
         console.log(this.userInfo, this.card);
         this.$emit("nextStep");
-      //}
+      }
     },
   },
 };
 </script>
 
 <style scoped>
+@media (max-width: 992px) {
+  .shipping_inf,
+  .shipping_inf.show,
+  .shipping_inf.hide,
+  .finalize-btn,
+  .scroll-area {
+    width: 100% !important;
+    transition: none !important;
+  }
+}
+
 .shipping_inf {
   width: 0;
-  height: 77vh;
-  transition: all 1s ease-in-out;
 }
 
-.shipping_inf.open,
-.finalize-order {
+.scroll-area,
+.shipping_inf.show {
   width: 340px;
+  transition: width 1s ease-in-out;
 }
 
-.scroll-area {
-  width: 340px;
-  height: 76vh;
+.shipping_inf.hide {
+  width: 0;
+  transition: width 1s ease-in-out;
 }
 
 .head {
@@ -140,6 +154,7 @@ button {
 }
 
 .finalize-btn {
+  width: 340px;
   background: #5bb85d;
   color: #fff;
 }
