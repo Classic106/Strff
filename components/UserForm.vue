@@ -141,6 +141,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data: () => ({
     password: "",
@@ -157,6 +159,11 @@ export default {
       email: "",
     },
   }),
+  computed: {
+    ...mapGetters({
+      user: "auth/user",
+    }),
+  },
   methods: {
     send: function () {
       if (this.password) {
@@ -168,6 +175,35 @@ export default {
       this.question = false;
       this.createAccount = false;
     },
+  },
+  mounted() {
+    if (this.user) {
+      const {
+        firstName,
+        lastName,
+        company,
+        address1,
+        address2,
+        city,
+        state,
+        zip,
+        contactNo,
+        email,
+      } = this.user;
+
+      this.userInfo = {
+        firstName,
+        lastName,
+        company,
+        address1,
+        address2,
+        city,
+        state,
+        zip,
+        contactNo,
+        email,
+      };
+    }
   },
 };
 </script>
