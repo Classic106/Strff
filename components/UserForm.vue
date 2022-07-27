@@ -65,19 +65,29 @@
         <input
           id="s-state"
           type="text"
-          placeholder="Enter your state"
-          v-model="userInfo.state"
+          placeholder="Chose state"
+          v-model="userInfo.state.abbreviation"
           required
           autofocus="true"
-          class=""
+          v-if="!choseState"
+          v-on:click="choseState = true"
         />
+        <select v-else size="1" name="states_hash" v-model="userInfo.state">
+          <option
+            v-for="states_hash in states_hashes"
+            :key="states_hash.name"
+            :value="states_hash"
+          >
+            {{ states_hash.name }}
+          </option>
+        </select>
       </div>
       <div class="mb-2">
         <label class="" for="s-zip-code"> Zip Code </label>
         <input
           id="s-zip-code"
           type="text"
-          placeholder="Enter your postal code"
+          placeholder="Enter your Zip code"
           v-model="userInfo.zip"
           required
           autofocus="true"
@@ -85,11 +95,11 @@
         />
       </div>
       <div class="mb-2">
-        <label class="" for="s-contact-no"> Contact No. </label>
+        <label class="" for="s-contact-no"> cellphone </label>
         <input
           id="s-contact-no"
           type="text"
-          placeholder="Enter your contact no."
+          placeholder="Enter your cellphone"
           v-model="userInfo.contactNo"
           required
           autofocus="true"
@@ -142,6 +152,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { states_hashes } from "@/data";
 
 export default {
   data: () => ({
@@ -155,14 +166,24 @@ export default {
       city: "",
       state: "",
       zip: "",
-      contactNo: "",
+      cellphone: "",
       email: "",
     },
+    choseState: false,
+    states_hashes,
   }),
   computed: {
     ...mapGetters({
       user: "auth/user",
     }),
+  },
+  watch: {
+    userInfo: {
+      handler() {
+        this.choseState = false;
+      },
+      deep: true,
+    },
   },
   methods: {
     send: function () {
@@ -187,7 +208,7 @@ export default {
         city,
         state,
         zip,
-        contactNo,
+        cellphone,
         email,
       } = this.user;
 
@@ -200,7 +221,7 @@ export default {
         city,
         state,
         zip,
-        contactNo,
+        cellphone,
         email,
       };
     }
@@ -209,7 +230,8 @@ export default {
 </script>
 
 <style scoped>
-input {
+input,
+select {
   padding: 10px;
   border: none;
   border-radius: 6px;
