@@ -62,23 +62,15 @@
       </div>
       <div class="mb-2">
         <label class="" for="s-state"> State </label>
-        <input
-          id="s-state"
-          type="text"
-          placeholder="Chose state"
-          v-model="userInfo.state.abbreviation"
-          required
-          autofocus="true"
-          v-if="!choseState"
-          v-on:click="choseState = true"
-        />
-        <select v-else size="1" name="states_hash" v-model="userInfo.state">
-          <option
-            v-for="states_hash in states_hashes"
-            :key="states_hash.name"
-            :value="states_hash"
-          >
-            {{ states_hash.name }}
+        <select
+          size="1"
+          name="states_hash"
+          v-model="userInfo.state"
+          ref="select"
+        >
+          <option disabled :value="''">Chose state</option>
+          <option v-for="hash in states_hashes" :key="hash.name" :value="hash">
+            {{ showHash(hash) }}
           </option>
         </select>
       </div>
@@ -169,7 +161,7 @@ export default {
       cellphone: "",
       email: "",
     },
-    choseState: false,
+    openSelect: false,
     states_hashes,
   }),
   computed: {
@@ -186,6 +178,17 @@ export default {
     },
   },
   methods: {
+    showHash: function (hash) {
+      if (
+        !this.openSelect &&
+        this.userInfo.state &&
+        this.userInfo.state.name === hash.name
+      ) {
+        return hash.abbreviation;
+      }
+
+      return hash.name;
+    },
     send: function () {
       if (this.password) {
         this.userInfo.password = this.password;
@@ -225,6 +228,14 @@ export default {
         email,
       };
     }
+    const { select } = this.$refs;
+
+    select.onchange = () => select.blur();
+    select.onfocus = () => (this.openSelect = true);
+    select.onblur = () => (this.openSelect = false);
+    select.onkeyup = (e) => {
+      if (e.keyCode == 27) this.openSelect = true;
+    };
   },
 };
 </script>
