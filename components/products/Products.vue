@@ -3,11 +3,14 @@
     <div v-if="error">
       {{ error }}
     </div>
-    <div v-else class="row justify-content-center p-5 content m-0">
+    <div
+      v-else
+      class="content row justify-content-center px-1 py-5 m-100 mx-auto"
+    >
       <div
         v-for="product in products"
         :key="product.id"
-        class="col col-md-5 col-lg-3 m-0 mb-3 m-md-1 m-lg-3 product p-4 m-2"
+        class="product col-10 col-md-7 col-lg-3 mb-3 mx-md-2 p-4"
       >
         <nuxt-link :to="`/products/${product.slug}`">
           <img class="mb-2 w-100" :src="`${getFirstImage(product.image)}`" />
@@ -98,7 +101,7 @@ button {
 
 .product {
   box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.17);
-  border-radius: 5%;
+  border-radius: 10px;
 }
 
 .product:hover {
@@ -107,6 +110,6 @@ button {
 
 img {
   box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.06);
-  border-radius: 5%;
+  border-radius: 10px;
 }
 </style>

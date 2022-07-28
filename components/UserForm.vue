@@ -67,6 +67,7 @@
           name="states_hash"
           v-model="userInfo.state"
           ref="select"
+          :class="userInfo.state && 'chosed'"
         >
           <option disabled :value="''">Chose state</option>
           <option v-for="hash in states_hashes" :key="hash.name" :value="hash">
@@ -249,6 +250,14 @@ select {
   color: #fff;
   background: #222222;
   width: 100%;
+}
+
+select {
+  color: gray;
+}
+
+select.chosed {
+  color: #fff;
 }
 
 .save {
