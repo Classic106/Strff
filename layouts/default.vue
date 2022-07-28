@@ -91,5 +91,9 @@ h6 {
 .loaded {
   width: auto;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
 </style>
 

@@ -2,9 +2,19 @@
   <div class="first-step d-flex flex-column overflow-auto">
     <div
       v-if="!order_items.length && !order_bundles.length"
-      class="cart p-4 d-flex justify-content-center align-items-center"
+      class="
+        cart
+        empty
+        p-4
+        d-flex
+        flex-column
+        justify-content-center
+        align-items-center
+        m-auto
+      "
     >
-      <h5 class="text-uppercase text-center">put something in the cart</h5>
+      <h6 class="text-center">Your Shopping Cart is Empty</h6>
+      <h6 class="gold cursor-pointer" v-on:click="$emit('close')">SHOP NOW</h6>
     </div>
     <vueCustomScrollbar
       v-else
@@ -18,7 +28,7 @@
       "
       :settings="scrollAreaSettings"
     >
-      <ShippingInf :isShipping="isShipping" v-on:nextStep="$emit('nextStep')" />
+      <ShippingInf v-show="isShipping" :isShipping="isShipping" v-on:nextStep="$emit('nextStep')" />
       <div class="cart d-flex flex-column px-3">
         <h6 class="text-uppercase text-center my-3">
           total price: {{ totalPrice | formatNumber }} $
@@ -364,6 +374,12 @@ export default {
 </script>
 
 <style scoped>
+@media (min-width: 992px) {
+  .cart.empty {
+    width: 600px;
+  }
+}
+
 .first-step {
   background: #333333;
   z-index: 1;
@@ -383,12 +399,6 @@ export default {
 
 .grey {
   color: #919191;
-}
-
-.close-button {
-  color: #fff;
-  font-size: 3rem;
-  transform: rotate(45deg);
 }
 
 li {

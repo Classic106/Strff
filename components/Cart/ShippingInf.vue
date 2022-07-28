@@ -20,16 +20,12 @@
           "
         >
           <h6
-            class="w-100 p-3"
+            class="py-3 p-3"
             v-on:click.self="isAddressOpen = !isAddressOpen"
           >
             + Add Shipping Address
           </h6>
-          <span
-            class="p-3 text-center close-button"
-            v-on:click.self="isAddressOpen = false"
-            >+</span
-          >
+          <CloseButton class="mr-3 my-2" v-on:close="isAddressOpen = false" />
         </div>
         <UserForm v-if="isAddressOpen" :setUserInfo="setUserInfo" />
       </div>
@@ -45,14 +41,10 @@
             align-items-center
           "
         >
-          <h6 class="w-100 p-3" v-on:click.self="isCardOpen = !isCardOpen">
+          <h6 class="p-3" v-on:click.self="isCardOpen = !isCardOpen">
             + Add Credit Card
           </h6>
-          <span
-            class="p-3 text-center close-button"
-            v-on:click.self="isCardOpen = false"
-            >+</span
-          >
+          <CloseButton class="mr-3 my-2" v-on:close="isCardOpen = false" />
         </div>
         <Card v-if="isCardOpen" :setCard="setCard" />
       </div>
@@ -71,9 +63,10 @@ import { mapGetters } from "vuex";
 import Sign from "@/components/Sign";
 import UserForm from "@/components/UserForm";
 import Card from "./Card.vue";
+import CloseButton from "@/components/common/CloseButton";
 
 export default {
-  components: { Sign, UserForm, Card },
+  components: { Sign, UserForm, Card, CloseButton },
   props: ["isShipping"],
   data: () => ({
     userInfo: {},
@@ -140,12 +133,6 @@ export default {
 .head {
   cursor: pointer;
   background: rgb(21, 21, 22);
-}
-
-.close-button {
-  transform: rotate(45deg);
-  z-index: 0;
-  cursor: pointer;
 }
 
 button {
