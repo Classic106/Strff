@@ -1,5 +1,5 @@
 <template>
-  <Products :products="this.products" :error="error" />
+  <Products :products="products" :error="error" />
 </template>
 
 <script>
@@ -9,12 +9,10 @@ import Products from "~/components/products/Products";
 export default {
   layout: "club",
   components: { Products },
-  data() {
-    return {
-      products: [],
-      error: null,
-    };
-  },
+  data: () => ({
+    products: [],
+    error: null,
+  }),
   computed: { ...mapGetters({ categories: "categories/categories" }) },
   mounted() {
     const catgory = this.categories.filter(
