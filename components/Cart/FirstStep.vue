@@ -359,9 +359,6 @@ export default {
 
       this.totalPrice = orderItemsTotalPrice + bundlesTotalPrice;
     },
-    mounted() {
-      this.calcTotalPrice();
-    },
   },
 };
 </script>
