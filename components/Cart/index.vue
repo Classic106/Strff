@@ -1,15 +1,16 @@
 <template>
   <div class="container d-flex m-0 p-0">
     <div class="content d-flex flex-column" :class="isOpen && 'open'">
-      <div class="header d-flex align-items-center justify-content-end">
-        <span
-          class="p-4 text-center close-button"
-          v-on:click.self="$emit('close')"
-          >+</span
-        >
+      <div class="header d-flex align-items-center justify-content-between">
+        <h6 class="text-uppercase m-0 p-3">shopping bag</h6>
+        <CloseButton class="mr-3 my-2" v-on:close="$emit('close')" />
       </div>
       <div>
-        <FirstStep v-if="step === 1" :nextStep="nextStep" />
+        <FirstStep
+          v-if="step === 1"
+          :nextStep="nextStep"
+          v-on:close="$emit('close')"
+        />
         <SecondStep v-if="step === 2" v-on:firstStep="firstStep" />
       </div>
     </div>
@@ -20,11 +21,13 @@
 import { mapGetters } from "vuex";
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep.vue";
+import CloseButton from "@/components/common/CloseButton";
 
 export default {
   components: {
     FirstStep,
     SecondStep,
+    CloseButton,
   },
   props: ["isOpen"],
   data: () => ({
@@ -60,11 +63,6 @@ export default {
   width: max-content;
 }
 
-.header > span {
-  color: #fff;
-  font-size: 3rem;
-}
-
 .content {
   min-width: 100%;
   margin-left: 100%;
@@ -76,11 +74,6 @@ export default {
 
 .content.open {
   margin-left: 0;
-}
-
-.close-button {
-  transform: rotate(45deg);
-  cursor: pointer;
 }
 
 .icon-share {

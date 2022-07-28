@@ -2,12 +2,8 @@
   <div class="container d-flex col-12 col-lg-6 m-0 p-0">
     <div class="content d-flex flex-column" :class="isOpen && 'open'">
       <div class="header d-flex align-items-center justify-content-between">
-        <h6 class="text-uppercase px-5">search</h6>
-        <span
-          class="p-4 text-center close-button"
-          v-on:click.self="$emit('close')"
-          >+</span
-        >
+        <h6 class="text-uppercase p-4">search</h6>
+        <CloseButton class="mr-3 my-2" v-on:close="$emit('close')" />
       </div>
       <div class="d-flex flex-column">
         <div class="form__group field w-100 d-flex justify-content-center">
@@ -164,9 +160,10 @@
 <script>
 import { getStrapiMedia } from "~/utils/medias";
 import Loader from "@/components/Loader";
+import CloseButton from "@/components/common/CloseButton";
 
 export default {
-  components: { Loader },
+  components: { Loader, CloseButton },
   props: ["isOpen"],
   data: () => ({
     text: "",
@@ -271,11 +268,6 @@ h6 {
 
 .content.open {
   margin-left: 0;
-}
-
-.close-button {
-  transform: rotate(45deg);
-  cursor: pointer;
 }
 
 .loader {
