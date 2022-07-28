@@ -10,7 +10,7 @@
       <div
         v-for="product in products"
         :key="product.id"
-        class="product col-10 col-md-7 col-lg-3 mb-3 mx-md-auto p-4"
+        class="product col-10 col-md-7 col-lg-3 mb-3 mx-md-2 p-4"
       >
         <nuxt-link :to="`/products/${product.slug}`">
           <img class="mb-2 w-100" :src="`${getFirstImage(product.image)}`" />
@@ -110,6 +110,6 @@ button {
 
 img {
   box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.06);
-  border-radius: 5%;
+  border-radius: 10px;
 }
 </style>
