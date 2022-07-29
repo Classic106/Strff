@@ -26,6 +26,10 @@ export const actions = {
 
     if (!item.length) {
       const result = await this.$strapi.$http.$post("/order-items", order_item);
+      const product = await this.$strapi.find("products", {
+        id: result.product.id,
+      });
+      result.product = product[0];
       commit("addProduct", result);
     }
   },

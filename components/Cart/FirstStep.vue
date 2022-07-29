@@ -28,7 +28,7 @@
       "
       :settings="scrollAreaSettings"
     >
-      <ShippingInf v-show="isShipping" :isShipping="isShipping" v-on:nextStep="$emit('nextStep')" />
+      <ShippingInf :isShipping="isShipping" v-on:nextStep="$emit('nextStep')" />
       <div class="cart d-flex flex-column px-3">
         <h6 class="text-uppercase text-center my-3">
           total price: {{ totalPrice | formatNumber }} $

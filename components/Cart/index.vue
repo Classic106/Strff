@@ -30,13 +30,7 @@ export default {
     CloseButton,
   },
   props: ["isOpen"],
-  data: () => ({
-    step: 1,
-    settings: {
-      suppressScrollX: true,
-      wheelPropagation: false,
-    },
-  }),
+  data: () => ({ step: 1 }),
   computed: {
     ...mapGetters({
       order_items: "order/getOrderItems",
