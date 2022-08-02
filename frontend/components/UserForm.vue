@@ -67,6 +67,7 @@
           name="states_hash"
           v-model="userInfo.state"
           ref="select"
+          required
           :class="userInfo.state && 'chosed'"
         >
           <option disabled :value="''">Chose state</option>
@@ -137,14 +138,14 @@
         class="text-uppercase w-100 p-2 save gold-background"
         type="submit"
       >
-        save
+        {{ saved ? "saved" : "save" }}
       </button>
     </div>
   </form>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import { states_hashes } from "@/data";
 
 export default {
@@ -162,12 +163,14 @@ export default {
       cellphone: "",
       email: "",
     },
+    saved: false,
     openSelect: false,
     states_hashes,
   }),
   computed: {
     ...mapGetters({
       user: "auth/user",
+      userInf: "userInfo/userInfo",
     }),
   },
   watch: {
@@ -179,6 +182,9 @@ export default {
     },
   },
   methods: {
+    ...mapMutations({
+      setUserInfo: "userInfo/setUserInfo",
+    }),
     showHash: function (hash) {
       if (
         !this.openSelect &&
@@ -194,7 +200,9 @@ export default {
       if (this.password) {
         this.userInfo.password = this.password;
       }
-      this.$emit("setUserInfo");
+      this.saved = true;
+      this.setUserInfo(this.userInfo);
+      this.$emit("setUserInfo", this.userInfo);
     },
     cancel: function () {
       this.question = false;
@@ -228,7 +236,10 @@ export default {
         cellphone,
         email,
       };
+    } else {
+      this.userInfo = { ...this.userInfo, ...this.userInf };
     }
+
     const { select } = this.$refs;
 
     select.onchange = () => select.blur();

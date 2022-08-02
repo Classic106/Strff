@@ -294,7 +294,6 @@ export default {
   components: { PurchaseTypes, ShippingInf },
   data: () => ({
     edit: false,
-    //totalPrice: 0,
     isShipping: false,
     scrollAreaSettings: {
       suppressScrollX: true,

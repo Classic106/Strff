@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Card",
@@ -46,9 +46,6 @@ export default {
     }),
   },
   methods: {
-    ...mapActions({
-      addOrder: "order/addOrder",
-    }),
     creditInfoChanged(values) {
       this.cardData = values;
     },

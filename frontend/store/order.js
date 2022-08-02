@@ -8,8 +8,7 @@ export const actions = {
   async addOrder({ state }, data = {}) {
     const order = {
       ...data,
-      order_items: state.order_items.map((item) => item.id),
-      bundle_items: state.order_bundles.map((item) => item.id),
+      ...state,
       order_date: new Date(),
     };
 
@@ -31,7 +30,7 @@ export const actions = {
       commit("addProduct", order_item);
     }
   },
-  async updateProduct({ commit }, order_item) {
+  /*async updateProduct({ commit }, order_item) {
     try {
       const result = await this.$strapi.update(
         "order-items",
@@ -71,7 +70,7 @@ export const actions = {
     } catch (e) {
       console.log(e);
     }
-  },
+  },*/
 };
 
 export const mutations = {
