@@ -19,15 +19,12 @@
             align-items-center
           "
         >
-          <h6
-            class="py-3 p-3"
-            v-on:click.self="isAddressOpen = !isAddressOpen"
-          >
+          <h6 class="py-3 p-3" v-on:click.self="isAddressOpen = !isAddressOpen">
             + Add Shipping Address
           </h6>
           <CloseButton class="mr-3 my-2" v-on:close="isAddressOpen = false" />
         </div>
-        <UserForm v-if="isAddressOpen" :setUserInfo="setUserInfo" />
+        <UserForm v-if="isAddressOpen" v-on:setUserInfo="setUserInfo" />
       </div>
       <div class="d-flex flex-column">
         <div
@@ -46,7 +43,7 @@
           </h6>
           <CloseButton class="mr-3 my-2" v-on:close="isCardOpen = false" />
         </div>
-        <Card v-if="isCardOpen" :setCard="setCard" />
+        <Card v-if="isCardOpen" v-on:setCard="setCard" />
       </div>
     </vueCustomScrollbar>
     <button
@@ -59,7 +56,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import Sign from "@/components/Sign";
 import UserForm from "@/components/UserForm";
 import Card from "./Card.vue";
@@ -84,6 +81,9 @@ export default {
     }),
   },
   methods: {
+    ...mapActions({
+      addOrder: "order/addOrder",
+    }),
     setUserInfo: function (val) {
       this.userInfo = val;
     },
@@ -95,7 +95,7 @@ export default {
       const isCard = Object.keys(this.card).length !== 0;
 
       if (isUserInfo && isCard) {
-        console.log(this.userInfo, this.card);
+        this.addOrder(this.userInfo);
         this.$emit("nextStep");
       }
     },
