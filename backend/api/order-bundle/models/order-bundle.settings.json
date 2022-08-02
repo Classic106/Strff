@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "order_bundles",
+  "info": {
+    "name": "Order Bundle"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "bundle": {
+      "model": "bundle"
+    },
+    "order": {
+      "via": "order_bundles",
+      "model": "order"
+    }
+  }
+}
