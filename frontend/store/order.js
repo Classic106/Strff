@@ -2,6 +2,7 @@ export const state = () => ({
   order_items: [],
   order_bundles: [],
   total: 0,
+  order_status: 5,
 });
 
 export const actions = {
@@ -18,6 +19,19 @@ export const actions = {
     } catch (e) {
       console.log(e);
     }
+  },
+  async confirmOrder({ state, commit }, userInfo = {}) {
+    const order = {
+      ...state,
+      ...userInfo,
+      order_status: 7,
+      order_date: new Date(),
+    };
+
+    //console.log(data);
+    const result = await this.$strapi.$http.$put(`/orders/${state.id}`, order);
+    console.log(result);
+    //commit("clearOrder");
   },
   async addProduct({ commit, state }, order_item) {
     const item = state.order_items.filter(
@@ -39,8 +53,11 @@ export const actions = {
     }
   },
   async updateProduct({ commit }, order_item) {
-    await this.$strapi.$http.$put(`/order_items/${order_item.id}`, order_item);
-    commit("updateProduct", order_item);
+    const result = await this.$strapi.$http.$put(
+      `/order-items/${order_item.id}`,
+      order_item
+    );
+    commit("updateProduct", result);
   },
   async removeProduct({ commit }, id) {
     this.$strapi.delete("order-items", { id });
@@ -67,7 +84,6 @@ export const actions = {
           bundle: bundle.id,
         };
         const result = await this.$strapi.create("order-bundles", order_bundle);
-        console.log(result);
         commit("addBundle", result);
       }
     }
@@ -86,12 +102,13 @@ export const mutations = {
     state = Object.assign(state, order);
   },
   clearOrder(state) {
-    /*state = Object.assign(state, {
+    state = Object.assign(state, {
       total: 0,
       order_items: [],
       order_bundles: [],
-    });*/
-    //this.$cookies.set("order", JSON.stringify(null));
+      order_status: 5,
+    });
+    this.$cookies.remove("order");
   },
   setTotal(state, total) {
     state.total = total;
@@ -126,7 +143,6 @@ export const getters = {
     return state.order_items;
   },
   getBundleItems(state) {
-    console.log(state.order_bundles)
     return state.order_bundles;
   },
   numberOfItems(state) {
