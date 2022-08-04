@@ -78,11 +78,12 @@ export default {
   computed: {
     ...mapGetters({
       username: "auth/username",
+      userInf: "userInfo/userInfo",
     }),
   },
   methods: {
     ...mapActions({
-      addOrder: "order/addOrder",
+      confirmOrder: "order/confirmOrder",
     }),
     setUserInfo: function (val) {
       this.userInfo = val;
@@ -95,10 +96,16 @@ export default {
       const isCard = Object.keys(this.card).length !== 0;
 
       if (isUserInfo && isCard) {
-        this.addOrder(this.userInfo);
+        const data = { ...this.userInfo };
+        data.state = this.userInfo.state.name;
+
+        this.confirmOrder(data);
         this.$emit("nextStep");
       }
     },
+  },
+  mounted() {
+    this.userInfo = this.userInf;
   },
 };
 </script>

@@ -25,52 +25,28 @@
       "plugin": "users-permissions",
       "model": "user"
     },
-    "billing_first_name": {
+    "firstName": {
       "type": "string"
     },
-    "billing_last_name": {
+    "lastName": {
       "type": "string"
     },
-    "billing_company": {
+    "company": {
       "type": "string"
     },
-    "billing_address_1": {
+    "address1": {
       "type": "text"
     },
-    "billing_city": {
+    "city": {
       "type": "string"
     },
-    "billing_state": {
+    "state": {
       "type": "string"
     },
-    "billing_zip_code": {
+    "zip": {
       "type": "string"
     },
-    "billing_contact_no": {
-      "type": "string"
-    },
-    "shipping_first_name": {
-      "type": "string"
-    },
-    "shipping_last_name": {
-      "type": "string"
-    },
-    "shipping_company": {
-      "type": "string"
-    },
-    "shipping_address_1": {
-      "type": "text"
-    },
-    "shipping_city": {
-      "type": "string"
-    },
-    "shipping_state": {
-      "type": "string"
-    },
-    "shipping_zip_code": {
-      "type": "string"
-    },
-    "shipping_contact_no": {
+    "cellphone": {
       "type": "string"
     },
     "order_bundles": {
@@ -80,6 +56,12 @@
     "order_items": {
       "collection": "order-item",
       "via": "order"
+    },
+    "adress2": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
     }
   }
 }

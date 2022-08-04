@@ -10,10 +10,10 @@ module.exports = {
     const { body } = ctx.request;
 
     const item = await strapi.services["order-item"].create(body);
-    const result = await strapi.services["order-item"].findOne({ id: item.id }, [
-      "product.categories",
-      "product.image"
-    ]);
+    const result = await strapi.services["order-item"].findOne(
+      { id: item.id },
+      ["product.categories", "product.image"]
+    );
 
     return result;
   },
@@ -21,13 +21,14 @@ module.exports = {
     const { id } = ctx.params;
     const { body } = ctx.request;
 
-    console.log(body);
-    /*const item = await strapi.services["order-item"].create(body);
-    const result = await strapi.services["order-item"].findOne({ id: item.id }, [
-      "product.categories",
-      "product.image"
-    ]);*/
+    body.total = body.quantity * body.product.price;
 
-    return body;
+    const item = await strapi.services["order-item"].update({ id }, body);
+    const result = await strapi.services["order-item"].findOne(
+      { id: item.id },
+      ["product.categories", "product.image"]
+    );
+
+    return result;
   },
 };
