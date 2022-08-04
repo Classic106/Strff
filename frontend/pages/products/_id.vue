@@ -186,7 +186,7 @@ export default {
         this.$route.params.id
       );
 
-      this.selected.product = this.product.id;
+      this.selected.product = this.product;
       this.selected.total = this.product.price;
       this.images = this.product.image.map((item) => this.getImage(item));
     } catch (error) {

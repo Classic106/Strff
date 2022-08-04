@@ -6,6 +6,20 @@
  */
 
 module.exports = {
+  async findOne(ctx) {
+    const { id } = ctx.params;
+
+    const result = await strapi.services["order"].findOne({ id }, [
+      "order_items.product",
+      "order_items.product.image",
+      "order_items.product.categories",
+      "order_bundles.bundle",
+      "order_bundles.bundle.products.image",
+      "order_bundles.bundle.products.categories",
+    ]);
+
+    return result;
+  },
   async create(ctx) {
     const { body } = ctx.request;
     const { order_items, order_bundles } = body;
@@ -61,8 +75,82 @@ module.exports = {
     const result = await strapi.services["order"].delete({
       id: order.id,
     });
-    console.log(result);
+
     return result;
+  },
+  async update(ctx) {
+    const { id } = ctx.params;
+    const { body } = ctx.request;
+    const { order_items, order_bundles } = body;
+
+    const order = await strapi.services["order"].findOne({ id });
+
+    if (order) {
+      let newOrderItems = [];
+      let newOrderBundles = [];
+
+      if (order.order_items.length < order_items.length) {
+        const index = order_items.findIndex((item) => !item.id);
+        const item = await strapi.services["order-item"].create(
+          order_items[index]
+        );
+        order_items[index] = item;
+        newOrderItems = order_items.map((item) => item.id);
+      } else if (order.order_items.length > order_items.length) {
+        const ids = order.order_items.reduce(
+          (acc, curr) => {
+            if (acc.items.includes(curr.id)) {
+              acc.deleted = curr.id;
+            } else {
+              acc.items.push(curr.id);
+            }
+            return acc;
+          },
+          {
+            deleted: null,
+            items: [],
+          }
+        );
+
+        await strapi.services["order-item"].delete({ id: ids.deleted });
+        newOrderItems = ids.items;
+      }
+
+      if (order.order_bundles.length < order_bundles.length) {
+        const index = order_bundles.findIndex((item) => !item.id);
+        const item = await strapi.services["order-item"].create(
+          order_bundles[index]
+        );
+        order_bundles[index] = item;
+        newOrderBundles = order_bundles.map((item) => item.id);
+      } else if (order.order_bundles.length > order_bundles.length) {
+        const ids = order.order_bundles.reduce(
+          (acc, curr) => {
+            if (acc.items.includes(curr.id)) {
+              acc.deleted = curr.id;
+            } else {
+              acc.items.push(curr.id);
+            }
+            return acc;
+          },
+          {
+            deleted: null,
+            items: [],
+          }
+        );
+
+        await strapi.services["order-bundle"].delete({ id: ids.deleted });
+        newOrderBundles = ids.items;
+      }
+
+      body.order_items = newOrderItems;
+      body.order_bundles = newOrderBundles;
+
+      const result = await strapi.services.order.update(order.id, body);
+
+      return result;
+    }
+    return order;
   },
   async addToCart(ctx) {
     let params = ctx.request.body;

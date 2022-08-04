@@ -1,0 +1,17 @@
+{
+  "host": "localhost",
+  "port": 1337,
+  "proxy": {
+    "enabled": true,
+    "ssl": true,
+    "host": "rebelnut.com",
+    "port": 443
+  },
+  "cron": {
+    "enabled": false
+  },
+  "admin": {
+    "autoOpen": false,
+    "path": "/dna"
+  }
+}

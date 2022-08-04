@@ -114,13 +114,9 @@
                     <PurchaseTypes
                       v-else
                       cart
-                      :purType="
-                        item.purchase_type ? item.purchase_type : null
-                      "
+                      :purType="item.purchase_type ? item.purchase_type : null"
                       :subType="
-                        item.subscription_type
-                          ? item.subscription_type
-                          : null
+                        item.subscription_type ? item.subscription_type : null
                       "
                       v-on:setTypes="(types) => setTypes(types, item.id)"
                     />
@@ -144,104 +140,113 @@
           </ul>
           <ul v-if="order_bundles.length" class="p-0">
             <li
-              v-for="(order_bundle, index) in order_bundles"
+              v-for="order_bundle in order_bundles"
               :key="order_bundle.id"
               class="p-3 mb-3"
             >
               <div class="d-flex flex-column">
                 <div class="d-flex row">
-                  <div v-if="(index - 1) % 2" class="col-4">
+                  <div class="col-5">
                     <div
-                      v-if="order_bundle.bundle.products[index + 1]"
-                      class="row p-2"
+                      v-for="(product, index) in order_bundle.bundle.products"
+                      :key="product.id + index"
                     >
-                      <div class="col-5 p-0">
-                        <div class="m-auto p-2">
-                          <img
-                            :src="`${getFirstImage(
-                              order_bundle.bundle.products[index].image
-                            )}`"
-                            class="m-auto gold-border"
-                          />
-                        </div>
+                      <div v-if="(index - 1) % 2" class="row p-3">
                         <div
-                          class="
-                            d-flex
-                            flex-column
-                            justify-content-between
-                            mt-3
-                          "
+                          v-if="order_bundle.bundle.products[index + 1]"
+                          class="row p-2"
                         >
-                          <span class="font-weight-light text-center">
-                            {{ order_bundle.bundle.products[index].title }}
-                          </span>
-                          <span class="font-weight-light text-center grey">
-                            ${{
-                              order_bundle.bundle.products[index].price
-                                | formatNumber
-                            }}
-                          </span>
+                          <div class="col-5 p-0">
+                            <div class="m-auto p-2">
+                              <img
+                                :src="`${getFirstImage(
+                                  order_bundle.bundle.products[index].image
+                                )}`"
+                                class="m-auto gold-border"
+                              />
+                            </div>
+                            <div
+                              class="
+                                d-flex
+                                flex-column
+                                justify-content-between
+                                mt-3
+                              "
+                            >
+                              <span class="font-weight-light text-center">
+                                {{ order_bundle.bundle.products[index].title }}
+                              </span>
+                              <span class="font-weight-light text-center grey">
+                                ${{
+                                  order_bundle.bundle.products[index].price
+                                    | formatNumber
+                                }}
+                              </span>
+                            </div>
+                          </div>
+                          <div class="col-2 p-0 mx-auto mt-3">
+                            <p class="text-center plus grey">+</p>
+                          </div>
+                          <div class="col-5 p-0">
+                            <div class="m-auto p-2">
+                              <img
+                                :src="`${getFirstImage(
+                                  order_bundle.bundle.products[index + 1].image
+                                )}`"
+                                class="m-auto gold-border"
+                              />
+                            </div>
+                            <div
+                              class="
+                                d-flex
+                                flex-column
+                                justify-content-between
+                                mt-3
+                              "
+                            >
+                              <span class="font-weight-light text-center">
+                                {{
+                                  order_bundle.bundle.products[index + 1].title
+                                }}
+                              </span>
+                              <span class="font-weight-light text-center grey">
+                                ${{
+                                  order_bundle.bundle.products[index + 1].price
+                                    | formatNumber
+                                }}
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <div class="col-2 p-0 mx-auto mt-3">
-                        <p class="text-center plus grey">+</p>
-                      </div>
-                      <div class="col-5 p-0">
-                        <div class="m-auto p-2">
-                          <img
-                            :src="`${getFirstImage(
-                              order_bundle.bundle.products[index + 1].image
-                            )}`"
-                            class="m-auto gold-border"
-                          />
-                        </div>
-                        <div
-                          class="
-                            d-flex
-                            flex-column
-                            justify-content-between
-                            mt-3
-                          "
-                        >
-                          <span class="font-weight-light text-center">
-                            {{ order_bundle.bundle.products[index + 1].title }}
-                          </span>
-                          <span class="font-weight-light text-center grey">
-                            ${{
-                              order_bundle.bundle.products[index + 1].price
-                                | formatNumber
-                            }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div v-else class="d-flex justify-content-center">
-                      <div class="col-5 p-0">
-                        <div class="m-auto p-2">
-                          <img
-                            :src="`${getFirstImage(
-                              order_bundle.bundle.products[index].image
-                            )}`"
-                            class="m-auto gold-border"
-                          />
-                        </div>
-                        <div
-                          class="
-                            d-flex
-                            flex-column
-                            justify-content-between
-                            mt-3
-                          "
-                        >
-                          <span class="font-weight-light text-center">
-                            {{ order_bundle.bundle.products[index].title }}
-                          </span>
-                          <span class="font-weight-light text-center grey">
-                            ${{
-                              order_bundle.bundle.products[index].price
-                                | formatNumber
-                            }}
-                          </span>
+                        <div v-else class="d-flex justify-content-center">
+                          <div class="col-5 p-0">
+                            <div class="m-auto p-2">
+                              <img
+                                :src="`${getFirstImage(
+                                  order_bundle.bundle.products[index].image
+                                )}`"
+                                class="m-auto gold-border"
+                              />
+                            </div>
+                            <div
+                              class="
+                                d-flex
+                                flex-column
+                                justify-content-between
+                                mt-3
+                              "
+                            >
+                              <span class="font-weight-light text-center">
+                                {{ order_bundle.bundle.products[index].title }}
+                              </span>
+                              <span class="font-weight-light text-center grey">
+                                ${{
+                                  order_bundle.bundle.products[index].price
+                                    | formatNumber
+                                }}
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -284,7 +289,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
 import PurchaseTypes from "~/components/common/PurchaseTypes";
 import ShippingInf from "./ShippingInf";
@@ -323,10 +328,12 @@ export default {
   methods: {
     getStrapiMedia,
     ...mapMutations({
-      removeProduct: "order/clearOrder",
+      setTotal: "order/setTotal",
+    }),
+    ...mapActions({
+      removeProduct: "order/removeProduct",
       updateProduct: "order/updateProduct",
       removeBundle: "order/removeBundle",
-      setTotal: "order/setTotal",
     }),
     getFirstImage: function (images) {
       if (images[0]) {
@@ -370,6 +377,9 @@ export default {
 
       this.setTotal(orderItemsTotalPrice + bundlesTotalPrice);
     },
+  },
+  mounted() {
+    this.calcTotalPrice();
   },
 };
 </script>

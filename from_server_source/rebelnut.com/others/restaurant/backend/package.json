@@ -1,0 +1,51 @@
+{
+  "name": "backend",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A Strapi application",
+  "scripts": {
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi",
+    "lint": "eslint .",
+    "build-production": "cross-env NODE_ENV=production BACKEND_URL=/dna strapi build",
+    "start-production": "cross-env NODE_ENV=production BACKEND_URL=/dna strapi start"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-react": "^7.25.1"
+  },
+  "dependencies": {
+    "knex": "latest",
+    "lodash": "^4.17.5",
+    "sqlite3": "latest",
+    "strapi": "3.0.0-beta.14",
+    "strapi-admin": "3.0.0-beta.14",
+    "strapi-hook-bookshelf": "3.0.0-beta.14",
+    "strapi-hook-knex": "3.0.0-beta.14",
+    "strapi-plugin-content-manager": "3.0.0-beta.14",
+    "strapi-plugin-content-type-builder": "3.0.0-beta.14",
+    "strapi-plugin-email": "3.0.0-beta.14",
+    "strapi-plugin-graphql": "3.0.0-beta.14",
+    "strapi-plugin-settings-manager": "3.0.0-beta.14",
+    "strapi-plugin-upload": "3.0.0-beta.14",
+    "strapi-plugin-users-permissions": "3.0.0-beta.14",
+    "strapi-utils": "3.0.0-beta.14"
+  },
+  "author": {
+    "name": "A Strapi developer"
+  },
+  "strapi": {
+    "uuid": "a45046ad-52e3-426c-a7aa-25c5de132bfe"
+  },
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}
