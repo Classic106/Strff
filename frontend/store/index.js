@@ -14,7 +14,12 @@ export const actions = {
     }
 
     if (order !== null) {
-      commit("order/setOrder", JSON.parse(order));
+      try {
+        const data = await this.$strapi.findOne("orders", JSON.parse(order));
+        commit("order/setOrder", data);
+      } catch (e) {
+        this.$cookies.remove("order");
+      }
     }
 
     if (Object.keys(userInfo).length) {
