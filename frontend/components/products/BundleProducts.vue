@@ -11,8 +11,12 @@
         :key="bundleProduct.id"
         class="border-black p-3"
       >
-        <h6 class="text-center gold">{{ bundleProduct.title }}</h6>
-        <p class="text-center">{{ bundleProduct.description }}</p>
+        <h6 style="display: none" class="text-center gold">
+          {{ bundleProduct.title }}
+        </h6>
+        <p style="display: none" class="text-center">
+          {{ bundleProduct.description }}
+        </p>
         <div
           v-for="(product, index) in bundleProduct.products"
           :key="product.id + index"
@@ -38,7 +42,17 @@
                   </span>
                 </div>
               </div>
-              <div class="col-2 p-0 mx-auto mt-3">
+              <div
+                class="
+                  wrap-plus
+                  col-2
+                  p-0
+                  mx-auto
+                  d-flex
+                  align-items-center
+                  justify-content-center
+                "
+              >
                 <p class="text-center plus">+</p>
               </div>
               <div class="col-5 p-0">
@@ -155,6 +169,10 @@ export default {
         this.product.bundle.id
       );
       this.bundleProducts = [result];
+      this.bundleProducts = this.bundleProducts.map((item) => {
+        item.products.length = 2;
+        return item;
+      });
     } catch (error) {}
   },
 };
@@ -162,11 +180,16 @@ export default {
 
 <style csoped>
 .border-black {
-  border: 1px solid #000;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .color-blue {
   color: #42b4e4;
+}
+
+.wrap-plus {
+  margin-top: -60px;
 }
 
 .plus {
@@ -175,8 +198,8 @@ export default {
 }
 
 .bundle-products-title {
-  border-bottom: 1px solid #000;
   background-color: #f5f5f5;
+  border-radius: 4px 4px 0 0;
 }
 
 .add-cart-button {

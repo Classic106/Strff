@@ -24,7 +24,7 @@
     </div>
     <div class="mt-1 position-relative" v-if="options.length">
       <select
-        class="position-relative w-100"
+        class="subscription_types position-relative w-100"
         v-model="subscription_type"
         v-on:change="change"
       >
@@ -111,4 +111,9 @@ export default {
 </script>
 
 <style scoped>
+.subscription_types {
+  padding: 10px 5px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
 </style>
