@@ -98,6 +98,10 @@ export default {
   border-radius: 10px;
 }
 
+.product:hover {
+  transform: scale(1.01);
+}
+
 .product.col-lg-6 {
   flex: 1 0 45%;
 }

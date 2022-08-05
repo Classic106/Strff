@@ -16,7 +16,6 @@ export const actions = {
     try {
       const result = await this.$strapi.create("orders", order);
       commit("setOrder", result);
-      console.log(result)
       commit("setOrderCookie");
     } catch (e) {
       console.log(e);
