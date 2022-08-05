@@ -31,6 +31,7 @@ export default {
     try {
       const result = await this.$strapi.$bestsellers.find();
       this.products = result[0].products;
+      this.products.length = 4;
     } catch (error) {
       this.error = error;
     }

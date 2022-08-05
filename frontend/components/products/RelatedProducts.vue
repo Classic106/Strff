@@ -24,7 +24,7 @@
             <span class="font-weight-light text-center col-black text-nowrap">
               ${{ product.price | formatNumber }}
             </span>
-            <span class="font-weight-light text-center gold text-nowrap ">
+            <span class="font-weight-light text-center gold text-nowrap">
               {{ product.title }}
             </span>
           </div>
@@ -79,6 +79,9 @@ export default {
 
         return result.length && item.id !== this.product.id ? item : false;
       });
+      if (this.relatedProducts.length > 4) {
+        this.relatedProducts.length = 4;
+      }
     }
   },
 };
