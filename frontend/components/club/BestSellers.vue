@@ -1,15 +1,24 @@
 <template>
   <div class="d-flex flex-column">
     <h6 class="p-3 pb-5 text-center col-black">BEST SELLERS</h6>
-    <div class="row flex-column flex-md-row justify-content-center">
+    <div
+      class="
+        row
+        flex-column flex-md-row
+        justify-content-center
+        mb-4
+        px-5
+        p-md-0
+      "
+    >
       <div
         v-for="product in products"
         :key="product.id"
-        class="col col-md-5 col-lg-3"
+        class="product col col-md-4 col-lg-3 p-3 m-2"
       >
         <nuxt-link :to="`/products/${product.id}`">
           <img class="mb-2" :src="`${getFirstImage(product.image)}`" />
-          <div class="card-info col-black d-flex justify-content-between mb-4">
+          <div class="card-info col-black d-flex justify-content-between">
             <span>{{ product.price }} $</span>
             <span class="text-upprcase gold">{{ product.title }}</span>
           </div>
@@ -48,5 +57,18 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.product {
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.17);
+  border-radius: 10px;
+}
+
+.product.col-lg-3 {
+  flex: 1 0 23%;
+}
+
+img {
+  box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+}
 </style>
