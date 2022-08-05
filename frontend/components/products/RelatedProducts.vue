@@ -16,7 +16,7 @@
       <div
         v-for="product in relatedProducts"
         :key="product.id"
-        class="col-8 col-lg-6"
+        class="product col-10 col-lg-6 p-4 m-2"
       >
         <nuxt-link :to="`/products/${product.id}`">
           <img :src="`${getFirstImage(product.image)}`" class="m-auto" />
@@ -91,5 +91,19 @@ export default {
 .related-products {
   text-decoration: underline;
   text-decoration-color: #9e7d24;
+}
+
+.product {
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.17);
+  border-radius: 10px;
+}
+
+.product.col-lg-6 {
+  flex: 1 0 45%;
+}
+
+img {
+  box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
 }
 </style>
