@@ -16,6 +16,8 @@ export const actions = {
     try {
       const result = await this.$strapi.create("orders", order);
       commit("setOrder", result);
+      console.log(result)
+      commit("setOrderCookie");
     } catch (e) {
       console.log(e);
     }
@@ -28,10 +30,8 @@ export const actions = {
       order_date: new Date(),
     };
 
-    //console.log(data);
     const result = await this.$strapi.$http.$put(`/orders/${state.id}`, order);
-    console.log(result);
-    //commit("clearOrder");
+    commit("clearOrder");
   },
   async addProduct({ commit, state }, order_item) {
     const item = state.order_items.filter(
@@ -40,8 +40,7 @@ export const actions = {
 
     if (!item.length) {
       if (!state.id) {
-        actions.addOrder.call(this, { commit, state });
-        commit("setOrderCookie");
+        await actions.addOrder.call(this, { commit, state });
         order_item.order = state.id;
         const result = await this.$strapi.create("order-items", order_item);
         commit("addProduct", result);
@@ -70,8 +69,7 @@ export const actions = {
 
     if (!item.length) {
       if (!state.id) {
-        actions.addOrder.call(this, { commit, state });
-        commit("setOrderCookie");
+        await actions.addOrder.call(this, { commit, state });
         const order_bundle = {
           order: state.id,
           bundle: bundle.id,
