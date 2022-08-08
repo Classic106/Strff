@@ -107,7 +107,7 @@
                   }}</span>
                   <span class="gold">{{ product.price }} $</span>
                   <span class="col-white"
-                    >in <span class="gold">{{  }}</span></span
+                    >in <span class="gold">{{}}</span></span
                   >
                 </div>
               </a>
@@ -159,6 +159,7 @@
 
 <script>
 import { getStrapiMedia } from "~/utils/medias";
+import { shuffleArray } from "~/helpers";
 import Loader from "@/components/Loader";
 import CloseButton from "@/components/common/CloseButton";
 
@@ -214,6 +215,7 @@ export default {
     },
   },
   methods: {
+    shuffleArray,
     getStrapiMedia,
     getFirstImage: function (images) {
       if (images[0]) {
@@ -233,7 +235,8 @@ export default {
     const result = await this.$strapi.find("bestsellers");
 
     if (result.length && result[0].products) {
-      this.bestSellers = result[0].products;
+      this.bestSellers = this.shuffleArray(result[0].products);
+      this.bestSellers.length = 4;
     }
 
     this.isLoading = false;

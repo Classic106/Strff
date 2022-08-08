@@ -30,6 +30,7 @@
 
 <script>
 import { getStrapiMedia } from "~/utils/medias";
+import { shuffleArray } from "~/helpers";
 
 export default {
   data: () => ({
@@ -39,13 +40,14 @@ export default {
   async mounted() {
     try {
       const result = await this.$strapi.$bestsellers.find();
-      this.products = result[0].products;
+      this.products = this.shuffleArray(result[0].products);
       this.products.length = 4;
     } catch (error) {
       this.error = error;
     }
   },
   methods: {
+    shuffleArray,
     getStrapiMedia,
     getFirstImage: function (images) {
       if (images[0]) {
@@ -61,6 +63,10 @@ export default {
 .product {
   box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.17);
   border-radius: 10px;
+}
+
+.product:hover {
+  transform: scale(1.01);
 }
 
 .product.col-lg-3 {

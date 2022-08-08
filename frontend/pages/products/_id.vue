@@ -39,13 +39,12 @@
               </ssr-carousel>
             </div>
           </div>
-          <RelatedProducts :product="product" />
         </div>
         <div
           class="
             col-md-6 col-12
             pt-0
-            px-5
+            pl-5
             flex flex-col
             justify-content-between
           "
@@ -140,6 +139,7 @@
           </div>
         </div>
       </div>
+      <RelatedProducts :product="product" class="px-4 mx-5"/>
     </div>
   </div>
 </template>
