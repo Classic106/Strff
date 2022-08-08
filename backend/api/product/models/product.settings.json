@@ -64,6 +64,9 @@
       "collection": "category",
       "via": "products",
       "dominant": true
+    },
+    "included": {
+      "type": "json"
     }
   }
 }
