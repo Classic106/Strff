@@ -220,9 +220,11 @@ export default {
 
       this.selected.product = this.product;
       this.selected.total = this.product.price;
-      this.included = this.product.included;
-
       this.images = this.product.image.map((item) => this.getImage(item));
+
+      if (this.product.included) {
+        this.included = this.product.included;
+      }
     } catch (error) {
       this.error = error;
     }
