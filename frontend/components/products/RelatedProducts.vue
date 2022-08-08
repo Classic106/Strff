@@ -7,29 +7,31 @@
       class="
         text-uppercase
         related-products
+        align-self-start
         text-nowrap text-lg-left text-center
       "
     >
       related products
     </h6>
     <div class="row justify-content-center">
-      <div
+      <nuxt-link
+        :to="`/products/${product.id}`"
+        class="product col-10 col-md-4 col-lg-2 p-4 p-lg-3 m-2"
         v-for="product in relatedProducts"
         :key="product.id"
-        class="product col-10 col-lg-6 p-4 m-2"
       >
-        <nuxt-link :to="`/products/${product.id}`">
+        <div>
           <img :src="`${getFirstImage(product.image)}`" class="m-auto" />
-          <div class="d-flex justify-content-between mt-3">
+          <div class="d-flex flex-lg-column justify-content-between mt-3">
             <span class="font-weight-light text-center col-black text-nowrap">
               ${{ product.price | formatNumber }}
             </span>
-            <span class="font-weight-light text-center gold text-nowrap">
+            <span class="font-weight-light text-center gold">
               {{ product.title }}
             </span>
           </div>
-        </nuxt-link>
-      </div>
+        </div>
+      </nuxt-link>
     </div>
   </div>
 </template>
@@ -79,8 +81,9 @@ export default {
 
         return result.length && item.id !== this.product.id ? item : false;
       });
-      if (this.relatedProducts.length > 4) {
-        this.relatedProducts.length = 4;
+
+      if (this.relatedProducts.length > 6) {
+        this.relatedProducts.length = 6;
       }
     }
   },
@@ -88,6 +91,20 @@ export default {
 </script>
 
 <style scoped>
+@media (min-width: 768px) {
+  .col-md-4 {
+    flex: 0 0 31%;
+    max-width: 31%;
+  }
+}
+
+@media (min-width: 992px) {
+  .col-lg-2 {
+    flex: 0 0 15%;
+    max-width: 15%;
+  }
+}
+
 .related-products {
   text-decoration: underline;
   text-decoration-color: #9e7d24;
@@ -100,10 +117,6 @@ export default {
 
 .product:hover {
   transform: scale(1.01);
-}
-
-.product.col-lg-6 {
-  flex: 1 0 45%;
 }
 
 img {
