@@ -152,8 +152,18 @@
               :subType="selected.subscription_type"
             />
             <div class="mt-1 items-baseline text-gray-600">
-              <span class="gold font-weight-bold">Description:</span>
               {{ product.description }}
+            </div>
+            <div
+              v-if="included.length"
+              class="mt-1 items-baseline text-gray-600"
+            >
+              <span class="gold font-weight-bold">Included:</span>
+              <ul class="included d-flex flex-column p-0">
+                <li v-for="include in included" :key="include">
+                  {{ include }}
+                </li>
+              </ul>
             </div>
             <BundleProducts :product="product" />
           </div>
@@ -185,6 +195,7 @@ export default {
     error: null,
     images: [],
     discount: null,
+    included: [],
     selected: {
       product: null,
       quantity: 1,
@@ -209,6 +220,8 @@ export default {
 
       this.selected.product = this.product;
       this.selected.total = this.product.price;
+      this.included = this.product.included;
+
       this.images = this.product.image.map((item) => this.getImage(item));
     } catch (error) {
       this.error = error;
@@ -309,7 +322,7 @@ export default {
 .discount {
   left: 15px;
   color: white;
-  padding: 1px 5px 0 0;
+  padding: 0 5px 1px 0;
   border-radius: 0 10px 10px 0;
 }
 
@@ -388,5 +401,9 @@ select::-ms-expand {
     background: none\9;
     padding: 5px\9;
   }
+}
+
+.included > li:first-child {
+  margin-top: 10px;
 }
 </style>
