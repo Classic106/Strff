@@ -54,9 +54,29 @@
               v-html="colorTitleNumbers(product.title)"
               class="font-weight-bold text-md-left text-center"
             ></h6>
-            <h6 class="mt-3 font-weight-normal text-md-left text-center">
-              ${{ product.price | formatNumber }}
+            <h6
+              class="
+                product-price
+                mt-3
+                font-weight-bold
+                text-md-left text-center
+              "
+            >
+              <span class="position-relative" :class="discount && 'cross-out'"
+                >${{ calcPrice() | formatNumber }}</span
+              >
             </h6>
+            <div v-if="discount" class="d-flex align-items-center">
+              <h6 class="m-0 font-weight-bold text-md-left text-center">
+                ${{ calcDiscoutPrice() | formatNumber }}
+              </h6>
+              <div class="d-flex ml-3 position-relative align-items-center">
+                <span class="icon-tag"></span>
+                <span class="discount position-absolute gold-background">{{
+                  discount
+                }}</span>
+              </div>
+            </div>
             <div
               class="
                 d-flex
@@ -139,7 +159,7 @@
           </div>
         </div>
       </div>
-      <RelatedProducts :product="product" class="px-4 mx-5"/>
+      <RelatedProducts :product="product" class="px-4 mx-5" />
     </div>
   </div>
 </template>
@@ -164,6 +184,7 @@ export default {
     options: [],
     error: null,
     images: [],
+    discount: null,
     selected: {
       product: null,
       quantity: 1,
@@ -204,6 +225,7 @@ export default {
     },
     setTypes: function (types) {
       this.selected = { ...this.selected, ...types };
+      this.calcDiscoutPrice();
     },
     quantityPlus: function () {
       if (this.selected.quantity < 99) {
@@ -217,17 +239,26 @@ export default {
         this.selected.total = this.selected.quantity * this.product.price;
       }
     },
-    calcPrice: function (itemPrice, quantity) {
+    calcPrice: function () {
+      const { product, quantity } = this.selected;
+      return product.price * quantity;
+    },
+    calcDiscoutPrice: function () {
+      const { product, quantity } = this.selected;
+
       const purchaseType = this.purchaseTypes.filter(
         (item) => item.id === this.selected.purchase_type
       );
 
-      const price = +itemPrice * +quantity;
+      const price = product.price * quantity;
 
       if (purchaseType.length && purchaseType[0].title) {
         const { description } = purchaseType[0];
 
-        if (!description) return price;
+        if (!description) {
+          this.discount = null;
+          return price;
+        }
 
         if (description.includes("%")) {
           let per = description.match(/(?<!\d)\d{1,2}(?=%)/gi)[0];
@@ -236,6 +267,7 @@ export default {
             per = +per;
           }
 
+          this.discount = `${per}%`;
           const value = (price / 100) * per;
           return price - value;
         } else if (description.includes("$")) {
@@ -244,10 +276,15 @@ export default {
           if (val && +val > 0) {
             val = +val;
           }
+          this.discount = `${val}$`;
           return price - val;
         }
+
+        this.discount = null;
         return price;
       }
+
+      this.discount = null;
       return price;
     },
     addToCart: async function () {
@@ -258,6 +295,36 @@ export default {
 </script>
 
 <style scoped>
+.icon-tag {
+  display: inline-block;
+  min-width: 44px;
+  height: 50px;
+  background-size: cover;
+  transform: rotate(-45deg);
+  filter: invert(45%) sepia(61%) saturate(475%) hue-rotate(6deg) brightness(96%)
+    contrast(95%);
+  background-image: url("../../assets/icons/tag-solid.svg");
+}
+
+.discount {
+  left: 15px;
+  color: white;
+  padding: 1px 5px 0 0;
+  border-radius: 0 10px 10px 0;
+}
+
+.product-price > span.cross-out::before {
+  position: absolute;
+  content: "";
+  display: block;
+  width: 140%;
+  height: 3px;
+  top: 50%;
+  left: -20%;
+  transform: rotate(-14deg);
+  background-color: #9e7d24;
+}
+
 .add-cart-button {
   background-color: #1f2020;
   color: #fff;
