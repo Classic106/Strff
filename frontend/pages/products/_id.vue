@@ -21,8 +21,9 @@
               ></div>
               <ssr-carousel
                 class="all-images mt-3"
-                :show-arrows="images.length > 6"
+                :show-arrows="images.length > 5"
                 :loop="true"
+                :slides-per-page="5"
               >
                 <div
                   class="image-wrapper slide mr-2"
@@ -169,7 +170,7 @@
           </div>
         </div>
       </div>
-      <RelatedProducts :product="product" class="px-4 mx-5" />
+      <RelatedProducts :product="product" />
     </div>
   </div>
 </template>
@@ -349,10 +350,6 @@ export default {
   width: 56px;
 }
 
-.image-wrapper.slide {
-  width: 15%;
-}
-
 .icon-bag {
   width: 14px;
   height: 14px;
@@ -407,5 +404,13 @@ select::-ms-expand {
 
 .included > li:first-child {
   margin-top: 10px;
+}
+
+.images-wrapper .image-wrapper .image {
+  cursor: pointer;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-top: 100%;
 }
 </style>

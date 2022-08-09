@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="relatedProducts.length"
-    class="d-flex flex-column mt-5 d-none d-md-flex"
+    class="d-flex flex-column d-none d-md-flex mx-0 px-0 mt-5"
   >
     <h6
       class="
@@ -9,11 +9,13 @@
         related-products
         align-self-start
         text-nowrap text-lg-left text-center
+        gold
+        w-100
       "
     >
       related products
     </h6>
-    <div class="row justify-content-center">
+    <div class="products row justify-content-center">
       <nuxt-link
         :to="`/products/${product.id}`"
         class="product col-10 col-md-4 col-lg-2 p-4 p-lg-3 m-2"
@@ -106,13 +108,19 @@ export default {
 }
 
 .related-products {
-  text-decoration: underline;
-  text-decoration-color: #9e7d24;
+  padding: 20px;
+  background-color: #000;
+}
+
+.products {
+  padding: 40px 0;
+  background-color: #f5f5f5;
 }
 
 .product {
   box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.17);
   border-radius: 10px;
+  background-color: #fff;
 }
 
 .product:hover {

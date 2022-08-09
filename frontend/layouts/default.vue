@@ -80,20 +80,16 @@ h6 {
   font-size: 1.25rem;
 }
 
-.images-wrapper .image-wrapper .image {
-  cursor: pointer;
-  background-position: 50%;
-  background-repeat: no-repeat;
-  background-size: cover;
-  padding-top: 100%;
-}
-
 .loaded {
   width: auto;
 }
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.ssr-carousel-track {
+  justify-content: left !important;
 }
 </style>
 
