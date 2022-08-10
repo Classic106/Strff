@@ -10,6 +10,7 @@
         align-self-start
         text-nowrap text-lg-left text-center
         gold
+        m-0
         w-100
       "
     >
