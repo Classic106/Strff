@@ -1,8 +1,15 @@
-const colorTitleNumbers = (title) => {
-  return title.replace(
-    /(\d+\.\d+)|\d+/g,
-    (val) => `<span class="gold">${val}</span>`
-  );
+const colorTitleNumbers = (title, tag = "span", tagClass = "gold") => {
+  if (tagClass === "gold") {
+    return title.replace(
+      /(\d+\.\d+)|\d+/g,
+      (val) => `<${tag} class="gold">${val}</${tag}>`
+    );
+  } else {
+    return title.replace(
+      /(\d+\.\d+)|\d+/g,
+      (val) => `<${tag} class="${tagClass}">${val}</${tag}>`
+    );
+  }
 };
 
 function shuffleArray(array) {

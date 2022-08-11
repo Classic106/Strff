@@ -16,7 +16,7 @@
     >
       related products
     </h6>
-    <div class="products row justify-content-center">
+    <div class="products row justify-content-center m-0">
       <nuxt-link
         :to="`/products/${product.id}`"
         class="product col-10 col-md-4 col-lg-2 p-4 p-lg-3 m-2"
@@ -29,8 +29,16 @@
             <span class="font-weight-light text-center col-black text-nowrap">
               ${{ product.price | formatNumber }}
             </span>
-            <span class="font-weight-light text-center gold">
-              {{ product.title }}
+            <span
+              class="
+                d-flex
+                justify-content-center
+                font-weight-light
+                text-center
+                gold
+              "
+              v-html="colorTitleNumbers(product.title, 'span', 'col-black')"
+            >
             </span>
           </div>
         </div>
@@ -41,6 +49,7 @@
 
 <script>
 import { getStrapiMedia } from "~/utils/medias";
+import { colorTitleNumbers } from "~/helpers";
 
 export default {
   name: "RelatedProducts",
@@ -52,6 +61,7 @@ export default {
   }),
   methods: {
     getStrapiMedia,
+    colorTitleNumbers,
     getFirstImage: function (images) {
       if (images[0]) {
         return this.getStrapiMedia(images[0].url);
