@@ -34,8 +34,16 @@
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
-                  <span class="font-weight-light text-center gold">
-                    {{ bundleProduct.products[index].title }}
+                  <span
+                    class="font-weight-light text-center gold"
+                    v-html="
+                      colorTitleNumbers(
+                        bundleProduct.products[index].title,
+                        'span',
+                        'col-black'
+                      )
+                    "
+                  >
                   </span>
                   <span class="font-weight-light text-center col-black">
                     ${{ bundleProduct.products[index].price | formatNumber }}
@@ -65,8 +73,16 @@
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
-                  <span class="font-weight-light text-center gold">
-                    {{ bundleProduct.products[index + 1].title }}
+                  <span
+                    class="font-weight-light text-center gold"
+                    v-html="
+                      colorTitleNumbers(
+                        bundleProduct.products[index].title,
+                        'span',
+                        'col-black'
+                      )
+                    "
+                  >
                   </span>
                   <span class="font-weight-light text-center col-black">
                     ${{
@@ -87,8 +103,16 @@
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
-                  <span class="font-weight-light text-center color-blue">
-                    {{ bundleProduct.products[index].title }}
+                  <span
+                    class="font-weight-light text-center color-blue"
+                    v-html="
+                      colorTitleNumbers(
+                        bundleProduct.products[index].title,
+                        'span',
+                        'col-black'
+                      )
+                    "
+                  >
                   </span>
                   <span class="font-weight-light text-center col-black">
                     ${{ bundleProduct.products[index].price | formatNumber }}
@@ -139,6 +163,7 @@
 <script>
 import { mapActions } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
+import { colorTitleNumbers } from "~/helpers";
 
 export default {
   name: "BundleProducts",
@@ -150,6 +175,7 @@ export default {
   }),
   methods: {
     getStrapiMedia,
+    colorTitleNumbers,
     ...mapActions({
       addBundle: "order/addBundle",
     }),
