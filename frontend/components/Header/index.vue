@@ -13,19 +13,20 @@
   >
     <div
       class="
-        row
         head
-        p-0
-        m-3
-        justify-content-md-center justify-content-end
+        d-flex
+        px-4
+        my-4
+        mb-lg-2
+        justify-content-between
+        align-items-center
         text-uppercase
-        position-relative
         w-100
       "
     >
       <div
         ref="menuButton"
-        class="nav-menu-arrow d-flex d-lg-none position-absolute"
+        class="nav-menu-arrow d-flex d-lg-none"
         :class="isOpenMenu && 'open'"
         v-on:click="isOpenMenu = !isOpenMenu"
       >
@@ -33,17 +34,12 @@
         <span></span>
         <span></span>
       </div>
-      <div
-        class="row align-items-center w-75"
-        :class="isMobile ? ' justify-content-end' : ' justify-content-center'"
-      >
-        <h6 class="col-md-7 col-3 d-flex justify-content-end">
-          <nuxt-link to="/" class="gold mr-4">strff</nuxt-link>
-        </h6>
-        <div class="col-md-5 col-9 d-flex">
-          <Search />
-          <Cart />
-        </div>
+      <h6 class="d-flex justify-content-center align-items-center w-100 m-0">
+        <nuxt-link to="/" class="gold m-0">strff</nuxt-link>
+      </h6>
+      <div class="d-flex align-items-center ml-4">
+        <Search class="cursor-pointer" />
+        <Cart class="cursor-pointer" />
       </div>
     </div>
     <div
@@ -90,7 +86,14 @@
           >
             <a
               v-on:click.prevent="isOpen = !isOpen"
-              class="text-nowrap gold d-flex align-items-center m-0"
+              class="
+                gold
+                cursor-pointer
+                d-flex
+                align-items-center
+                text-nowrap
+                m-0
+              "
             >
               MAN`S CARE
               <Icon
@@ -244,6 +247,10 @@ header > span {
   justify-content: flex-start !important;
 }
 
+h6 > a {
+  font-family: "Roboto", sans-serif;
+}
+
 li > a {
   font-family: "Roboto", sans-serif;
   display: block;
@@ -270,10 +277,8 @@ li > a {
 }
 
 .nav-menu-arrow {
-  width: 50px;
-  height: 50px;
-  left: 20px;
-  top: 4px;
+  width: 80px;
+  height: 26px;
   position: relative;
   cursor: pointer;
 }
