@@ -91,5 +91,27 @@ h6 {
 .ssr-carousel-track {
   justify-content: left !important;
 }
+
+@media (max-width: 400px) {
+  h1 {
+    font-size: 6rem;
+  }
+
+  h3 {
+    font-size: 2.5rem;
+  }
+
+  h4 {
+    font-size: 2rem;
+  }
+
+  h5 {
+    font-size: 1.8rem;
+  }
+
+  h6 {
+    font-size: 1.5rem;
+  }
+}
 </style>
 
