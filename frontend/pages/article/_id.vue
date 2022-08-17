@@ -14,9 +14,11 @@
       <div class="d-flex position-relative mb-5">
         <img :src="`${getStrapiMedia(article.image.url)}`" alt="image" />
         <div class="date d-flex flex-column position-absolute px-5 py-2 mb-5">
-          <h6 class="text-center text-uppercase">{{ 9 | formatDate }}</h6>
           <h6 class="text-center text-uppercase">
-            {{ article.date.getMonth() | parseMonth }}
+            {{ new Date(article.created_at).getDate() | formatDate }}
+          </h6>
+          <h6 class="text-center text-uppercase">
+            {{ new Date(article.created_at).getMonth() | parseMonth }}
           </h6>
         </div>
       </div>
