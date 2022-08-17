@@ -27,9 +27,11 @@ export const actions = {
     }
 
     const categories = await this.$strapi.find("categories");
+    const articles = await this.$strapi.find("articles");
     const purchaseTypes = await this.$strapi.find("purchase-types");
 
     commit("categories/setCategories", categories);
+    commit("articles/setArticles", articles);
     commit("purchase-types/setTypes", purchaseTypes);
   },
 };

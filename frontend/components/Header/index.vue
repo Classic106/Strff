@@ -102,17 +102,30 @@
                 class="angle ml-1"
               />
             </a>
-            <ul
+            <vueCustomScrollbar
+              class="
+                scroll-area
+                position-realtive
+                d-flex
+                flex-column
+                overflow-auto
+                rounded
+                p-3
+              "
+              :settings="scrollSettings"
               v-if="isMobile ? true : isOpen"
-              class="rounded p-3"
               :class="isMobile ? '' : 'position-absolute additional_menu'"
             >
-              <li v-for="item in additionalMenu" :key="item.title">
-                <NuxtLink :to="item.link" class="text-nowrap gold">{{
-                  item.title
-                }}</NuxtLink>
-              </li>
-            </ul>
+              <ul class="p-0">
+                <li v-for="article in articles" :key="article.name">
+                  <NuxtLink
+                    :to="`/article/${article.id}`"
+                    class="text-nowrap gold"
+                    >{{ article.name }}</NuxtLink
+                  >
+                </li>
+              </ul>
+            </vueCustomScrollbar>
           </li>
         </ul>
       </div>
@@ -138,24 +151,15 @@ export default {
     isMobile: true,
     error: null,
     isOpen: false,
-    additionalMenu: [
-      {
-        title: "Body Care & Deodorant",
-        link: "/article/1",
-      },
-      {
-        title: "Facial Care",
-        link: "/article/2",
-      },
-      {
-        title: "Body Care",
-        link: "/article/3",
-      },
-    ],
+    scrollSettings: {
+      suppressScrollX: true,
+      wheelPropagation: false,
+    },
   }),
   computed: {
     ...mapGetters({
       //categories: "categories/categories",
+      articles: "articles/articles",
     }),
     categories: {
       //return this.$store.getters["categories/categories"];
@@ -235,6 +239,10 @@ header > span {
   left: -100vw;
   background-color: #1f2020;
   transition: all 0.5s ease, top 0.5s ease;
+}
+
+.scroll-area {
+  max-height: 46vh;
 }
 
 .menu-mobile.open {
