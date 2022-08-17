@@ -32,6 +32,9 @@
     },
     "date": {
       "type": "date"
+    },
+    "name": {
+      "type": "string"
     }
   }
 }
