@@ -33,7 +33,7 @@
         />
       </div>
     </div>
-    <div class="p-1 p-md-5 m-0 mx-md-5">
+    <div class="p-5 m-0 mx-md-5">
       <BestSellers />
       <Articles />
       <div class="position-relative text-center">
