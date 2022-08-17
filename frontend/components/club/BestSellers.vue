@@ -1,20 +1,18 @@
 <template>
   <div class="d-flex flex-column">
-    <h6 class="p-3 pb-5 text-center col-black">BEST SELLERS</h6>
+    <h6 class="text-center p-4 col-black">BEST SELLERS</h6>
     <div
       class="
-        row
+        d-flex
         flex-column flex-md-row
         justify-content-center
-        mb-4
-        px-5
-        p-md-0
+        align-items-center
       "
     >
       <div
         v-for="product in products"
         :key="product.id"
-        class="product col col-md-4 col-lg-3 p-3 m-2"
+        class="product col-11 col-md-4 col-lg-3 p-3 m-2"
       >
         <nuxt-link :to="`/products/${product.id}`">
           <img class="mb-2" :src="`${getFirstImage(product.image)}`" />

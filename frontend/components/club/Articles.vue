@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h6 class="col-black p-3 pb-5 text-center text-uppercase">articles</h6>
+    <h6 class="col-black p-4 text-center text-uppercase">articles</h6>
     <div
       class="
         row
@@ -45,7 +45,7 @@
                 mb-lg-3 mb-xl-5
               "
             >
-              <h6 class="text-center text-uppercase">
+              <h6 class="text-center text-uppercase mr-1">
                 {{ new Date(article.created_at).getDate() | formatDate }}
               </h6>
               <h6>

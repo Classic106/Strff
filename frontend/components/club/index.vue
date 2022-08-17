@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="mb-lg-4">
     <div
       class="
         main-header
@@ -25,7 +25,7 @@
         <h3 class="mb-5">our best Selling BEARD</h3>
         <h3 class="mt-5">hair and Skin CARE PRODUCTS</h3>
       </div>
-      <div class="d-flex justify-content-center w-100">
+      <div class="iStock d-flex justify-content-center w-100">
         <img
           class="position-absolute header-image"
           src="@/assets/img/iStock-1018779998-min.jpg"
@@ -33,7 +33,7 @@
         />
       </div>
     </div>
-    <div class="p-5 m-0 mx-md-5">
+    <div class="px-0 px-lg-5 m-0 mx-md-5">
       <BestSellers />
       <Articles />
       <div class="position-relative text-center">
@@ -44,6 +44,7 @@
             flex-column
             justify-content-center
             align-items-center
+            p-0
             container
           "
         >
@@ -51,11 +52,14 @@
           <p>Indulge in a moment of perfect nostalgia</p>
           <h4 class="grey">SHOP NOW</h4>
         </div>
-        <img src="@/assets/img/iStock-1251674339-min.jpg" alt="istockphoto" />
+        <img
+          src="@/assets/img/iStock-1251674339-min.jpg"
+          alt="istockphoto"
+        />
       </div>
-      <div class="d-flex flex-column align-items-center">
-        <h6 class="text-center col-black p-3">FOLLOW US</h6>
-        <div class="d-flex follow-icons justify-content-center p-3 rounded">
+      <div class="follow-us d-flex flex-column align-items-center">
+        <h6 class="text-center col-black p-4">FOLLOW US</h6>
+        <div class="follow-icons d-flex justify-content-center p-3 rounded">
           <NuxtLink class="icon icon-twitter mx-2" to="/"></NuxtLink>
           <NuxtLink class="icon icon-facebook mx-2" to="/"></NuxtLink>
           <NuxtLink class="icon icon-pinterest mx-2" to="/"></NuxtLink>
@@ -78,6 +82,15 @@ export default {
 </script>
 
 <style scoped>
+@media (max-width: 500px) {
+  .follow-us {
+    width: 100%;
+  }
+  .follow-us > .follow-icons {
+    width: 100%;
+  }
+}
+
 @media (min-width: 1000px) {
   .main-header {
     height: 650px !important;
@@ -137,7 +150,6 @@ main {
   z-index: 1;
 }
 
-h6,
 .content > h1,
 .content > h3 {
   font-weight: 400;

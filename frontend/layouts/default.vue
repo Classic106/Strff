@@ -92,13 +92,13 @@ h6 {
   justify-content: left !important;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 500px) {
   h1 {
     font-size: 6rem;
   }
 
   h3 {
-    font-size: 2.5rem;
+    font-size: 2.4rem;
   }
 
   h4 {
