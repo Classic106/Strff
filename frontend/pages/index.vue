@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Club from "@/components/club/Club";
+import Club from "@/components/Club";
 
 export default {
   layout: "club",

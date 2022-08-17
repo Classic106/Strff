@@ -35,6 +35,7 @@
     </div>
     <div class="p-1 p-md-5 m-0 mx-md-5">
       <BestSellers />
+      <Articles />
       <div class="position-relative text-center">
         <div
           class="
@@ -50,10 +51,7 @@
           <p>Indulge in a moment of perfect nostalgia</p>
           <h4 class="grey">SHOP NOW</h4>
         </div>
-        <img
-          src="@/assets/img/iStock-1251674339-min.jpg"
-          alt="istockphoto"
-        />
+        <img src="@/assets/img/iStock-1251674339-min.jpg" alt="istockphoto" />
       </div>
       <div class="d-flex flex-column align-items-center">
         <h6 class="text-center col-black p-3">FOLLOW US</h6>
@@ -70,11 +68,12 @@
 
 <script>
 import BestSellers from "./BestSellers";
+import Articles from "./Articles";
 
 export default {
   name: "Club",
   layout: "club",
-  components: { BestSellers },
+  components: { BestSellers, Articles },
 };
 </script>
 
