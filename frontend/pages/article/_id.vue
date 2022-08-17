@@ -9,12 +9,22 @@
     </div>
     <div
       v-else
-      class="article d-flex flex-column justify-content-center m-5 p-5"
+      class="article d-flex flex-column justify-content-center m-5 p-lg-5 p-0"
     >
       <div class="d-flex position-relative mb-5">
         <img :src="`${getStrapiMedia(article.image.url)}`" alt="image" />
-        <div class="date d-flex flex-column position-absolute px-5 py-2 mb-5">
-          <h6 class="text-center text-uppercase">
+        <div
+          class="
+            date
+            d-flex
+            flex-row flex-lg-column
+            position-absolute
+            px-5
+            py-2
+            mb-5
+          "
+        >
+          <h6 class="text-center text-uppercase mr-1">
             {{ new Date(article.created_at).getDate() | formatDate }}
           </h6>
           <h6 class="text-center text-uppercase">
@@ -22,15 +32,7 @@
           </h6>
         </div>
       </div>
-      <div
-        class="
-          d-flex
-          flex-column
-          justify-content-center
-          align-items-center
-          px-5
-        "
-      >
+      <div class="d-flex flex-column justify-content-center align-items-center">
         <p class="text-center">{{ article.title }}</p>
         <hr class="m-3" />
         <p class="text-center">{{ article.article }}</p>

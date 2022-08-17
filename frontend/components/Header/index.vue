@@ -235,7 +235,7 @@ header > span {
   height: 100vh;
   position: absolute;
   width: 80vw !important;
-  top: 77px;
+  top: 35%;
   left: -100vw;
   background-color: #1f2020;
   transition: all 0.5s ease, top 0.5s ease;
@@ -247,7 +247,6 @@ header > span {
 
 .menu-mobile.open {
   left: 0vw;
-  top: 42%;
 }
 
 .ul-mobile {
