@@ -1,57 +1,60 @@
 <template>
-  <div
-    class="
-      row
-      flex-column flex-md-row
-      mb-5
-      px-4 px-md-0
-      justify-content-center
-      w-100
-      mx-auto
-    "
-  >
+  <div>
+    <h6 class="col-black p-3 pb-5 text-center text-uppercase">articles</h6>
     <div
-      class="article col col-lg-6 m-1 p-0"
-      v-for="article in articles"
-      :key="article.id"
+      class="
+        row
+        flex-column flex-md-row
+        mb-5
+        px-4 px-md-0
+        justify-content-center
+        w-100
+        mx-auto
+      "
     >
-      <nuxt-link
-        class="d-flex position-relative p-0"
-        :to="`article/${article.id}`"
+      <div
+        class="article col col-lg-6 m-1 p-0"
+        v-for="article in articles"
+        :key="article.id"
       >
-        <img :src="`${getStrapiMedia(article.image.url)}`" alt="image" />
-        <div
-          class="
-            inf
-            d-flex
-            flex-column
-            position-absolute
-            justify-content-center
-          "
+        <nuxt-link
+          class="d-flex position-relative p-0"
+          :to="`article/${article.id}`"
         >
-          <h5 class="w-100 text-center text-uppercase">
-            {{ article.name }}
-          </h5>
+          <img :src="`${getStrapiMedia(article.image.url)}`" alt="image" />
           <div
             class="
-              date
+              inf
               d-flex
-              flex-row flex-lg-column
+              flex-column
               position-absolute
-              px-5
-              py-2
-              mb-lg-3 mb-xl-5
+              justify-content-center
             "
           >
-            <h6 class="text-center text-uppercase">
-              {{ new Date(article.created_at).getDate() | formatDate }}
-            </h6>
-            <h6>
-              {{ new Date(article.created_at).getMonth() | parseMonth }}
-            </h6>
+            <h5 class="w-100 text-center text-uppercase">
+              {{ article.name }}
+            </h5>
+            <div
+              class="
+                date
+                d-flex
+                flex-row flex-lg-column
+                position-absolute
+                px-5
+                py-2
+                mb-lg-3 mb-xl-5
+              "
+            >
+              <h6 class="text-center text-uppercase">
+                {{ new Date(article.created_at).getDate() | formatDate }}
+              </h6>
+              <h6>
+                {{ new Date(article.created_at).getMonth() | parseMonth }}
+              </h6>
+            </div>
           </div>
-        </div>
-      </nuxt-link>
+        </nuxt-link>
+      </div>
     </div>
   </div>
 </template>
