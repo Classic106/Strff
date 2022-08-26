@@ -40,7 +40,7 @@
         <h6 class="d-flex justify-content-center align-items-center w-100 m-0">
           <nuxt-link to="/" class="gold m-0">strff</nuxt-link>
         </h6>
-        <div class="d-flex align-items-center ml-4">
+        <div class="d-flex align-items-center ml-sm-4 ml-1">
           <Search class="cursor-pointer" />
           <Cart class="cursor-pointer" />
         </div>
@@ -59,7 +59,7 @@
           <ul
             ref="menu"
             class="
-              pl-4
+              pl-sm-4 pl-1
               text-uppercase
               d-flex
               w-100
@@ -72,17 +72,20 @@
             <li
               v-for="category in categories"
               :key="category.id"
-              class="px-3 py-2"
+              class="px-md-3 px-1 py-2"
             >
-              <NuxtLink :to="`/categories/${category.slug}`" class="gold">{{
-                category.name
-              }}</NuxtLink>
+              <NuxtLink
+                :to="`/categories/${category.slug}`"
+                class="gold"
+                v-on:click.native="lickClick(`/categories/${category.slug}`)"
+                >{{ category.name }}</NuxtLink
+              >
             </li>
             <li
               class="d-flex"
               :class="
                 isMobile
-                  ? 'row flex-column m-0 pl-3'
+                  ? 'row flex-column m-0 pl-md-3 pl-1'
                   : 'justify-content-center align-items-center position-relative'
               "
               ref="additionalMenu"
@@ -123,7 +126,8 @@
                   <li v-for="article in articles" :key="article.name">
                     <NuxtLink
                       :to="`/article/${article.id}`"
-                      class="text-nowrap gold"
+                      class="gold"
+                      v-on:click.native="lickClick(`/article/${article.id}`)"
                       >{{ article.name }}</NuxtLink
                     >
                   </li>
@@ -177,6 +181,10 @@ export default {
     handlerResize(e) {
       this.isMobile = !(e.target.innerWidth > 992);
     },
+    lickClick(link) {
+      this.$router.push(link);
+      this.isOpenMenu = false;
+    },
     closeOutsideMenu(e) {
       const { menu, menuButton, additionalMenu } = this.$refs;
       const { target } = e;
@@ -217,7 +225,6 @@ export default {
 
 <style>
 header {
-  max-height: 220px;
   background-color: #1f2020;
   color: #fff;
   z-index: 2;

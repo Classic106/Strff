@@ -3,7 +3,10 @@
     <div v-if="error">
       {{ error }}
     </div>
-    <div v-else class="content row justify-content-center px-1 py-5 m-100">
+    <main
+      v-else
+      class="content row justify-content-center px-md-1 px-0 py-5 mx-md-5 m-0"
+    >
       <div
         v-for="product in products"
         :key="product.id"
@@ -47,7 +50,7 @@
           Add to cart
         </button>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
