@@ -14,11 +14,8 @@ export default {};
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 @import "vue-custom-scrollbar/dist/vueScrollbar.css";
 
-@media (min-width: 1200px) {
-  .loaded {
-    margin: 0 auto !important;
-    widows: 100%;
-  }
+.h-100 {
+  height: 100vh !important;
 }
 
 a:hover,
@@ -92,6 +89,13 @@ h6 {
   justify-content: left !important;
 }
 
+@media (min-width: 1200px) {
+  .loaded {
+    margin: 0 auto !important;
+    widows: 100%;
+  }
+}
+
 @media (max-width: 500px) {
   h1 {
     font-size: 6rem;
@@ -111,6 +115,28 @@ h6 {
 
   h6 {
     font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  h1 {
+    font-size: 3.5rem;
+  }
+
+  h3 {
+    font-size: 2rem;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+  }
+
+  h5 {
+    font-size: 1.2rem;
+  }
+
+  h6 {
+    font-size: 1rem;
   }
 }
 </style>

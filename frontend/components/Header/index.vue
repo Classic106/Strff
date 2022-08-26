@@ -15,6 +15,7 @@
       class="
         head
         d-flex
+        flex-column
         px-4
         my-4
         mb-lg-2
@@ -22,112 +23,115 @@
         align-items-center
         text-uppercase
         w-100
+        position-relative
       "
     >
-      <div
-        ref="menuButton"
-        class="nav-menu-arrow d-flex d-lg-none"
-        :class="isOpenMenu && 'open'"
-        v-on:click="isOpenMenu = !isOpenMenu"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-      <h6 class="d-flex justify-content-center align-items-center w-100 m-0">
-        <nuxt-link to="/" class="gold m-0">strff</nuxt-link>
-      </h6>
-      <div class="d-flex align-items-center ml-4">
-        <Search class="cursor-pointer" />
-        <Cart class="cursor-pointer" />
-      </div>
-    </div>
-    <div
-      class="row w-100"
-      :class="
-        isMobile
-          ? isOpenMenu
-            ? 'menu-mobile open flex-column'
-            : 'menu-mobile'
-          : 'position-relative justify-content-between'
-      "
-    >
-      <div class="col-lg row">
-        <ul
-          ref="menu"
-          class="
-            pl-4
-            text-uppercase
-            d-flex
-            w-100
-            m-0
-            flex-column flex-lg-row
-            justify-content-center
-          "
-          :class="isMobile ? 'ul-mobile' : ''"
+      <div class="w-100 d-flex">
+        <div
+          ref="menuButton"
+          class="nav-menu-arrow d-flex d-lg-none"
+          :class="isOpenMenu && 'open'"
+          v-on:click="isOpenMenu = !isOpenMenu"
         >
-          <li
-            v-for="category in categories"
-            :key="category.id"
-            class="px-3 py-2"
-          >
-            <NuxtLink :to="`/categories/${category.slug}`" class="gold">{{
-              category.name
-            }}</NuxtLink>
-          </li>
-          <li
-            class="d-flex"
-            :class="
-              isMobile
-                ? 'row flex-column m-0 pl-3'
-                : 'justify-content-center align-items-center position-relative'
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <h6 class="d-flex justify-content-center align-items-center w-100 m-0">
+          <nuxt-link to="/" class="gold m-0">strff</nuxt-link>
+        </h6>
+        <div class="d-flex align-items-center ml-4">
+          <Search class="cursor-pointer" />
+          <Cart class="cursor-pointer" />
+        </div>
+      </div>
+      <div
+        class="row m-0 w-100"
+        :class="
+          isMobile
+            ? isOpenMenu
+              ? 'menu-mobile open'
+              : 'menu-mobile'
+            : 'position-relative justify-content-between'
+        "
+      >
+        <div class="menu-wrap col-lg col-sm-8 m-0">
+          <ul
+            ref="menu"
+            class="
+              pl-4
+              text-uppercase
+              d-flex
+              w-100
+              m-0
+              flex-column flex-lg-row
+              justify-content-center
             "
-            ref="additionalMenu"
+            :class="isMobile ? 'ul-mobile' : ''"
           >
-            <a
-              v-on:click.prevent="isOpen = !isOpen"
-              class="
-                gold
-                cursor-pointer
-                d-flex
-                align-items-center
-                text-nowrap
-                m-0
-              "
+            <li
+              v-for="category in categories"
+              :key="category.id"
+              class="px-3 py-2"
             >
-              MAN`S CARE
-              <Icon
-                v-if="!isMobile"
-                :icon="isOpen ? 'angle-up' : 'angle-down'"
-                class="angle ml-1"
-              />
-            </a>
-            <vueCustomScrollbar
-              class="
-                scroll-area
-                position-realtive
-                d-flex
-                flex-column
-                overflow-auto
-                rounded
-                p-3
+              <NuxtLink :to="`/categories/${category.slug}`" class="gold">{{
+                category.name
+              }}</NuxtLink>
+            </li>
+            <li
+              class="d-flex"
+              :class="
+                isMobile
+                  ? 'row flex-column m-0 pl-3'
+                  : 'justify-content-center align-items-center position-relative'
               "
-              :settings="scrollSettings"
-              v-if="isMobile ? true : isOpen"
-              :class="isMobile ? '' : 'position-absolute additional_menu'"
+              ref="additionalMenu"
             >
-              <ul class="p-0">
-                <li v-for="article in articles" :key="article.name">
-                  <NuxtLink
-                    :to="`/article/${article.id}`"
-                    class="text-nowrap gold"
-                    >{{ article.name }}</NuxtLink
-                  >
-                </li>
-              </ul>
-            </vueCustomScrollbar>
-          </li>
-        </ul>
+              <a
+                v-on:click.prevent="isOpen = !isOpen"
+                class="
+                  gold
+                  cursor-pointer
+                  d-flex
+                  align-items-center
+                  text-nowrap
+                  m-0
+                "
+              >
+                MAN`S CARE
+                <Icon
+                  v-if="!isMobile"
+                  :icon="isOpen ? 'angle-up' : 'angle-down'"
+                  class="angle ml-1"
+                />
+              </a>
+              <vueCustomScrollbar
+                class="
+                  scroll-area
+                  position-realtive
+                  d-flex
+                  flex-column
+                  overflow-auto
+                  rounded
+                  p-3
+                "
+                :settings="scrollSettings"
+                v-if="isMobile ? true : isOpen"
+                :class="isMobile ? '' : 'position-absolute additional_menu'"
+              >
+                <ul class="p-0">
+                  <li v-for="article in articles" :key="article.name">
+                    <NuxtLink
+                      :to="`/article/${article.id}`"
+                      class="text-nowrap gold"
+                      >{{ article.name }}</NuxtLink
+                    >
+                  </li>
+                </ul>
+              </vueCustomScrollbar>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <span class="p-3 text-center m-0 w-100">
@@ -234,10 +238,8 @@ header > span {
   display: flex !important;
   height: 100vh;
   position: absolute;
-  width: 80vw !important;
-  top: 35%;
+  top: calc(100% + 28px);
   left: -100vw;
-  background-color: #1f2020;
   transition: all 0.5s ease, top 0.5s ease;
 }
 
@@ -247,6 +249,12 @@ header > span {
 
 .menu-mobile.open {
   left: 0vw;
+  height: 100vh;
+}
+
+.menu-wrap {
+  background-color: #1f2020;
+  height: 100%;
 }
 
 .ul-mobile {
