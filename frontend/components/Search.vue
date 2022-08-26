@@ -38,8 +38,8 @@
                 justify-content-center
                 align-items-center
                 overflow-auto
-                px-5
-                mx-5
+                px-md-5 px-1
+                mx-md-5 mx-1
               "
             >
               <div
@@ -54,11 +54,24 @@
                     class="mb-2"
                     :src="`${getFirstImage(bestSeller.image)}`"
                   />
-                  <div class="card-info d-flex justify-content-between mb-4">
-                    <span class="col-white text-nowrap mr-3"
+                  <div
+                    class="
+                      d-flex
+                      flex-sm-row flex-column
+                      justify-content-between
+                      mb-4
+                    "
+                  >
+                    <span
+                      class="
+                        col-white
+                        text-nowrap
+                        mr-3
+                        text-center text-sm-left
+                      "
                       >{{ bestSeller.price }} $</span
                     >
-                    <span class="text-upprcase gold">{{
+                    <span class="text-upprcase gold text-center text-sm-left">{{
                       bestSeller.title
                     }}</span>
                   </div>
@@ -75,8 +88,8 @@
             justify-content-center
             align-items-center
             overflow-auto
-            px-5
-            mx-5
+            px-md-5 px-1
+            mx-md-5 mx-1
             mt-5
           "
         >
@@ -92,7 +105,7 @@
           />
           <div
             v-if="resultProducts.length"
-            class="row justify-content-center px-5 my-auto"
+            class="row justify-content-center mx-1"
           >
             <div
               v-for="product in resultProducts"
@@ -116,7 +129,7 @@
 
           <div
             v-if="resultArticles.length"
-            class="row justify-content-center px-5 my-auto w-100 mt-5"
+            class="row justify-content-center w-100 mt-5"
           >
             <div
               v-for="article in resultArticles"
