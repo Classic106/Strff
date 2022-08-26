@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <main>
     <div v-if="error">
       {{ error }}
     </div>
@@ -45,7 +45,8 @@
           class="
             col-md-6 col-12
             pt-0
-            pl-5
+            pl-md-5
+            py-2
             flex flex-col
             justify-content-between
           "
@@ -172,7 +173,7 @@
       </div>
       <RelatedProducts :product="product" />
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
