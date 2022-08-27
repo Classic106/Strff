@@ -1,5 +1,5 @@
 <template>
-  <div class="first-step d-flex flex-column overflow-auto">
+  <div class="first-step d-flex flex-column">
     <div
       v-if="!order_items.length && !order_bundles.length"
       class="
@@ -278,7 +278,7 @@
           </ul>
         </vueCustomScrollbar>
         <button
-          class="text-uppercase p-3 mt-4 gold-background d-none d-lg-block"
+          class="text-uppercase p-3 my-3 gold-background d-none d-lg-block"
           v-on:click="isShipping = !isShipping"
         >
           {{ isShipping ? "close checkout" : "go to checkout" }}
@@ -405,7 +405,7 @@ export default {
 }
 
 .scroll-area {
-  min-height: 95%;
+  height: 100%;
 }
 
 .grey {
