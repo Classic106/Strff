@@ -1,57 +1,62 @@
 <template>
-  <div
-    class="shipping_inf d-flex flex-column"
-    :class="isShipping ? 'show' : 'hide'"
-  >
-    <vueCustomScrollbar
-      class="scroll-area position-realtive px-3 mb-auto"
-      :settings="settings"
-    >
-      <div class="d-flex flex-column">
-        <div
-          class="
-            head
-            mb-3
-            d-flex
-            w-100
-            rounded
-            justify-content-between
-            align-items-center
-          "
-        >
-          <h6 class="py-3 p-3" v-on:click.self="isAddressOpen = !isAddressOpen">
-            + Add Shipping Address
-          </h6>
-          <CloseButton class="mr-3 my-2" v-on:close="isAddressOpen = false" />
+  <div class="shipping_inf" :class="isShipping ? 'show' : 'hide'">
+    <div class="shipping_inf_content d-flex flex-column">
+      <vueCustomScrollbar
+        class="scroll-area position-realtive px-sm-3 px-1"
+        :settings="settings"
+      >
+        <div class="d-flex flex-column">
+          <div
+            class="
+              head
+              mb-3
+              d-flex
+              w-100
+              rounded
+              justify-content-between
+              align-items-center
+            "
+          >
+            <h6
+              class="py-3 p-3 text-nowrap"
+              v-on:click.self="isAddressOpen = !isAddressOpen"
+            >
+              + Add Shipping Address
+            </h6>
+            <CloseButton class="mr-3 my-2" v-on:close="isAddressOpen = false" />
+          </div>
+          <UserForm v-if="isAddressOpen" v-on:setUserInfo="setUserInfo" />
         </div>
-        <UserForm v-if="isAddressOpen" v-on:setUserInfo="setUserInfo" />
-      </div>
-      <div class="d-flex flex-column">
-        <div
-          class="
-            head
-            w-100
-            mb-3
-            d-flex
-            rounded
-            justify-content-between
-            align-items-center
-          "
-        >
-          <h6 class="p-3" v-on:click.self="isCardOpen = !isCardOpen">
-            + Add Credit Card
-          </h6>
-          <CloseButton class="mr-3 my-2" v-on:close="isCardOpen = false" />
+        <div class="d-flex flex-column">
+          <div
+            class="
+              head
+              w-100
+              mb-3
+              d-flex
+              rounded
+              justify-content-between
+              align-items-center
+            "
+          >
+            <h6
+              class="p-3 text-nowrap"
+              v-on:click.self="isCardOpen = !isCardOpen"
+            >
+              + Add Credit Card
+            </h6>
+            <CloseButton class="mr-3 my-2" v-on:close="isCardOpen = false" />
+          </div>
+          <Card v-if="isCardOpen" v-on:setCard="setCard" />
         </div>
-        <Card v-if="isCardOpen" v-on:setCard="setCard" />
-      </div>
-    </vueCustomScrollbar>
-    <button
-      class="finalize-btn text-nowrap p-3 mt-4 mx-1"
-      v-on:click="finalize"
-    >
-      FINALIZE AND PLACE ORDER
-    </button>
+      </vueCustomScrollbar>
+      <button
+        class="finalize-btn text-nowrap p-3 mt-4 mx-1"
+        v-on:click="finalize"
+      >
+        FINALIZE AND PLACE ORDER
+      </button>
+    </div>
   </div>
 </template>
 
@@ -120,19 +125,32 @@ export default {
     width: 100% !important;
     transition: none !important;
   }
+  .shipping_inf_content {
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  .scroll-area {
+    width: 100%;
+    min-height: 88%;
+  }
+  .shipping_inf_content {
+    width: 340px;
+    height: 100%;
+  }
 }
 
 .shipping_inf {
-  width: 0;
+  height: 100%;
 }
 
-.scroll-area,
-.shipping_inf.show {
+.show {
   width: 340px;
   transition: width 1s ease-in-out;
 }
 
-.shipping_inf.hide {
+.hide {
   width: 0;
   transition: width 1s ease-in-out;
 }
