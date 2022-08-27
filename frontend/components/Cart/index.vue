@@ -5,7 +5,7 @@
         <h6 class="text-uppercase m-0 p-3">shopping bag</h6>
         <CloseButton class="mr-3 my-2" v-on:close="$emit('close')" />
       </div>
-      <div>
+      <div class="h-100">
         <FirstStep
           v-if="step === 1"
           :nextStep="nextStep"
@@ -58,6 +58,12 @@ export default {
 </script>
 
 <style scoped>
+@media (max-width: 992px) {
+  .container {
+    width: 100% !important;
+  }
+}
+
 .container {
   height: 100%;
   width: max-content;

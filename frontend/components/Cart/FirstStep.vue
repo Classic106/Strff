@@ -21,7 +21,7 @@
       class="
         scroll-area
         position-realtive
-        px-3
+        px-sm-3 px-1
         d-flex
         flex-lg-row flex-column
         overflow-auto
@@ -29,12 +29,12 @@
       :settings="scrollAreaSettings"
     >
       <ShippingInf :isShipping="isShipping" v-on:nextStep="$emit('nextStep')" />
-      <div class="cart d-flex flex-column px-3">
+      <div class="cart d-flex flex-column px-sm-3 px-1">
         <h6 class="text-uppercase text-center my-3">
           total price: {{ totalPrice | formatNumber }} $
         </h6>
         <vueCustomScrollbar
-          class="position-realtive px-3 mb-auto"
+          class="position-realtive px-sm-3 px-1 mb-auto"
           :settings="itemsSettings"
         >
           <ul v-if="order_items.length" class="p-0">
@@ -66,12 +66,12 @@
                   </div>
                 </div>
                 <div class="d-flex flex-column mt-3">
-                  <div class="d-flex">
-                    <p class="w-25 mb-2 grey">description</p>
+                  <div class="d-flex flex-sm-row flex-column">
+                    <p class="w-25 mb-2 grey mr-2">description</p>
                     <p class="mb-2">{{ item.product.description }}</p>
                   </div>
-                  <div class="d-flex">
-                    <p class="w-25 mb-2 grey">quantity</p>
+                  <div class="d-flex flex-sm-row flex-column">
+                    <p class="w-25 mb-2 grey mr-2">quantity</p>
                     <div class="d-flex">
                       <button
                         v-if="edit"
@@ -92,8 +92,8 @@
                       </button>
                     </div>
                   </div>
-                  <div class="d-flex">
-                    <p class="w-25 mb-2 grey">category</p>
+                  <div class="d-flex flex-sm-row flex-column">
+                    <p class="w-25 mb-2 grey mr-2">category</p>
                     <p
                       v-for="category in item.product.categories"
                       :key="category.id"
@@ -102,8 +102,8 @@
                       {{ category.name }}
                     </p>
                   </div>
-                  <div class="d-flex">
-                    <p class="w-25 mb-2 grey">Purchase</p>
+                  <div class="d-flex flex-sm-row flex-column">
+                    <p class="w-25 mb-2 grey mr-2">Purchase</p>
                     <p class="mb-2" v-if="!edit">
                       {{
                         purchaseTypes.filter(
@@ -394,7 +394,7 @@ export default {
 .first-step {
   background: #333333;
   z-index: 1;
-  height: 90vh;
+  height: 100%;
 }
 
 .cart {
@@ -405,7 +405,7 @@ export default {
 }
 
 .scroll-area {
-  height: 82vh;
+  min-height: 95%;
 }
 
 .grey {
