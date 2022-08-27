@@ -223,7 +223,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 header {
   background-color: #1f2020;
   color: #fff;

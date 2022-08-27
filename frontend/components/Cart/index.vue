@@ -5,7 +5,7 @@
         <h6 class="text-uppercase m-0 p-3">shopping bag</h6>
         <CloseButton class="mr-3 my-2" v-on:close="$emit('close')" />
       </div>
-      <div class="h-100">
+      <div class="steps">
         <FirstStep
           v-if="step === 1"
           :nextStep="nextStep"
@@ -64,9 +64,17 @@ export default {
   }
 }
 
+.icon {
+  filter: brightness(0) invert(1);
+}
+
 .container {
   height: 100%;
   width: max-content;
+}
+
+.header {
+  height: 56px;
 }
 
 .content {
@@ -82,13 +90,7 @@ export default {
   margin-left: 0;
 }
 
-.icon-share {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  filter: brightness(0) invert(1);
-  transform: rotate(180deg);
-  background-size: cover;
-  background-image: url("../../assets/icons/share-solid.svg");
+.steps {
+  height: calc(100% - 56px);
 }
 </style>

@@ -2,7 +2,7 @@
   <div class="shipping_inf" :class="isShipping ? 'show' : 'hide'">
     <div class="shipping_inf_content d-flex flex-column">
       <vueCustomScrollbar
-        class="scroll-area position-realtive px-sm-3 px-1"
+        class="scroll-area position-realtive px-sm-3 px-1 mb-auto"
         :settings="settings"
       >
         <div class="d-flex flex-column">
@@ -51,7 +51,7 @@
         </div>
       </vueCustomScrollbar>
       <button
-        class="finalize-btn text-nowrap p-3 mt-4 mx-1"
+        class="finalize-btn text-nowrap p-3 my-3 mx-1"
         v-on:click="finalize"
       >
         FINALIZE AND PLACE ORDER
@@ -133,7 +133,6 @@ export default {
 @media (min-width: 992px) {
   .scroll-area {
     width: 100%;
-    min-height: 88%;
   }
   .shipping_inf_content {
     width: 340px;
@@ -141,8 +140,8 @@ export default {
   }
 }
 
-.shipping_inf {
-  height: 100%;
+.icon {
+  filter: brightness(0) invert(1);
 }
 
 .show {
