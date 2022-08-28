@@ -29,7 +29,10 @@
               align-items-center
             "
           />
-          <div v-else class="mt-3">
+          <vueCustomScrollbar
+            class="position-realtive mt-3"
+            :settings="itemsSettings"
+          >
             <h6 class="p-3 text-center">BEST SELLERS</h6>
             <div
               class="
@@ -78,7 +81,7 @@
                 </a>
               </div>
             </div>
-          </div>
+          </vueCustomScrollbar>
         </div>
         <div
           v-else
@@ -173,6 +176,7 @@
 <script>
 import { getStrapiMedia } from "~/utils/medias";
 import { shuffleArray } from "~/helpers";
+
 import Loader from "@/components/Loader";
 import CloseButton from "@/components/common/CloseButton";
 
@@ -187,6 +191,10 @@ export default {
     articles: [],
     bestSellers: [],
     isLoading: false,
+    itemsSettings: {
+      suppressScrollX: true,
+      wheelPropagation: true,
+    },
   }),
   watch: {
     text: function () {
@@ -258,6 +266,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.icon {
+  filter: brightness(0) invert(1);
+}
+
 .container {
   height: 100%;
   max-width: 600px;

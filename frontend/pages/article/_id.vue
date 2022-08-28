@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <main>
     <Loader v-if="loading" />
     <div
       v-if="!article"
@@ -9,7 +9,7 @@
     </div>
     <div
       v-else
-      class="article d-flex flex-column justify-content-center m-5 p-lg-5 p-0"
+      class="article d-flex flex-column justify-content-center m-sm-5 m-1 p-lg-5 p-0"
     >
       <div class="d-flex position-relative mb-5">
         <img :src="`${getStrapiMedia(article.image.url)}`" alt="image" />
@@ -20,7 +20,7 @@
             flex-row flex-lg-column
             position-absolute
             px-5
-            py-2
+            py-md-2 py-1
             mb-5
           "
         >
@@ -38,7 +38,7 @@
         <p class="text-center">{{ article.article }}</p>
       </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
