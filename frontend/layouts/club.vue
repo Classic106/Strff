@@ -37,7 +37,6 @@ export default {
     ClubFooter,
     Loader,
   },
-
   data: () => ({ loading: true }),
   mounted() {
     this.loading = false;
@@ -45,5 +44,13 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.h-100 {
+  height: 100vh !important;
+}
+
+.loading {
+  background: #333333;
+}
+</style>
 
