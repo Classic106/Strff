@@ -17,26 +17,27 @@
       related products
     </h6>
     <div class="products row justify-content-center m-0">
-      <nuxt-link
-        :to="`/products/${product.id}`"
-        class="product col-10 col-md-4 col-lg-2 p-4 p-lg-3 m-2"
+      <div
+        class="product col-10 col-md-4 col-lg-3 p-4 p-lg-3 m-2"
         v-for="product in relatedProducts"
         :key="product.id"
       >
-        <div>
-          <img :src="`${getFirstImage(product.image)}`" class="m-auto" />
-          <div class="d-flex flex-lg-column justify-content-between mt-3">
-            <span class="font-weight-light text-center col-black text-nowrap">
-              ${{ product.price | formatNumber }}
-            </span>
-            <span
-              class="font-weight-light text-center gold text-ellipsis"
-              v-html="colorTitleNumbers(product.title, 'col-black')"
-            >
-            </span>
+        <nuxt-link :to="`/products/${product.id}`" class="h-100">
+          <div class="d-flex h-100 flex-column justify-content-between">
+            <img :src="`${getFirstImage(product.image)}`" class="my-auto" />
+            <div class="d-flex flex-lg-column justify-content-between mt-3">
+              <span class="font-weight-light text-center col-black text-nowrap">
+                ${{ product.price | formatNumber }}
+              </span>
+              <span
+                class="font-weight-light text-center gold text-ellipsis"
+                v-html="colorTitleNumbers(product.title, 'col-black')"
+              >
+              </span>
+            </div>
           </div>
-        </div>
-      </nuxt-link>
+        </nuxt-link>
+      </div>
     </div>
   </div>
 </template>
@@ -99,16 +100,16 @@ export default {
 
 <style scoped>
 @media (min-width: 768px) {
-  .col-md-4 {
+  .product.col-md-4 {
     flex: 0 0 31%;
     max-width: 31%;
   }
 }
 
 @media (min-width: 992px) {
-  .col-lg-2 {
-    flex: 0 0 15%;
-    max-width: 15%;
+  .product.col-lg-3 {
+    flex: 0 0 23%;
+    max-width: 23%;
   }
 }
 
