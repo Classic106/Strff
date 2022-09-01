@@ -1,26 +1,31 @@
 <template>
-  <div class="d-flex flex-column">
-    <h6 class="text-center p-4 col-black">BEST SELLERS</h6>
-    <div
-      class="
-        d-flex
-        flex-column flex-md-row
-        justify-content-center
-        align-items-center
-      "
-    >
+  <div>
+    <div v-if="!products.length">
+      <h6>There isn`t any products</h6>
+    </div>
+    <div v-else class="d-flex flex-column">
+      <h6 class="text-center p-4 col-black">BEST SELLERS</h6>
       <div
-        v-for="product in products"
-        :key="product.id"
-        class="product col-11 col-md-4 col-lg-3 p-3 m-2"
+        class="
+          d-flex
+          flex-column flex-md-row
+          justify-content-center
+          align-items-center
+        "
       >
-        <nuxt-link :to="`/products/${product.id}`">
-          <img class="mb-2" :src="`${getFirstImage(product.image)}`" />
-          <div class="card-info col-black d-flex justify-content-between">
-            <span>{{ product.price }} $</span>
-            <span class="text-upprcase gold">{{ product.title }}</span>
-          </div>
-        </nuxt-link>
+        <div
+          v-for="product in products"
+          :key="product.id"
+          class="product col-11 col-md-4 col-lgz-3 p-3 m-2"
+        >
+          <nuxt-link :to="`/products/${product.id}`">
+            <img class="mb-2" :src="`${getFirstImage(product.image)}`" />
+            <div class="card-info col-black d-flex justify-content-between">
+              <span>{{ product.price }} $</span>
+              <span class="text-upprcase gold">{{ product.title }}</span>
+            </div>
+          </nuxt-link>
+        </div>
       </div>
     </div>
   </div>

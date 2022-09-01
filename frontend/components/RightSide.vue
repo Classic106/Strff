@@ -1,6 +1,6 @@
 <template>
   <div
-    class="menu h-100 w-100 position-fixed d-flex justify-content-end"
+    class="menu h-100vh w-100 position-fixed d-flex justify-content-end"
     :class="isOpen && 'open'"
     v-on:click.self="isOpen = false"
   >

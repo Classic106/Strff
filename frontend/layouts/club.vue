@@ -5,7 +5,7 @@
       class="
         loading
         w-100
-        h-100
+        h-100vh
         d-flex
         justify-content-center
         align-items-center
@@ -45,7 +45,7 @@ export default {
 </script>
 
 <style scoped>
-.h-100 {
+.h-100vh {
   height: 100vh !important;
 }
 
