@@ -84,8 +84,10 @@ h6 {
   font-size: 1.25rem;
 }
 
-.loaded {
-  width: auto;
+img.loaded {
+  height: 100% !important;
+  width: auto !important;
+  margin: 0 auto !important;
 }
 
 .cursor-pointer {
@@ -94,13 +96,6 @@ h6 {
 
 .ssr-carousel-track {
   justify-content: left !important;
-}
-
-@media (min-width: 1200px) {
-  .loaded {
-    margin: 0 auto !important;
-    widows: 100%;
-  }
 }
 
 @media (max-width: 500px) {
