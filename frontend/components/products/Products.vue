@@ -1,8 +1,14 @@
 <template>
   <div>
-    <div v-if="error">
+    <main v-if="error">
       {{ error }}
-    </div>
+    </main>
+    <main
+      v-else-if="!products.length"
+      class="main d-flex justify-content-center"
+    >
+      <h6 class="no-items text-center my-auto">There aren't any products</h6>
+    </main>
     <main
       v-else
       class="content row justify-content-center px-md-1 px-0 py-5 mx-md-5 m-0"
@@ -10,26 +16,43 @@
       <div
         v-for="product in products"
         :key="product.id"
-        class="product col-10 col-md-7 col-lg-3 mb-3 mx-md-2 p-4 mx-2"
+        class="
+          product
+          d-flex
+          flex-column
+          justify-content-between
+          col-10 col-md-7 col-lg-3
+          mb-3
+          mx-md-2
+          p-4
+          mx-2
+        "
       >
-        <nuxt-link :to="`/products/${product.id}`">
-          <img class="mb-2 w-100" :src="`${getFirstImage(product.image)}`" />
-          <h6
-            class="
-              col-black
-              text-upprcase
-              d-flex
-              justify-content-center
-              m-2
-              mb-4
-              text-uppercase text-nowrap
-            "
-          >
-            {{ product.title }}
-          </h6>
-          <h5 class="gold d-flex justify-content-center m-3 price">
-            {{ product.price }} $
-          </h5>
+        <nuxt-link
+          :to="`/products/${product.id}`"
+          class="h-100 d-flex flex-column"
+        >
+          <img
+            class="mb-2 w-100 my-auto"
+            :src="`${getFirstImage(product.image)}`"
+          />
+          <div class="mb-0 mt-auto">
+            <h6
+              class="
+                product-title
+                col-black
+                text-upprcase
+                m-2
+                mb-4
+                text-uppercase text-nowrap
+              "
+            >
+              {{ product.title }}
+            </h6>
+            <h5 class="gold d-flex justify-content-center m-3 price">
+              {{ product.price }} $
+            </h5>
+          </div>
         </nuxt-link>
         <button
           v-if="product.status === 'published'"
@@ -86,9 +109,18 @@ export default {
 </script>
 
 <style scoped>
+.main {
+  height: 70vh;
+}
+
 button {
   background-color: #1f2020;
   color: #fff;
+}
+
+.product-title {
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .btn:hover {
