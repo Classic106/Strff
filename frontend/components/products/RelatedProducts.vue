@@ -30,14 +30,8 @@
               ${{ product.price | formatNumber }}
             </span>
             <span
-              class="
-                d-flex
-                justify-content-center
-                font-weight-light
-                text-center
-                gold
-              "
-              v-html="colorTitleNumbers(product.title, 'span', 'col-black')"
+              class="font-weight-light text-center gold text-ellipsis"
+              v-html="colorTitleNumbers(product.title, 'col-black')"
             >
             </span>
           </div>

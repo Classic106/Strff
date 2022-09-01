@@ -16,13 +16,15 @@
         <div
           v-for="product in products"
           :key="product.id"
-          class="product col-11 col-md-4 col-lgz-3 p-3 m-2"
+          class="product col-11 col-md-3 p-3 m-2"
         >
           <nuxt-link :to="`/products/${product.id}`">
             <img class="mb-2" :src="`${getFirstImage(product.image)}`" />
             <div class="card-info col-black d-flex justify-content-between">
-              <span>{{ product.price }} $</span>
-              <span class="text-upprcase gold">{{ product.title }}</span>
+              <span class="text-nowrap">{{ product.price }} $</span>
+              <span class="text-ellipsis text-upprcase gold ml-2">{{
+                product.title
+              }}</span>
             </div>
           </nuxt-link>
         </div>
@@ -72,7 +74,7 @@ export default {
   transform: scale(1.01);
 }
 
-.product.col-lg-3 {
+.product.col-md-3 {
   flex: 1 0 23%;
 }
 

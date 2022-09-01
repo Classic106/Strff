@@ -39,7 +39,6 @@
                     v-html="
                       colorTitleNumbers(
                         bundleProduct.products[index].title,
-                        'span',
                         'col-black'
                       )
                     "
@@ -78,7 +77,6 @@
                     v-html="
                       colorTitleNumbers(
                         bundleProduct.products[index].title,
-                        'span',
                         'col-black'
                       )
                     "
@@ -108,7 +106,6 @@
                     v-html="
                       colorTitleNumbers(
                         bundleProduct.products[index].title,
-                        'span',
                         'col-black'
                       )
                     "

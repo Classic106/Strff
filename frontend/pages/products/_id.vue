@@ -53,8 +53,8 @@
         >
           <div>
             <h5
-              v-html="colorTitleNumbers(product.title, 'h5')"
-              class="d-flex font-weight-bold text-md-left text-uppercase"
+              v-html="colorTitleNumbers(product.title)"
+              class="font-weight-bold text-md-left text-uppercase"
             ></h5>
             <h6
               class="
