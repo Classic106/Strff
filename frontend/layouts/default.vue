@@ -18,6 +18,12 @@ export default {};
   height: 100vh !important;
 }
 
+.text-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 a:hover,
 a:visited,
 a:link,
@@ -69,7 +75,8 @@ h4 {
   font-size: 3.8rem;
 }
 
-h5 {
+h5,
+h5 > span {
   font-size: 2.2rem;
 }
 
@@ -109,7 +116,8 @@ h6 {
     font-size: 2rem;
   }
 
-  h5 {
+  h5,
+  h5 > span {
     font-size: 1.8rem;
   }
 
@@ -131,7 +139,8 @@ h6 {
     font-size: 1.5rem;
   }
 
-  h5 {
+  h5,
+  h5 > span {
     font-size: 1.2rem;
   }
 

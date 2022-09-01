@@ -1,13 +1,13 @@
-const colorTitleNumbers = (title, tag = "span", tagClass = "gold") => {
+const colorTitleNumbers = (title, tagClass = "gold") => {
   if (tagClass === "gold") {
     return title.replace(
       /(\d+\.\d+)|\d+/g,
-      (val) => `<${tag} class="gold">${val}</${tag}>`
+      (val) => `<span class="gold">${val}</span>`
     );
   } else {
     return title.replace(
       /(\d+\.\d+)|\d+/g,
-      (val) => `<${tag} class="${tagClass}">${val}</${tag}>`
+      (val) => `<span class="${tagClass}">${val}</span>`
     );
   }
 };

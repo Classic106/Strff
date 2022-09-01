@@ -39,7 +39,7 @@
           <div class="mb-0 mt-auto">
             <h6
               class="
-                product-title
+                text-ellipsis
                 col-black
                 text-upprcase
                 m-2
@@ -116,11 +116,6 @@ export default {
 button {
   background-color: #1f2020;
   color: #fff;
-}
-
-.product-title {
-  text-overflow: ellipsis;
-  overflow: hidden;
 }
 
 .btn:hover {
