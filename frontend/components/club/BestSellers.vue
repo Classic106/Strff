@@ -101,7 +101,7 @@ export default {
 }
 
 img {
-  box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.06);
+  /*box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.06);*/
   border-radius: 10px;
 }
 </style>
