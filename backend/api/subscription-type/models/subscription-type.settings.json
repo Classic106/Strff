@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "subscription_types",
+  "info": {
+    "name": "Subscription Type"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "purchase_type": {
+      "via": "subscription_types",
+      "model": "purchase-type"
+    }
+  }
+}

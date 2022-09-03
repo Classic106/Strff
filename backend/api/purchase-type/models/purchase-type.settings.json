@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "purchase_types",
+  "info": {
+    "name": "Purchase Type",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "subscription_types": {
+      "collection": "subscription-type",
+      "via": "purchase_type"
+    },
+    "description": {
+      "type": "string"
+    }
+  }
+}

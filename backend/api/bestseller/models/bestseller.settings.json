@@ -1,0 +1,20 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bestsellers",
+  "info": {
+    "name": "bestseller",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "products": {
+      "via": "bestseller",
+      "collection": "product"
+    }
+  }
+}
