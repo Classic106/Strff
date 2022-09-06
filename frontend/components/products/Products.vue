@@ -5,7 +5,7 @@
     </main>
     <main
       v-else-if="!products.length"
-      class="main d-flex justify-content-center"
+      class="main d-flex justify-content-center h-100vh"
     >
       <h6 class="no-items text-center my-auto">There aren't any products</h6>
     </main>

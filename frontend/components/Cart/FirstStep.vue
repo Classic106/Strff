@@ -18,14 +18,7 @@
     </div>
     <vueCustomScrollbar
       v-else
-      class="
-        scroll-area
-        position-realtive
-        px-sm-3 px-1
-        d-flex
-        flex-lg-row flex-column
-        overflow-auto
-      "
+      class="h-100 px-sm-3 px-1 d-flex flex-lg-row flex-column overflow-auto"
       :settings="scrollAreaSettings"
     >
       <ShippingInf :isShipping="isShipping" v-on:nextStep="$emit('nextStep')" />
@@ -34,7 +27,7 @@
           total price: {{ totalPrice | formatNumber }} $
         </h6>
         <vueCustomScrollbar
-          class="position-realtive px-sm-3 px-1 mb-auto"
+          class="px-sm-3 px-1 mb-auto"
           :settings="itemsSettings"
         >
           <ul v-if="order_items.length" class="p-0">
@@ -398,10 +391,6 @@ export default {
   z-index: 1;
   position: relative;
   background: #333333;
-}
-
-.scroll-area {
-  height: 100%;
 }
 
 .grey {

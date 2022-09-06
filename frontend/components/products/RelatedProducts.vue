@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { colorTitleNumbers } from "~/helpers";
+import { colorTitleNumbers, shuffleArray } from "~/helpers";
 import PreloaderImage from "~/components/PreloaderImage";
 
 export default {
@@ -58,13 +58,15 @@ export default {
   data: () => ({
     relatedProducts: [],
   }),
-  methods: { colorTitleNumbers },
+  methods: {
+    shuffleArray,
+    colorTitleNumbers,
+  },
   async mounted() {
     const products = await this.$strapi.find("products");
 
-    this.relatedProducts = products;
     if (this.product.categories.length && products.length) {
-      this.relatedProducts = products.filter((item) => {
+      const relatedProducts = products.filter((item) => {
         const itemCategoryIds = item.categories.reduce((acc, next) => {
           acc.push(next.id);
           return acc;
@@ -84,6 +86,8 @@ export default {
 
         return result.length && item.id !== this.product.id ? item : false;
       });
+
+      this.relatedProducts = this.shuffleArray(relatedProducts);
 
       if (this.relatedProducts.length > 6) {
         this.relatedProducts.length = 6;

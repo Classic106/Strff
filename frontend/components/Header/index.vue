@@ -138,7 +138,7 @@
         </div>
       </div>
     </div>
-    <span class="p-3 text-center m-0 w-100">
+    <span v-if="isTextBunner" class="p-3 text-center m-0 w-100">
       Last chance to shop holiday gifts. Buy online and pick up at an STRFF
       Store or choose two‑hour courier or free delivery. Shop now
     </span>
@@ -153,6 +153,12 @@ import Cart from "./Cart";
 
 export default {
   name: "Header",
+  props: {
+    isTextBunner: {
+      type: Boolean,
+      default: false,
+    },
+  },
   components: { Icon, Search, Cart },
   data: () => ({
     isOpenMenu: false,

@@ -189,7 +189,7 @@ import BundleProducts from "~/components/products/BundleProducts";
 import PurchaseTypes from "~/components/common/PurchaseTypes";
 
 export default {
-  layout: "club",
+  layout: "header_without_text_bunner",
   components: { Icon, RelatedProducts, BundleProducts, PurchaseTypes },
   data: () => ({
     product: null,
