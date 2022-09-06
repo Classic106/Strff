@@ -221,5 +221,7 @@ export default {
   width: 14px;
   height: 14px;
   background-image: url("../../assets/icons/shopping-bag.svg");
+  filter: invert(98%) sepia(98%) saturate(0%) hue-rotate(326deg)
+    brightness(103%) contrast(102%);
 }
 </style>

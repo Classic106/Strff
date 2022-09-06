@@ -13,6 +13,10 @@ const colorTitleNumbers = (title, tagClass = "gold") => {
 };
 
 function shuffleArray(array) {
+  if (!array || !array.length) {
+    return [];
+  }
+
   const arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
