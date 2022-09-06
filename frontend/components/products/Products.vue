@@ -32,9 +32,9 @@
           :to="`/products/${product.id}`"
           class="h-100 d-flex flex-column"
         >
-          <img
-            class="mb-2 w-100 my-auto"
-            :src="`${getFirstImage(product.image)}`"
+          <PreloaderImage
+            :classStyle="'mb-2 w-100 my-auto'"
+            :image="product.image[0].url"
           />
           <div class="mb-0 mt-auto">
             <h6
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { getStrapiMedia } from "~/utils/medias";
+import PreloaderImage from "~/components/PreloaderImage";
 
 export default {
   props: {
@@ -86,14 +86,8 @@ export default {
     error: Object,
     storeUrl: String,
   },
+  components: { PreloaderImage },
   methods: {
-    getStrapiMedia,
-    getFirstImage: function (images) {
-      if (images[0]) {
-        return this.getStrapiMedia(images[0].url);
-      }
-      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
-    },
     addToCart(product) {
       const selected = {
         product,
@@ -152,10 +146,5 @@ button {
 
 .product:hover {
   transform: scale(1.01);
-}
-
-img {
-  /*box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.06);*/
-  border-radius: 10px;
 }
 </style>
