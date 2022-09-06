@@ -184,6 +184,7 @@ export default {
     lickClick(link) {
       this.$router.push(link);
       this.isOpenMenu = false;
+      this.isOpen = false;
     },
     closeOutsideMenu(e) {
       const { menu, menuButton, additionalMenu } = this.$refs;

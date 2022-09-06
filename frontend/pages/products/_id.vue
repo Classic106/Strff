@@ -407,11 +407,11 @@ select::-ms-expand {
   margin-top: 10px;
 }
 
-.images-wrapper .image-wrapper .image {
+.image-wrapper > .image {
   cursor: pointer;
   background-position: 50%;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   padding-top: 100%;
 }
 </style>

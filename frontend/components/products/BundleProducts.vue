@@ -24,7 +24,47 @@
         >
           <div v-if="(index - 1) % 2">
             <div v-if="bundleProduct.products[index + 1]" class="row p-2">
-              <div class="col-5 p-0">
+              <div class="col-5 p-0 d-flex flex-column">
+                <div class="m-auto p-2">
+                  <img
+                    :src="`${getFirstImage(
+                      bundleProduct.products[index + 1].image
+                    )}`"
+                    class="m-auto"
+                  />
+                </div>
+                <div class="d-flex flex-column justify-content-between mt-3">
+                  <span
+                    class="font-weight-light text-center gold"
+                    v-html="
+                      colorTitleNumbers(
+                        bundleProduct.products[index + 1].title,
+                        'col-black'
+                      )
+                    "
+                  >
+                  </span>
+                  <span class="font-weight-light text-center col-black">
+                    ${{
+                      bundleProduct.products[index + 1].price | formatNumber
+                    }}
+                  </span>
+                </div>
+              </div>
+              <div
+                class="
+                  wrap-plus
+                  col-2
+                  p-0
+                  mx-auto
+                  d-flex
+                  align-items-center
+                  justify-content-center
+                "
+              >
+                <p class="text-center plus">+</p>
+              </div>
+              <div class="col-5 p-0 d-flex flex-column">
                 <div class="m-auto p-2">
                   <img
                     :src="`${getFirstImage(
@@ -49,49 +89,9 @@
                   </span>
                 </div>
               </div>
-              <div
-                class="
-                  wrap-plus
-                  col-2
-                  p-0
-                  mx-auto
-                  d-flex
-                  align-items-center
-                  justify-content-center
-                "
-              >
-                <p class="text-center plus">+</p>
-              </div>
-              <div class="col-5 p-0">
-                <div class="m-auto p-2">
-                  <img
-                    :src="`${getFirstImage(
-                      bundleProduct.products[index].image
-                    )}`"
-                    class="m-auto"
-                  />
-                </div>
-                <div class="d-flex flex-column justify-content-between mt-3">
-                  <span
-                    class="font-weight-light text-center gold"
-                    v-html="
-                      colorTitleNumbers(
-                        bundleProduct.products[index].title,
-                        'col-black'
-                      )
-                    "
-                  >
-                  </span>
-                  <span class="font-weight-light text-center col-black">
-                    ${{
-                      bundleProduct.products[index + 1].price | formatNumber
-                    }}
-                  </span>
-                </div>
-              </div>
             </div>
             <div v-else class="d-flex justify-content-center">
-              <div class="col-5 p-0">
+              <div class="col-5 p-0 d-flex flex-column">
                 <div class="m-auto p-2">
                   <img
                     :src="`${getFirstImage(
@@ -126,11 +126,10 @@
           <p class="text-center">
             You save: $
             {{
-              bundleProduct.price -
               bundleProduct.products.reduce(
                 (prVal, curVal) => prVal + curVal.price,
                 0
-              )
+              ) - bundleProduct.price
             }}!
           </p>
           <button

@@ -13,20 +13,32 @@
           align-items-center
         "
       >
-        <div
-          v-for="product in products"
-          :key="product.id"
-          class="product col-11 col-md-3 p-3 m-2"
-        >
-          <nuxt-link :to="`/products/${product.id}`">
-            <img class="mb-2" :src="`${getFirstImage(product.image)}`" />
-            <div class="card-info col-black d-flex justify-content-between">
-              <span class="text-nowrap">{{ product.price }} $</span>
-              <span class="text-ellipsis text-upprcase gold ml-2">{{
-                product.title
-              }}</span>
-            </div>
-          </nuxt-link>
+        <div class="products row justify-content-center m-0 w-100">
+          <div
+            v-for="product in products"
+            :key="product.id"
+            class="product col-11 col-md-4 col-lg-3 p-3 m-2"
+          >
+            <nuxt-link :to="`/products/${product.id}`" class="h-100">
+              <div class="d-flex flex-column h-100 justify-content-between">
+                <img class="my-auto" :src="`${getFirstImage(product.image)}`" />
+                <div
+                  class="
+                    card-info
+                    col-black
+                    d-flex
+                    justify-content-between
+                    mt-3
+                  "
+                >
+                  <span class="text-nowrap">{{ product.price }} $</span>
+                  <span class="text-ellipsis text-upprcase gold ml-2">{{
+                    product.title
+                  }}</span>
+                </div>
+              </div>
+            </nuxt-link>
+          </div>
         </div>
       </div>
     </div>
@@ -65,6 +77,20 @@ export default {
 </script>
 
 <style scoped>
+@media (min-width: 768px) {
+  .product.col-md-4 {
+    flex: 0 0 31%;
+    max-width: 31%;
+  }
+}
+
+@media (min-width: 992px) {
+  .product.col-lg-3 {
+    flex: 0 0 23%;
+    max-width: 23%;
+  }
+}
+
 .product {
   box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.17);
   border-radius: 10px;
@@ -74,12 +100,8 @@ export default {
   transform: scale(1.01);
 }
 
-.product.col-md-3 {
-  flex: 1 0 23%;
-}
-
 img {
-  box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.06);
+  /*box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.06);*/
   border-radius: 10px;
 }
 </style>

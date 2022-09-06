@@ -45,7 +45,7 @@
             >
               <div class="d-flex flex-column">
                 <div class="d-flex">
-                  <div class="w-25">
+                  <div class="image-wrap">
                     <img
                       :src="`${getFirstImage(item.product.image)}`"
                       class="m-auto gold-border"
@@ -66,10 +66,6 @@
                   </div>
                 </div>
                 <div class="d-flex flex-column mt-3">
-                  <div class="d-flex flex-sm-row flex-column">
-                    <p class="w-25 mb-2 grey mr-2">description</p>
-                    <p class="mb-2">{{ item.product.description }}</p>
-                  </div>
                   <div class="d-flex flex-sm-row flex-column">
                     <p class="w-25 mb-2 grey mr-2">quantity</p>
                     <div class="d-flex">
@@ -414,6 +410,10 @@ export default {
 
 li {
   background: #151515;
+}
+
+.image-wrap {
+  min-width: 25%;
 }
 
 h6,
