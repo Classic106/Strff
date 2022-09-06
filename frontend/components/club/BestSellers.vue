@@ -13,7 +13,7 @@
           align-items-center
         "
       >
-        <div class="products row justify-content-center m-0 w-100">
+        <div class="row justify-content-center m-0 w-100">
           <div
             v-for="product in products"
             :key="product.id"
