@@ -147,4 +147,9 @@ button {
 .product:hover {
   transform: scale(1.01);
 }
+
+.icon-bag {
+  filter: invert(98%) sepia(98%) saturate(0%) hue-rotate(326deg)
+    brightness(103%) contrast(102%);
+}
 </style>

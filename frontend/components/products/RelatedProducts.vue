@@ -18,7 +18,7 @@
     </h6>
     <div class="products row justify-content-center m-0">
       <div
-        class="product col-10 col-md-4 col-lg-3 p-4 p-lg-3 m-2"
+        class="product col-10 col-md-4 col-lg-2 p-4 p-lg-3 m-2"
         v-for="product in relatedProducts"
         :key="product.id"
       >
@@ -102,9 +102,9 @@ export default {
 }
 
 @media (min-width: 992px) {
-  .product.col-lg-3 {
-    flex: 0 0 23%;
-    max-width: 23%;
+  .product.col-lg-2 {
+    flex: 0 0 15%;
+    max-width: 15%;
   }
 }
 

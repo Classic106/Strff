@@ -280,6 +280,10 @@ li > a {
   width: 100%;
 }
 
+a:hover {
+  color: #d2a52c;
+}
+
 .additional_menu {
   top: 100%;
   right: 0;
