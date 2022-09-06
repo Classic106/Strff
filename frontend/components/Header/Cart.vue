@@ -51,6 +51,10 @@ export default {
   height: 30px;
 }
 
+.icon-bag-wrap:hover > span {
+  color: #d2a52c;
+}
+
 .icon-bag {
   right: 0;
   top: -1px;
