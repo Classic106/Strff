@@ -24,7 +24,10 @@
       >
         <nuxt-link :to="`/products/${product.id}`" class="h-100">
           <div class="d-flex h-100 flex-column justify-content-between">
-            <img :src="`${getFirstImage(product.image)}`" class="my-auto" />
+            <PreloaderImage
+              :classStyle="'my-auto'"
+              :image="product.image[0].url"
+            />
             <div class="d-flex flex-lg-column justify-content-between mt-3">
               <span class="font-weight-light text-center col-black text-nowrap">
                 ${{ product.price | formatNumber }}
@@ -43,27 +46,19 @@
 </template>
 
 <script>
-import { getStrapiMedia } from "~/utils/medias";
 import { colorTitleNumbers } from "~/helpers";
+import PreloaderImage from "~/components/PreloaderImage";
 
 export default {
   name: "RelatedProducts",
   props: {
     product: Object,
   },
+  components: { PreloaderImage },
   data: () => ({
     relatedProducts: [],
   }),
-  methods: {
-    getStrapiMedia,
-    colorTitleNumbers,
-    getFirstImage: function (images) {
-      if (images[0]) {
-        return this.getStrapiMedia(images[0].url);
-      }
-      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
-    },
-  },
+  methods: { colorTitleNumbers },
   async mounted() {
     const products = await this.$strapi.find("products");
 
@@ -131,10 +126,5 @@ export default {
 
 .product:hover {
   transform: scale(1.01);
-}
-
-img {
-  /*box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.06);*/
-  border-radius: 10px;
 }
 </style>
