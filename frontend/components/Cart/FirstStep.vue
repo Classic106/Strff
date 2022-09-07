@@ -39,13 +39,13 @@
               <div class="d-flex flex-column">
                 <div class="d-flex">
                   <div class="image-wrap">
-                    <img
-                      :src="`${getFirstImage(item.product.image)}`"
-                      class="m-auto gold-border"
+                    <PreloaderImage
+                      :classStyle="'m-auto gold-border'"
+                      :image="item.product.image[0].url"
                     />
                   </div>
                   <div class="d-flex flex-column px-3">
-                    <h6>{{ item.product.title }}</h6>
+                    <h6 class="block-with-text">{{ item.product.title }}</h6>
                     <div>
                       <p class="mb-2 grey">
                         price {{ item.product.price | formatNumber }} $
@@ -147,11 +147,12 @@
                         >
                           <div class="col-5 p-0">
                             <div class="m-auto p-2">
-                              <img
-                                :src="`${getFirstImage(
-                                  order_bundle.bundle.products[index].image
-                                )}`"
-                                class="m-auto gold-border"
+                              <PreloaderImage
+                                :classStyle="'m-auto gold-border'"
+                                :image="
+                                  order_bundle.bundle.products[index].image[0]
+                                    .url
+                                "
                               />
                             </div>
                             <div
@@ -178,11 +179,12 @@
                           </div>
                           <div class="col-5 p-0">
                             <div class="m-auto p-2">
-                              <img
-                                :src="`${getFirstImage(
-                                  order_bundle.bundle.products[index + 1].image
-                                )}`"
-                                class="m-auto gold-border"
+                              <PreloaderImage
+                                :classStyle="'m-auto gold-border'"
+                                :image="
+                                  order_bundle.bundle.products[index + 1]
+                                    .image[0].url
+                                "
                               />
                             </div>
                             <div
@@ -210,11 +212,12 @@
                         <div v-else class="d-flex justify-content-center">
                           <div class="col-5 p-0">
                             <div class="m-auto p-2">
-                              <img
-                                :src="`${getFirstImage(
-                                  order_bundle.bundle.products[index].image
-                                )}`"
-                                class="m-auto gold-border"
+                              <PreloaderImage
+                                :classStyle="'m-auto gold-border'"
+                                :image="
+                                  order_bundle.bundle.products[index].image[0]
+                                    .url
+                                "
                               />
                             </div>
                             <div
@@ -279,13 +282,18 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
-import { getStrapiMedia } from "~/utils/medias";
+
 import PurchaseTypes from "~/components/common/PurchaseTypes";
+import PreloaderImage from "~/components/PreloaderImage";
 import ShippingInf from "./ShippingInf";
 
 export default {
   props: ["isOpen"],
-  components: { PurchaseTypes, ShippingInf },
+  components: {
+    PurchaseTypes,
+    PreloaderImage,
+    ShippingInf,
+  },
   data: () => ({
     edit: false,
     isShipping: false,
@@ -315,7 +323,6 @@ export default {
     },
   },
   methods: {
-    getStrapiMedia,
     ...mapMutations({
       setTotal: "order/setTotal",
     }),
@@ -324,12 +331,6 @@ export default {
       updateProduct: "order/updateProduct",
       removeBundle: "order/removeBundle",
     }),
-    getFirstImage: function (images) {
-      if (images[0]) {
-        return this.getStrapiMedia(images[0].url);
-      }
-      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
-    },
     setTypes: function (types, id) {
       const index = this.order_items.findIndex((item) => item.id === id);
       if (index !== -1) {
@@ -437,5 +438,30 @@ p {
 button {
   color: #fff;
   border: none;
+}
+
+.block-with-text {
+  /* hide text if it more than N lines  */
+  overflow: hidden;
+  /* for set '...' in absolute position */
+  position: relative;
+  /* use this value to count block height */
+  line-height: 1.2em;
+  /* max-height = line-height (1.2) * lines max number (3) */
+  max-height: 2.4em;
+  /* fix problem when last visible word doesn't adjoin right side  */
+  text-align: justify;
+
+  /*margin-right: -1em; */
+  padding-right: 1em;
+}
+.block-with-text:before {
+  /* points in the end */
+  content: "...";
+  /* absolute position */
+  position: absolute;
+  /* set position to right bottom corner of block */
+  right: 0;
+  bottom: 0;
 }
 </style>

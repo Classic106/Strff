@@ -24,6 +24,7 @@
                 <PreloaderImage
                   :classStyle="'my-auto'"
                   :image="product.image[0].url"
+                  rounded
                 />
                 <div
                   class="

@@ -35,6 +35,7 @@
           <PreloaderImage
             :classStyle="'mb-2 w-100 my-auto'"
             :image="product.image[0].url"
+            rounded
           />
           <div class="mb-0 mt-auto">
             <h6
