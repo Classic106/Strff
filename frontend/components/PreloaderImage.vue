@@ -1,10 +1,6 @@
 <template>
   <VueLoadImage>
-    <img
-      slot="image"
-      :src="`${getImage(image)}`"
-      :class="classStyle ? classStyle : 'm-auto'"
-    />
+    <img slot="image" :src="`${getImage(image)}`" :class="setClassStyle()" />
     <img slot="preloader" class="m-auto" src="@/assets/img/Curve-Loading.gif" />
     <img slot="error" class="m-auto" src="@/assets/img/image-not-found.jpg" />
   </VueLoadImage>
@@ -21,6 +17,7 @@ export default {
       type: String,
     },
     classStyle: String,
+    rounded: Boolean,
   },
   methods: {
     getStrapiMedia,
@@ -29,6 +26,14 @@ export default {
         return this.getStrapiMedia(image);
       }
       return null;
+    },
+    setClassStyle: function () {
+      const rounded = this.rounded ? "border-round" : "";
+
+      if (this.classStyle) {
+        return `${this.classStyle} ${rounded}`;
+      }
+      return `m-auto ${rounded}`;
     },
   },
 };
@@ -40,7 +45,7 @@ export default {
   height: 100%;
 }
 
-img {
+.border-round {
   border-radius: 10px;
 }
 </style>
