@@ -58,7 +58,7 @@ export const actions = {
     commit("updateProduct", result);
   },
   async removeProduct({ commit }, id) {
-    this.$strapi.delete("order-items", { id });
+    await this.$strapi.$http.$delete(`/order-items/${id}`);
     commit("removeProduct", id);
   },
   async addBundle({ commit, state }, bundle) {
@@ -125,7 +125,6 @@ export const mutations = {
   },
   removeProduct(state, id) {
     state.order_items = state.order_items.filter((item) => item.id !== id);
-    this.$strapi.$http.$delete(`/order-items/${id}`);
   },
   addBundle(state, bundle) {
     state.order_bundles.push(bundle);

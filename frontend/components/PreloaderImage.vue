@@ -1,9 +1,10 @@
 <template>
-  <VueLoadImage>
-    <img slot="image" :src="`${getImage(image)}`" :class="setClassStyle()" />
-    <img slot="preloader" class="m-auto" src="@/assets/img/Curve-Loading.gif" />
-    <img slot="error" class="m-auto" src="@/assets/img/image-not-found.jpg" />
-  </VueLoadImage>
+  <img
+    v-lazy
+    :class="setClassStyle()"
+    src="@/assets/img/Curve-Loading.gif"
+    :data-src="`${getImage(image)}`"
+  />
 </template>
 
 <script>
@@ -34,6 +35,22 @@ export default {
         return `${this.classStyle} ${rounded}`;
       }
       return `m-auto ${rounded}`;
+    },
+  },
+  directives: {
+    lazy: {
+      inserted: (el) => {
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              let lazyImage = entry.target;
+              lazyImage.src = lazyImage.dataset.src;
+              observer.unobserve(el);
+            }
+          });
+        });
+        observer.observe(el);
+      },
     },
   },
 };
