@@ -2,7 +2,7 @@
   <div class="shipping_inf" :class="isShipping ? 'show' : 'hide'">
     <div class="shipping_inf_content d-flex flex-column">
       <vueCustomScrollbar
-        class="scroll-area position-realtive px-sm-3 px-1 mb-auto"
+        class="scroll-area px-sm-3 px-1 mb-auto"
         :settings="settings"
       >
         <div class="d-flex flex-column">

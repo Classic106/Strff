@@ -13,7 +13,7 @@
           align-items-center
         "
       >
-        <div class="products row justify-content-center m-0 w-100">
+        <div class="row justify-content-center m-0 w-100">
           <div
             v-for="product in products"
             :key="product.id"
@@ -21,7 +21,11 @@
           >
             <nuxt-link :to="`/products/${product.id}`" class="h-100">
               <div class="d-flex flex-column h-100 justify-content-between">
-                <img class="my-auto" :src="`${getFirstImage(product.image)}`" />
+                <PreloaderImage
+                  :classStyle="'my-auto'"
+                  :image="product.image[0].url"
+                  rounded
+                />
                 <div
                   class="
                     card-info
@@ -46,10 +50,11 @@
 </template>
 
 <script>
-import { getStrapiMedia } from "~/utils/medias";
 import { shuffleArray } from "~/helpers";
+import PreloaderImage from "~/components/PreloaderImage";
 
 export default {
+  components: { PreloaderImage },
   data: () => ({
     products: [],
     error: null,
@@ -63,16 +68,7 @@ export default {
       this.error = error;
     }
   },
-  methods: {
-    shuffleArray,
-    getStrapiMedia,
-    getFirstImage: function (images) {
-      if (images[0]) {
-        return this.getStrapiMedia(images[0].url);
-      }
-      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
-    },
-  },
+  methods: { shuffleArray },
 };
 </script>
 
@@ -98,10 +94,5 @@ export default {
 
 .product:hover {
   transform: scale(1.01);
-}
-
-img {
-  /*box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.06);*/
-  border-radius: 10px;
 }
 </style>

@@ -18,13 +18,16 @@
     </h6>
     <div class="products row justify-content-center m-0">
       <div
-        class="product col-10 col-md-4 col-lg-3 p-4 p-lg-3 m-2"
+        class="product col-10 col-md-4 col-lg-2 p-4 p-lg-3 m-2"
         v-for="product in relatedProducts"
         :key="product.id"
       >
         <nuxt-link :to="`/products/${product.id}`" class="h-100">
           <div class="d-flex h-100 flex-column justify-content-between">
-            <img :src="`${getFirstImage(product.image)}`" class="my-auto" />
+            <PreloaderImage
+              :classStyle="'my-auto'"
+              :image="product.image[0].url"
+            />
             <div class="d-flex flex-lg-column justify-content-between mt-3">
               <span class="font-weight-light text-center col-black text-nowrap">
                 ${{ product.price | formatNumber }}
@@ -43,33 +46,27 @@
 </template>
 
 <script>
-import { getStrapiMedia } from "~/utils/medias";
-import { colorTitleNumbers } from "~/helpers";
+import { colorTitleNumbers, shuffleArray } from "~/helpers";
+import PreloaderImage from "~/components/PreloaderImage";
 
 export default {
   name: "RelatedProducts",
   props: {
     product: Object,
   },
+  components: { PreloaderImage },
   data: () => ({
     relatedProducts: [],
   }),
   methods: {
-    getStrapiMedia,
+    shuffleArray,
     colorTitleNumbers,
-    getFirstImage: function (images) {
-      if (images[0]) {
-        return this.getStrapiMedia(images[0].url);
-      }
-      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
-    },
   },
   async mounted() {
     const products = await this.$strapi.find("products");
 
-    this.relatedProducts = products;
     if (this.product.categories.length && products.length) {
-      this.relatedProducts = products.filter((item) => {
+      const relatedProducts = products.filter((item) => {
         const itemCategoryIds = item.categories.reduce((acc, next) => {
           acc.push(next.id);
           return acc;
@@ -90,6 +87,8 @@ export default {
         return result.length && item.id !== this.product.id ? item : false;
       });
 
+      this.relatedProducts = this.shuffleArray(relatedProducts);
+
       if (this.relatedProducts.length > 6) {
         this.relatedProducts.length = 6;
       }
@@ -107,9 +106,9 @@ export default {
 }
 
 @media (min-width: 992px) {
-  .product.col-lg-3 {
-    flex: 0 0 23%;
-    max-width: 23%;
+  .product.col-lg-2 {
+    flex: 0 0 15%;
+    max-width: 15%;
   }
 }
 
@@ -131,10 +130,5 @@ export default {
 
 .product:hover {
   transform: scale(1.01);
-}
-
-img {
-  /*box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.06);*/
-  border-radius: 10px;
 }
 </style>

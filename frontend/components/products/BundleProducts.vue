@@ -26,11 +26,9 @@
             <div v-if="bundleProduct.products[index + 1]" class="row p-2">
               <div class="col-5 p-0 d-flex flex-column">
                 <div class="m-auto p-2">
-                  <img
-                    :src="`${getFirstImage(
-                      bundleProduct.products[index + 1].image
-                    )}`"
-                    class="m-auto"
+                  <PreloaderImage
+                    :classStyle="'m-auto'"
+                    :image="bundleProduct.products[index + 1].image[0].url"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
@@ -66,11 +64,9 @@
               </div>
               <div class="col-5 p-0 d-flex flex-column">
                 <div class="m-auto p-2">
-                  <img
-                    :src="`${getFirstImage(
-                      bundleProduct.products[index].image
-                    )}`"
-                    class="m-auto"
+                  <PreloaderImage
+                    :classStyle="'m-auto'"
+                    :image="bundleProduct.products[index].image[0].url"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
@@ -93,11 +89,9 @@
             <div v-else class="d-flex justify-content-center">
               <div class="col-5 p-0 d-flex flex-column">
                 <div class="m-auto p-2">
-                  <img
-                    :src="`${getFirstImage(
-                      bundleProduct.products[index].image
-                    )}`"
-                    class="m-auto"
+                  <PreloaderImage
+                    :classStyle="'m-auto'"
+                    :image="bundleProduct.products[index].image[0].url"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
@@ -158,29 +152,23 @@
 
 <script>
 import { mapActions } from "vuex";
-import { getStrapiMedia } from "~/utils/medias";
 import { colorTitleNumbers } from "~/helpers";
+import PreloaderImage from "~/components/PreloaderImage";
 
 export default {
   name: "BundleProducts",
   props: {
     product: Object,
   },
+  components: { PreloaderImage },
   data: () => ({
     bundleProducts: null,
   }),
   methods: {
-    getStrapiMedia,
     colorTitleNumbers,
     ...mapActions({
       addBundle: "order/addBundle",
     }),
-    getFirstImage: function (images) {
-      if (images[0]) {
-        return this.getStrapiMedia(images[0].url);
-      }
-      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
-    },
     addToCart(bundle) {
       this.addBundle(bundle);
     },
@@ -233,5 +221,7 @@ export default {
   width: 14px;
   height: 14px;
   background-image: url("../../assets/icons/shopping-bag.svg");
+  filter: invert(98%) sepia(98%) saturate(0%) hue-rotate(326deg)
+    brightness(103%) contrast(102%);
 }
 </style>

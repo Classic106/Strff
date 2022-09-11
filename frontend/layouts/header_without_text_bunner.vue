@@ -14,8 +14,8 @@
       <Loader />
     </div>
     <div v-else class="flex flex-col">
-      <ClubHeader :isTextBunner="true" />
-      <Nuxt />
+      <ClubHeader />
+      <Nuxt class="nuxt" />
       <ClubFooter />
     </div>
     <div
@@ -51,6 +51,10 @@ export default {
 
 .loading {
   background: #333333;
+}
+
+.nuxt {
+  min-height: 90vh;
 }
 </style>
 

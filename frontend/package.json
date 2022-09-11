@@ -5,7 +5,6 @@
   "scripts": {
     "develop": "cross-env HOST=localhost PORT=3001 API_URL=https://strff.com/api nuxt",
     "start": "HOST=localhost PORT=3001 API_URL=https://strff.com/api nuxt start",
-    "develop-local": "HOST=localhost PORT=3001 API_URL=http://localhost:1338 nuxt",
     "serve": "nuxt serve",
     "build": "nuxt build"
   },

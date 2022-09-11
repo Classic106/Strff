@@ -5,7 +5,7 @@
     </main>
     <main
       v-else-if="!products.length"
-      class="main d-flex justify-content-center"
+      class="main d-flex justify-content-center h-100vh"
     >
       <h6 class="no-items text-center my-auto">There aren't any products</h6>
     </main>
@@ -21,7 +21,7 @@
           d-flex
           flex-column
           justify-content-between
-          col-10 col-md-7 col-lg-3
+          col-10 col-md-6 col-lg-3
           mb-3
           mx-md-2
           p-4
@@ -32,9 +32,10 @@
           :to="`/products/${product.id}`"
           class="h-100 d-flex flex-column"
         >
-          <img
-            class="mb-2 w-100 my-auto"
-            :src="`${getFirstImage(product.image)}`"
+          <PreloaderImage
+            :classStyle="'mb-2 w-100 my-auto'"
+            :image="product.image[0].url"
+            rounded
           />
           <div class="mb-0 mt-auto">
             <h6
@@ -78,7 +79,7 @@
 </template>
 
 <script>
-import { getStrapiMedia } from "~/utils/medias";
+import PreloaderImage from "~/components/PreloaderImage";
 
 export default {
   props: {
@@ -86,14 +87,8 @@ export default {
     error: Object,
     storeUrl: String,
   },
+  components: { PreloaderImage },
   methods: {
-    getStrapiMedia,
-    getFirstImage: function (images) {
-      if (images[0]) {
-        return this.getStrapiMedia(images[0].url);
-      }
-      return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
-    },
     addToCart(product) {
       const selected = {
         product,
@@ -109,6 +104,20 @@ export default {
 </script>
 
 <style scoped>
+@media (min-width: 720px) {
+  .product.col-md-6 {
+    flex: 0 0 47%;
+    max-width: 47%;
+  }
+}
+
+@media (min-width: 992px) {
+  .product.col-lg-3 {
+    flex: 0 0 23%;
+    max-width: 23%;
+  }
+}
+
 .main {
   height: 70vh;
 }
@@ -140,8 +149,8 @@ button {
   transform: scale(1.01);
 }
 
-img {
-  /*box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.06);*/
-  border-radius: 10px;
+.icon-bag {
+  filter: invert(98%) sepia(98%) saturate(0%) hue-rotate(326deg)
+    brightness(103%) contrast(102%);
 }
 </style>

@@ -18,6 +18,14 @@ export default {};
   height: 100vh !important;
 }
 
+.col-white {
+  color: #fff;
+}
+
+.grey {
+  color: #919191;
+}
+
 .text-ellipsis {
   text-overflow: ellipsis;
   overflow: hidden;
