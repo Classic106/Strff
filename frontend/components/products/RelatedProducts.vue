@@ -22,24 +22,7 @@
         v-for="product in relatedProducts"
         :key="product.id"
       >
-        <nuxt-link :to="`/products/${product.id}`" class="h-100">
-          <div class="d-flex h-100 flex-column justify-content-between">
-            <PreloaderImage
-              :classStyle="'my-auto'"
-              :image="product.image[0].url"
-            />
-            <div class="d-flex flex-lg-column justify-content-between mt-3">
-              <span class="font-weight-light text-center col-black text-nowrap">
-                ${{ product.price | formatNumber }}
-              </span>
-              <span
-                class="font-weight-light text-center gold text-ellipsis"
-                v-html="colorTitleNumbers(product.title, 'col-black')"
-              >
-              </span>
-            </div>
-          </div>
-        </nuxt-link>
+        <ProductCard :product="product" />
       </div>
     </div>
   </div>
@@ -48,13 +31,14 @@
 <script>
 import { colorTitleNumbers, shuffleArray } from "~/helpers";
 import PreloaderImage from "~/components/PreloaderImage";
+import ProductCard from "~/components/products/ProductCard";
 
 export default {
   name: "RelatedProducts",
   props: {
     product: Object,
   },
-  components: { PreloaderImage },
+  components: { PreloaderImage, ProductCard },
   data: () => ({
     relatedProducts: [],
   }),
