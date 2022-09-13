@@ -17,7 +17,7 @@
           <div
             v-for="product in products"
             :key="product.id"
-            class="product col-11 col-md-4 col-lg-3 p-3 m-2"
+            class="product col-11 col-sm-6 col-md-4 col-lg-3 p-3 m-2"
           >
             <ProductCard :product="product" />
           </div>
@@ -51,6 +51,13 @@ export default {
 </script>
 
 <style scoped>
+@media (min-width: 300px) {
+  .product.col-sm-6 {
+    flex: 0 0 44%;
+    max-width: 44%;
+  }
+}
+
 @media (min-width: 768px) {
   .product.col-md-4 {
     flex: 0 0 31%;

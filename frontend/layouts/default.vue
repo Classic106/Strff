@@ -56,7 +56,7 @@ form {
 }
 
 .col-black {
-  color: #000;
+  color: #333;
 }
 
 img {
@@ -125,7 +125,7 @@ img.loaded {
   }
 
   h6 {
-    font-size: 1.5rem;
+    font-size: 0.9rem;
   }
 }
 

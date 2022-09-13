@@ -19,7 +19,7 @@
         >
           {{ product.title }}
         </h6>
-        <h5 class="price gold d-flex justify-content-center m-3">
+        <h5 class="price gold d-flex justify-content-center m-3 text-nowrap">
           {{ product.price }} $
         </h5>
       </div>
