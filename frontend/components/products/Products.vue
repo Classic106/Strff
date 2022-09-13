@@ -28,33 +28,7 @@
           mx-2
         "
       >
-        <nuxt-link
-          :to="`/products/${product.id}`"
-          class="h-100 d-flex flex-column"
-        >
-          <PreloaderImage
-            :classStyle="'mb-2 w-100 my-auto'"
-            :image="product.image[0].url"
-            rounded
-          />
-          <div class="mb-0 mt-auto">
-            <h6
-              class="
-                text-ellipsis
-                col-black
-                text-upprcase
-                m-2
-                mb-4
-                text-uppercase text-nowrap
-              "
-            >
-              {{ product.title }}
-            </h6>
-            <h5 class="gold d-flex justify-content-center m-3 price">
-              {{ product.price }} $
-            </h5>
-          </div>
-        </nuxt-link>
+        <ProductCard :product="product" />
         <button
           v-if="product.status === 'published'"
           class="
@@ -79,7 +53,7 @@
 </template>
 
 <script>
-import PreloaderImage from "~/components/PreloaderImage";
+import ProductCard from "~/components/products/ProductCard";
 
 export default {
   props: {
@@ -87,7 +61,7 @@ export default {
     error: Object,
     storeUrl: String,
   },
-  components: { PreloaderImage },
+  components: { ProductCard },
   methods: {
     addToCart(product) {
       const selected = {

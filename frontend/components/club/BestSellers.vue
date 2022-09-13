@@ -19,29 +19,7 @@
             :key="product.id"
             class="product col-11 col-md-4 col-lg-3 p-3 m-2"
           >
-            <nuxt-link :to="`/products/${product.id}`" class="h-100">
-              <div class="d-flex flex-column h-100 justify-content-between">
-                <PreloaderImage
-                  :classStyle="'my-auto'"
-                  :image="product.image[0].url"
-                  rounded
-                />
-                <div
-                  class="
-                    card-info
-                    col-black
-                    d-flex
-                    justify-content-between
-                    mt-3
-                  "
-                >
-                  <span class="text-nowrap">{{ product.price }} $</span>
-                  <span class="text-ellipsis text-upprcase gold ml-2">{{
-                    product.title
-                  }}</span>
-                </div>
-              </div>
-            </nuxt-link>
+            <ProductCard :product="product" />
           </div>
         </div>
       </div>
@@ -51,10 +29,10 @@
 
 <script>
 import { shuffleArray } from "~/helpers";
-import PreloaderImage from "~/components/PreloaderImage";
+import ProductCard from "~/components/products/ProductCard";
 
 export default {
-  components: { PreloaderImage },
+  components: { ProductCard },
   data: () => ({
     products: [],
     error: null,
