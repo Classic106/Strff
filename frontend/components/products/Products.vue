@@ -21,7 +21,7 @@
           d-flex
           flex-column
           justify-content-between
-          col-10 col-md-6 col-lg-3
+          col-10 col-sm-6 col-lg-3
           mb-3
           mx-md-2
           p-4
@@ -78,10 +78,10 @@ export default {
 </script>
 
 <style scoped>
-@media (min-width: 720px) {
-  .product.col-md-6 {
-    flex: 0 0 47%;
-    max-width: 47%;
+@media (min-width: 300px) {
+  .product.col-sm-6 {
+    flex: 0 0 45%;
+    max-width: 45%;
   }
 }
 
