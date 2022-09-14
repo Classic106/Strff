@@ -78,7 +78,7 @@ export default {
 </script>
 
 <style scoped>
-@media (min-width: 300px) {
+@media (min-width: 350px) {
   .product.col-sm-6 {
     flex: 0 0 45%;
     max-width: 45%;
