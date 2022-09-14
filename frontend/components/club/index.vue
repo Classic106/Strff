@@ -11,6 +11,7 @@
     >
       <div
         class="
+          banner
           position-absolute
           p-0
           m-0
@@ -18,7 +19,7 @@
           mx-md-5
           text-center
           content
-          align-self-center
+          align-self-end align-self-md-center
         "
       >
         <h1 class="gold">Discover</h1>
@@ -100,6 +101,7 @@ export default {
 
 @media (max-width: 767px) {
   .banner {
+    width: 100%;
     background-color: rgba(0, 0, 0, 0.4);
   }
 }
