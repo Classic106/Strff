@@ -21,40 +21,14 @@
           d-flex
           flex-column
           justify-content-between
-          col-10 col-md-6 col-lg-3
+          col-10 col-sm-6 col-lg-3
           mb-3
           mx-md-2
           p-4
           mx-2
         "
       >
-        <nuxt-link
-          :to="`/products/${product.id}`"
-          class="h-100 d-flex flex-column"
-        >
-          <PreloaderImage
-            :classStyle="'mb-2 w-100 my-auto'"
-            :image="product.image[0].url"
-            rounded
-          />
-          <div class="mb-0 mt-auto">
-            <h6
-              class="
-                text-ellipsis
-                col-black
-                text-upprcase
-                m-2
-                mb-4
-                text-uppercase text-nowrap
-              "
-            >
-              {{ product.title }}
-            </h6>
-            <h5 class="gold d-flex justify-content-center m-3 price">
-              {{ product.price }} $
-            </h5>
-          </div>
-        </nuxt-link>
+        <ProductCard :product="product" />
         <button
           v-if="product.status === 'published'"
           class="
@@ -79,7 +53,7 @@
 </template>
 
 <script>
-import PreloaderImage from "~/components/PreloaderImage";
+import ProductCard from "~/components/products/ProductCard";
 
 export default {
   props: {
@@ -87,7 +61,7 @@ export default {
     error: Object,
     storeUrl: String,
   },
-  components: { PreloaderImage },
+  components: { ProductCard },
   methods: {
     addToCart(product) {
       const selected = {
@@ -104,10 +78,10 @@ export default {
 </script>
 
 <style scoped>
-@media (min-width: 720px) {
-  .product.col-md-6 {
-    flex: 0 0 47%;
-    max-width: 47%;
+@media (min-width: 350px) {
+  .product.col-sm-6 {
+    flex: 0 0 45%;
+    max-width: 45%;
   }
 }
 

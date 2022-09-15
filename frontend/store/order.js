@@ -1,8 +1,8 @@
 export const state = () => ({
-  order_items: [],
-  order_bundles: [],
+  orderItems: [],
+  orderBundles: [],
   total: 0,
-  order_status: 5,
+  orderStatus: 5,
 });
 
 export const actions = {
@@ -25,7 +25,7 @@ export const actions = {
     const order = {
       ...state,
       ...userInfo,
-      order_status: 7,
+      orderStatus: 7,
       order_date: new Date(),
     };
 
@@ -33,7 +33,7 @@ export const actions = {
     commit("clearOrder");
   },
   async addProduct({ commit, state }, order_item) {
-    const item = state.order_items.filter(
+    const item = state.orderItems.filter(
       (item) => item.product.id === order_item.product.id
     );
 
@@ -62,7 +62,7 @@ export const actions = {
     commit("removeProduct", id);
   },
   async addBundle({ commit, state }, bundle) {
-    const item = state.order_bundles.filter(
+    const item = state.orderBundles.filter(
       (item) => item.bundle.id === bundle.id
     );
 
@@ -101,9 +101,9 @@ export const mutations = {
   clearOrder(state) {
     state = Object.assign(state, {
       total: 0,
-      order_items: [],
-      order_bundles: [],
-      order_status: 5,
+      orderItems: [],
+      orderBundles: [],
+      orderStatus: 5,
     });
     this.$cookies.remove("order");
   },
@@ -111,38 +111,38 @@ export const mutations = {
     state.total = total;
   },
   async addProduct(state, order_item) {
-    state.order_items.push(order_item);
+    state.orderItems.push(order_item);
   },
   updateProduct(state, order_item) {
-    const index = state.order_items.findIndex(
+    const index = state.orderItems.findIndex(
       (item) => item.id === order_item.id
     );
     if (index !== -1) {
-      const new_order_items = [...state.order_items];
+      const new_order_items = [...state.orderItems];
       new_order_items[index] = order_item;
-      state.order_items = new_order_items;
+      state.orderItems = new_order_items;
     }
   },
   removeProduct(state, id) {
-    state.order_items = state.order_items.filter((item) => item.id !== id);
+    state.orderItems = state.orderItems.filter((item) => item.id !== id);
   },
   addBundle(state, bundle) {
-    state.order_bundles.push(bundle);
+    state.orderBundles.push(bundle);
   },
   removeBundle(state, id) {
-    state.order_bundles = state.order_bundles.filter((item) => item.id !== id);
+    state.orderBundles = state.orderBundles.filter((item) => item.id !== id);
   },
 };
 
 export const getters = {
   getOrderItems(state) {
-    return state.order_items;
+    return state.orderItems;
   },
   getBundleItems(state) {
-    return state.order_bundles;
+    return state.orderBundles;
   },
   numberOfItems(state) {
-    return state.order_items.length + state.order_bundles.length;
+    return state.orderItems.length + state.orderBundles.length;
   },
   getTotal(state) {
     return state.total;

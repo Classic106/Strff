@@ -7,7 +7,7 @@
           <div
             v-for="bestSeller in products"
             :key="bestSeller.id"
-            class="col-12 col-md-6 mb-3"
+            class="product col-12 col-sm-6 mb-3"
           >
             <a
               v-on:click.prevent="redirect(`/products/${bestSeller.slug}`)"
@@ -57,6 +57,13 @@ export default {
 </script>
 
 <style scoped>
+@media (min-width: 300px) {
+  .product.col-sm-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
 .bestseller-scroll {
   height: calc(100% - 80px);
 }

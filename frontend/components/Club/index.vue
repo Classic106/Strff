@@ -11,6 +11,7 @@
     >
       <div
         class="
+          banner
           position-absolute
           p-0
           m-0
@@ -18,14 +19,14 @@
           mx-md-5
           text-center
           content
-          align-self-center
+          align-self-end align-self-md-center
         "
       >
         <h1 class="gold">Discover</h1>
         <h3 class="mb-5">our best Selling BEARD</h3>
         <h3 class="mt-5">hair and Skin CARE PRODUCTS</h3>
       </div>
-      <div class="iStock d-flex justify-content-center w-100">
+      <div class="d-flex justify-content-center w-100">
         <img
           class="position-absolute header-image"
           src="@/assets/img/iStock-1018779998-min.jpg"
@@ -36,26 +37,33 @@
     <div class="px-0 px-lg-5 m-0 mx-md-5">
       <BestSellers />
       <Articles />
-      <div class="position-relative text-center">
+      <div
+        class="
+          position-relative
+          d-flex
+          justify-content-center
+          align-items-md-center align-items-end
+        "
+      >
         <div
           class="
+            banner
             position-absolute
             d-flex
             flex-column
             justify-content-center
             align-items-center
-            p-0
-            container
+            p-2
+            w-100
           "
         >
           <h4 class="gold">Traditional Shaving</h4>
-          <p>Indulge in a moment of perfect nostalgia</p>
+          <p class="text-center">Indulge in a moment of perfect nostalgia</p>
           <h4 class="grey">SHOP NOW</h4>
         </div>
-        <img
-          src="@/assets/img/iStock-1251674339-min.jpg"
-          alt="istockphoto"
-        />
+        <div class="d-flex justify-content-center w-100">
+          <img src="@/assets/img/iStock-1251674339-min.jpg" alt="istockphoto" />
+        </div>
       </div>
       <div class="follow-us d-flex flex-column align-items-center">
         <h6 class="text-center col-black p-4">FOLLOW US</h6>
@@ -88,6 +96,13 @@ export default {
   }
   .follow-us > .follow-icons {
     width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .banner {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
   }
 }
 
@@ -158,13 +173,6 @@ main {
 .card-info > span {
   font-weight: 400;
   font-family: "Roboto", sans-serif;
-}
-
-.container {
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
 }
 
 .follow-icons {
