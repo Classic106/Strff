@@ -5,6 +5,7 @@
   "description": "A Strapi application",
   "scripts": {
     "develop": "HOST=localhost PORT=1338 strapi develop",
+    "develop-local": "HOST=localhost PORT=1338 strapi develop",
     "start": "HOST=localhost PORT=1338 strapi start",
     "build": "strapi build",
     "strapi": "strapi"
