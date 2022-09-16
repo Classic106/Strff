@@ -27,15 +27,11 @@
       "
     >
       <div class="w-100 d-flex">
-        <div
-          ref="menuButton"
-          class="nav-menu-arrow d-flex d-lg-none"
-          :class="isOpenMenu && 'open'"
-          v-on:click="isOpenMenu = !isOpenMenu"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
+        <div ref="menuButton">
+          <BurgerMenuButton
+            :isOpenMenu="isOpenMenu"
+            v-on:isOpenMenu="isOpenMenu = !isOpenMenu"
+          />
         </div>
         <h6 class="d-flex justify-content-center align-items-center w-100 m-0">
           <nuxt-link to="/" class="gold m-0">strff</nuxt-link>
@@ -55,9 +51,8 @@
             : 'position-relative justify-content-between'
         "
       >
-        <div class="menu-wrap col-lg col-sm-8 m-0">
+        <div class="menu-wrap col-lg col-sm-8 m-0" ref="menu">
           <ul
-            ref="menu"
             class="
               pl-sm-4 pl-1
               text-uppercase
@@ -77,7 +72,7 @@
               <NuxtLink
                 :to="`/categories/${category.slug}`"
                 class="gold"
-                v-on:click.native="lickClick(`/categories/${category.slug}`)"
+                v-on:click.native="linkClick(`/categories/${category.slug}`)"
                 >{{ category.name }}</NuxtLink
               >
             </li>
@@ -127,7 +122,7 @@
                     <NuxtLink
                       :to="`/article/${article.id}`"
                       class="gold"
-                      v-on:click.native="lickClick(`/article/${article.id}`)"
+                      v-on:click.native="linkClick(`/article/${article.id}`)"
                       >{{ article.name }}</NuxtLink
                     >
                   </li>
@@ -147,7 +142,9 @@
 
 <script>
 import { mapGetters } from "vuex";
+
 import Icon from "@/assets/icons";
+import BurgerMenuButton from "~/components/common/BurgerMenuButton.vue";
 import Search from "./Search";
 import Cart from "./Cart";
 
@@ -159,7 +156,7 @@ export default {
       default: false,
     },
   },
-  components: { Icon, Search, Cart },
+  components: { Icon, Search, Cart, BurgerMenuButton },
   data: () => ({
     isOpenMenu: false,
     isMobile: true,
@@ -187,7 +184,7 @@ export default {
     handlerResize(e) {
       this.isMobile = !(e.target.innerWidth > 992);
     },
-    lickClick(link) {
+    linkClick(link) {
       this.$router.push(link);
       this.isOpenMenu = false;
       this.isOpen = false;
@@ -307,43 +304,5 @@ a:hover {
 .angle {
   width: 0.8rem !important;
   height: 0.8rem !important;
-}
-
-.nav-menu-arrow {
-  width: 80px;
-  height: 26px;
-  position: relative;
-  cursor: pointer;
-}
-.nav-menu-arrow span {
-  transform: rotate(0deg);
-  transition: all 0.5s ease, top 0.5s ease;
-  width: 30px;
-  position: absolute;
-  height: 4px;
-  background-color: #fff;
-  border-radius: 5px;
-  left: 0;
-}
-.nav-menu-arrow span:nth-child(1) {
-  top: 0px;
-}
-.nav-menu-arrow span:nth-child(2) {
-  top: 10px;
-}
-.nav-menu-arrow span:nth-child(3) {
-  top: 20px;
-}
-.nav-menu-arrow.open span:nth-child(1) {
-  transform: rotate(-45deg);
-  top: 5px;
-  width: 20px;
-  left: -4px;
-}
-.nav-menu-arrow.open span:nth-child(3) {
-  transform: rotate(45deg);
-  top: 17px;
-  width: 20px;
-  left: -4px;
 }
 </style>
