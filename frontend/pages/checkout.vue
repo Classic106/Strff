@@ -1,7 +1,7 @@
 <template>
   <section class="container">
     <div>
-      <div v-if="cart">
+      <div v-if="numberOfItems">
         <h1 class="mt-5">Checkout</h1>
         <div class="grid md:grid-cols-1 mt-3">
             <div class="card">
@@ -9,7 +9,7 @@
                 <h5 class="card-title">Cart</h5>
                 <p class="card-text">{{ numberOfItems }} item(s) selected:</p>
                 <ul>
-                    <li v-for="item in cart.items" :key="item.id" class="card-text mb-2 flex items-center justify-between">
+                    <li v-for="item in orderItems" :key="item.id" class="card-text mb-2 flex items-center justify-between">
                     <span>Name: {{ item.product.title }} (${{ item.price | formatNumber }}) ({{ item.quantity }})</span>
                     <div>
                         <button @click="addToCart(item)"> + </button>
@@ -205,12 +205,6 @@ import { pad, convertObjectToQueryUrl } from '~/utils/functions'
 import { v4 as uuidv4 } from 'uuid'
 
 import PayWithNmi from '~/utils/payments/nmi'
-import PayWithSquare from '~/utils/payments/square'
-import PayWithAuthorizeNet from '~/utils/payments/authorize-net'
-import PayWithUsaEPay from '~/utils/payments/usa-e-pay'
-import PayWithStripe from '~/utils/payments/stripe'
-import PayWithPaypal from '~/utils/payments/paypal'
-import PayWithGooglePay from '~/utils/payments/google-pay'
 
 export default {
   layout: "club",
@@ -270,21 +264,18 @@ export default {
             {text: 'Dec', value: 12}
         ],
         ccYears: [],
-        paymentApiNmi: null,
-        paymentApiSquare: null,
-        paymentApiAuthorizeNet: null,
-        paymentApiUsaEPay: null,
-        paymentApiStripe: null,
-        paymentApiPaypal: null,
-        paymentApiGooglepay: null
+        paymentApiNmi: null
     }
   },
   computed: {
-    cart() {
-      return this.$store.getters['cart/cart']
+    orderItems() {
+      return this.$store.getters['order/getOrderItems']
+    },
+    orderBundleItems() {
+      return this.$store.getters['order/getBundleItems']
     },
     numberOfItems() {
-      return this.$store.getters['cart/numberOfItems']
+      return this.$store.getters['order/numberOfItems']
     },
     loggedUser() {
       return this.$store.getters['auth/user']
@@ -303,22 +294,6 @@ export default {
             if (this.paymentType == 1) {
                 this.paymentApiNmi = new PayWithNmi(this.order, this.$axios)
                 paymentResult = this.paymentApiNmi.pay()
-            } else if (this.paymentType == 2) {
-                paymentResult = this.paymentApiSquare.pay()
-            } else if (this.paymentType == 3) {
-                this.paymentApiAuthorizeNet = new PayWithAuthorizeNet(this.order, this.$axios)
-                paymentResult = this.paymentApiAuthorizeNet.pay()
-            } else if (this.paymentType == 4) {
-                this.paymentApiUsaEPay = new PayWithUsaEPay(this.order, this.$axios)
-                paymentResult = this.paymentApiUsaEPay.pay()
-            } else if (this.paymentType == 5) {
-                this.paymentApiStripe = new PayWithStripe(this.order, this.$axios)
-                paymentResult = this.paymentApiStripe.pay()
-            } else if (this.paymentType == 6) {
-                this.paymentApiPaypal = new PayWithPaypal(this.order, this.$axios)
-                paymentResult = this.paymentApiPaypal.pay()
-            } else if (this.paymentType == 7) {
-                paymentResult = this.payWithGooglePay.pay()
             }
             if (paymentResult) {
                 alert('Your order have been successfully submitted.')
@@ -351,49 +326,30 @@ export default {
             console.log(error)
         }
     },
-    addToCart(item) {
+    addToCart(product) {
         let selected = {
-          productId: item.product.id,
-          sizeId: item.size.id,
+          product,
           quantity: 1,
-          purchaseTypeId: item.purchase_type.id,
-          subscriptionTypeId: item.subscription_type? item.subscription_type.id: null
+          purchase_type: 1,
+          subscription_type: null,
+          total: product.price,
         }
-        this.$store.dispatch('cart/add', selected)
+        this.$store.dispatch("order/addProduct", selected);
     },
-    removeFromCart(item) {
-        let selected = {
-          productId: item.product.id,
-          sizeId: item.size.id,
-          quantity: 1,
-          purchaseTypeId: item.purchase_type.id,
-          subscriptionTypeId: item.subscription_type? item.subscription_type.id: null
-        }
-        this.$store.dispatch('cart/remove', selected)
+    removeFromCart(product) {
+        this.$store.dispatch('order/removeProduct', product.id)
     },
-    emptyCart() {
-        this.$store.dispatch('cart/empty')
-    },
-    releaseCart(data) {
-        this.$store.dispatch('cart/release', data)
-    }
   },
   async mounted () {
-    this.order.shippingInfo.firstName = this.loggedUser.first_name
-    this.order.shippingInfo.lastName = this.loggedUser.last_name
-    this.order.billingInfo.firstName = this.loggedUser.first_name
-    this.order.billingInfo.lastName = this.loggedUser.last_name
+    if (this.loggedUser) {
+        this.order.shippingInfo.firstName = this.loggedUser.first_name
+        this.order.shippingInfo.lastName = this.loggedUser.last_name
+        this.order.billingInfo.firstName = this.loggedUser.first_name
+        this.order.billingInfo.lastName = this.loggedUser.last_name
+    }
 
     for (let i = 1940; i < 2099; i++) {
         this.ccYears.push({'text': i, 'value': i})
-    }
-
-    if (this.paymentType == 2) {
-        this.paymentApiSquare = new PayWithSquare(this.order, this.$axios)
-        this.paymentApiSquare.initialize()
-    } else if (this.paymentType == 7) {
-        this.payWithGooglePay = new PayWithGooglePay(this.order, this.$axios)
-        this.payWithGooglePay.initialize('google-pay-block')
     }
   }
 }

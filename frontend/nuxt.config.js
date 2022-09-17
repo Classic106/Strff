@@ -77,38 +77,7 @@ export default {
       target: "https://secure.networkmerchants.com/api/transact.php",
       pathRewrite: { "^/payment-nmi/": "" },
       changeOrigin: true,
-    },
-    "/payment-square/": {
-      target: "https://connect.squareupsandbox.com/v2/payments",
-      pathRewrite: { "^/payment-square/": "" },
-      changeOrigin: true,
-    },
-    "/payment-authorize-net/": {
-      target: "https://apitest.authorize.net/xml/v1/request.api",
-      pathRewrite: { "^/payment-authorize-net/": "" },
-      changeOrigin: true,
-    },
-    "/payment-usa-epay/": {
-      target: "https://sandbox.usaepay.com/api/XXZR8SWS/transactions",
-      pathRewrite: { "^/payment-usa-epay/": "" },
-      changeOrigin: true,
-    },
-    "/payment-stripe/": {
-      target: "https://api.stripe.com/v1/payment_methods",
-      pathRewrite: { "^/payment-stripe/": "" },
-      changeOrigin: true,
-    },
-    "/payment-paypal/": {
-      target: "https://api-m.sandbox.paypal.com/v1/payments/payment",
-      pathRewrite: { "^/payment-paypal/": "" },
-      changeOrigin: true,
-    },
-    "/payment-klarna/": {
-      target:
-        "https://api-na.klarna.com/payments/v1/authorizations/{authorizationToken}/order",
-      pathRewrite: { "^/payment-klarna/": "" },
-      changeOrigin: true,
-    },
+    }
   },
   strapi: {
     url: process.env.API_URL || "http://localhost:1338",

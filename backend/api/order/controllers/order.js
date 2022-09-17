@@ -22,29 +22,29 @@ module.exports = {
   },
   async create(ctx) {
     const { body } = ctx.request;
-    const { order_items, order_bundles } = body;
+    const { orderItems, orderBundles } = body;
 
     const newOrderItems = [];
     const newOrderBundles = [];
 
-    if (order_items.length) {
-      for (let k = 0; k < order_items.length; k++) {
-        const item = await strapi.services["order-item"].create(order_items[k]);
+    if (orderItems.length) {
+      for (let k = 0; k < orderItems.length; k++) {
+        const item = await strapi.services["order-item"].create(orderItems[k]);
         newOrderItems.push(item.id);
       }
     }
 
-    if (order_bundles.length) {
-      for (let k = 0; k < order_bundles.length; k++) {
+    if (orderBundles.length) {
+      for (let k = 0; k < orderBundles.length; k++) {
         const bundle = await strapi.services["order-bundle"].create(
-          order_bundles[k]
+          orderBundles[k]
         );
         newOrderBundles.push(bundle.id);
       }
     }
 
-    body.order_items = newOrderItems;
-    body.order_bundles = newOrderBundles;
+    body.orderItems = newOrderItems;
+    body.orderBundles = newOrderBundles;
 
     const result = await strapi.services.order.create(body);
 
@@ -56,18 +56,18 @@ module.exports = {
     const order = await strapi.services["order"].findOne({ id });
 
     if (order) {
-      const { order_items, order_bundles } = order;
+      const { orderItems, orderBundles } = order;
 
-      if (order_items.length) {
-        for (let k = 0; k < order_items.length; k++) {
-          await strapi.services["order-item"].delete({ id: order_items[k].id });
+      if (orderItems.length) {
+        for (let k = 0; k < orderItems.length; k++) {
+          await strapi.services["order-item"].delete({ id: orderItems[k].id });
         }
       }
 
-      if (order_bundles.length) {
-        for (let k = 0; k < order_bundles.length; k++) {
+      if (orderBundles.length) {
+        for (let k = 0; k < orderBundles.length; k++) {
           await strapi.services["order-bundle"].delete({
-            id: order_bundles[k].id,
+            id: orderBundles[k].id,
           });
         }
       }

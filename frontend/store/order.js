@@ -1,8 +1,8 @@
 export const state = () => ({
-  orderItems: [],
-  orderBundles: [],
+  order_items: [],
+  order_bundles: [],
   total: 0,
-  orderStatus: 5,
+  order_status: 5,
 });
 
 export const actions = {
@@ -25,7 +25,7 @@ export const actions = {
     const order = {
       ...state,
       ...userInfo,
-      orderStatus: 7,
+      order_status: 7,
       order_date: new Date(),
     };
 
@@ -33,7 +33,7 @@ export const actions = {
     commit("clearOrder");
   },
   async addProduct({ commit, state }, order_item) {
-    const item = state.orderItems.filter(
+    const item = state.order_items.filter(
       (item) => item.product.id === order_item.product.id
     );
 
@@ -58,11 +58,11 @@ export const actions = {
     commit("updateProduct", result);
   },
   async removeProduct({ commit }, id) {
-    await this.$strapi.$http.$delete(`/order-items/${id}`);
+    this.$strapi.delete("order-items", { id });
     commit("removeProduct", id);
   },
   async addBundle({ commit, state }, bundle) {
-    const item = state.orderBundles.filter(
+    const item = state.order_bundles.filter(
       (item) => item.bundle.id === bundle.id
     );
 
@@ -101,9 +101,9 @@ export const mutations = {
   clearOrder(state) {
     state = Object.assign(state, {
       total: 0,
-      orderItems: [],
-      orderBundles: [],
-      orderStatus: 5,
+      order_items: [],
+      order_bundles: [],
+      order_status: 5,
     });
     this.$cookies.remove("order");
   },
@@ -111,38 +111,39 @@ export const mutations = {
     state.total = total;
   },
   async addProduct(state, order_item) {
-    state.orderItems.push(order_item);
+    state.order_items.push(order_item);
   },
   updateProduct(state, order_item) {
-    const index = state.orderItems.findIndex(
+    const index = state.order_items.findIndex(
       (item) => item.id === order_item.id
     );
     if (index !== -1) {
-      const new_order_items = [...state.orderItems];
+      const new_order_items = [...state.order_items];
       new_order_items[index] = order_item;
-      state.orderItems = new_order_items;
+      state.order_items = new_order_items;
     }
   },
   removeProduct(state, id) {
-    state.orderItems = state.orderItems.filter((item) => item.id !== id);
+    state.order_items = state.order_items.filter((item) => item.id !== id);
+    this.$strapi.$http.$delete(`/order-items/${id}`);
   },
   addBundle(state, bundle) {
-    state.orderBundles.push(bundle);
+    state.order_bundles.push(bundle);
   },
   removeBundle(state, id) {
-    state.orderBundles = state.orderBundles.filter((item) => item.id !== id);
+    state.order_bundles = state.order_bundles.filter((item) => item.id !== id);
   },
 };
 
 export const getters = {
   getOrderItems(state) {
-    return state.orderItems;
+    return state.order_items;
   },
   getBundleItems(state) {
-    return state.orderBundles;
+    return state.order_bundles;
   },
   numberOfItems(state) {
-    return state.orderItems.length + state.orderBundles.length;
+    return state.order_items.length + state.order_bundles.length;
   },
   getTotal(state) {
     return state.total;
