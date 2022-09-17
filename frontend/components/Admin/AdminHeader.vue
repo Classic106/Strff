@@ -1,6 +1,12 @@
 <template>
   <div class="d-flex justify-content-between align-items-center py-3">
     <div class="d-flex align-items-center">
+      <div ref="menuButton" class="d-flex d-md-none">
+        <BurgerMenuButton
+          :isOpenMenu="isOpenMenu"
+          v-on:isOpenMenu="$emit('isOpenMenuHeader', !isOpenMenu)"
+        />
+      </div>
       <span class="px-3">strf</span>
       <span class="px-2">{{ getDate() }}</span>
     </div>
@@ -12,10 +18,17 @@
 </template>
 
 <script>
+import BurgerMenuButton from "~/components/common/BurgerMenuButton.vue";
+
 export default {
   name: "AdminHeader",
+  components: { BurgerMenuButton },
+  props: {
+    isOpenMenu: Boolean,
+  },
   data: () => ({
     text: "",
+    isMobile: true,
   }),
   methods: {
     getDate: function () {

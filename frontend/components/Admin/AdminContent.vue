@@ -1,5 +1,7 @@
 <template>
-  <div>{{ page }}</div>
+  <div class="d-flex justify-content-center">
+    {{ page }}
+  </div>
 </template>
 
 <script>
