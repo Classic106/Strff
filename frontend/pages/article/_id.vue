@@ -9,7 +9,14 @@
     </div>
     <div
       v-else
-      class="article d-flex flex-column justify-content-center m-sm-5 m-1 p-lg-5 p-0"
+      class="
+        article
+        d-flex
+        flex-column
+        justify-content-center
+        m-sm-5 m-1
+        p-lg-5 p-0
+      "
     >
       <div class="d-flex position-relative mb-5">
         <img :src="`${getStrapiMedia(article.image.url)}`" alt="image" />
@@ -44,7 +51,7 @@
 <script>
 import "~/utils/filters";
 import { getStrapiMedia } from "~/utils/medias";
-import Loader from "@/components/Loader.vue";
+import Loader from "@/components/common/Loader.vue";
 
 export default {
   layout: "club",
