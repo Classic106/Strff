@@ -222,7 +222,7 @@ export default {
   },
   destroyed() {
     window.removeEventListener("resize", this.handlerResize);
-    document.addEventListener("click", this.closeOutsideMenu);
+    document.removeEventListener("click", this.closeOutsideMenu);
   },
 };
 </script>
