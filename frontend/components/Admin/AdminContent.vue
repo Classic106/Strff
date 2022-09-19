@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import AdminProducts from "./AdminProducts.vue";
+import AdminProducts from "./AdminProducts/index.vue";
 
 export default {
   name: "AdminContent",
