@@ -17,12 +17,14 @@
       >
         <AdminMenu v-on:setPage="setPage" />
       </div>
-      <AdminContent class="content col-md-10 col p-0" :page="page" />
+      <AdminContent class="content col-md-10 col p-0" :page="currentPage" />
     </main>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
+
 import AdminHeader from "./AdminHeader.vue";
 import AdminMenu from "./AdminMenu.vue";
 import AdminContent from "./AdminContent.vue";
@@ -31,13 +33,17 @@ export default {
   name: "Admin",
   components: { AdminHeader, AdminMenu, AdminContent },
   data: () => ({
-    page: "home",
     isOpenMenu: false,
     isMobile: true,
   }),
+  computed: {
+    ...mapGetters({ currentPage: "admin/currentPage" }),
+  },
   methods: {
+    ...mapActions({ getProducts: "admin/getProducts" }),
+    ...mapMutations({ setCurrentPage: "admin/setCurrentPage" }),
     setPage: function (page) {
-      this.page = page;
+      this.setCurrentPage(page);
     },
     isOpen: function (isOpen) {
       this.isOpenMenu = isOpen;
@@ -57,7 +63,8 @@ export default {
       }
     },
   },
-  async mounted() {
+  mounted() {
+    this.getProducts();
     this.handlerResize({ target: window });
     window.addEventListener("resize", this.handlerResize);
     document.addEventListener("click", this.closeOutsideMenu);
