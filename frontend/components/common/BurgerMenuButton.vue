@@ -21,7 +21,7 @@ export default {
 
 <style scoped>
 .nav-menu-arrow {
-  width: 80px;
+  width: 30px;
   height: 26px;
   position: relative;
   cursor: pointer;

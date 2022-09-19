@@ -3,7 +3,7 @@
     <header>
       <AdminHeader :isOpenMenu="isOpenMenu" v-on:isOpenMenuHeader="isOpen" />
     </header>
-    <main class="h-100 row position-relative">
+    <main class="h-100 w-100 m-0 row position-relative">
       <div
         ref="menu"
         class="col-md-2 col-2"
@@ -17,7 +17,7 @@
       >
         <AdminMenu v-on:setPage="setPage" />
       </div>
-      <AdminContent class="content col-md-10 col" :page="page" />
+      <AdminContent class="content col-md-10 col p-0" :page="page" />
     </main>
   </div>
 </template>

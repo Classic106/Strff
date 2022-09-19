@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex justify-content-between align-items-center py-3">
     <div class="d-flex align-items-center">
-      <div ref="menuButton" class="d-flex d-md-none">
+      <div ref="menuButton" class="d-flex d-md-none pl-3">
         <BurgerMenuButton
           :isOpenMenu="isOpenMenu"
           v-on:isOpenMenu="$emit('isOpenMenuHeader', !isOpenMenu)"

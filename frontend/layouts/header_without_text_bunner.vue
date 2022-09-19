@@ -29,7 +29,7 @@
 <script>
 import ClubHeader from "@/components/Header";
 import ClubFooter from "@/components/Footer";
-import Loader from "@/components/Loader.vue";
+import Loader from "@/components/common/Loader.vue";
 
 export default {
   components: {

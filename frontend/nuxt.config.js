@@ -43,6 +43,7 @@ export default {
    ** https://nuxtjs.org/guide/plugins
    */
   plugins: [
+    { src: '~/plugins/vue-good-table', ssr: false },
     { src: "~/plugins/v-credit-card-form.js", mode: "client" },
     { src: "~/plugins/vue-cool-lightbox.js", mode: "client" },
     { src: "~/plugins/vue-custom-scrollbar.js", mode: "client" },
