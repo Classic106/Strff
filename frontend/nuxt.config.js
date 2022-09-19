@@ -72,7 +72,7 @@ export default {
   ],
   bootstrapVue: {
     // Add the desired icon components to the `components` array
-    components: ["BIconArrowLeft"],
+    components: ["BIconArrowLeft", "BIconChevronLeft", "BIconChevronRight"],
   },
   axios: {
     proxy: true,
