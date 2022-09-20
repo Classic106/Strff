@@ -1,6 +1,6 @@
 <template>
-  <div class="d-flex w-100 justify-content-center">
-    <div class="d-flex flex-column w-50">
+  <div class="row w-100 justify-content-center">
+    <div class="d-flex flex-column col-md-6 col-12">
       <div class="d-flex align-items-center">
         <button v-on:click="setSelectedProduct(null)" class="button">
           <BIconArrowLeft />

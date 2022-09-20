@@ -6,7 +6,7 @@
     <main class="h-100 w-100 m-0 row position-relative">
       <div
         ref="menu"
-        class="col-md-2 col-2"
+        class="col-md-2 col-2 p-0"
         :class="
           isMobile
             ? isOpenMenu
