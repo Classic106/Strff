@@ -94,7 +94,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 
-import PreloaderImage from "~/components/PreloaderImage";
+import PreloaderImage from "~/components/common/PreloaderImage";
 import PurchaseTypes from "~/components/common/PurchaseTypes";
 
 export default {
