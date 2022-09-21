@@ -25,7 +25,7 @@
 
 <script>
 import Loader from "@/components/common/Loader";
-import PreloaderImage from "~/components/PreloaderImage";
+import PreloaderImage from "~/components/common/PreloaderImage";
 
 export default {
   name: "SearchedProducts",

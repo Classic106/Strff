@@ -96,7 +96,7 @@ import { mapMutations, mapGetters } from "vuex";
 import { prevCurrNextProduct } from "~/helpers";
 import { getStrapiMedia } from "~/utils/medias";
 
-import PreloaderImage from "~/components/PreloaderImage.vue";
+import PreloaderImage from "~/components/common/PreloaderImage.vue";
 
 export default {
   name: "AdminProduct",

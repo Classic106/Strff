@@ -56,7 +56,7 @@ import { mapGetters, mapMutations, mapActions } from "vuex";
 import CartOrderItems from "./CartOrderItems.vue";
 import OrderBundles from "./OrderBundles.vue";
 import PurchaseTypes from "~/components/common/PurchaseTypes";
-import PreloaderImage from "~/components/PreloaderImage";
+import PreloaderImage from "~/components/common/PreloaderImage";
 import ShippingInf from "./ShippingInf";
 
 export default {

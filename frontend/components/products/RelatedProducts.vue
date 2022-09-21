@@ -30,7 +30,7 @@
 
 <script>
 import { colorTitleNumbers, shuffleArray } from "~/helpers";
-import PreloaderImage from "~/components/PreloaderImage";
+import PreloaderImage from "~/components/common/PreloaderImage";
 import ProductCard from "~/components/products/ProductCard";
 
 export default {
