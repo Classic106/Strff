@@ -6,15 +6,17 @@
     </p>
     <p class="mt-3">© 2022 STRFF MAN'S CLUB</p>
     <RightSide />
+    <LightBox />
   </footer>
 </template>
 
 <script>
 import RightSide from "@/components/RightSide";
+import LightBox from "@/components/common/LightBox.vue";
 
 export default {
   name: "ClubFooter",
-  components: { RightSide },
+  components: { RightSide, LightBox },
 };
 </script>
 

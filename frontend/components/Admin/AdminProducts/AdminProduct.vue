@@ -42,7 +42,7 @@
                 </div>
                 <div
                   class="image-wrap col-5 position-relative m-2"
-                  v-for="image in images"
+                  v-for="(image, index) in images"
                   :key="image.id"
                 >
                   <div
@@ -53,10 +53,15 @@
                       justify-content-center
                     "
                   >
-                    <button class="btn btn-primary m-1">show</button>
+                    <button
+                      class="btn btn-primary m-1"
+                      v-on:click="setImageIndex(index)"
+                    >
+                      show
+                    </button>
                     <button class="btn btn-danger m-1">delete</button>
                   </div>
-                  <PreloaderImage :image="image.url" rounded />
+                  <PreloaderImage :image="image" rounded />
                 </div>
               </div>
             </div>
@@ -89,6 +94,7 @@
 <script>
 import { mapMutations, mapGetters } from "vuex";
 import { prevCurrNextProduct } from "~/helpers";
+import { getStrapiMedia } from "~/utils/medias";
 
 import PreloaderImage from "~/components/PreloaderImage.vue";
 
@@ -112,14 +118,17 @@ export default {
   watch: {
     selectedProduct: function () {
       const { image } = this.selectedProduct;
-      this.images = image;
+      this.images = image.map((item) => this.getStrapiMedia(item.url));
     },
   },
   methods: {
+    getStrapiMedia,
     prevCurrNextProduct,
     ...mapMutations({
       clearProducts: "admin/clearProducts",
       setSelectedProducts: "admin/setSelectedProducts",
+      setImages: "cool_light_box/setImages",
+      setImageIndex: "cool_light_box/setImageIndex",
     }),
     setNextProduct: function () {
       const index = this.findIndex();
@@ -149,8 +158,9 @@ export default {
     const { title, image } = this.selectedProduct;
 
     this.title = title;
-    this.images = image;
-    console.log(this.previousProduct, this.nextProduct);
+    this.images = image.map((item) => this.getStrapiMedia(item.url));
+
+    this.setImages(this.images);
   },
 };
 </script>

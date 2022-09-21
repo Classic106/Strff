@@ -7,16 +7,10 @@
       <div class="row m-1 m-md-5">
         <div class="col-md-6 col-12 rounded pt-2 pb-2">
           <div class="m-auto images-wrapper">
-            <CoolLightBox
-              :items="images"
-              :index="imageIndex"
-              :loop="true"
-              @close="imageIndex = null"
-            />
             <div class="image-wrapper">
               <div
                 class="image"
-                @click="imageIndex = index"
+                @click="setCoolLightBox(index)"
                 :style="{ backgroundImage: `url(${images[index]})` }"
               ></div>
               <ssr-carousel
@@ -177,8 +171,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import "vue-cool-lightbox/dist/vue-cool-lightbox.min.css";
+import { mapGetters, mapMutations } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
 import { colorTitleNumbers } from "~/helpers";
 
@@ -224,6 +217,8 @@ export default {
       this.selected.total = this.product.price;
       this.images = this.product.image.map((item) => this.getImage(item));
 
+      this.setImages(this.images);
+
       if (this.product.included) {
         this.included = this.product.included;
       }
@@ -234,6 +229,13 @@ export default {
   methods: {
     getStrapiMedia,
     colorTitleNumbers,
+    ...mapMutations({
+      setImages: "cool_light_box/setImages",
+      setImageIndex: "cool_light_box/setImageIndex",
+    }),
+    setCoolLightBox: function (index) {
+      this.setImageIndex(index);
+    },
     getImage: function (image) {
       if (image.url) {
         return this.getStrapiMedia(image.url);
