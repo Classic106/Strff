@@ -25,4 +25,24 @@ function shuffleArray(array) {
   return arr;
 }
 
-export { colorTitleNumbers, shuffleArray };
+function prevCurrNextProduct(selectedProduct, products) {
+  const { length } = products;
+  const index = products.findIndex((item) => item.id === selectedProduct.id);
+  
+  const result = {
+    selectedProduct,
+    nextProduct: null,
+    previousProduct: null,
+  };
+
+  if (index < length) {
+    result.nextProduct = products[index + 1];
+  }
+
+  if (index > 0) {
+    result.previousProduct = products[index - 1];
+  }
+  return result;
+}
+
+export { colorTitleNumbers, shuffleArray, prevCurrNextProduct };

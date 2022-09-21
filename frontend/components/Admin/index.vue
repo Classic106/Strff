@@ -44,6 +44,7 @@ export default {
     ...mapMutations({ setCurrentPage: "admin/setCurrentPage" }),
     setPage: function (page) {
       this.setCurrentPage(page);
+      this.isOpenMenu = false;
     },
     isOpen: function (isOpen) {
       this.isOpenMenu = isOpen;

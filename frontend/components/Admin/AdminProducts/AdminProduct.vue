@@ -2,14 +2,22 @@
   <div class="row w-100 justify-content-center">
     <div class="d-flex flex-column col-md-6 col-12">
       <div class="d-flex align-items-center">
-        <button v-on:click="setSelectedProduct(null)" class="button">
+        <button v-on:click="clearProducts()" class="button">
           <BIconArrowLeft />
         </button>
         <p class="text-ellipsis m-0 ml-2">{{ selectedProduct.title }}</p>
-        <button class="border-left">
+        <button
+          class="border-left"
+          v-on:click="setPreviousProduct"
+          :disabled="!previousProduct"
+        >
           <BIconChevronLeft />
         </button>
-        <button class="border-right">
+        <button
+          class="border-right"
+          v-on:click="setNextProduct"
+          :disabled="!nextProduct"
+        >
           <BIconChevronRight />
         </button>
       </div>
@@ -79,7 +87,8 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
+import { prevCurrNextProduct } from "~/helpers";
 
 import PreloaderImage from "~/components/PreloaderImage.vue";
 
@@ -93,14 +102,55 @@ export default {
     title: "",
     images: [],
   }),
+  computed: {
+    ...mapGetters({
+      products: "admin/products",
+      previousProduct: "admin/previousProduct",
+      nextProduct: "admin/nextProduct",
+    }),
+  },
+  watch: {
+    selectedProduct: function () {
+      const { image } = this.selectedProduct;
+      this.images = image;
+    },
+  },
   methods: {
-    ...mapMutations({ setSelectedProduct: "admin/setSelectedProduct" }),
+    prevCurrNextProduct,
+    ...mapMutations({
+      clearProducts: "admin/clearProducts",
+      setSelectedProducts: "admin/setSelectedProducts",
+    }),
+    setNextProduct: function () {
+      const index = this.findIndex();
+      const result = this.prevCurrNextProduct(
+        this.products[index + 1],
+        this.products
+      );
+
+      this.setSelectedProducts(result);
+    },
+    setPreviousProduct: function () {
+      const index = this.findIndex();
+      const result = this.prevCurrNextProduct(
+        this.products[index - 1],
+        this.products
+      );
+
+      this.setSelectedProducts(result);
+    },
+    findIndex: function () {
+      return this.products.findIndex(
+        (item) => item.id === this.selectedProduct.id
+      );
+    },
   },
   mounted() {
     const { title, image } = this.selectedProduct;
 
     this.title = title;
     this.images = image;
+    console.log(this.previousProduct, this.nextProduct);
   },
 };
 </script>
