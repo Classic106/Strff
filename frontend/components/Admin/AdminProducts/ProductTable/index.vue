@@ -3,22 +3,16 @@
     <div class="w-100 h-100 overflow-auto">
       <vue-good-table
         :columns="columns"
-        :rows="products"
+        :rows="currentProducts"
         :select-options="{
           enabled: true,
           selectOnCheckboxOnly: true,
         }"
         :search-options="{ enabled: true }"
-        :sort-options="{
-          enabled: true,
-          initialSortBy: [
-            { field: 'title', type: 'asc' },
-            { field: 'status', type: 'asc' },
-            { field: 'categories', type: 'asc' },
-          ],
-        }"
+        :sort-options="{ enabled: true }"
         :pagination-options="{ enabled: true, position: 'top' }"
         @on-cell-click="onCellClick"
+        @on-sort-change="onSortChange"
         @on-selected-rows-change="selectionChanged"
         @on-select-all="onSelectAll"
         compactMode
@@ -52,6 +46,7 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import { prevCurrNextProduct } from "~/helpers";
 
 import Loader from "~/components/common/Loader";
 import ProductTableColumn from "../ProductTable/ProductTableColumn.vue";
@@ -65,6 +60,7 @@ export default {
     CategoryTableColumn,
   },
   data: () => ({
+    currentProducts: [],
     selectedRows: [],
     columns: [
       {
@@ -86,11 +82,16 @@ export default {
     ...mapGetters({ products: "admin/products" }),
   },
   methods: {
+    prevCurrNextProduct,
     ...mapMutations({
-      setSelectedProduct: "admin/setSelectedProduct",
+      setSelectedProducts: "admin/setSelectedProducts",
+      setProducts: "admin/setProducts",
     }),
     onCellClick: function (params) {
-      this.setSelectedProduct(params.row);
+      const result = this.prevCurrNextProduct(params.row, this.currentProducts);
+
+      this.setSelectedProducts(result);
+      this.setProducts(this.currentProducts);
       // params.row - row object
       // params.pageIndex - index of this row on the current page.
       // params.selected - if selection is enabled this argument
@@ -106,6 +107,40 @@ export default {
       // params.selected - whether the select-all checkbox is checked or unchecked
       // params.selectedRows - all rows that are selected (this page)
     },
+    onSortChange(params) {
+      const { field, type } = params[0];
+
+      if (type === "asc") {
+        if (field === "title" || field === "status") {
+          this.currentProducts.sort((a, b) => {
+            return a[field].localeCompare(b[field]);
+          });
+        }
+        if (field === "categories") {
+          this.currentProducts.sort((a, b) => {
+            const nameA = a.categories[0].name;
+            const nameB = b.categories[0].name;
+            return nameA.localeCompare(nameB);
+          });
+        }
+      }
+      if (type === "desc") {
+        if (field === "title" || field === "status") {
+          this.currentProducts.sort((a, b) => {
+            return b[field].localeCompare(a[field]);
+          });
+        }
+        if (field === "categories") {
+          this.currentProducts.sort((a, b) => {
+            const nameA = a.categories[0].name;
+            const nameB = b.categories[0].name;
+            return nameB.localeCompare(nameA);
+          });
+        }
+      }
+      // params[0].sortType - ascending or descending
+      // params[0].columnIndex - index of column being sorted
+    },
     deleteItems() {
       const ids = this.selectedRows.map((item) => item.id);
       console.log(ids);
@@ -118,6 +153,9 @@ export default {
       const ids = this.selectedRows.map((item) => item.id);
       console.log(ids);
     },
+  },
+  mounted() {
+    this.currentProducts = JSON.parse(JSON.stringify(this.products));
   },
 };
 </script>
