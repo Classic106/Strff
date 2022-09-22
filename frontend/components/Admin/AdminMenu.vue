@@ -29,14 +29,13 @@ export default {
 <style scoped>
 @media (max-width: 768px) {
   .menu {
-    color: #000 !important;
     background-color: #fff;
   }
 }
 
 .menu {
   z-index: 20;
-  color: #fff;
+  color: #000;
   border-right: 1px solid black;
 }
 </style>

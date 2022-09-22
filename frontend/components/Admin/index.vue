@@ -1,5 +1,5 @@
 <template>
-  <div class="gold-background">
+  <div class="bg-grey">
     <header>
       <AdminHeader
         :isOpenMenu="isOpenMenu"
@@ -23,7 +23,7 @@
       </div>
       <AdminContent class="content col-md-8 col p-0" :page="currentPage" />
       <div
-        class="h-100 right-side"
+        class="right-side p-0"
         :class="
           isMobile
             ? isOpenRightSide
@@ -32,7 +32,7 @@
             : 'col-2 desctop'
         "
       >
-        <AdminRightSide />
+        <AdminRightSide class="bg-white h-100" />
       </div>
     </main>
   </div>
@@ -126,11 +126,14 @@ export default {
 }
 
 .right-side.mobile {
+  border-left: none;
+  position: relative;
   z-index: -1;
 }
 
 .right-side.mobile.open {
   right: 0;
+  position: absolute;
   z-index: 1;
 }
 

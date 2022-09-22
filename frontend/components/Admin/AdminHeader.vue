@@ -5,6 +5,7 @@
         <BurgerMenuButton
           :isOpenMenu="isOpenMenu"
           v-on:isOpenMenu="$emit('isOpenMenuHeader', !isOpenMenu)"
+          colorBlack
         />
       </div>
       <span class="px-3">strf</span>

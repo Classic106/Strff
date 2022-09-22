@@ -1,7 +1,7 @@
 <template>
   <div
     class="nav-menu-arrow d-flex d-lg-none"
-    :class="isOpenMenu && 'open'"
+    :class="setStyle()"
     v-on:click="$emit('isOpenMenu', !isOpenMenu)"
   >
     <span></span>
@@ -15,6 +15,14 @@ export default {
   name: "BurgerMenuButton",
   props: {
     isOpenMenu: Boolean,
+    colorBlack: Boolean,
+  },
+  methods: {
+    setStyle: function () {
+      const isOpen = this.isOpenMenu ? "open" : "";
+      const isBlack = this.colorBlack ? "black " : "";
+      return `${isOpen} ${isBlack}`;
+    },
   },
 };
 </script>
@@ -35,6 +43,10 @@ export default {
   background-color: #fff;
   border-radius: 5px;
   left: 0;
+}
+
+.nav-menu-arrow.black span {
+  background-color: #000;
 }
 .nav-menu-arrow span:nth-child(1) {
   top: 0px;
