@@ -13,7 +13,14 @@
     <div>
       <input v-model="text" type="text" placeholder="Search" />
     </div>
-    <div class="px-3">user</div>
+    <div class="d-flex">
+      <div class="d-flex">
+        <div class="px-3">user</div>
+      </div>
+      <span class="d-flex d-md-none" v-on:click="$emit('isOpenRightSide')"
+        ><BIconThreeDotsVertical
+      /></span>
+    </div>
   </div>
 </template>
 

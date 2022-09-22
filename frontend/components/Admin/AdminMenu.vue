@@ -1,6 +1,6 @@
 <template>
-  <div class="menu">
-    <ul class="d-flex flex-column mr-md-0 mr-5">
+  <div class="menu h-100">
+    <ul class="d-flex flex-column h-100 mr-md-0 mr-5">
       <li v-on:click="setPage('home')">Home</li>
       <li v-on:click="setPage('orders')">Orders</li>
       <li v-on:click="setPage('products')">Products</li>
@@ -37,5 +37,6 @@ export default {
 .menu {
   z-index: 20;
   color: #fff;
+  border-right: 1px solid black;
 }
 </style>
