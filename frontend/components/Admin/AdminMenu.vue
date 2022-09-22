@@ -1,10 +1,18 @@
 <template>
   <div class="menu h-100">
-    <ul class="d-flex flex-column h-100 mr-md-0 mr-5">
-      <li v-on:click="setPage('home')">Home</li>
-      <li v-on:click="setPage('orders')">Orders</li>
-      <li v-on:click="setPage('products')">Products</li>
-      <li v-on:click="setPage('customers')">Customers</li>
+    <ul class="d-flex flex-column h-100 mr-md-0 mr-5 mt-3">
+      <li v-on:click="setPage('home')" class="d-flex align-items-center">
+        <BIconHouseDoor class="mr-2" />Home
+      </li>
+      <li v-on:click="setPage('orders')" class="d-flex align-items-center">
+        <BIconInboxFill class="mr-2" />Orders
+      </li>
+      <li v-on:click="setPage('products')" class="d-flex align-items-center">
+        <BIconTagFill class="mr-2" />Products
+      </li>
+      <li v-on:click="setPage('customers')" class="d-flex align-items-center">
+        <BIconPersonFill class="mr-2" />Customers
+      </li>
     </ul>
   </div>
 </template>
