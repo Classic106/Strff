@@ -1,7 +1,11 @@
 <template>
   <div class="gold-background">
     <header>
-      <AdminHeader :isOpenMenu="isOpenMenu" v-on:isOpenMenuHeader="isOpen" />
+      <AdminHeader
+        :isOpenMenu="isOpenMenu"
+        v-on:isOpenMenuHeader="isOpen"
+        v-on:isOpenRightSide="isOpenRightSide = !isOpenRightSide"
+      />
     </header>
     <main class="h-100 w-100 m-0 row position-relative">
       <div
@@ -17,7 +21,19 @@
       >
         <AdminMenu v-on:setPage="setPage" />
       </div>
-      <AdminContent class="content col-md-10 col p-0" :page="currentPage" />
+      <AdminContent class="content col-md-8 col p-0" :page="currentPage" />
+      <div
+        class="h-100 right-side"
+        :class="
+          isMobile
+            ? isOpenRightSide
+              ? 'mobile open'
+              : 'mobile'
+            : 'col-2 desctop'
+        "
+      >
+        <AdminRightSide />
+      </div>
     </main>
   </div>
 </template>
@@ -28,13 +44,20 @@ import { mapGetters, mapMutations, mapActions } from "vuex";
 import AdminHeader from "./AdminHeader.vue";
 import AdminMenu from "./AdminMenu.vue";
 import AdminContent from "./AdminContent.vue";
+import AdminRightSide from "./AdminRightSide.vue";
 
 export default {
   name: "Admin",
-  components: { AdminHeader, AdminMenu, AdminContent },
+  components: {
+    AdminHeader,
+    AdminMenu,
+    AdminContent,
+    AdminRightSide,
+  },
   data: () => ({
     isOpenMenu: false,
     isMobile: true,
+    isOpenRightSide: false,
   }),
   computed: {
     ...mapGetters({ currentPage: "admin/currentPage" }),
@@ -90,6 +113,25 @@ export default {
 .menu-mobile.open {
   left: 0vw;
   height: 100vh;
+}
+
+.right-side {
+  position: fixed;
+  width: 100%;
+  border-left: 1px solid black;
+}
+
+.right-side.desctop {
+  position: relative;
+}
+
+.right-side.mobile {
+  z-index: -1;
+}
+
+.right-side.mobile.open {
+  right: 0;
+  z-index: 1;
 }
 
 .content {

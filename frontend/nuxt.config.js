@@ -45,7 +45,7 @@ export default {
   plugins: [
     { src: "~/plugins/vue-good-table", ssr: false },
     { src: "~/plugins/v-credit-card-form.js", mode: "client" },
-    { src: "~/plugins/vue-cool-lightbox.js", mode: "client" },
+    { src: "~/plugins/vue-cool-lightbox.js", mode: "ssr" },
     { src: "~/plugins/vue-custom-scrollbar.js", mode: "client" },
   ],
   /*
@@ -72,7 +72,12 @@ export default {
   ],
   bootstrapVue: {
     // Add the desired icon components to the `components` array
-    components: ["BIconArrowLeft", "BIconChevronLeft", "BIconChevronRight"],
+    components: [
+      "BIconArrowLeft",
+      "BIconChevronLeft",
+      "BIconChevronRight",
+      "BIconThreeDotsVertical",
+    ],
   },
   axios: {
     proxy: true,
