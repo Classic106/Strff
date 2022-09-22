@@ -1,13 +1,13 @@
 <template>
   <section class="container">
     <div>
-      <div v-if="numberOfItems">
+      <div v-if="orderNoOfItems">
         <h1 class="mt-5">Checkout</h1>
         <div class="grid md:grid-cols-1 mt-3">
             <div class="card">
                 <div class="card-body">
                 <h5 class="card-title">Cart</h5>
-                <p class="card-text">{{ numberOfItems }} item(s) selected:</p>
+                <p class="card-text">{{ orderNoOfItems }} item(s) selected:</p>
                 <ul>
                     <li v-for="item in orderItems" :key="item.id" class="card-text mb-2 flex items-center justify-between">
                     <span>Name: {{ item.product.title }} (${{ item.price | formatNumber }}) ({{ item.quantity }})</span>
@@ -17,8 +17,8 @@
                     </div>
                     </li>
                 </ul>
-                <h5 class="card-text">Total: ${{ cart.total | formatNumber }}</h5>
-                <p v-if="cart.items && !cart.items.length">Please select some items.</p>
+                <h5 class="card-text">Total: ${{ orderTotal | formatNumber }}</h5>
+                <p v-if="!orderNoOfItems">Please select some items.</p>
                 </div>
             </div>
         </div>
@@ -191,7 +191,7 @@
             </form>
             </div>
         </div>
-        <div class="mt-5" v-if="!cart">
+        <div class="mt-5" v-if="!orderNoOfItems">
             Cart is empty
         </div>
     </div>
@@ -199,7 +199,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapGetters } from 'vuex'
 import '~/utils/filters'
 import { pad, convertObjectToQueryUrl } from '~/utils/functions'
 import { v4 as uuidv4 } from 'uuid'
@@ -268,36 +268,32 @@ export default {
     }
   },
   computed: {
-    orderItems() {
-      return this.$store.getters['order/getOrderItems']
-    },
-    orderBundleItems() {
-      return this.$store.getters['order/getBundleItems']
-    },
-    numberOfItems() {
-      return this.$store.getters['order/numberOfItems']
-    },
-    loggedUser() {
-      return this.$store.getters['auth/user']
-    }
+    ...mapGetters({
+        orderItems: 'order/orderItems',
+        orderBundles: 'order/orderBundles',
+        orderTotal: 'order/orderTotal',
+        orderNoOfItems: 'order/orderNoOfItems',
+        loggedUser: 'auth/user',
+        purchaseTypes: 'purchase-types/getTypes'
+    })
   },
   methods: {
     async handleSubmit() {
-        this.loading = true
+        this.loading = true;
         try {
-            this.order.orderDate = Date.now()
-            this.order.orderNo = await this.$strapi.$http.$post('/incremental-values/get-value', { code: 'order-no' })
-            this.order.items = this.cart.items
-            this.order.total = this.cart.total
+            this.order.orderDate = Date.now();
+            this.order.orderNo = await this.$strapi.$http.$post('/incremental-values/get-value', { code: 'order-no' });
+            this.order.items = this.cart.items;
+            this.order.total = this.cart.total;
 
-            let paymentResult = false
+            let paymentResult = false;
             if (this.paymentType == 1) {
-                this.paymentApiNmi = new PayWithNmi(this.order, this.$axios)
-                paymentResult = this.paymentApiNmi.pay()
+                this.paymentApiNmi = new PayWithNmi(this.order, this.$axios);
+                paymentResult = this.paymentApiNmi.pay();
             }
             if (paymentResult) {
-                alert('Your order have been successfully submitted.')
-                this.releaseCart({
+                alert('Your order have been successfully submitted.');
+                this.placeOrder({
                     orderNo: this.orderNo,
                     orderDate: this.orderDate,
                     billingFirstName: this.order.billingInfo.firstName,
@@ -316,40 +312,47 @@ export default {
                     shippingState: this.order.shippingInfo.state,
                     shippingZipCode: this.order.shippingInfo.zip,
                     shippingContactNo: this.order.shippingInfo.contactNo
-                })
-                this.$router.push('/')
+                });
+                this.$router.push('/');
             } else {
-                alert('Your order submittion was not successfull.')
+                alert('Your order submittion was not successfull.');
             }
         } catch (error) {
-            this.loading = false
-            console.log(error)
+            this.loading = false;
+            console.log(error);
         }
     },
-    addToCart(product) {
+    addToCart(item) {
         let selected = {
-          product,
-          quantity: 1,
-          purchase_type: 1,
-          subscription_type: null,
-          total: product.price,
-        }
-        this.$store.dispatch("order/addProduct", selected);
+          productId: item.product.id,
+          quantity: 1
+        };
+        this.$store.dispatch('order/addProduct', selected);
     },
-    removeFromCart(product) {
-        this.$store.dispatch('order/removeProduct', product.id)
+    removeFromCart(item) {
+        let selected = {
+          productId: item.product.id,
+          quantity: 1
+        };
+        this.$store.dispatch('order/removeProduct', selected);
     },
+    emptyCart() {
+        this.$store.dispatch('order/clearOrder');
+    },
+    placeOrder(data) {
+        this.$store.dispatch('order/placeOrder', data);
+    }
   },
   async mounted () {
     if (this.loggedUser) {
-        this.order.shippingInfo.firstName = this.loggedUser.first_name
-        this.order.shippingInfo.lastName = this.loggedUser.last_name
-        this.order.billingInfo.firstName = this.loggedUser.first_name
-        this.order.billingInfo.lastName = this.loggedUser.last_name
+        this.order.shippingInfo.firstName = this.loggedUser.first_name;
+        this.order.shippingInfo.lastName = this.loggedUser.last_name;
+        this.order.billingInfo.firstName = this.loggedUser.first_name;
+        this.order.billingInfo.lastName = this.loggedUser.last_name;
     }
 
     for (let i = 1940; i < 2099; i++) {
-        this.ccYears.push({'text': i, 'value': i})
+        this.ccYears.push({'text': i, 'value': i});
     }
   }
 }

@@ -50,40 +50,40 @@
     },
     {
        "method": "POST",
-       "path": "/cart/add",
-       "handler": "order.addToCart",
+       "path": "/orders/addproduct",
+       "handler": "order.addProduct",
        "config": {
           "policies": []
        }
     },
     {
         "method": "POST",
-        "path": "/cart/remove",
-        "handler": "order.removeFromCart",
+        "path": "/orders/removeproduct",
+        "handler": "order.removeProduct",
         "config": {
            "policies": []
         }
     },
     {
         "method": "POST",
-        "path": "/cart/empty",
-        "handler": "order.emptyCart",
+        "path": "/orders/empty",
+        "handler": "order.emptyOrder",
         "config": {
            "policies": []
         }
     },
     {
         "method": "POST",
-        "path": "/cart/release",
-        "handler": "order.releaseCart",
+        "path": "/orders/placeorder",
+        "handler": "order.placeOrder",
         "config": {
            "policies": []
         }
     },
     {
         "method": "GET",
-        "path": "/cart/getcart",
-        "handler": "order.getCart",
+        "path": "/order/getorder",
+        "handler": "order.getOrder",
         "config": {
           "policies": []
         }

@@ -1,151 +1,131 @@
 export const state = () => ({
-  order_items: [],
-  order_bundles: [],
-  total: 0,
-  order_status: 5,
-});
+    order: {
+        order_items: [],
+        order_bundles: [],
+        total: 0
+    },
+    token: null
+})
 
 export const actions = {
-  async addOrder({ state, commit }, data = {}) {
-    const order = {
-      ...data,
-      ...state,
-      order_date: new Date(),
-    };
-
-    try {
-      const result = await this.$strapi.create("orders", order);
-      commit("setOrder", result);
-      commit("setOrderCookie");
-    } catch (e) {
-      console.log(e);
+    async addProduct({commit, state}, data) {
+        if (data.quantity == null) {
+            data.quantity = 1;
+        }
+        let currentUser = this.$cookies.get('user');
+        data.userId = currentUser? currentUser.id: null;
+        data.cartToken = this.$cookies.get('cart_token');
+        let order = await this.$strapi.$http.$post('/orders/addproduct', data);
+        commit('setOrder', order);
+    },
+    async removeProduct({commit, state}, data) {
+        let currentUser = this.$cookies.get('user');
+        data.userId = currentUser? currentUser.id: null;
+        data.cartToken = this.$cookies.get('cart_token');
+        let order = await this.$strapi.$http.$post('/orders/removeproduct', data);
+        commit('setOrder', order);
+    },
+    async clearOrder({commit, state}) {
+        let currentUser = this.$cookies.get('user');
+        let data = {};
+        data.userId = currentUser? currentUser.id: null;
+        data.cartToken = this.$cookies.get('cart_token');
+        let order = await this.$strapi.$http.$post('/orders/empty', data);
+        commit('setOrder', order);
+    },
+    async placeOrder({commit, state}, data) {
+        let currentUser = this.$cookies.get('user');
+        data.userId = currentUser? currentUser.id: null;
+        data.cartToken = this.$cookies.get('cart_token');
+        await this.$strapi.$http.$post('/orders/placeorder', data);
+        commit('setOrder', null);
+    },
+    async syncByUser({commit, state}, userId) {
+        let order = null;
+        let s = await this.$strapi.find('order-statuses', { 'code': 'order' });
+        s = s[0];
+        let c = await this.$strapi.find('orders', { 'order_status.id': s.id, 'user.id': userId });
+        if (c && c.length) {
+            order = c[0];
+        }
+        commit('setOrder', order);
     }
-  },
-  async confirmOrder({ state, commit }, userInfo = {}) {
-    const order = {
-      ...state,
-      ...userInfo,
-      order_status: 7,
-      order_date: new Date(),
-    };
-
-    const result = await this.$strapi.$http.$put(`/orders/${state.id}`, order);
-    commit("clearOrder");
-  },
-  async addProduct({ commit, state }, order_item) {
-    const item = state.order_items.filter(
-      (item) => item.product.id === order_item.product.id
-    );
-
-    if (!item.length) {
-      if (!state.id) {
-        await actions.addOrder.call(this, { commit, state });
-        order_item.order = state.id;
-        const result = await this.$strapi.create("order-items", order_item);
-        commit("addProduct", result);
-      } else {
-        order_item.order = state.id;
-        const result = await this.$strapi.create("order-items", order_item);
-        commit("addProduct", result);
-      }
-    }
-  },
-  async updateProduct({ commit }, order_item) {
-    const result = await this.$strapi.$http.$put(
-      `/order-items/${order_item.id}`,
-      order_item
-    );
-    commit("updateProduct", result);
-  },
-  async removeProduct({ commit }, id) {
-    this.$strapi.delete("order-items", { id });
-    commit("removeProduct", id);
-  },
-  async addBundle({ commit, state }, bundle) {
-    const item = state.order_bundles.filter(
-      (item) => item.bundle.id === bundle.id
-    );
-
-    if (!item.length) {
-      if (!state.id) {
-        await actions.addOrder.call(this, { commit, state });
-        const order_bundle = {
-          order: state.id,
-          bundle: bundle.id,
-        };
-        const result = await this.$strapi.create("order-bundles", order_bundle);
-        commit("addBundle", result);
-      } else {
-        const order_bundle = {
-          order: state.id,
-          bundle: bundle.id,
-        };
-        const result = await this.$strapi.create("order-bundles", order_bundle);
-        commit("addBundle", result);
-      }
-    }
-  },
-  async removeBundle({ commit }, id) {
-    await this.$strapi.$http.$delete(`/order-bundles/${id}`);
-    commit("removeBundle", id);
-  },
-};
+}
 
 export const mutations = {
-  setOrderCookie(state) {
-    this.$cookies.set("order", state.id);
-  },
-  setOrder(state, order) {
-    state = Object.assign(state, order);
-  },
-  clearOrder(state) {
-    state = Object.assign(state, {
-      total: 0,
-      order_items: [],
-      order_bundles: [],
-      order_status: 5,
-    });
-    this.$cookies.remove("order");
-  },
-  setTotal(state, total) {
-    state.total = total;
-  },
-  async addProduct(state, order_item) {
-    state.order_items.push(order_item);
-  },
-  updateProduct(state, order_item) {
-    const index = state.order_items.findIndex(
-      (item) => item.id === order_item.id
-    );
-    if (index !== -1) {
-      const new_order_items = [...state.order_items];
-      new_order_items[index] = order_item;
-      state.order_items = new_order_items;
-    }
-  },
-  removeProduct(state, id) {
-    state.order_items = state.order_items.filter((item) => item.id !== id);
-    this.$strapi.$http.$delete(`/order-items/${id}`);
-  },
-  addBundle(state, bundle) {
-    state.order_bundles.push(bundle);
-  },
-  removeBundle(state, id) {
-    state.order_bundles = state.order_bundles.filter((item) => item.id !== id);
-  },
-};
+    setOrder (state, newOrder) {
+        if (newOrder) {
+            state.order = {
+                id: newOrder.id,
+                order_no: newOrder.order_no,
+                order_date: newOrder.order_date,
+                total: newOrder.total,
+                cart_token: newOrder.cart_token,
+                items: []
+            };
+
+            if (newOrder.order_items) {
+                for (let i = 0; i < newOrder.order_items.length; i++) {
+                    let d = {
+                        product: {
+                            id: newOrder.order_items[i].product.id,
+                            code: newOrder.order_items[i].product.code,
+                            title: newOrder.order_items[i].product.title
+                        },
+                        quantity: newOrder.order_items[i].quantity,
+                        price: newOrder.order_items[i].price,
+                        total: newOrder.order_items[i].total,
+                        size: {
+                            id: newOrder.order_items[i].size.id,
+                            title: newOrder.order_items[i].size.title
+                        },
+                        purchase_type: {
+                            id: newOrder.order_items[i].purchase_type.id,
+                            title: newOrder.order_items[i].purchase_type.title
+                        },
+                        subscription_type: null
+                    };
+                    if (newOrder.order_items[i].subscription_type) {
+                        d.subscription_type = {
+                            id: newOrder.order_items[i].subscription_type.id,
+                            title: newOrder.order_items[i].subscription_type.title
+                        };
+                    }
+                    state.order.items.push(d);
+                }
+            }
+            this.$cookies.set('order', JSON.stringify(state.order));
+        } else {
+            state.order = null;
+            this.$cookies.set('order', null);
+        }
+	},
+    setToken (state, token) {
+		state.token = token;
+        this.$cookies.set('cart_token', token);
+	}
+}
 
 export const getters = {
-  getOrderItems(state) {
-    return state.order_items;
-  },
-  getBundleItems(state) {
-    return state.order_bundles;
-  },
-  numberOfItems(state) {
-    return state.order_items.length + state.order_bundles.length;
-  },
-  getTotal(state) {
-    return state.total;
-  },
-};
+    order (state) {
+        return state.order;
+    },
+    orderItems(state) {
+        return state.order? state.order.order_items: null;
+    },
+    orderBundles(state) {
+        return state.order? state.order.order_bundles: null;
+    },
+    orderNoOfItems (state) {
+        return state.order.order_items? (state.order.order_items.reduce((accumulator, item) => accumulator + item.quantity, 0)): 0;
+    },
+    orderBundleNoOfItems (state) {
+        return state.order.order_bundles? (state.order.order_bundles.reduce((accumulator, item) => accumulator + item.quantity, 0)): 0;
+    },
+    orderTotal(state) {
+        return state.order? state.order.total: 0;
+    },
+    cartToken (state) {
+        return state.token;
+    }
+}

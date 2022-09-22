@@ -1,18 +1,6 @@
 <template>
   <div class="first-step d-flex flex-column">
-    <div
-      v-if="!order_items.length && !order_bundles.length"
-      class="
-        cart
-        empty
-        p-4
-        d-flex
-        flex-column
-        justify-content-center
-        align-items-center
-        m-auto
-      "
-    >
+    <div v-if="!orderNoOfItems && !orderBundleNoOfItems" class="cart empty p-4 d-flex flex-column justify-content-center align-items-center m-auto">
       <h6 class="text-center">Your Shopping Cart is Empty</h6>
       <h6 class="gold cursor-pointer" v-on:click="$emit('close')">SHOP NOW</h6>
     </div>
@@ -31,12 +19,12 @@
           :settings="itemsSettings"
         >
           <CartOrderItems
-            v-if="order_items.length"
-            :order_items="order_items"
+            v-if="orderNoOfItems"
+            :order_items="orderItems"
           />
           <OrderBundles
-            v-if="order_bundles.length"
-            :order_bundles="order_bundles"
+            v-if="orderBundleNoOfItems"
+            :order_bundles="orderBundles"
           />
         </vueCustomScrollbar>
         <button
@@ -81,36 +69,17 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      order_items: "order/getOrderItems",
-      order_bundles: "order/getBundleItems",
-      totalPrice: "order/getTotal",
-      purchaseTypes: "purchase-types/getTypes",
+        orderItems: 'order/orderItems',
+        orderBundles: 'order/orderBundles',
+        orderNoOfItems: 'order/orderNoOfItems',
+        orderBundleNoOfItems: 'order/orderBundleNoOfItems',
+        totalPrice: 'order/orderTotal',
+        purchaseTypes: 'purchase-types/getTypes'
     }),
-  },
-  watch: {
-    order_items: function () {
-      this.calcTotalPrice();
-    },
-    order_bundles: function () {
-      this.calcTotalPrice();
-    },
   },
   methods: {
-    ...mapMutations({
-      setTotal: "order/setTotal",
-    }),
     calcTotalPrice: function () {
-      const orderItemsTotalPrice = this.order_items.reduce(
-        (acc, item) => (acc += item.product.price * item.quantity),
-        0
-      );
-
-      const bundlesTotalPrice = this.order_bundles.reduce(
-        (acc, item) => (acc += item.bundle.price),
-        0
-      );
-
-      this.setTotal(orderItemsTotalPrice + bundlesTotalPrice);
+      return 0
     },
   },
   mounted() {

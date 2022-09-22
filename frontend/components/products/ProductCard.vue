@@ -39,11 +39,8 @@ export default {
   methods: {
     addToCart(product) {
       const selected = {
-        product,
-        quantity: 1,
-        purchase_type: 1,
-        subscription_type: null,
-        total: product.price,
+        productId: product.id,
+        quantity: 1
       };
       this.$store.dispatch("order/addProduct", selected);
     },

@@ -12,7 +12,7 @@
         align-items-center
         gold
       "
-      >{{ numberOfItems }}</span
+      >{{ orderNoOfItems }}</span
     >
     <span class="icon icon-bag position-relative"></span>
   </div>
@@ -24,7 +24,7 @@ import { mapGetters } from "vuex";
 export default {
   computed: {
     ...mapGetters({
-      numberOfItems: "order/numberOfItems",
+      orderNoOfItems: "order/orderNoOfItems",
     }),
   },
 };

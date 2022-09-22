@@ -18,7 +18,7 @@
         <Cart />
         <span
           class="cart-total-price ml-3 font-semibold text-sm text-indigo-500"
-          >${{ numberOfItems }}</span
+          >${{ orderNoOfItems }}</span
         >
       </button>
     </div>
@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      numberOfItems: "cart/numberOfItems",
+      orderNoOfItems: "cart/orderNoOfItems",
       username: "auth/username",
     }),
   },
