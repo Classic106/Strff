@@ -15,9 +15,14 @@
     </div>
     <div class="d-flex">
       <div class="d-flex">
-        <div class="px-3">user</div>
+        <BAvatar :text="chortUserName()" class="text-uppercase" />
+        <span class="px-3 text-ellipsis">{{
+          (user && user.first_name) || "user"
+        }}</span>
       </div>
-      <span class="d-flex d-md-none" v-on:click="$emit('isOpenRightSide')"
+      <span
+        class="d-flex d-md-none align-items-center"
+        v-on:click="$emit('isOpenRightSide')"
         ><BIconThreeDotsVertical
       /></span>
     </div>
@@ -25,6 +30,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 import BurgerMenuButton from "~/components/common/BurgerMenuButton.vue";
 
 export default {
@@ -37,7 +44,18 @@ export default {
     text: "",
     isMobile: true,
   }),
+  computed: {
+    ...mapGetters({ user: "auth/user" }),
+  },
   methods: {
+    chortUserName: function () {
+      if (this.user) {
+        const { first_name, last_name } = this.user;
+
+        return `${first_name[0]} ${last_name[0]}`;
+      }
+      return "u";
+    },
     getDate: function () {
       const date = new Date();
       const year = date.getFullYear();
