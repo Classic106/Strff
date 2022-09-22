@@ -26,6 +26,10 @@ export default {};
   color: #919191;
 }
 
+.bg-grey {
+  background-color: #f6f6f6;
+}
+
 .text-ellipsis {
   text-overflow: ellipsis;
   overflow: hidden;

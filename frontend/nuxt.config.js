@@ -77,7 +77,11 @@ export default {
       "BIconChevronLeft",
       "BIconChevronRight",
       "BIconThreeDotsVertical",
-      "BAvatar"
+      "BIconHouseDoor",
+      "BIconInboxFill",
+      "BIconTagFill",
+      "BIconPersonFill",
+      "BAvatar",
     ],
   },
   axios: {
