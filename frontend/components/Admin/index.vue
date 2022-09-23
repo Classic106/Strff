@@ -21,7 +21,7 @@
       >
         <AdminMenu />
       </div>
-      <AdminContent class="content col-md-8 col p-0" :page="currentPage" />
+      <AdminContent class="content col-md-7 col p-0" />
       <div
         class="right-side p-0"
         :class="
@@ -29,7 +29,7 @@
             ? isOpenRightSide
               ? 'mobile open'
               : 'mobile'
-            : 'col-2 desctop'
+            : 'col-3 desctop'
         "
       >
         <AdminRightSide class="bg-white h-100" />
@@ -130,6 +130,7 @@ export default {
   border-left: none;
   position: relative;
   z-index: -1;
+  height: 100%;
 }
 
 .right-side.mobile.open {
