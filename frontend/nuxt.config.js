@@ -77,7 +77,7 @@ export default {
       "BIconChevronLeft",
       "BIconChevronRight",
       "BIconThreeDotsVertical",
-      "BIconHouseDoor",
+      "BIconHouseDoorFill",
       "BIconInboxFill",
       "BIconTagFill",
       "BIconPersonFill",

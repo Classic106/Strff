@@ -19,7 +19,7 @@
             : 'position-relative justify-content-between'
         "
       >
-        <AdminMenu v-on:setPage="setPage" />
+        <AdminMenu />
       </div>
       <AdminContent class="content col-md-8 col p-0" :page="currentPage" />
       <div
@@ -62,13 +62,14 @@ export default {
   computed: {
     ...mapGetters({ currentPage: "admin/currentPage" }),
   },
+  watch: {
+    currentPage: function () {
+      this.isOpenMenu = false;
+    },
+  },
   methods: {
     ...mapActions({ getProducts: "admin/getProducts" }),
     ...mapMutations({ setCurrentPage: "admin/setCurrentPage" }),
-    setPage: function (page) {
-      this.setCurrentPage(page);
-      this.isOpenMenu = false;
-    },
     isOpen: function (isOpen) {
       this.isOpenMenu = isOpen;
     },
