@@ -1,21 +1,21 @@
 <template>
   <div class="d-flex flex-column">
     <div class="border-bottom p-3">
-      <div class="d-flex">
+      <div class="d-flex justify-content-between">
         <p class="text-uppercase">total sales</p>
         <p>Today</p>
       </div>
       <span>There were no sales during this time</span>
     </div>
     <div class="border-bottom p-3">
-      <div class="d-flex">
+      <div class="d-flex justify-content-between">
         <p class="text-uppercase">total sales breakdown</p>
         <p>Today</p>
       </div>
       <span>There were no sales during this time</span>
     </div>
     <div class="border-bottom p-3">
-      <div class="d-flex">
+      <div class="d-flex justify-content-between">
         <p class="text-uppercase">top products</p>
         <p>Today</p>
       </div>
@@ -25,15 +25,19 @@
       <p class="text-uppercase">payout shedule</p>
       <div class="d-flex flex-column justify-content-between">
         <div
-          class="d-flex justify-content-between mb-2"
+          class="d-flex flex-lg-row flex-column justify-content-between mb-2"
           v-for="payout_shedule in payout_shedules"
           :key="payout_shedule.summ"
         >
-          <div>
-            <span>{{ parseDate(payout_shedule.date) }}</span>
+          <div class="d-flex justify-content-center">
+            <span class="text-nowrap mr-2">{{
+              parseDate(payout_shedule.date)
+            }}</span>
             <span class="paid p-2">Paid</span>
           </div>
-          <span>$ {{ parseSumm(payout_shedule.summ) }}</span>
+          <span class="text-nowrap text-center"
+            >$ {{ parseSumm(payout_shedule.summ) }}</span
+          >
         </div>
       </div>
     </div>
