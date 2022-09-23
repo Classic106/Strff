@@ -1,20 +1,21 @@
 <template>
   <div class="d-flex justify-content-center">
-    <AdminProducts v-if="page === 'products'" />
-    <span v-else>{{ page }}</span>
+    <AdminProducts v-if="currentPage === 'products'" />
+    <span v-else>{{ currentPage }}</span>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 import AdminProducts from "./AdminProducts";
 
 export default {
   name: "AdminContent",
-  props: {
-    page: String,
-    default: "home",
-  },
   components: { AdminProducts },
+  computed: {
+    ...mapGetters({ currentPage: "admin/currentPage" }),
+  },
 };
 </script>
 

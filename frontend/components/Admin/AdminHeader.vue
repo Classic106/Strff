@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex justify-content-between align-items-center py-3">
+  <div class="header d-flex justify-content-between align-items-center py-3">
     <div class="d-flex align-items-center">
       <div ref="menuButton" class="d-flex d-md-none pl-3">
         <BurgerMenuButton
@@ -70,4 +70,7 @@ export default {
 </script>
 
 <style scoped>
+.header {
+  border-bottom: 1px solid #000;
+}
 </style>
