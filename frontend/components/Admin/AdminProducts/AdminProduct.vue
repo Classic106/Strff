@@ -5,18 +5,18 @@
         <button v-on:click="clearProducts()" class="button">
           <BIconArrowLeft />
         </button>
-        <p class="text-ellipsis m-0 ml-2">{{ selectedProduct.title }}</p>
+        <p class="text-ellipsis m-0 ml-2">{{ title }}</p>
         <button
           class="border-left"
           v-on:click="setPreviousProduct"
-          :disabled="!previousProduct"
+          :disabled="!previous"
         >
           <BIconChevronLeft />
         </button>
         <button
           class="border-right"
           v-on:click="setNextProduct"
-          :disabled="!nextProduct"
+          :disabled="!next"
         >
           <BIconChevronRight />
         </button>
@@ -42,7 +42,7 @@
                 </div>
                 <div
                   class="image-wrap col-5 position-relative m-2"
-                  v-for="(image, index) in images"
+                  v-for="(image, index) in selected.image"
                   :key="image.id"
                 >
                   <div
@@ -61,7 +61,7 @@
                     </button>
                     <button class="btn btn-danger m-1">delete</button>
                   </div>
-                  <PreloaderImage :image="image" rounded />
+                  <PreloaderImage :image="image.url" rounded />
                 </div>
               </div>
             </div>
@@ -94,6 +94,7 @@
 <script>
 import { mapMutations, mapGetters } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
+import { prevCurrNextItems } from "~/helpers";
 
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
 
@@ -110,27 +111,23 @@ export default {
   computed: {
     ...mapGetters({
       products: "admin_products/products",
-      previousProduct: "admin_products/previousProduct",
-      nextProduct: "admin_products/nextProduct",
+      previous: "admin_products/previous",
+      selected: "admin_products/selected",
+      next: "admin_products/next",
     }),
-  },
-  watch: {
-    selectedProduct: function () {
-      const { image } = this.selectedProduct;
-      this.images = image.map((item) => this.getStrapiMedia(item.url));
-    },
   },
   methods: {
     getStrapiMedia,
+    prevCurrNextItems,
     ...mapMutations({
-      clearProducts: "admin/clearProducts",
-      setSelectedProducts: "admin/setSelectedProducts",
+      clearProducts: "admin_products/clearProducts",
+      setSelectedProducts: "admin_products/setSelectedProducts",
       setImages: "cool_light_box/setImages",
       setImageIndex: "cool_light_box/setImageIndex",
     }),
     setNextProduct: function () {
       const index = this.findIndex();
-      const result = this.prevCurrNextProduct(
+      const result = this.prevCurrNextItems(
         this.products[index + 1],
         this.products
       );
@@ -139,7 +136,7 @@ export default {
     },
     setPreviousProduct: function () {
       const index = this.findIndex();
-      const result = this.prevCurrNextProduct(
+      const result = this.prevCurrNextItems(
         this.products[index - 1],
         this.products
       );
@@ -147,18 +144,14 @@ export default {
       this.setSelectedProducts(result);
     },
     findIndex: function () {
-      return this.products.findIndex(
-        (item) => item.id === this.selectedProduct.id
-      );
+      return this.products.findIndex((item) => item.id === this.selected.id);
     },
   },
   mounted() {
-    const { title, image } = this.selectedProduct;
+    const { title, image } = this.selected;
 
     this.title = title;
-    this.images = image.map((item) => this.getStrapiMedia(item.url));
-
-    this.setImages(this.images);
+    this.setImages(image);
   },
 };
 </script>

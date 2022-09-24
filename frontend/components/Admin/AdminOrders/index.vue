@@ -7,8 +7,8 @@
       <Loader />
     </div>
     <div v-else>
-      <OrdersTable v-if="!selectedOrder" />
-      <div v-else>selected</div>
+      <OrdersTable v-if="!selected" />
+      <div v-else>selected {{ selected.id }}</div>
     </div>
   </div>
 </template>
@@ -24,7 +24,7 @@ export default {
   components: { Loader, OrdersTable },
   data: () => ({ loading: false }),
   computed: {
-    ...mapGetters({ selectedOrder: "admin_orders/selectedOrder" }),
+    ...mapGetters({ selected: "admin_orders/selected" }),
   },
   methods: {
     ...mapActions({ getOrders: "admin_orders/getOrders" }),
