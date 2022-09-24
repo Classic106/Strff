@@ -89,18 +89,9 @@ export default {
       setProducts: "admin_products/setProducts",
     }),
     onCellClick: function (params) {
-      const { selected, next, previous } = this.prevCurrNextProduct(
-        params.row,
-        this.currentProducts
-      );
-
-      const obj = {
-        selectedProduct: selected,
-        nextProduct: next,
-        previousProduct: previous,
-      };
-
-      this.setSelectedProducts(obj);
+      const result = this.prevCurrNextItems(params.row, this.currentProducts);
+      console.log(result)
+      this.setSelectedProducts(result);
       this.setProducts(this.currentProducts);
       // params.row - row object
       // params.pageIndex - index of this row on the current page.

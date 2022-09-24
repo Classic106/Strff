@@ -91,14 +91,14 @@ export default {
   methods: {
     prevCurrNextItems,
     ...mapMutations({
-      setSelectedProducts: "admin_orders/setSelectedProducts",
+      setSelectedOrders: "admin_orders/setSelectedOrders",
       setOrders: "admin_orders/setOrders",
     }),
     onCellClick: function (params) {
-      /*const result = this.prevCurrNextProduct(params.row, this.currentProducts);
+      const result = this.prevCurrNextItems(params.row, this.currentOrders);
 
-      this.setSelectedProducts(result);
-      this.setProducts(this.currentProducts);*/
+      this.setSelectedOrders(result);
+      this.setOrders(this.currentOrders);
       // params.row - row object
       // params.pageIndex - index of this row on the current page.
       // params.selected - if selection is enabled this argument

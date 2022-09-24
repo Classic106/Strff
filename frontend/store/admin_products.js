@@ -1,8 +1,8 @@
 export const state = () => ({
   products: [],
-  selectedProduct: null,
-  nextProduct: null,
-  previousProduct: null,
+  selected: null,
+  next: null,
+  previous: null,
 });
 
 export const actions = {
@@ -21,19 +21,19 @@ export const mutations = {
     state.products = products;
   },
   setSelectedProducts(state, data) {
-    const { selectedProduct, previousProduct, nextProduct } = data;
+    const { selected, previous, next } = data;
 
-    state.selectedProduct = selectedProduct;
-    state.previousProduct = previousProduct;
-    state.nextProduct = nextProduct;
+    state.selected = selected;
+    state.previous = previous;
+    state.next = next;
   },
   setNextProduct(state, product) {
     state.nextProduct = product;
   },
   clearProducts(state) {
-    state.previousProduct = null;
-    state.selectedProduct = null;
-    state.nextProduct = null;
+    state.previous = null;
+    state.selected = null;
+    state.next = null;
   },
 };
 
@@ -41,16 +41,13 @@ export const getters = {
   products: (state) => {
     return state.products;
   },
-  selectedProduct: (state) => {
-    return state.selectedProduct;
+  selected: (state) => {
+    return state.selected;
   },
-  nextProduct: (state) => {
-    return state.nextProduct;
+  next: (state) => {
+    return state.next;
   },
-  previousProduct: (state) => {
-    return state.previousProduct;
-  },
-  currentPage: (state) => {
-    return state.currentPage;
+  previous: (state) => {
+    return state.previous;
   },
 };

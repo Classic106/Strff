@@ -1,8 +1,8 @@
 export const state = () => ({
   orders: [],
-  selectedOrder: null,
-  nextOrder: null,
-  previousOrder: null,
+  selected: null,
+  next: null,
+  previous: null,
 });
 
 export const actions = {
@@ -20,16 +20,20 @@ export const mutations = {
   setOrders(state, orders) {
     state.orders = orders;
   },
-  setSelectedProducts(state, data) {
-    state = { ...state, data };
+  setSelectedOrders(state, data) {
+    const { selected, previous, next } = data;
+
+    state.selected = selected;
+    state.previous = previous;
+    state.next = next;
   },
   setNextProduct(state, order) {
     state.nextOrder = order;
   },
   clearOrders(state) {
-    state.previousOrder = null;
-    state.selectedOrder = null;
-    state.nextOrder = null;
+    state.previous = null;
+    state.selected = null;
+    state.next = null;
   },
 };
 
@@ -37,13 +41,13 @@ export const getters = {
   orders: (state) => {
     return state.orders;
   },
-  selectedOrder: (state) => {
-    return state.selectedOrder;
+  selected: (state) => {
+    return state.selected;
   },
-  nextOrder: (state) => {
-    return state.nextOrder;
+  next: (state) => {
+    return state.next;
   },
-  previousOrder: (state) => {
-    return state.previousOrder;
+  previous: (state) => {
+    return state.previous;
   },
 };

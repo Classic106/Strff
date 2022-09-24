@@ -1,6 +1,6 @@
 <template>
-  <ProductTable v-if="!selectedProduct" />
-  <AdminProduct v-else :selectedProduct="selectedProduct" />
+  <ProductTable v-if="!selected" />
+  <AdminProduct v-else />
 </template>
 
 <script>
@@ -13,7 +13,7 @@ export default {
   name: "AdminProducts",
   components: { ProductTable, AdminProduct },
   computed: {
-    ...mapGetters({ selectedProduct: "admin_products/selectedProduct" }),
+    ...mapGetters({ selected: "admin_products/selected" }),
   },
 };
 </script>

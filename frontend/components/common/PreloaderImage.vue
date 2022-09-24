@@ -20,6 +20,11 @@ export default {
     classStyle: String,
     rounded: Boolean,
   },
+  watch:{
+    image: function (){
+      console.log(this.image);
+    }
+  },
   methods: {
     getStrapiMedia,
     getImage: function (image) {
