@@ -1,9 +1,10 @@
 <template>
-  <div class="w-100 p-0">
+  <div class="d-flex flex-column w-100 p-3">
+    <h6 class="w-100 text-left">Orders</h6>
     <div class="w-100 h-100 overflow-auto">
       <vue-good-table
         :columns="columns"
-        :rows="currentProducts"
+        :rows="orders"
         :select-options="{
           enabled: true,
           selectOnCheckboxOnly: true,
@@ -19,13 +20,13 @@
         compactMode
       >
         <template slot="table-row" slot-scope="props">
-          <ProductTableColumn
-            :item="props.row"
-            v-if="props.column.field == 'title'"
+          <Items
+            :items="props.row.order_items"
+            v-if="props.column.field == 'order_items'"
           />
-          <CategoryTableColumn
-            :categories="props.row.categories"
-            v-else-if="props.column.field == 'categories'"
+          <Items
+            :items="props.row.order_bundles"
+            v-else-if="props.column.field == 'order_bundles'"
           />
           <span v-else class="d-flex align-items-center">
             {{ props.formattedRow[props.column.field] }}
@@ -34,10 +35,6 @@
         <div slot="selected-row-actions">
           <button class="btn btn-danger" v-on:click="deleteItems">
             Delete
-          </button>
-          <button class="btn btn-success" v-on:click="publish">Publish</button>
-          <button class="btn btn-warning" v-on:click="unPublish">
-            Unpublish
           </button>
         </div>
       </vue-good-table>
@@ -49,59 +46,59 @@
 import { mapGetters, mapMutations } from "vuex";
 import { prevCurrNextItems } from "~/helpers";
 
-import Loader from "~/components/common/Loader";
-import ProductTableColumn from "../ProductTable/ProductTableColumn.vue";
-import CategoryTableColumn from "../ProductTable/CategoryTableColumn.vue";
+import Items from "./Items.vue";
 
 export default {
-  name: "ProductTable",
-  components: {
-    Loader,
-    ProductTableColumn,
-    CategoryTableColumn,
-  },
+  name: "OrdersTable",
+  components: { Items },
   data: () => ({
-    currentProducts: [],
+    currentOrders: [],
     selectedRows: [],
     columns: [
       {
-        label: "Product",
-        field: "title",
-        width: "250px",
+        label: "Order",
+        field: "id",
+      },
+      {
+        label: "Date",
+        field: "order_date",
+      },
+      {
+        label: "Customer",
+        field: "customer",
+      },
+      {
+        label: "Total",
+        field: "total",
       },
       {
         label: "Status",
         field: "status",
       },
       {
-        label: "Categories",
-        field: "categories",
+        label: "Items",
+        field: "order_items",
+      },
+      {
+        label: "Bundles",
+        field: "order_bundles",
       },
     ],
   }),
   computed: {
-    ...mapGetters({ products: "admin_products/products" }),
+    ...mapGetters({ orders: "admin_orders/orders" }),
   },
   methods: {
     prevCurrNextItems,
     ...mapMutations({
-      setSelectedProducts: "admin_products/setSelectedProducts",
-      setProducts: "admin_products/setProducts",
+      setSelectedProducts: "admin_orders/setSelectedProducts",
+      setOrders: "admin_orders/setOrders",
     }),
     onCellClick: function (params) {
-      const { selected, next, previous } = this.prevCurrNextProduct(
-        params.row,
-        this.currentProducts
-      );
+      /*const result = this.prevCurrNextProduct(params.row, this.currentProducts);
 
-      const obj = {
-        selectedProduct: selected,
-        nextProduct: next,
-        previousProduct: previous,
-      };
-
-      this.setSelectedProducts(obj);
-      this.setProducts(this.currentProducts);
+      this.setSelectedProducts(result);
+      this.setProducts(this.currentProducts);*/
       // params.row - row object
       // params.pageIndex - index of this row on the current page.
       // params.selected - if selection is enabled this argument
@@ -122,7 +119,7 @@ export default {
 
       if (type === "asc") {
         if (field === "title" || field === "status") {
-          this.currentProducts.sort((a, b) => {
+          this.orders.sort((a, b) => {
             return a[field].localeCompare(b[field]);
           });
         }
@@ -155,49 +152,12 @@ export default {
       const ids = this.selectedRows.map((item) => item.id);
       console.log(ids);
     },
-    publish() {
-      const ids = this.selectedRows.map((item) => item.id);
-      console.log(ids);
-    },
-    unPublish() {
-      const ids = this.selectedRows.map((item) => item.id);
-      console.log(ids);
-    },
   },
   mounted() {
-    this.currentProducts = JSON.parse(JSON.stringify(this.products));
+    this.currentOrders = JSON.parse(JSON.stringify(this.orders));
   },
 };
 </script>
 
 <style scoped>
-@media (min-width: 300px) {
-  .product.col-sm-6 {
-    flex: 0 0 44%;
-    max-width: 44%;
-  }
-}
-
-@media (min-width: 768px) {
-  .product.col-md-4 {
-    flex: 0 0 31%;
-    max-width: 31%;
-  }
-}
-
-@media (min-width: 992px) {
-  .product.col-lg-3 {
-    flex: 0 0 23%;
-    max-width: 23%;
-  }
-}
-
-.product {
-  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.17);
-  border-radius: 10px;
-}
-
-.product:hover {
-  transform: scale(1.01);
-}
 </style>

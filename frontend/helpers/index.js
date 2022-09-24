@@ -25,22 +25,22 @@ function shuffleArray(array) {
   return arr;
 }
 
-function prevCurrNextProduct(selectedProduct, products) {
-  const { length } = products;
-  const index = products.findIndex((item) => item.id === selectedProduct.id);
+function prevCurrNextItems(selected, arr) {
+  const { length } = arr;
+  const index = arr.findIndex((item) => item.id === selected.id);
 
   const result = {
-    selectedProduct,
-    nextProduct: null,
-    previousProduct: null,
+    selected,
+    next: null,
+    previous: null,
   };
 
   if (index < length) {
-    result.nextProduct = products[index + 1];
+    result.next = arr[index + 1];
   }
 
   if (index > 0) {
-    result.previousProduct = products[index - 1];
+    result.previous = arr[index - 1];
   }
   return result;
 }
@@ -74,4 +74,4 @@ function getSeason(date = new Date()) {
   return season;
 }
 
-export { colorTitleNumbers, shuffleArray, prevCurrNextProduct, getSeason };
+export { colorTitleNumbers, shuffleArray, prevCurrNextItems, getSeason };
