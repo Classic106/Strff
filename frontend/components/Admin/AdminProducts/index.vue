@@ -13,7 +13,7 @@ export default {
   name: "AdminProducts",
   components: { ProductTable, AdminProduct },
   computed: {
-    ...mapGetters({ selectedProduct: "admin/selectedProduct" }),
+    ...mapGetters({ selectedProduct: "admin_products/selectedProduct" }),
   },
 };
 </script>

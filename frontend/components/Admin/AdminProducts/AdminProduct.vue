@@ -93,7 +93,6 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
-import { prevCurrNextProduct } from "~/helpers";
 import { getStrapiMedia } from "~/utils/medias";
 
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
@@ -110,9 +109,9 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      products: "admin/products",
-      previousProduct: "admin/previousProduct",
-      nextProduct: "admin/nextProduct",
+      products: "admin_products/products",
+      previousProduct: "admin_products/previousProduct",
+      nextProduct: "admin_products/nextProduct",
     }),
   },
   watch: {
@@ -123,7 +122,6 @@ export default {
   },
   methods: {
     getStrapiMedia,
-    prevCurrNextProduct,
     ...mapMutations({
       clearProducts: "admin/clearProducts",
       setSelectedProducts: "admin/setSelectedProducts",

@@ -68,7 +68,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions({ getProducts: "admin/getProducts" }),
+    ...mapActions({ getProducts: "admin_products/getProducts" }),
     ...mapMutations({ setCurrentPage: "admin/setCurrentPage" }),
     isOpen: function (isOpen) {
       this.isOpenMenu = isOpen;
