@@ -82,6 +82,7 @@ export default {
       "BIconTagFill",
       "BIconPersonFill",
       "BIconSearch",
+      "BIconDot",
       "BAvatar",
     ],
   },
