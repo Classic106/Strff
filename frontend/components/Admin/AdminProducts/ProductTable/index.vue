@@ -90,7 +90,7 @@ export default {
     }),
     onCellClick: function (params) {
       const result = this.prevCurrNextItems(params.row, this.currentProducts);
-      console.log(result)
+
       this.setSelectedProducts(result);
       this.setProducts(this.currentProducts);
       // params.row - row object
