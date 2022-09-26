@@ -8,7 +8,7 @@
     </div>
     <div v-else>
       <OrdersTable v-if="!selected" />
-      <div v-else>selected {{ selected.id }}</div>
+      <AdminOrder v-else />
     </div>
   </div>
 </template>
@@ -18,10 +18,11 @@ import { mapActions, mapGetters } from "vuex";
 
 import Loader from "~/components/common/Loader";
 import OrdersTable from "./OrdersTable";
+import AdminOrder from "./AdminOrder.vue";
 
 export default {
   name: "AdminOrders",
-  components: { Loader, OrdersTable },
+  components: { Loader, OrdersTable, AdminOrder },
   data: () => ({ loading: false }),
   computed: {
     ...mapGetters({ selected: "admin_orders/selected" }),

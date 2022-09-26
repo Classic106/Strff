@@ -100,9 +100,6 @@ import PreloaderImage from "~/components/common/PreloaderImage.vue";
 
 export default {
   name: "AdminProduct",
-  props: {
-    selectedProduct: Object,
-  },
   components: { PreloaderImage },
   data: () => ({
     title: "",

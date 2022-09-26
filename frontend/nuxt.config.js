@@ -83,6 +83,7 @@ export default {
       "BIconPersonFill",
       "BIconSearch",
       "BIconDot",
+      "BIconCheckCircle",
       "BAvatar",
     ],
   },
