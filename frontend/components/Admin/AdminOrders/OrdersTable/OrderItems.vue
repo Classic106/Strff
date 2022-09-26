@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "Items",
+  name: "OrderItems",
   props: {
     items: Array,
   },

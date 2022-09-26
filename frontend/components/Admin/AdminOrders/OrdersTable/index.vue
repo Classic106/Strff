@@ -20,13 +20,17 @@
         compactMode
       >
         <template slot="table-row" slot-scope="props">
-          <Items
+          <OrderItems
             :items="props.row.order_items"
             v-if="props.column.field == 'order_items'"
           />
-          <Items
+          <OrderItems
             :items="props.row.order_bundles"
             v-else-if="props.column.field == 'order_bundles'"
+          />
+          <OrderCustomers
+            :order="props.row"
+            v-else-if="props.column.field == 'user'"
           />
           <span v-else class="d-flex align-items-center">
             {{ props.formattedRow[props.column.field] }}
@@ -46,11 +50,12 @@
 import { mapGetters, mapMutations } from "vuex";
 import { prevCurrNextItems } from "~/helpers";
 
-import Items from "./Items.vue";
+import OrderItems from "./OrderItems.vue";
+import OrderCustomers from "./OrderCustomers.vue";
 
 export default {
   name: "OrdersTable",
-  components: { Items },
+  components: { OrderItems, OrderCustomers },
   data: () => ({
     currentOrders: [],
     selectedRows: [],
@@ -65,7 +70,7 @@ export default {
       },
       {
         label: "Customer",
-        field: "customer",
+        field: "user",
       },
       {
         label: "Total",
@@ -118,30 +123,54 @@ export default {
       const { field, type } = params[0];
 
       if (type === "asc") {
-        if (field === "title" || field === "status") {
-          this.orders.sort((a, b) => {
-            return a[field].localeCompare(b[field]);
+        if (field === "id" || field === "total") {
+          this.currentOrders.sort((a, b) => {
+            return a < b;
           });
         }
-        if (field === "categories") {
-          this.currentProducts.sort((a, b) => {
-            const nameA = a.categories[0].name;
-            const nameB = b.categories[0].name;
-            return nameA.localeCompare(nameB);
+        if (field === "order_date") {
+          this.currentOrders.sort((a, b) => {
+            const dateA = new Date(a);
+            const dateB = new Date(b);
+            return dateA < dateB;
+          });
+        }
+        if (field === "user") {
+          this.currentOrders.sort((a, b) => {
+            const nameA = this.getCustomerName(a);
+            const nameB = this.getCustomerName(b);
+            return nameA < nameB;
+          });
+        }
+        if (field === "order_items" || field === "order_bundles") {
+          this.currentOrders.sort((a, b) => {
+            return a.length < b.length;
           });
         }
       }
       if (type === "desc") {
-        if (field === "title" || field === "status") {
-          this.currentProducts.sort((a, b) => {
-            return b[field].localeCompare(a[field]);
+        if (field === "id" || field === "total") {
+          this.currentOrders.sort((a, b) => {
+            return a > b;
           });
         }
-        if (field === "categories") {
-          this.currentProducts.sort((a, b) => {
-            const nameA = a.categories[0].name;
-            const nameB = b.categories[0].name;
-            return nameB.localeCompare(nameA);
+        if (field === "order_date") {
+          this.currentOrders.sort((a, b) => {
+            const dateA = new Date(a);
+            const dateB = new Date(b);
+            return dateA > dateB;
+          });
+        }
+        if (field === "user") {
+          this.currentOrders.sort((a, b) => {
+            const nameA = this.getCustomerName(a);
+            const nameB = this.getCustomerName(b);
+            return nameA > nameB;
+          });
+        }
+        if (field === "order_items" || field === "order_bundles") {
+          this.currentOrders.sort((a, b) => {
+            return a.length > b.length;
           });
         }
       }
@@ -151,6 +180,23 @@ export default {
     deleteItems() {
       const ids = this.selectedRows.map((item) => item.id);
       console.log(ids);
+    },
+    getCustomerName: function (order) {
+      const { first_name, last_name, user } = order;
+
+      if (!user) {
+        return `${first_name} ${last_name}`;
+      } else {
+        const { first_name, last_name } = user;
+        return `${first_name} ${last_name}`;
+      }
+    },
+    parseDate: function (date) {
+      const day = date.getDate();
+      const month = date.getMonth();
+      const year = date.getDay();
+
+      return `${day}/${month}/${year}`;
     },
   },
   mounted() {
