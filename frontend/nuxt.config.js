@@ -85,6 +85,8 @@ export default {
       "BIconDot",
       "BIconCheckCircle",
       "BAvatar",
+      "BProgress",
+      "BProgressBar",
     ],
   },
   axios: {
