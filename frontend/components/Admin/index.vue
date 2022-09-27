@@ -49,7 +49,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions({ getProducts: "admin_products/getProducts" }),
     ...mapMutations({ setCurrentPage: "admin/setCurrentPage" }),
     isOpen: function (isOpen) {
       this.isOpenMenu = isOpen;
@@ -70,7 +69,6 @@ export default {
     },
   },
   mounted() {
-    this.getProducts();
     this.handlerResize({ target: window });
     window.addEventListener("resize", this.handlerResize);
     document.addEventListener("click", this.closeOutsideMenu);

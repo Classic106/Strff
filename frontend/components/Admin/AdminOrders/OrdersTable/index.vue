@@ -1,8 +1,8 @@
 <template>
-  <div class="d-flex flex-column w-100 p-3">
-    <h6 class="w-100 text-left">Orders</h6>
+  <div class="d-flex flex-column w-100 h-100">
+    <h6 class="w-100 text-left p-3">Orders</h6>
     <vueCustomScrollbar
-      class="w-100 h-100 overflow-auto"
+      class="scroll w-100 overflow-auto"
       :settings="scrollSettings"
     >
       <vue-good-table
@@ -99,7 +99,7 @@ export default {
     ],
     scrollSettings: {
       suppressScrollX: true,
-      wheelPropagation: true,
+      wheelPropagation: false,
     },
   }),
   computed: {
@@ -211,4 +211,7 @@ export default {
 </script>
 
 <style scoped>
+.scroll {
+  height: calc(100% - 65px);
+}
 </style>
