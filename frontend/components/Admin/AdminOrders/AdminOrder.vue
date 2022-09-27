@@ -1,6 +1,6 @@
 <template>
   <div class="row w-100 justify-content-center">
-    <div class="d-flex flex-column col-md-6 col-12">
+    <div class="d-flex flex-column col-md-8 col-12">
       <div class="d-flex align-items-start mt-3">
         <button v-on:click="clearOrders()" class="button">
           <BIconArrowLeft />
@@ -35,8 +35,8 @@
           <BIconChevronRight />
         </button>
       </div>
-      <div class="d-flex">
-        <div class="w-75">
+      <div class="row">
+        <div class="col-7">
           <div class="block w-100 mb-3">
             <div class="block-main d-flex flex-column p-3">
               <div class="d-flex">
@@ -88,7 +88,9 @@
                 </div>
                 <h6 class="ml-2 m-0">Paid</h6>
               </div>
-              <div class="d-flex justify-content-between">
+              <div
+                class="d-flex flex-lg-row flex-column justify-content-between"
+              >
                 <p>Subtotal</p>
                 <p class="text-center">
                   {{
@@ -98,7 +100,9 @@
                 </p>
                 <p>${{ 465 }}</p>
               </div>
-              <div class="d-flex justify-content-between">
+              <div
+                class="d-flex flex-lg-row flex-column justify-content-between"
+              >
                 <p>Shipping</p>
                 <p class="text-center">Flat Rate (0.07 rate lb)</p>
                 <p>${{ 465 }}</p>
@@ -114,7 +118,60 @@
             </div>
           </div>
         </div>
-        <div class="d-flex flex-column ml-2"></div>
+        <div class="col-5 d-flex flex-column">
+          <div class="block mb-3">
+            <h6 class="text-uppercase m-0 p-3">Customer</h6>
+            <div class="block-main pt-0 px-3">
+              <p>{{ getCustomer() }}</p>
+              <p>1 order</p>
+            </div>
+            <div class="block-main p-3">
+              <div class="d-flex">
+                <h6 class="text-uppercase m-0">Contact information</h6>
+                <span>Edit</span>
+              </div>
+              <p>{{ getCustomerEmail() }}</p>
+            </div>
+            <div class="block-main p-3">
+              <div class="d-flex">
+                <h6 class="text-uppercase m-0">Shipping address</h6>
+                <span>Edit</span>
+              </div>
+              <p>{{ getCustomer() }}</p>
+              <p>{{ getCustomerAdress() }}</p>
+              <p>{{ getCustomerPhone() }}</p>
+              <a href="#">View map</a>
+            </div>
+            <div class="p-3">
+              <h6 class="text-uppercase m-0">Billing adress</h6>
+              <p>Same as shipping address</p>
+            </div>
+          </div>
+          <div class="block d-flex flex-column align-items-center">
+            <div class="block-main p-3 w-100">
+              <h6 class="m-0">Fraud analysis</h6>
+              <BProgress class="mt-2" :max="100">
+                <BProgressBar :value="45 * (6 / 10)" variant="success" />
+                <BProgressBar :value="45 * (2.5 / 10)" variant="warning" />
+                <BProgressBar :value="45 * (1.5 / 10)" variant="danger" />
+              </BProgress>
+              <ul class="d-flex flex-column p-0 mt-2">
+                <li class="d-flex align-items-center mb-2">
+                  <BIconDot scale="2" class="mr-2" />
+                  <p class="m-0">
+                    Characteristic of this order similat to non-fraudulent
+                    orders observed in the past
+                  </p>
+                </li>
+                <li class="d-flex align-items-center">
+                  <BIconDot scale="2" class="mr-2" />
+                  <p class="m-0">There was 1 payment attempt</p>
+                </li>
+              </ul>
+            </div>
+            <a href="#" class="p-3">View full analisis</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -176,10 +233,51 @@ export default {
 
       return `${month} ${day}, at ${hours}: ${minutes}`;
     },
+    getCustomer: function () {
+      const { first_name, last_name, user } = this.selected;
+
+      if (!user) {
+        return `${first_name} ${last_name}`;
+      } else {
+        const { first_name, last_name } = user;
+        return `${first_name} ${last_name}`;
+      }
+    },
+    getCustomerEmail: function () {
+      const { email, user } = this.selected;
+
+      if (!user) {
+        return email;
+      } else {
+        const { email } = user;
+        return email;
+      }
+    },
+    getCustomerAdress: function () {
+      const { address1, user } = this.selected;
+
+      if (!user) {
+        return address1;
+      } else {
+        const { address1 } = user;
+        return address1;
+      }
+    },
+    getCustomerPhone: function () {
+      const { cellphone, user } = this.selected;
+
+      if (!user) {
+        return cellphone;
+      } else {
+        const { cellphone } = user;
+        return cellphone;
+      }
+    },
   },
   async mounted() {
+    console.log(this.selected);
     /*console.log(this.selected.id);
-
+  
     const result = await this.$strapi.find("orders", { id: this.selected.id });
     console.log(result);*/
   },
