@@ -1,6 +1,10 @@
 <template>
-  <div class="w-100 p-0">
-    <div class="w-100 h-100 overflow-auto">
+  <div class="w-100 h-100 p-0">
+    <h6 class="w-100 text-left p-3">Products</h6>
+    <vueCustomScrollbar
+      class="scroll w-100 overflow-auto"
+      :settings="scrollSettings"
+    >
       <vue-good-table
         :columns="columns"
         :rows="currentProducts"
@@ -41,7 +45,7 @@
           </button>
         </div>
       </vue-good-table>
-    </div>
+    </vueCustomScrollbar>
   </div>
 </template>
 
@@ -78,6 +82,10 @@ export default {
         field: "categories",
       },
     ],
+    scrollSettings: {
+      suppressScrollX: true,
+      wheelPropagation: false,
+    },
   }),
   computed: {
     ...mapGetters({ products: "admin_products/products" }),
@@ -181,6 +189,10 @@ export default {
     flex: 0 0 23%;
     max-width: 23%;
   }
+}
+
+.scroll {
+  height: calc(100% - 65px);
 }
 
 .product {

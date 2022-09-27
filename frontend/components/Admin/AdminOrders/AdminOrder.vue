@@ -1,180 +1,183 @@
 <template>
-  <div class="row w-100 justify-content-center">
-    <div class="d-flex flex-column col-md-8 col-12">
-      <div class="d-flex align-items-start mt-3">
-        <button v-on:click="clearOrders()" class="button">
-          <BIconArrowLeft />
-        </button>
-        <div class="w-100 px-3">
-          <div class="d-flex align-items-center">
-            <h6 class="m-0 px-2 font-weight-bold">{{ selected.id }}</h6>
-            <div
-              class="paid p-1 pl-2 pr-3 mr-2"
-              :class="selected.paid && 'active'"
-            >
-              <BIconDot scale="2" /> Paid
-            </div>
-            <div class="status p-1 pl-2 pr-3 mr-2">
-              <BIconDot scale="2" /> {{ selected.status }}
-            </div>
-          </div>
-          <p>{{ parseDate(selected.order_date) }}</p>
-        </div>
-        <button
-          class="border-left"
-          v-on:click="setPreviousOrder"
-          :disabled="!previous"
-        >
-          <BIconChevronLeft />
-        </button>
-        <button
-          class="border-right"
-          v-on:click="setNextOrder"
-          :disabled="!next"
-        >
-          <BIconChevronRight />
-        </button>
-      </div>
-      <div class="row">
-        <div class="col-7">
-          <div class="block w-100 mb-3">
-            <div class="block-main d-flex flex-column p-3">
-              <div class="d-flex">
-                <div
-                  class="
-                    icon-circle-wrap
-                    d-flex
-                    align-items-center
-                    justify-content-center
-                  "
-                >
-                  <BIconCheckCircle variant="success" />
-                </div>
-                <h6 class="ml-2 m-0">{{ selected.status }}dsdfds</h6>
-              </div>
-              <div class="d-flex flex-column">
-                <div
-                  class="row"
-                  v-for="order_item in selected.order_items"
-                  :key="order_item.id"
-                >
-                  <div class="col-2"></div>
-                </div>
-                <div
-                  class="row"
-                  v-for="order_bundle in selected.order_bundles"
-                  :key="order_bundle.id"
-                >
-                  <div class="col-2"></div>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex justify-content-end p-3">
-              <button class="btn btn-success">Add tracking</button>
-            </div>
-          </div>
-          <div class="block w-100">
-            <div class="block-main d-flex flex-column p-3">
-              <div class="d-flex">
-                <div
-                  class="
-                    icon-circle-wrap
-                    d-flex
-                    align-items-center
-                    justify-content-center
-                  "
-                >
-                  <BIconCheckCircle variant="success" />
-                </div>
-                <h6 class="ml-2 m-0">Paid</h6>
-              </div>
+  <vueCustomScrollbar class="w-100 h-100 overflow-auto" :settings="scrollSettings">
+    <div class="row w-100 justify-content-center">
+      <div class="d-flex flex-column col-md-8 col-12">
+        <div class="d-flex align-items-start mt-3">
+          <button v-on:click="clearOrders()" class="button">
+            <BIconArrowLeft />
+          </button>
+          <div class="w-100 px-3">
+            <div class="d-flex align-items-center">
+              <h6 class="m-0 px-2 font-weight-bold">{{ selected.id }}</h6>
               <div
-                class="d-flex flex-lg-row flex-column justify-content-between"
+                class="paid p-1 pl-2 pr-3 mr-2"
+                :class="selected.paid && 'active'"
               >
-                <p>Subtotal</p>
-                <p class="text-center">
-                  {{
-                    selected.order_items.length + selected.order_bundles.length
-                  }}
-                  items
-                </p>
-                <p>${{ 465 }}</p>
+                <BIconDot scale="2" /> Paid
               </div>
-              <div
-                class="d-flex flex-lg-row flex-column justify-content-between"
-              >
-                <p>Shipping</p>
-                <p class="text-center">Flat Rate (0.07 rate lb)</p>
-                <p>${{ 465 }}</p>
-              </div>
-              <div class="d-flex justify-content-between">
-                <p class="font-weight-bold">Total</p>
-                <p class="font-weight-bold">${{ selected.total }}</p>
+              <div class="status p-1 pl-2 pr-3 mr-2">
+                <BIconDot scale="2" /> {{ selected.status }}
               </div>
             </div>
-            <div class="d-flex justify-content-between p-3">
-              <p class="m-0">Paid by customer</p>
-              <p class="m-0">${{ selected.total }}</p>
-            </div>
+            <p>{{ parseDate(selected.order_date) }}</p>
           </div>
+          <button
+            class="border-left"
+            v-on:click="setPreviousOrder"
+            :disabled="!previous"
+          >
+            <BIconChevronLeft />
+          </button>
+          <button
+            class="border-right"
+            v-on:click="setNextOrder"
+            :disabled="!next"
+          >
+            <BIconChevronRight />
+          </button>
         </div>
-        <div class="col-5 d-flex flex-column">
-          <div class="block mb-3">
-            <h6 class="text-uppercase m-0 p-3">Customer</h6>
-            <div class="block-main pt-0 px-3">
-              <p>{{ getCustomer() }}</p>
-              <p>1 order</p>
-            </div>
-            <div class="block-main p-3">
-              <div class="d-flex">
-                <h6 class="text-uppercase m-0">Contact information</h6>
-                <span>Edit</span>
+        <div class="row">
+          <div class="col-7">
+            <div class="block w-100 mb-3">
+              <div class="block-main d-flex flex-column p-3">
+                <div class="d-flex">
+                  <div
+                    class="
+                      icon-circle-wrap
+                      d-flex
+                      align-items-center
+                      justify-content-center
+                    "
+                  >
+                    <BIconCheckCircle variant="success" />
+                  </div>
+                  <h6 class="ml-2 m-0">{{ selected.status }}dsdfds</h6>
+                </div>
+                <div class="d-flex flex-column">
+                  <div
+                    class="row"
+                    v-for="order_item in selected.order_items"
+                    :key="order_item.id"
+                  >
+                    <div class="col-2"></div>
+                  </div>
+                  <div
+                    class="row"
+                    v-for="order_bundle in selected.order_bundles"
+                    :key="order_bundle.id"
+                  >
+                    <div class="col-2"></div>
+                  </div>
+                </div>
               </div>
-              <p>{{ getCustomerEmail() }}</p>
-            </div>
-            <div class="block-main p-3">
-              <div class="d-flex">
-                <h6 class="text-uppercase m-0">Shipping address</h6>
-                <span>Edit</span>
+              <div class="d-flex justify-content-end p-3">
+                <button class="btn btn-success">Add tracking</button>
               </div>
-              <p>{{ getCustomer() }}</p>
-              <p>{{ getCustomerAdress() }}</p>
-              <p>{{ getCustomerPhone() }}</p>
-              <a href="#">View map</a>
             </div>
-            <div class="p-3">
-              <h6 class="text-uppercase m-0">Billing adress</h6>
-              <p>Same as shipping address</p>
-            </div>
-          </div>
-          <div class="block d-flex flex-column align-items-center">
-            <div class="block-main p-3 w-100">
-              <h6 class="m-0">Fraud analysis</h6>
-              <BProgress class="mt-2" :max="100">
-                <BProgressBar :value="45 * (6 / 10)" variant="success" />
-                <BProgressBar :value="45 * (2.5 / 10)" variant="warning" />
-                <BProgressBar :value="45 * (1.5 / 10)" variant="danger" />
-              </BProgress>
-              <ul class="d-flex flex-column p-0 mt-2">
-                <li class="d-flex align-items-center mb-2">
-                  <BIconDot scale="2" class="mr-2" />
-                  <p class="m-0">
-                    Characteristic of this order similat to non-fraudulent
-                    orders observed in the past
+            <div class="block w-100">
+              <div class="block-main d-flex flex-column p-3">
+                <div class="d-flex">
+                  <div
+                    class="
+                      icon-circle-wrap
+                      d-flex
+                      align-items-center
+                      justify-content-center
+                    "
+                  >
+                    <BIconCheckCircle variant="success" />
+                  </div>
+                  <h6 class="ml-2 m-0">Paid</h6>
+                </div>
+                <div
+                  class="d-flex flex-lg-row flex-column justify-content-between"
+                >
+                  <p>Subtotal</p>
+                  <p class="text-center">
+                    {{
+                      selected.order_items.length +
+                      selected.order_bundles.length
+                    }}
+                    items
                   </p>
-                </li>
-                <li class="d-flex align-items-center">
-                  <BIconDot scale="2" class="mr-2" />
-                  <p class="m-0">There was 1 payment attempt</p>
-                </li>
-              </ul>
+                  <p>${{ 465 }}</p>
+                </div>
+                <div
+                  class="d-flex flex-lg-row flex-column justify-content-between"
+                >
+                  <p>Shipping</p>
+                  <p class="text-center">Flat Rate (0.07 rate lb)</p>
+                  <p>${{ 465 }}</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <p class="font-weight-bold">Total</p>
+                  <p class="font-weight-bold">${{ selected.total }}</p>
+                </div>
+              </div>
+              <div class="d-flex justify-content-between p-3">
+                <p class="m-0">Paid by customer</p>
+                <p class="m-0">${{ selected.total }}</p>
+              </div>
             </div>
-            <a href="#" class="p-3">View full analisis</a>
+          </div>
+          <div class="col-5 d-flex flex-column">
+            <div class="block mb-3">
+              <h6 class="text-uppercase m-0 p-3">Customer</h6>
+              <div class="block-main pt-0 px-3">
+                <p>{{ getCustomer() }}</p>
+                <p>1 order</p>
+              </div>
+              <div class="block-main p-3">
+                <div class="d-flex">
+                  <h6 class="text-uppercase m-0">Contact information</h6>
+                  <span>Edit</span>
+                </div>
+                <p>{{ getCustomerEmail() }}</p>
+              </div>
+              <div class="block-main p-3">
+                <div class="d-flex">
+                  <h6 class="text-uppercase m-0">Shipping address</h6>
+                  <span>Edit</span>
+                </div>
+                <p>{{ getCustomer() }}</p>
+                <p>{{ getCustomerAdress() }}</p>
+                <p>{{ getCustomerPhone() }}</p>
+                <a href="#">View map</a>
+              </div>
+              <div class="p-3">
+                <h6 class="text-uppercase m-0">Billing adress</h6>
+                <p>Same as shipping address</p>
+              </div>
+            </div>
+            <div class="block d-flex flex-column align-items-center">
+              <div class="block-main p-3 w-100">
+                <h6 class="m-0">Fraud analysis</h6>
+                <BProgress class="mt-2" :max="100">
+                  <BProgressBar :value="45 * (6 / 10)" variant="success" />
+                  <BProgressBar :value="45 * (2.5 / 10)" variant="warning" />
+                  <BProgressBar :value="45 * (1.5 / 10)" variant="danger" />
+                </BProgress>
+                <ul class="d-flex flex-column p-0 mt-2">
+                  <li class="d-flex align-items-center mb-2">
+                    <BIconDot scale="2" class="mr-2" />
+                    <p class="m-0">
+                      Characteristic of this order similat to non-fraudulent
+                      orders observed in the past
+                    </p>
+                  </li>
+                  <li class="d-flex align-items-center">
+                    <BIconDot scale="2" class="mr-2" />
+                    <p class="m-0">There was 1 payment attempt</p>
+                  </li>
+                </ul>
+              </div>
+              <a href="#" class="p-3">View full analisis</a>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </vueCustomScrollbar>
 </template>
 
 <script>
@@ -185,6 +188,12 @@ import { prevCurrNextItems } from "~/helpers";
 
 export default {
   name: "AdminOrder",
+  data: () => ({
+    scrollSettings: {
+      suppressScrollX: true,
+      wheelPropagation: false,
+    },
+  }),
   computed: {
     ...mapGetters({
       orders: "admin_orders/orders",

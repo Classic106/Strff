@@ -1,8 +1,8 @@
 <template>
-  <div class="d-flex flex-column w-100 p-3">
-    <h6 class="w-100 text-left">Orders</h6>
+  <div class="d-flex flex-column w-100 h-100">
+    <h6 class="w-100 text-left p-3">Orders</h6>
     <vueCustomScrollbar
-      class="w-100 h-100 overflow-auto"
+      class="scroll w-100 overflow-auto"
       :settings="scrollSettings"
     >
       <vue-good-table
@@ -23,9 +23,13 @@
         compactMode
       >
         <template slot="table-row" slot-scope="props">
+          <OrderDate
+            :date="props.row.order_date"
+            v-if="props.column.field == 'order_date'"
+          />
           <OrderItems
             :items="props.row.order_items"
-            v-if="props.column.field == 'order_items'"
+            v-else-if="props.column.field == 'order_items'"
           />
           <OrderItems
             :items="props.row.order_bundles"
@@ -55,10 +59,11 @@ import { prevCurrNextItems } from "~/helpers";
 
 import OrderItems from "./OrderItems.vue";
 import OrderCustomers from "./OrderCustomers.vue";
+import OrderDate from "./OrderDate.vue";
 
 export default {
   name: "OrdersTable",
-  components: { OrderItems, OrderCustomers },
+  components: { OrderItems, OrderCustomers, OrderDate },
   data: () => ({
     currentOrders: [],
     selectedRows: [],
@@ -94,7 +99,7 @@ export default {
     ],
     scrollSettings: {
       suppressScrollX: true,
-      wheelPropagation: true,
+      wheelPropagation: false,
     },
   }),
   computed: {
@@ -198,13 +203,6 @@ export default {
         return `${first_name} ${last_name}`;
       }
     },
-    parseDate: function (date) {
-      const day = date.getDate();
-      const month = date.getMonth();
-      const year = date.getDay();
-
-      return `${day}/${month}/${year}`;
-    },
   },
   mounted() {
     this.currentOrders = JSON.parse(JSON.stringify(this.orders));
@@ -213,4 +211,7 @@ export default {
 </script>
 
 <style scoped>
+.scroll {
+  height: calc(100% - 65px);
+}
 </style>

@@ -1,94 +1,99 @@
 <template>
-  <div class="row w-100 justify-content-center">
-    <div class="d-flex flex-column col-md-6 col-12">
-      <div class="d-flex align-items-center">
-        <button v-on:click="clearProducts()" class="button">
-          <BIconArrowLeft />
-        </button>
-        <p class="text-ellipsis m-0 ml-2">{{ title }}</p>
-        <button
-          class="border-left"
-          v-on:click="setPreviousProduct"
-          :disabled="!previous"
-        >
-          <BIconChevronLeft />
-        </button>
-        <button
-          class="border-right"
-          v-on:click="setNextProduct"
-          :disabled="!next"
-        >
-          <BIconChevronRight />
-        </button>
-      </div>
-      <div class="d-flex">
-        <div class="w-75">
-          <div class="d-flex flex-column">
-            <div class="block d-flex flex-column p-2 mt-2">
-              <p class="font-weight-bold">Title</p>
-              <input type="text" v-model="title" />
-            </div>
-            <div class="block d-flex flex-column p-2 mt-2">
-              <p class="font-weight-bold">Media</p>
-              <div class="row w-100 m-0 justify-content-center">
-                <div class="col-12 mb-2">
-                  <label class="btn btn-primary w-100">
-                    <i class="fa fa-image"></i> Add<input
-                      type="file"
-                      style="display: none"
-                      name="image"
-                    />
-                  </label>
-                </div>
-                <div
-                  class="image-wrap col-5 position-relative m-2"
-                  v-for="(image, index) in selected.image"
-                  :key="image.id"
-                >
-                  <div
-                    class="
-                      image-buttons
-                      position-absolute
-                      align-items-center
-                      justify-content-center
-                    "
-                  >
-                    <button
-                      class="btn btn-primary m-1"
-                      v-on:click="setImageIndex(index)"
-                    >
-                      show
-                    </button>
-                    <button class="btn btn-danger m-1">delete</button>
+  <vueCustomScrollbar
+    class="scroll w-100 overflow-auto"
+    :settings="scrollSettings"
+  >
+    <div class="row w-100 justify-content-center">
+      <div class="d-flex flex-column col-md-6 col-12">
+        <div class="d-flex align-items-center">
+          <button v-on:click="clearProducts()" class="button">
+            <BIconArrowLeft />
+          </button>
+          <p class="text-ellipsis m-0 ml-2">{{ title }}</p>
+          <button
+            class="border-left"
+            v-on:click="setPreviousProduct"
+            :disabled="!previous"
+          >
+            <BIconChevronLeft />
+          </button>
+          <button
+            class="border-right"
+            v-on:click="setNextProduct"
+            :disabled="!next"
+          >
+            <BIconChevronRight />
+          </button>
+        </div>
+        <div class="d-flex">
+          <div class="w-75">
+            <div class="d-flex flex-column">
+              <div class="block d-flex flex-column p-2 mt-2">
+                <p class="font-weight-bold">Title</p>
+                <input type="text" v-model="title" />
+              </div>
+              <div class="block d-flex flex-column p-2 mt-2">
+                <p class="font-weight-bold">Media</p>
+                <div class="row w-100 m-0 justify-content-center">
+                  <div class="col-12 mb-2">
+                    <label class="btn btn-primary w-100">
+                      <i class="fa fa-image"></i> Add<input
+                        type="file"
+                        style="display: none"
+                        name="image"
+                      />
+                    </label>
                   </div>
-                  <PreloaderImage :image="image.url" rounded />
+                  <div
+                    class="image-wrap col-5 position-relative m-2"
+                    v-for="(image, index) in selected.image"
+                    :key="image.id"
+                  >
+                    <div
+                      class="
+                        image-buttons
+                        position-absolute
+                        align-items-center
+                        justify-content-center
+                      "
+                    >
+                      <button
+                        class="btn btn-primary m-1"
+                        v-on:click="setImageIndex(index)"
+                      >
+                        show
+                      </button>
+                      <button class="btn btn-danger m-1">delete</button>
+                    </div>
+                    <PreloaderImage :image="image.url" rounded />
+                  </div>
                 </div>
               </div>
+              <button class="btn btn-danger text-uppercase mt-2">
+                delete product
+              </button>
             </div>
-            <button class="btn btn-danger text-uppercase mt-2">
-              delete product
-            </button>
           </div>
-        </div>
-        <div class="d-flex flex-column ml-2">
-          <div class="block d-flex flex-column p-2 mt-2">
-            <p class="font-weight-bold">Product status</p>
-            <select name="" id="">
-              <option value="">published</option>
-              <option value="">unpublisched</option>
-            </select>
-          </div>
-          <div class="block d-flex flex-column p-2 mt-2">
-            <p class="font-weight-bold">Categories</p>
-            <select name="" id="">
-              <option value="">1</option>
-              <option value="">2</option>
-            </select>
+          <div class="d-flex flex-column ml-2">
+            <div class="block d-flex flex-column p-2 mt-2">
+              <p class="font-weight-bold">Product status</p>
+              <select name="" id="">
+                <option value="">published</option>
+                <option value="">unpublisched</option>
+              </select>
+            </div>
+            <div class="block d-flex flex-column p-2 mt-2">
+              <p class="font-weight-bold">Categories</p>
+              <select name="" id="">
+                <option value="">1</option>
+                <option value="">2</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </vueCustomScrollbar>
 </template>
 
 <script>
@@ -104,6 +109,10 @@ export default {
   data: () => ({
     title: "",
     images: [],
+    scrollSettings: {
+      suppressScrollX: true,
+      wheelPropagation: false,
+    },
   }),
   computed: {
     ...mapGetters({
