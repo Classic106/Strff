@@ -30,17 +30,10 @@
       />
     </div>
     <div class="d-flex">
-      <div class="d-flex">
-        <BAvatar :text="chortUserName()" class="text-uppercase" />
-        <span class="px-3 text-ellipsis">{{
-          (user && user.first_name) || "user"
-        }}</span>
-      </div>
-      <span
-        class="d-flex d-md-none align-items-center"
-        v-on:click="$emit('isOpenRightSide')"
-        ><BIconThreeDotsVertical
-      /></span>
+      <BAvatar :text="chortUserName()" class="text-uppercase" />
+      <span class="px-3 text-ellipsis">{{
+        (user && user.first_name) || "user"
+      }}</span>
     </div>
   </div>
 </template>

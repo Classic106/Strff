@@ -46,7 +46,7 @@
 
 <script>
 export default {
-  name: "AdminRightSide",
+  name: "AdminHomeRightSide",
   data: () => ({
     payout_shedules: [
       {
@@ -61,28 +61,16 @@ export default {
   }),
   methods: {
     parseDate: function (date) {
-      const monthNames = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ];
-
-      const month = monthNames[date.getMonth()];
+      const curDate = new Date(date);
       const day = date.getDay();
+      const month = curDate.toLocaleString("en-US", {
+        month: "long",
+      });
 
       return `${month} ${day}`;
     },
     parseSumm: function (summ) {
-      return new Intl.NumberFormat("en-IN", {
+      return new Intl.NumberFormat("en-US", {
         maximumSignificantDigits: 3,
       }).format(summ);
     },

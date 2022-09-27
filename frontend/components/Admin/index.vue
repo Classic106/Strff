@@ -1,16 +1,12 @@
 <template>
   <div class="bg-grey">
     <header>
-      <AdminHeader
-        :isOpenMenu="isOpenMenu"
-        v-on:isOpenMenuHeader="isOpen"
-        v-on:isOpenRightSide="isOpenRightSide = !isOpenRightSide"
-      />
+      <AdminHeader :isOpenMenu="isOpenMenu" v-on:isOpenMenuHeader="isOpen" />
     </header>
     <main class="h-100 w-100 m-0 row position-relative">
       <div
         ref="menu"
-        class="col-md-2 col-2 p-0"
+        class="col-md-2 p-0"
         :class="
           isMobile
             ? isOpenMenu
@@ -21,19 +17,7 @@
       >
         <AdminMenu />
       </div>
-      <AdminContent class="content col-md-7 col p-0" />
-      <div
-        class="right-side p-0"
-        :class="
-          isMobile
-            ? isOpenRightSide
-              ? 'mobile open'
-              : 'mobile'
-            : 'col-3 desctop'
-        "
-      >
-        <AdminRightSide class="bg-white h-100" />
-      </div>
+      <AdminContent class="content col-md-10 col-12 p-0" />
     </main>
   </div>
 </template>
@@ -44,7 +28,6 @@ import { mapGetters, mapMutations, mapActions } from "vuex";
 import AdminHeader from "./AdminHeader.vue";
 import AdminMenu from "./AdminMenu.vue";
 import AdminContent from "./AdminContent.vue";
-import AdminRightSide from "./AdminRightSide.vue";
 
 export default {
   name: "Admin",
@@ -52,12 +35,10 @@ export default {
     AdminHeader,
     AdminMenu,
     AdminContent,
-    AdminRightSide,
   },
   data: () => ({
     isOpenMenu: false,
     isMobile: true,
-    isOpenRightSide: false,
   }),
   computed: {
     ...mapGetters({ currentPage: "admin/currentPage" }),
@@ -116,30 +97,7 @@ export default {
   height: 100vh;
 }
 
-.right-side {
-  position: fixed;
-  width: 100%;
-  border-left: 1px solid black;
-}
-
-.right-side.desctop {
-  position: relative;
-}
-
-.right-side.mobile {
-  border-left: none;
-  position: relative;
-  z-index: -1;
-  height: 100%;
-}
-
-.right-side.mobile.open {
-  right: 0;
-  position: absolute;
-  z-index: 1;
-}
-
 .content {
-  height: calc(100vh - 62px);
+  height: calc(100vh - 76px);
 }
 </style>

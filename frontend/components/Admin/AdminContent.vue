@@ -10,7 +10,7 @@
 <script>
 import { mapGetters } from "vuex";
 
-import AdminHome from "./AdminHome.vue";
+import AdminHome from "./AdminHome/index.vue";
 import AdminOrders from "./AdminOrders";
 import AdminProducts from "./AdminProducts";
 
