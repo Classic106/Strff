@@ -1,7 +1,10 @@
 <template>
   <div class="d-flex flex-column w-100 p-3">
     <h6 class="w-100 text-left">Orders</h6>
-    <div class="w-100 h-100 overflow-auto">
+    <vueCustomScrollbar
+      class="w-100 h-100 overflow-auto"
+      :settings="scrollSettings"
+    >
       <vue-good-table
         :columns="columns"
         :rows="orders"
@@ -42,7 +45,7 @@
           </button>
         </div>
       </vue-good-table>
-    </div>
+    </vueCustomScrollbar>
   </div>
 </template>
 
@@ -89,6 +92,10 @@ export default {
         field: "order_bundles",
       },
     ],
+    scrollSettings: {
+      suppressScrollX: true,
+      wheelPropagation: true,
+    },
   }),
   computed: {
     ...mapGetters({ orders: "admin_orders/orders" }),
