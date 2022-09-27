@@ -23,9 +23,13 @@
         compactMode
       >
         <template slot="table-row" slot-scope="props">
+          <OrderDate
+            :date="props.row.order_date"
+            v-if="props.column.field == 'order_date'"
+          />
           <OrderItems
             :items="props.row.order_items"
-            v-if="props.column.field == 'order_items'"
+            v-else-if="props.column.field == 'order_items'"
           />
           <OrderItems
             :items="props.row.order_bundles"
@@ -55,10 +59,11 @@ import { prevCurrNextItems } from "~/helpers";
 
 import OrderItems from "./OrderItems.vue";
 import OrderCustomers from "./OrderCustomers.vue";
+import OrderDate from "./OrderDate.vue";
 
 export default {
   name: "OrdersTable",
-  components: { OrderItems, OrderCustomers },
+  components: { OrderItems, OrderCustomers, OrderDate },
   data: () => ({
     currentOrders: [],
     selectedRows: [],
@@ -197,13 +202,6 @@ export default {
         const { first_name, last_name } = user;
         return `${first_name} ${last_name}`;
       }
-    },
-    parseDate: function (date) {
-      const day = date.getDate();
-      const month = date.getMonth();
-      const year = date.getDay();
-
-      return `${day}/${month}/${year}`;
     },
   },
   mounted() {

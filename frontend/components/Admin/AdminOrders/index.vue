@@ -3,7 +3,7 @@
     class="h-100 px-sm-3 px-1 overflow-auto"
     :settings="scrollSettings"
   >
-    <div class="w-100">
+    <div class="w-100 h-100">
       <div
         v-if="loading"
         class="w-100 h-100 d-flex align-items-center justify-content-center"
