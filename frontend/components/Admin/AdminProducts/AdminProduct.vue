@@ -1,6 +1,6 @@
 <template>
   <vueCustomScrollbar
-    class="scroll w-100 overflow-auto"
+    class="h-100 w-100 overflow-auto"
     :settings="scrollSettings"
   >
     <div class="row w-100 justify-content-center">
@@ -157,7 +157,8 @@ export default {
     const { title, image } = this.selected;
 
     this.title = title;
-    this.setImages(image);
+    const images = image.map((item) => this.getStrapiMedia(item.url));
+    this.setImages(images);
   },
 };
 </script>

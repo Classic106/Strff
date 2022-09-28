@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 import AdminHeader from "./AdminHeader.vue";
 import AdminMenu from "./AdminMenu.vue";
