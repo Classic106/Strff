@@ -14,14 +14,14 @@ export const actions = {
         }
         let currentUser = this.$cookies.get('user');
         data.userId = currentUser? currentUser.id: null;
-        data.cartToken = this.$cookies.get('cart_token');
+        data.orderToken = this.$cookies.get('order_token');
         let order = await this.$strapi.$http.$post('/orders/addproduct', data);
         commit('setOrder', order);
     },
     async removeProduct({commit, state}, data) {
         let currentUser = this.$cookies.get('user');
         data.userId = currentUser? currentUser.id: null;
-        data.cartToken = this.$cookies.get('cart_token');
+        data.orderToken = this.$cookies.get('order_token');
         let order = await this.$strapi.$http.$post('/orders/removeproduct', data);
         commit('setOrder', order);
     },
@@ -29,14 +29,14 @@ export const actions = {
         let currentUser = this.$cookies.get('user');
         let data = {};
         data.userId = currentUser? currentUser.id: null;
-        data.cartToken = this.$cookies.get('cart_token');
+        data.orderToken = this.$cookies.get('order_token');
         let order = await this.$strapi.$http.$post('/orders/empty', data);
         commit('setOrder', order);
     },
     async placeOrder({commit, state}, data) {
         let currentUser = this.$cookies.get('user');
         data.userId = currentUser? currentUser.id: null;
-        data.cartToken = this.$cookies.get('cart_token');
+        data.orderToken = this.$cookies.get('order_token');
         await this.$strapi.$http.$post('/orders/placeorder', data);
         commit('setOrder', null);
     },
@@ -60,8 +60,8 @@ export const mutations = {
                 order_no: newOrder.order_no,
                 order_date: newOrder.order_date,
                 total: newOrder.total,
-                cart_token: newOrder.cart_token,
-                items: []
+                order_token: newOrder.order_token,
+                order_items: []
             };
 
             if (newOrder.order_items) {
@@ -75,25 +75,29 @@ export const mutations = {
                         quantity: newOrder.order_items[i].quantity,
                         price: newOrder.order_items[i].price,
                         total: newOrder.order_items[i].total,
-                        size: {
-                            id: newOrder.order_items[i].size.id,
-                            title: newOrder.order_items[i].size.title
-                        },
+                        size: null,
                         purchase_type: {
                             id: newOrder.order_items[i].purchase_type.id,
                             title: newOrder.order_items[i].purchase_type.title
                         },
                         subscription_type: null
                     };
+                    if (newOrder.order_items[i].size) {
+                        d.size = {
+                            id: newOrder.order_items[i].size.id,
+                            title: newOrder.order_items[i].size.title
+                        };
+                    }
                     if (newOrder.order_items[i].subscription_type) {
                         d.subscription_type = {
                             id: newOrder.order_items[i].subscription_type.id,
                             title: newOrder.order_items[i].subscription_type.title
                         };
                     }
-                    state.order.items.push(d);
+                    state.order.order_items.push(d);
                 }
             }
+
             this.$cookies.set('order', JSON.stringify(state.order));
         } else {
             state.order = null;
@@ -102,7 +106,7 @@ export const mutations = {
 	},
     setToken (state, token) {
 		state.token = token;
-        this.$cookies.set('cart_token', token);
+        this.$cookies.set('order_token', token);
 	}
 }
 
@@ -125,7 +129,7 @@ export const getters = {
     orderTotal(state) {
         return state.order? state.order.total: 0;
     },
-    cartToken (state) {
+    orderToken (state) {
         return state.token;
     }
 }

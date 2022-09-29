@@ -29,7 +29,7 @@ module.exports = {
         if (params.userId) {
             options = { 'order_status.id': orderStatus.id, 'user.id': params.userId };
         } else {
-            options = { 'order_status.id': orderStatus.id, 'cart_token': params.cartToken };
+            options = { 'order_status.id': orderStatus.id, 'order_token': params.orderToken };
         }
         let order = await strapi.services.order.findOne(options);
         if (!order) {
@@ -40,12 +40,12 @@ module.exports = {
                 total: product.price,
                 order_status: orderStatus.id,
                 user: params.userId,
-                cart_token: params.cartToken
+                order_token: params.orderToken
             });
         } else {
             order.total += (params.quantity * product.price);
             order.user = params.userId;
-            order.cart_token = params.cartToken;
+            order.order_token = params.orderToken;
             order = await strapi.services.order.update({ id: order.id }, order);
         }
         if (order.id) {
@@ -112,7 +112,7 @@ module.exports = {
         if (params.userId) {
             options = { 'order_status.id': orderStatus.id, 'user.id': params.userId };
         } else {
-            options = { 'order_status.id': orderStatus.id, 'cart_token': params.cartToken };
+            options = { 'order_status.id': orderStatus.id, 'order_token': params.orderToken };
         }
         let order = await strapi.services.order.findOne(options);
         if (order) {
@@ -162,7 +162,7 @@ module.exports = {
         if (params.userId > 0) {
             options = { 'order_status.id': orderStatus.id, 'user.id': params.userId };
         } else {
-            options = { 'order_status.id': orderStatus.id, 'cart_token': params.cartToken };
+            options = { 'order_status.id': orderStatus.id, 'order_token': params.orderToken };
         }
         let order = await strapi.services.order.findOne(options);
         if (order) {
@@ -194,7 +194,7 @@ module.exports = {
         if (params.userId > 0) {
             options = { 'order_status.id': orderStatus.id, 'user.id': params.userId };
         } else {
-            options = { 'order_status.id': orderStatus.id, 'cart_token': params.cartToken };
+            options = { 'order_status.id': orderStatus.id, 'order_token': params.orderToken };
         }
         let order = await strapi.services.order.findOne(options);
         if (order) {

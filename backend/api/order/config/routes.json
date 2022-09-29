@@ -82,7 +82,7 @@
     },
     {
         "method": "GET",
-        "path": "/order/getorder",
+        "path": "/orders/getorder",
         "handler": "order.getOrder",
         "config": {
           "policies": []

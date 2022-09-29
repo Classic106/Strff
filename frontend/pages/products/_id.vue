@@ -305,7 +305,13 @@ export default {
       return price;
     },
     addToCart: async function () {
-      this.$store.dispatch("order/addProduct", this.selected);
+        const selected = {
+            productId: this.selected.product.id,
+            quantity: this.selected.quantity,
+            purchaseTypeId: this.selected.purchase_type,
+            subscriptionTypeId: this.selected.subscription_type
+        };
+        this.$store.dispatch("order/addProduct", selected);
     },
   },
 };
