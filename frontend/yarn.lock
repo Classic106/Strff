@@ -3080,6 +3080,11 @@
   "resolved" "https://registry.npmjs.org/core-js/-/core-js-2.6.12.tgz"
   "version" "2.6.12"
 
+"core-js@^3.14.0":
+  "integrity" "sha512-y1hvKXmPHvm5B7w4ln1S4uc9eV/O5+iFExSRUimnvIph11uaizFR8LFMdONN8hG3P2pipUfX4Y/fR8rAEtcHcQ=="
+  "resolved" "https://registry.npmjs.org/core-js/-/core-js-3.25.3.tgz"
+  "version" "3.25.3"
+
 "core-js@^3.22.0":
   "integrity" "sha512-oAKwkj9xcWNBAvGbT//WiCdOMpb9XQG92/Fe3ABFM/R16BsHgePG00mFOgKf7IsCtfj8tA1kHtf/VwErhriz5Q=="
   "resolved" "https://registry.npmjs.org/core-js/-/core-js-3.23.3.tgz"
@@ -5501,6 +5506,11 @@
   dependencies:
     "picocolors" "^1.0.0"
     "shell-quote" "^1.6.1"
+
+"libphonenumber-js@^1.10.12":
+  "integrity" "sha512-b74iyWmwb4GprAUPjPkJ11GTC7KX4Pd3onpJfKxYyY8y9Rbb4ERY47LvCMEDM09WD3thiLDMXtkfDK/AX+zT7Q=="
+  "resolved" "https://registry.npmjs.org/libphonenumber-js/-/libphonenumber-js-1.10.13.tgz"
+  "version" "1.10.13"
 
 "lilconfig@^2.0.5":
   "integrity" "sha512-xaYmXZtTHPAw5m+xLN8ab9C+3a8YmV3asNSPOATITbtwrfbwaLJj8h66H1WMIpALCkqsIzK3h7oQ+PdX+LQ9Eg=="
@@ -9431,6 +9441,14 @@
   dependencies:
     "hash-sum" "^1.0.2"
     "loader-utils" "^1.0.2"
+
+"vue-tel-input@^5.12.0":
+  "integrity" "sha512-4B+8DIHOWuYbk+eTt5T7e6NNVLf98Xp4NoNzKcGH8MvnHFTGIyU1tQZ1thWWBxyOYPcB8iMnkvnzGm/HQz4yeg=="
+  "resolved" "https://registry.npmjs.org/vue-tel-input/-/vue-tel-input-5.12.0.tgz"
+  "version" "5.12.0"
+  dependencies:
+    "core-js" "^3.14.0"
+    "libphonenumber-js" "^1.10.12"
 
 "vue-template-compiler@^2.6.12", "vue-template-compiler@^2.6.14":
   "integrity" "sha512-ODQS1SyMbjKoO1JBJZojSw6FE4qnh9rIpUZn2EUT86FKizx9uH5z6uXiIrm4/Nb/gwxTi/o17ZDEGWAXHvtC7g=="

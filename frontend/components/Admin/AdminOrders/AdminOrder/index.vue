@@ -1,5 +1,8 @@
 <template>
-  <vueCustomScrollbar class="w-100 h-100 overflow-auto" :settings="scrollSettings">
+  <vueCustomScrollbar
+    class="w-100 h-100 overflow-auto"
+    :settings="scrollSettings"
+  >
     <div class="row w-100 justify-content-center">
       <div class="d-flex flex-column col-md-8 col-12">
         <div class="d-flex align-items-start mt-3">
@@ -122,13 +125,21 @@
           </div>
           <div class="col-5 d-flex flex-column">
             <div class="block mb-3">
-              <h6 class="text-uppercase m-0 p-3">Customer</h6>
+              <div
+                class="d-flex justify-content-between align-items-center p-3"
+              >
+                <h6 class="text-uppercase m-0">Customer</h6>
+                <span v-on:click="openModal('customer-modal')">Edit</span>
+              </div>
               <div class="block-main pt-0 px-3">
                 <p>{{ getCustomer() }}</p>
                 <p>1 order</p>
+                <CustomerModal :order="selected" />
               </div>
-              <div class="block-main p-3">
-                <div class="d-flex">
+              <div class="block-main">
+                <div
+                  class="d-flex justify-content-between align-items-center p-3"
+                >
                   <h6 class="text-uppercase m-0">Contact information</h6>
                   <span>Edit</span>
                 </div>
@@ -186,6 +197,8 @@ import { mapMutations, mapGetters } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
 import { prevCurrNextItems } from "~/helpers";
 
+import CustomerModal from "./CustomerModal.vue";
+
 export default {
   name: "AdminOrder",
   data: () => ({
@@ -194,6 +207,7 @@ export default {
       wheelPropagation: false,
     },
   }),
+  components: { CustomerModal },
   computed: {
     ...mapGetters({
       orders: "admin_orders/orders",
@@ -209,6 +223,9 @@ export default {
       clearOrders: "admin_orders/clearOrders",
       setSelectedOrders: "admin_orders/setSelectedOrders",
     }),
+    openModal: function (modal) {
+      this.$root.$emit("bv::show::modal", modal);
+    },
     setNextOrder: function () {
       const index = this.findCurrentIndex();
       const result = this.prevCurrNextItems(

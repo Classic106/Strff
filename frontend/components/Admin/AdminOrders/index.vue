@@ -18,7 +18,7 @@ import { mapActions, mapGetters } from "vuex";
 
 import Loader from "~/components/common/Loader";
 import OrdersTable from "./OrdersTable";
-import AdminOrder from "./AdminOrder.vue";
+import AdminOrder from "./AdminOrder";
 
 export default {
   name: "AdminOrders",
