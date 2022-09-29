@@ -1,10 +1,11 @@
 <template>
   <img
-    v-lazy
-    :class="setClassStyle()"
     src="@/assets/img/Curve-Loading.gif"
-    :data-src="`${getImage(image)}`"
+    v-if="pending"
+    alt="image"
+    :class="setClassStyle()"
   />
+  <img v-else :src="img" alt="image" :class="setClassStyle()" />
 </template>
 
 <script>
@@ -20,18 +21,24 @@ export default {
     classStyle: String,
     rounded: Boolean,
   },
-  watch:{
-    image: function (){
-      console.log(this.image);
-    }
+  data() {
+    return {
+      pending: true,
+      img: "",
+    };
+  },
+  watch: {
+    image: function () {
+      this.getImage(this.image);
+    },
   },
   methods: {
     getStrapiMedia,
     getImage: function (image) {
-      if (image) {
-        return this.getStrapiMedia(image);
-      }
-      return null;
+      this.pending = true;
+      fetch(this.getStrapiMedia(image))
+        .then((data) => (this.img = data.url))
+        .finally(() => (this.pending = false));
     },
     setClassStyle: function () {
       const rounded = this.rounded ? "border-round" : "";
@@ -42,21 +49,8 @@ export default {
       return `m-auto ${rounded}`;
     },
   },
-  directives: {
-    lazy: {
-      inserted: (el) => {
-        const observer = new IntersectionObserver((entries, observer) => {
-          entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-              let lazyImage = entry.target;
-              lazyImage.src = lazyImage.dataset.src;
-              observer.unobserve(el);
-            }
-          });
-        });
-        observer.observe(el);
-      },
-    },
+  mounted() {
+    this.getImage(this.image);
   },
 };
 </script>
