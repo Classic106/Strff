@@ -1,6 +1,6 @@
 <template>
   <div class="item d-flex align-items-center">
-    <PreloaderImage :image="item.image[0].url" :classStyle="'image'" rounded />
+    <PreloaderImage :image="item.image[0].url" :classStyle="'image'" />
     <span class="text-ellipsis ml-2">{{ item.title }}</span>
   </div>
 </template>

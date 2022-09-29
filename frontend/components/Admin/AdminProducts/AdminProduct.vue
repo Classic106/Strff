@@ -114,6 +114,13 @@ export default {
       wheelPropagation: false,
     },
   }),
+  watch: {
+    selected: function () {
+      const { image } = this.selected;
+      const images = image.map((item) => this.getStrapiMedia(item.url));
+      this.setImages(images);
+    },
+  },
   computed: {
     ...mapGetters({
       products: "admin_products/products",
