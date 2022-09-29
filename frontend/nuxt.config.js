@@ -43,6 +43,7 @@ export default {
    ** https://nuxtjs.org/guide/plugins
    */
   plugins: [
+    "~/plugins/tel-input.js",
     { src: "~/plugins/vue-good-table", ssr: false },
     { src: "~/plugins/v-credit-card-form.js", mode: "client" },
     { src: "~/plugins/vue-cool-lightbox.js", mode: "ssr" },
@@ -86,6 +87,7 @@ export default {
       "BAvatar",
       "BProgress",
       "BProgressBar",
+      "BModal",
     ],
   },
   axios: {
