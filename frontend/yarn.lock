@@ -9358,6 +9358,13 @@
     "plyr" "^3.6.7"
     "vue" "^2.6.10"
 
+"vue-country-region-select@^2.0.16":
+  "integrity" "sha512-nVeBXrC12VMaC8PBJHy3oVOcrLTeN0yJ5lCVEcI3HBD9N1zk2Z0ltBwyYd+ertGhwqDk1g5TUy56jVqX6lTTdw=="
+  "resolved" "https://registry.npmjs.org/vue-country-region-select/-/vue-country-region-select-2.0.16.tgz"
+  "version" "2.0.16"
+  dependencies:
+    "vue" "^2.5.17"
+
 "vue-custom-scrollbar@^1.4.4":
   "integrity" "sha512-GKXEmLgUpH0Z+l4Y1TChgLpcKWXqdOOelfssuQakhPy/vvA4b5tqbWdvitCu1+zJlv+5vHa8BrUhlz1gJuZHgQ=="
   "resolved" "https://registry.npmjs.org/vue-custom-scrollbar/-/vue-custom-scrollbar-1.4.4.tgz"
@@ -9463,7 +9470,7 @@
   "resolved" "https://registry.npmjs.org/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz"
   "version" "1.9.1"
 
-"vue@^2.6.10", "vue@^2.6.11", "vue@^2.6.12":
+"vue@^2.5.17", "vue@^2.6.10", "vue@^2.6.11", "vue@^2.6.12":
   "integrity" "sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ=="
   "resolved" "https://registry.npmjs.org/vue/-/vue-2.6.14.tgz"
   "version" "2.6.14"

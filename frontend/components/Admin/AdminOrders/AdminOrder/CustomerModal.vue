@@ -1,6 +1,6 @@
 <template>
   <BModal v-model="show" id="customer-modal" title="Edit customer">
-    <form v-on:submit.prevent="submit">
+    <form v-on:submit.prevent="submit" id="customer-form">
       <div class="row">
         <div class="col-6 d-flex flex-column">
           <label class="d-flex" for="first-name"> First Name </label>
@@ -53,7 +53,14 @@
         <button size="sm" class="btn btn-danger mr-2" v-on:click="show = false">
           Cancel
         </button>
-        <button size="sm" class="btn btn-success" type="submit">Save</button>
+        <button
+          size="sm"
+          class="btn btn-success"
+          type="submit"
+          form="customer-form"
+        >
+          Save
+        </button>
       </div>
     </template>
   </BModal>
