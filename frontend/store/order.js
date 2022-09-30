@@ -54,7 +54,9 @@ export const actions = {
 
 export const mutations = {
     setOrder (state, newOrder) {
-        if (newOrder) {
+        state.order = newOrder;
+
+        /*if (newOrder) {
             state.order = {
                 id: newOrder.id,
                 order_no: newOrder.order_no,
@@ -102,7 +104,7 @@ export const mutations = {
         } else {
             state.order = null;
             this.$cookies.set('order', null);
-        }
+        } */
 	},
     setToken (state, token) {
 		state.token = token;
@@ -121,10 +123,10 @@ export const getters = {
         return state.order? state.order.order_bundles: null;
     },
     orderNoOfItems (state) {
-        return state.order.order_items? (state.order.order_items.reduce((accumulator, item) => accumulator + item.quantity, 0)): 0;
+        return state.order && state.order.order_items? (state.order.order_items.reduce((accumulator, item) => accumulator + item.quantity, 0)): 0;
     },
     orderBundleNoOfItems (state) {
-        return state.order.order_bundles? (state.order.order_bundles.reduce((accumulator, item) => accumulator + item.quantity, 0)): 0;
+        return state.order && state.order.order_bundles? (state.order.order_bundles.reduce((accumulator, item) => accumulator + item.quantity, 0)): 0;
     },
     orderTotal(state) {
         return state.order? state.order.total: 0;

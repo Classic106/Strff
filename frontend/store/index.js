@@ -46,11 +46,10 @@ export const actions = {
         } else {
             query = 'order_status.id=' + orderStatusPending.id + '&order_token=' + token;
         }
-        order = await this.$strapi.find('orders', query);
-        if (order && order.length) {
-            order = order[0];
-        }
+        order = await this.$strapi.$http.$get('/order/getorder?' + query)
     }
+
+    // console.log('Token: ', token);
 
     const categories = await this.$strapi.find('categories');
     const articles = await this.$strapi.find('articles');

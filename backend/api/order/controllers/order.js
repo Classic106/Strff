@@ -83,6 +83,8 @@ module.exports = {
             'user',
             'order_items',
             'order_items.product',
+            'order_items.product.image',
+            'order_items.product.categories',
             'order_items.size',
             'order_items.purchase_type',
             'order_items.subscription_type'
@@ -146,6 +148,8 @@ module.exports = {
                 'user',
                 'order_items',
                 'order_items.product',
+                'order_items.product.image',
+                'order_items.product.categories',
                 'order_items.size',
                 'order_items.purchase_type',
                 'order_items.subscription_type'
@@ -177,6 +181,8 @@ module.exports = {
                 'user',
                 'order_items',
                 'order_items.product',
+                'order_items.product.image',
+                'order_items.product.categories',
                 'order_items.size',
                 'order_items.purchase_type',
                 'order_items.subscription_type'
@@ -230,6 +236,8 @@ module.exports = {
             'user',
             'order_items',
             'order_items.product',
+            'order_items.product.image',
+            'order_items.product.categories',
             'order_items.size',
             'order_items.purchase_type',
             'order_items.subscription_type'

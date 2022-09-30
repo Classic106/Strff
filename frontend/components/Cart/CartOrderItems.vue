@@ -59,11 +59,7 @@
           <div class="d-flex flex-sm-row flex-column">
             <p class="w-25 mb-2 grey mr-2 text-uppercase">Purchase</p>
             <p class="mb-2" v-if="!edit">
-              {{
-                purchaseTypes.filter(
-                  (type) => item.purchase_type === type.id
-                )[0].title
-              }}
+              {{ item.purchase_type.name }}
             </p>
             <PurchaseTypes
               v-else
@@ -138,7 +134,7 @@ export default {
         const item = { ...this.order_items[index], ...types };
         this.updateProduct(item);
       }
-    },
+    }
   },
 };
 </script>
