@@ -44,6 +44,7 @@ export default {
    */
   plugins: [
     "~/plugins/tel-input.js",
+    "~/plugins/country-region-select.js",
     { src: "~/plugins/vue-good-table", ssr: false },
     { src: "~/plugins/v-credit-card-form.js", mode: "client" },
     { src: "~/plugins/vue-cool-lightbox.js", mode: "ssr" },

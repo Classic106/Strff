@@ -145,9 +145,9 @@
                 <p>{{ getCustomerEmail() }}</p>
               </div>
               <div class="block-main p-3">
-                <div class="d-flex">
+                <div class="d-flex justify-content-between align-items-center">
                   <h6 class="text-uppercase m-0">Shipping address</h6>
-                  <span>Edit</span>
+                  <span v-on:click="openModal('shipping-modal')">Edit</span>
                 </div>
                 <p>{{ getCustomer() }}</p>
                 <p>{{ getCustomerAdress() }}</p>
@@ -189,6 +189,7 @@
     </div>
     <ContactModal :order="selected" />
     <CustomerModal :order="selected" />
+    <ShippingModal :order="selected" />
   </vueCustomScrollbar>
 </template>
 
@@ -200,10 +201,11 @@ import { prevCurrNextItems } from "~/helpers";
 
 import CustomerModal from "./CustomerModal.vue";
 import ContactModal from "./ContactModal.vue";
+import ShippingModal from "./ShippingModal.vue";
 
 export default {
   name: "AdminOrder",
-  components: { CustomerModal, ContactModal },
+  components: { CustomerModal, ContactModal, ShippingModal },
   data: () => ({
     scrollSettings: {
       suppressScrollX: true,

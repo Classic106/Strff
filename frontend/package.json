@@ -28,6 +28,7 @@
     "uuid": "^8.3.2",
     "v-credit-card-form": "^1.2.8",
     "vue-cool-lightbox": "^2.7.5",
+    "vue-country-region-select": "^2.0.16",
     "vue-custom-scrollbar": "^1.4.4",
     "vue-good-table": "^2.21.11",
     "vue-meta": "^2.4.0",

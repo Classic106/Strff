@@ -1,6 +1,6 @@
 <template>
   <BModal v-model="show" id="contact-modal" title="Contact customer">
-    <form>
+    <form v-on:submit.prevent="submit" id="contact-form">
       <div class="row">
         <div class="col-6 d-flex flex-column">
           <label class="d-flex" for="customer-email"> To </label>
@@ -15,7 +15,7 @@
         </div>
         <div class="col-6 mb-2 d-flex flex-column">
           <label class="d-flex" for="organization-email"> From </label>
-          <select name="" id="organization-email" v-model="chosedFromEmails">
+          <select id="organization-email" v-model="chosedFromEmails" required>
             <option v-for="email in fromMails" :key="email" :value="email">
               {{ email }}
             </option>
@@ -36,6 +36,7 @@
               :value="support"
               v-model="chosedSupportEmails"
               autofocus="true"
+              required
               class="mr-3"
             />
             <label class="d-flex" :for="support"> {{ support }} </label>
@@ -49,6 +50,7 @@
           id="subject"
           placeholder="Message from:"
           v-model="messageFrom"
+          required
           class="w-100"
         />
       </div>
@@ -69,8 +71,13 @@
         <button size="sm" class="btn btn-danger mr-2" v-on:click="show = false">
           Cancel
         </button>
-        <button size="sm" class="btn btn-success" v-on:click="submit">
-          Save
+        <button
+          size="sm"
+          class="btn btn-success"
+          type="submit"
+          form="contact-form"
+        >
+          Review Email
         </button>
       </div>
     </template>
@@ -102,7 +109,12 @@ export default {
   }),
   methods: {
     submit: function () {
-      console.log(this.messageFrom, this.customMessage);
+      console.log(
+        this.messageFrom,
+        this.chosedFromEmails,
+        this.customMessage,
+        this.chosedSupportEmails
+      );
     },
   },
 };
