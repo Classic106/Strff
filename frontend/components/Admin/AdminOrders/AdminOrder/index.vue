@@ -134,14 +134,13 @@
               <div class="block-main pt-0 px-3">
                 <p>{{ getCustomer() }}</p>
                 <p>1 order</p>
-                <CustomerModal :order="selected" />
               </div>
               <div class="block-main">
                 <div
                   class="d-flex justify-content-between align-items-center p-3"
                 >
                   <h6 class="text-uppercase m-0">Contact information</h6>
-                  <span>Edit</span>
+                  <span v-on:click="openModal('contact-modal')">Edit</span>
                 </div>
                 <p>{{ getCustomerEmail() }}</p>
               </div>
@@ -188,6 +187,8 @@
         </div>
       </div>
     </div>
+    <ContactModal :order="selected" />
+    <CustomerModal :order="selected" />
   </vueCustomScrollbar>
 </template>
 
@@ -198,16 +199,17 @@ import { getStrapiMedia } from "~/utils/medias";
 import { prevCurrNextItems } from "~/helpers";
 
 import CustomerModal from "./CustomerModal.vue";
+import ContactModal from "./ContactModal.vue";
 
 export default {
   name: "AdminOrder",
+  components: { CustomerModal, ContactModal },
   data: () => ({
     scrollSettings: {
       suppressScrollX: true,
       wheelPropagation: false,
     },
   }),
-  components: { CustomerModal },
   computed: {
     ...mapGetters({
       orders: "admin_orders/orders",
