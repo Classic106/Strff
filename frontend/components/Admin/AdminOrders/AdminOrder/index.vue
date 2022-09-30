@@ -1,6 +1,6 @@
 <template>
   <vueCustomScrollbar
-    class="w-100 h-100 overflow-auto"
+    class="w-100 h-100 overflow-auto d-flex justify-content-center"
     :settings="scrollSettings"
   >
     <div class="row w-100 justify-content-center">
@@ -74,7 +74,12 @@
                 </div>
               </div>
               <div class="d-flex justify-content-end p-3">
-                <button class="btn btn-success">Add tracking</button>
+                <button
+                  class="btn btn-success"
+                  v-on:click="openModal('tracking-modal')"
+                >
+                  Add tracking
+                </button>
               </div>
             </div>
             <div class="block w-100">
@@ -103,14 +108,14 @@
                     }}
                     items
                   </p>
-                  <p>${{ 465 }}</p>
+                  <p>${{ selected.total }}</p>
                 </div>
                 <div
                   class="d-flex flex-lg-row flex-column justify-content-between"
                 >
                   <p>Shipping</p>
                   <p class="text-center">Flat Rate (0.07 rate lb)</p>
-                  <p>${{ 465 }}</p>
+                  <p>${{ selected.total }}</p>
                 </div>
                 <div class="d-flex justify-content-between">
                   <p class="font-weight-bold">Total</p>
@@ -155,7 +160,7 @@
                 <a href="#">View map</a>
               </div>
               <div class="p-3">
-                <h6 class="text-uppercase m-0">Billing adress</h6>
+                <h6 class="text-uppercase m-0">Billing address</h6>
                 <p>Same as shipping address</p>
               </div>
             </div>
@@ -187,6 +192,7 @@
         </div>
       </div>
     </div>
+    <AddTrackingModal />
     <ContactModal :order="selected" />
     <CustomerModal :order="selected" />
     <ShippingModal :order="selected" />
@@ -202,10 +208,16 @@ import { prevCurrNextItems } from "~/helpers";
 import CustomerModal from "./CustomerModal.vue";
 import ContactModal from "./ContactModal.vue";
 import ShippingModal from "./ShippingModal.vue";
+import AddTrackingModal from "./AddTrackingModal.vue";
 
 export default {
   name: "AdminOrder",
-  components: { CustomerModal, ContactModal, ShippingModal },
+  components: {
+    CustomerModal,
+    ContactModal,
+    ShippingModal,
+    AddTrackingModal,
+  },
   data: () => ({
     scrollSettings: {
       suppressScrollX: true,

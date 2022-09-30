@@ -1,5 +1,10 @@
 <template>
-  <BModal v-model="show" id="shipping-modal" title="Edit shipping address">
+  <BModal
+    v-model="show"
+    id="shipping-modal"
+    title="Edit shipping address"
+    centered
+  >
     <form v-on:submit.prevent="submit" id="shipping-form">
       <select v-model="selectedAddress" class="mb-2">
         <option disabled>Select address</option>
@@ -135,7 +140,7 @@
     </form>
     <template #modal-footer>
       <div class="w-100 d-flex justify-content-end">
-        <button size="sm" class="btn btn-danger mr-2" v-on:click="show = false">
+        <button size="sm" class="btn btn-light mr-2" v-on:click="show = false">
           Cancel
         </button>
         <button
