@@ -1,5 +1,5 @@
 <template>
-  <BModal v-model="show" id="contact-modal" title="Contact customer">
+  <BModal v-model="show" id="contact-modal" title="Contact customer" centered>
     <form v-on:submit.prevent="submit" id="contact-form">
       <div class="row">
         <div class="col-6 d-flex flex-column">
@@ -68,7 +68,7 @@
     </form>
     <template #modal-footer>
       <div class="w-100 d-flex justify-content-end">
-        <button size="sm" class="btn btn-danger mr-2" v-on:click="show = false">
+        <button size="sm" class="btn btn-light mr-2" v-on:click="show = false">
           Cancel
         </button>
         <button
