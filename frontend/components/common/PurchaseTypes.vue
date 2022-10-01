@@ -63,12 +63,8 @@ export default {
       options: [],
       purchase_type: this.purType ? this.purType : null,
       subscription_type: this.subType ? this.subType : null,
+      purchaseTypes: []
     };
-  },
-  computed: {
-    ...mapGetters({
-      purchaseTypes: "purchase-types/getTypes",
-    }),
   },
   methods: {
     change: function (e) {
@@ -107,6 +103,9 @@ export default {
       });
     },
   },
+  async mounted () {
+    this.purchaseTypes = await this.$strapi.find('purchase-types');
+  }
 };
 </script>
 

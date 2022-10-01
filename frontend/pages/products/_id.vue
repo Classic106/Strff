@@ -207,18 +207,12 @@ export default {
     },
     index: 0,
     imageIndex: null,
+    purchaseTypes: []
   }),
-  computed: {
-    ...mapGetters({
-      purchaseTypes: "purchase-types/getTypes",
-    }),
-  },
   async mounted() {
     try {
-      this.product = await this.$strapi.findOne(
-        "products",
-        this.$route.params.id
-      );
+      this.product = await this.$strapi.findOne('products', this.$route.params.id);
+      this.purchaseTypes = await this.$strapi.find('purchase-types');
 
       this.selected.product = this.product;
       this.selected.total = this.product.price;
@@ -257,8 +251,8 @@ export default {
       }
     },
     calcPrice: function () {
-      const { product, quantity } = this.selected;
-      return product.price * quantity;
+        const { product, quantity } = this.selected;
+        return product? product.price * quantity: 0;
     },
     calcDiscoutPrice: function () {
       const { product, quantity } = this.selected;

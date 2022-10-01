@@ -248,6 +248,7 @@ export default {
         },
         loading: false,
         paymentType: 1,
+        purchaseTypes: [],
         selectedPaymentMethod: null,
         ccMonths: [
             {text: 'Jan', value: 1},
@@ -273,8 +274,7 @@ export default {
         orderBundles: 'order/orderBundles',
         orderTotal: 'order/orderTotal',
         orderNoOfItems: 'order/orderNoOfItems',
-        loggedUser: 'auth/user',
-        purchaseTypes: 'purchase-types/getTypes'
+        loggedUser: 'auth/user'
     })
   },
   methods: {
@@ -354,6 +354,7 @@ export default {
     for (let i = 1940; i < 2099; i++) {
         this.ccYears.push({'text': i, 'value': i});
     }
+    this.purchaseTypes = await this.$strapi.find('purchase-types');
   }
 }
 </script>

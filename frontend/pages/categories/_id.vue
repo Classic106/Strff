@@ -13,16 +13,16 @@ export default {
     return {
       products: [],
       error: null,
+      categories: []
     };
   },
-  computed: { ...mapGetters({ categories: "categories/categories" }) },
-  mounted() {
-    const catgory = this.categories.filter(
+  async mounted() {
+    this.categories = await this.$strapi.find('categories');
+    const category = this.categories.filter(
       (item) => item.slug === this.$route.params.id
     );
-
-    if (catgory.length) {
-      this.products = catgory[0].products;
+    if (category.length) {
+      this.products = category[0].products;
     }
   },
 };

@@ -101,12 +101,8 @@ export default {
   components: { PreloaderImage, PurchaseTypes },
   data: () => ({
     edit: false,
+    purchaseTypes: []
   }),
-  computed: {
-    ...mapGetters({
-      purchaseTypes: "purchase-types/getTypes",
-    }),
-  },
   methods: {
     ...mapActions({
       removeProduct: "order/removeProduct",
@@ -136,6 +132,9 @@ export default {
       }
     }
   },
+  async mounted () {
+    this.purchaseTypes = await this.$strapi.find('purchase-types');
+  }
 };
 </script>
 

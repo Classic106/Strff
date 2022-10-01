@@ -169,20 +169,8 @@ export default {
       suppressScrollX: true,
       wheelPropagation: false,
     },
+    articles: []
   }),
-  computed: {
-    ...mapGetters({
-      //categories: "categories/categories",
-      articles: "articles/articles",
-    }),
-    categories: {
-      //return this.$store.getters["categories/categories"];
-      get: function () {
-        return this.$store.getters["categories/categories"];
-      },
-      set: function (newValue) {},
-    },
-  },
   methods: {
     handlerResize(e) {
       this.isMobile = !(e.target.innerWidth > 992);
@@ -213,6 +201,7 @@ export default {
     },
   },
   async mounted() {
+    this.articles = await this.$strapi.find('articles');
     this.handlerResize({ target: window });
     window.addEventListener("resize", this.handlerResize);
     document.addEventListener("click", this.closeOutsideMenu);

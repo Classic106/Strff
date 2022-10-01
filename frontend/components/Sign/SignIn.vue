@@ -114,7 +114,7 @@ export default {
         });
         this.loading = false;
         this.setUser(response.user);
-        this.$store.dispatch("cart/syncByUser", response.user.id);
+        this.$store.dispatch("order/syncByUser", response.user.id);
         this.$router.go(-1);
       } catch (err) {
         this.loading = false;

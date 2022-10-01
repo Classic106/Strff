@@ -66,6 +66,7 @@ export default {
       suppressScrollX: true,
       wheelPropagation: true,
     },
+    purchaseTypes: [],
   }),
   computed: {
     ...mapGetters({
@@ -73,8 +74,7 @@ export default {
         orderBundles: 'order/orderBundles',
         orderNoOfItems: 'order/orderNoOfItems',
         orderBundleNoOfItems: 'order/orderBundleNoOfItems',
-        totalPrice: 'order/orderTotal',
-        purchaseTypes: 'purchase-types/getTypes'
+        totalPrice: 'order/orderTotal'
     }),
   },
   methods: {
@@ -82,8 +82,9 @@ export default {
       return 0
     },
   },
-  mounted() {
+  async mounted() {
     this.calcTotalPrice();
+    this.purchaseTypes = await this.$strapi.find('purchase-types');
   },
 };
 </script>
