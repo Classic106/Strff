@@ -39,7 +39,7 @@
             <BIconChevronRight />
           </button>
         </div>
-        <div class="row">
+        <div class="row mb-3">
           <div class="col-7">
             <div class="block w-100 mb-3">
               <div class="block-main d-flex flex-column p-3">
@@ -186,7 +186,12 @@
                   </li>
                 </ul>
               </div>
-              <a href="#" class="p-3">View full analisis</a>
+              <a
+                href="#"
+                class="p-3"
+                v-on:click.prevent="openModal('fraud-analysis')"
+                >View full analisis</a
+              >
             </div>
           </div>
         </div>
@@ -196,6 +201,7 @@
     <ContactModal :order="selected" />
     <CustomerModal :order="selected" />
     <ShippingModal :order="selected" />
+    <FraudAnalysisModal />
   </vueCustomScrollbar>
 </template>
 
@@ -209,6 +215,7 @@ import CustomerModal from "./CustomerModal.vue";
 import ContactModal from "./ContactModal.vue";
 import ShippingModal from "./ShippingModal.vue";
 import AddTrackingModal from "./AddTrackingModal.vue";
+import FraudAnalysisModal from "./FraudAnalysisModal.vue";
 
 export default {
   name: "AdminOrder",
@@ -217,6 +224,7 @@ export default {
     ContactModal,
     ShippingModal,
     AddTrackingModal,
+    FraudAnalysisModal,
   },
   data: () => ({
     scrollSettings: {
