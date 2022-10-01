@@ -135,15 +135,20 @@ export default {
       const { field, type } = params[0];
 
       if (type === "asc") {
-        if (field === "id" || field === "total") {
+        if (field === "id") {
           this.currentOrders.sort((a, b) => {
-            return a < b;
+            return a.id < b.id;
+          });
+        }
+        if (field === "total") {
+          this.currentOrders.sort((a, b) => {
+            return a.total < b.total;
           });
         }
         if (field === "order_date") {
           this.currentOrders.sort((a, b) => {
-            const dateA = new Date(a);
-            const dateB = new Date(b);
+            const dateA = new Date(a.order_date);
+            const dateB = new Date(b.order_date);
             return dateA < dateB;
           });
         }
@@ -154,22 +159,32 @@ export default {
             return nameA < nameB;
           });
         }
-        if (field === "order_items" || field === "order_bundles") {
+        if (field === "order_items") {
           this.currentOrders.sort((a, b) => {
-            return a.length < b.length;
+            return a.order_items.length < b.order_items.length;
+          });
+        }
+        if (field === "order_bundles") {
+          this.currentOrders.sort((a, b) => {
+            return a.order_bundles.length < b.order_bundles.length;
           });
         }
       }
       if (type === "desc") {
-        if (field === "id" || field === "total") {
+        if (field === "id") {
           this.currentOrders.sort((a, b) => {
-            return a > b;
+            return a.id > b.id;
+          });
+        }
+        if (field === "total") {
+          this.currentOrders.sort((a, b) => {
+            return a.total > b.total;
           });
         }
         if (field === "order_date") {
           this.currentOrders.sort((a, b) => {
-            const dateA = new Date(a);
-            const dateB = new Date(b);
+            const dateA = new Date(a.order_date);
+            const dateB = new Date(b.order_date);
             return dateA > dateB;
           });
         }
@@ -180,9 +195,14 @@ export default {
             return nameA > nameB;
           });
         }
-        if (field === "order_items" || field === "order_bundles") {
+        if (field === "order_items") {
           this.currentOrders.sort((a, b) => {
-            return a.length > b.length;
+            return a.order_items.length > b.order_items.length;
+          });
+        }
+        if (field === "order_bundles") {
+          this.currentOrders.sort((a, b) => {
+            return a.order_bundles.length > b.order_bundles.length;
           });
         }
       }

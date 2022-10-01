@@ -60,6 +60,7 @@
 export default {
   name: "FraudAnalysisModal",
   data: () => ({
+    show: false,
     indicators: [
       {
         title:
