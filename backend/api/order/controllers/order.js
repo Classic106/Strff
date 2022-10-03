@@ -6,6 +6,18 @@
  */
 
 module.exports = {
+  async find(ctx) {
+    const result = await strapi.services["order"].find(ctx.query, [
+      "order_items.product",
+      "order_items.product.image",
+      "order_items.product.categories",
+      "order_bundles.bundle",
+      "order_bundles.bundle.products.image",
+      "order_bundles.bundle.products.categories",
+    ]);
+
+    return result;
+  },
   async findOne(ctx) {
     const { id } = ctx.params;
 
