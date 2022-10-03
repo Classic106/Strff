@@ -18,7 +18,11 @@
             </div>
           </div>
         </div>
-        <div class="row mb-3">
+        <Loader
+          v-if="loading"
+          class="w-100 h-100 d-flex align-items-center justify-content-center"
+        />
+        <div v-else class="row mb-3">
           <div class="col-7">
             <div class="block w-100 d-flex justify-content-between mb-3 p-3">
               <div>
@@ -40,35 +44,30 @@
                 <p>Average order value</p>
               </div>
             </div>
-            <div class="block w-100 p-3">
-              <h6 class="w-100">Last order place</h6>
-              <div class="d-flex justify-content-between">
-                <div class="d-flex align-items-center">
-                  <a href="#" v-on:click.prevent="" class="mr-2">{{
-                    customerOrders[0] && customerOrders[0].id
-                  }}</a>
-                  <div
-                    class="paid p-1 pl-2 pr-3 mr-2"
-                    :class="
-                      customerOrders[0] && customerOrders[0].paid && 'active'
-                    "
-                  >
-                    <BIconDot scale="2" /> Paid
-                  </div>
-                  <div class="status p-1 pl-2 pr-3 mr-2">
-                    <BIconDot scale="2" />
-                    {{ customerOrders[0] && customerOrders[0].status }}
-                  </div>
-                </div>
-                <span class="font-weight-bold"
-                  >$ {{ customerOrders[0] && customerOrders[0].total }}</span
-                >
+            <div class="block w-100">
+              <div v-if="viewAll === false" class="p-3">
+                <h6 class="w-100">Last order place</h6>
+                <CustomerOrder :order="customerOrders[0]" />
               </div>
-              <p>
-                {{
-                  customerOrders[0] && parseDate(customerOrders[0].order_date)
-                }}
-              </p>
+              <div v-else class="p-3">
+                <h6 class="w-100">All orders</h6>
+                <CustomerOrder
+                  v-for="customerOrder in customerOrders"
+                  :order="customerOrder"
+                  :key="customerOrder.id"
+                />
+              </div>
+              <div
+                class="bottom d-flex justify-content-end align-items-center p-3"
+              >
+                <a
+                  href="#"
+                  v-on:click.prevent="viewAll = !viewAll"
+                  class="mr-2"
+                  >{{ viewAll ? "Hide all oeders" : "View all orders" }}</a
+                >
+                <button class="btn btn-success">Create order</button>
+              </div>
             </div>
           </div>
           <div class="col-5 d-flex flex-column">
@@ -84,17 +83,22 @@
 <script>
 import { mapMutations, mapGetters } from "vuex";
 
-import { getStrapiMedia } from "~/utils/medias";
 import { prevCurrNextItems } from "~/helpers";
 import { states_hashes } from "@/data";
 
+import Loader from "~/components/common/Loader.vue";
+import CustomerOrder from "./CustomerOrder.vue";
+
 export default {
   name: "Customer",
+  components: { Loader, CustomerOrder },
   data: () => ({
+    viewAll: false,
     customerOrders: [],
     ordersSpent: 0,
     summOrders: {},
     states_hashes,
+    loading: false,
     scrollSettings: {
       suppressScrollX: true,
       wheelPropagation: false,
@@ -106,7 +110,6 @@ export default {
     }),
   },
   methods: {
-    getStrapiMedia,
     prevCurrNextItems,
     ...mapMutations({
       clearOrders: "admin_orders/clearOrders",
@@ -128,13 +131,13 @@ export default {
     },
     customerDuration: function () {
       const { created_at, user } = this.selected;
-      let customerRegistrationDate = new Date();
+      let customerRegistrationDate = new Date(created_at);
 
-      if (user) {
+      /*if (user) {
         customerRegistrationDate = new Date(user.created_at);
       } else {
         customerRegistrationDate = new Date(created_at);
-      }
+      }*/
 
       const intervals = [
         { label: "year", seconds: 31536000 },
@@ -151,18 +154,6 @@ export default {
       const interval = intervals.find((i) => i.seconds < seconds);
       const count = Math.floor(seconds / interval.seconds);
       return `${count} ${interval.label}${count !== 1 ? "s" : ""} ago`;
-    },
-    parseDate: function (date) {
-      const options = { month: "long" };
-
-      const d = new Date(date);
-
-      const month = new Intl.DateTimeFormat("en-US", options).format(d);
-      const day = d.getDate();
-      const hours = d.getHours();
-      const minutes = d.getMinutes();
-
-      return `${month} ${day}, at ${hours}: ${minutes}`;
     },
     getCustomerName: function () {
       const { first_name, last_name, user } = this.selected;
@@ -206,6 +197,7 @@ export default {
     },
   },
   async mounted() {
+    this.loading = true;
     const { user, last_name, first_name } = this.selected;
 
     const orders = await this.$strapi.$orders.find();
@@ -248,10 +240,7 @@ export default {
         0
       );
     }
-
-    /*console.log(this.selected.id);
-    const result = await this.$strapi.find("orders", { id: this.selected.id });
-    console.log(result);*/
+    this.loading = false;
   },
 };
 </script>
@@ -298,5 +287,23 @@ export default {
 
 .block-main {
   border-bottom: 1px solid black;
+}
+
+.wrap-img > span {
+  top: -1rem;
+  right: -0.2rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: #e4e5e7;
+}
+
+.wrap-img > img {
+  border: 2px solid #f3f4f5;
+  border-radius: 5px;
+}
+
+.bottom {
+  border-top: 1px solid #000;
 }
 </style>

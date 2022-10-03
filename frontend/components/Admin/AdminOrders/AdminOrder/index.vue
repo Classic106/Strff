@@ -5,7 +5,7 @@
 
 <script>
 import Order from "./Order.vue";
-import Customer from "./Customer.vue";
+import Customer from "./Customer";
 
 export default {
   name: "AdminOrder",
