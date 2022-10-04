@@ -1,7 +1,7 @@
 <template>
-  <CreateOrder
-    v-if="isCreateOrder"
-    v-on:closeCreateOrder="isCreateOrder = false"
+  <AddOrder
+    v-if="isAddOrder"
+    v-on:closeCreateOrder="isAddOrder = false"
   />
   <vueCustomScrollbar
     v-else
@@ -71,9 +71,9 @@
                 >
                 <button
                   class="btn btn-success"
-                  v-on:click="isCreateOrder = true"
+                  v-on:click="isAddOrder = true"
                 >
-                  Create order
+                  Add order
                 </button>
               </div>
             </div>
@@ -94,7 +94,7 @@ import { states_hashes } from "@/data";
 import Loader from "~/components/common/Loader.vue";
 import CustomerOrder from "./CustomerOrder.vue";
 import CustomerRightSide from "./CustomerRightSide.vue";
-import CreateOrder from "./CreateOrder.vue";
+import AddOrder from "./AddOrder.vue";
 
 export default {
   name: "Customer",
@@ -102,7 +102,7 @@ export default {
     Loader,
     CustomerOrder,
     CustomerRightSide,
-    CreateOrder,
+    AddOrder,
   },
   data: () => ({
     viewAll: false,
@@ -111,7 +111,7 @@ export default {
     summOrders: {},
     states_hashes,
     loading: false,
-    isCreateOrder: false,
+    isAddOrder: false,
     scrollSettings: {
       suppressScrollX: true,
       wheelPropagation: false,
