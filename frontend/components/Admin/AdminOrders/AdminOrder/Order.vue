@@ -137,27 +137,25 @@
               </div>
               <div class="block-main pt-0 px-3">
                 <a href="#" v-on:click.prevent="$emit('setCustomer')">
-                  {{ getCustomer() }}
+                  {{ getCustomerName() }}
                 </a>
                 <p>1 order</p>
               </div>
-              <div class="block-main">
-                <div
-                  class="d-flex justify-content-between align-items-center p-3"
-                >
+              <div class="block-main p-3">
+                <div class="d-flex justify-content-between align-items-center">
                   <h6 class="text-uppercase m-0">Contact information</h6>
                   <span v-on:click="openModal('contact-modal')">Edit</span>
                 </div>
-                <p>{{ getCustomerEmail() }} customer</p>
+                <p>{{ selected.email }} customer</p>
               </div>
               <div class="block-main p-3">
                 <div class="d-flex justify-content-between align-items-center">
                   <h6 class="text-uppercase m-0">Shipping address</h6>
                   <span v-on:click="openModal('shipping-modal')">Edit</span>
                 </div>
-                <p>{{ getCustomer() }}</p>
-                <p>{{ getCustomerAdress() }}</p>
-                <p>{{ getCustomerPhone() }}</p>
+                <p>{{ getCustomerName() }}</p>
+                <p>{{ selected.address1 && selected.address2 }}</p>
+                <p>{{ selected.cellphone }}</p>
                 <a href="#">View map</a>
               </div>
               <div class="p-3">
@@ -281,45 +279,9 @@ export default {
 
       return `${month} ${day}, at ${hours}: ${minutes}`;
     },
-    getCustomer: function () {
-      const { first_name, last_name, user } = this.selected;
-
-      if (!user) {
-        return `${first_name} ${last_name}`;
-      } else {
-        const { first_name, last_name } = user;
-        return `${first_name} ${last_name}`;
-      }
-    },
-    getCustomerEmail: function () {
-      const { email, user } = this.selected;
-
-      if (!user) {
-        return email;
-      } else {
-        const { email } = user;
-        return email;
-      }
-    },
-    getCustomerAdress: function () {
-      const { address1, user } = this.selected;
-
-      if (!user) {
-        return address1;
-      } else {
-        const { address1 } = user;
-        return address1;
-      }
-    },
-    getCustomerPhone: function () {
-      const { cellphone, user } = this.selected;
-
-      if (!user) {
-        return cellphone;
-      } else {
-        const { cellphone } = user;
-        return cellphone;
-      }
+    getCustomerName: function () {
+      const { firstName, lastName } = this.selected;
+      return `${firstName} ${lastName}`;
     },
   },
 };

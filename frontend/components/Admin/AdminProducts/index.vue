@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 import Loader from "~/components/common/Loader";
 import ProductTable from "./ProductTable";
@@ -31,11 +31,15 @@ export default {
   },
   methods: {
     ...mapActions({ getProducts: "admin_products/getProducts" }),
+    ...mapMutations({ clearProducts: "admin_products/clearProducts" }),
   },
   async mounted() {
     this.loading = true;
     await this.getProducts();
     this.loading = false;
+  },
+  destroyed() {
+    this.clearProducts();
   },
 };
 </script>

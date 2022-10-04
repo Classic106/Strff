@@ -34,6 +34,7 @@ export const mutations = {
     state.previous = null;
     state.selected = null;
     state.next = null;
+    state.orders = [];
   },
 };
 
