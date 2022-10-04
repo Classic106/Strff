@@ -22,7 +22,7 @@
         <li
           v-for="order_item in order.order_items"
           :key="order_item.id"
-          class="row"
+          class="row w-100"
         >
           <div class="wrap-img col-2 position-relative">
             <span
@@ -58,6 +58,7 @@
             <div class="wrap-img">
               <PreloaderImage
                 :image="order_bundle.bundle.products[0].image[0].url"
+                class="p-0"
               />
             </div>
             +
@@ -106,4 +107,12 @@ export default {
 </script>
 
 <style scoped>
+.wrap-img > span {
+  top: -.8rem;
+  right: -.5rem;
+  width: 2rem;
+  height: 2rem;
+  background-color: #e4e5e7;
+  border-radius: 50%;
+}
 </style>

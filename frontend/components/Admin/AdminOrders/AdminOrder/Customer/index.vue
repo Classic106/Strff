@@ -1,5 +1,10 @@
 <template>
+  <CreateOrder
+    v-if="isCreateOrder"
+    v-on:closeCreateOrder="isCreateOrder = false"
+  />
   <vueCustomScrollbar
+    v-else
     class="w-100 h-100 overflow-auto d-flex justify-content-center"
     :settings="scrollSettings"
   >
@@ -64,7 +69,12 @@
                   class="mr-2"
                   >{{ viewAll ? "Hide all oeders" : "View all orders" }}</a
                 >
-                <button class="btn btn-success">Create order</button>
+                <button
+                  class="btn btn-success"
+                  v-on:click="isCreateOrder = true"
+                >
+                  Create order
+                </button>
               </div>
             </div>
           </div>
@@ -84,6 +94,7 @@ import { states_hashes } from "@/data";
 import Loader from "~/components/common/Loader.vue";
 import CustomerOrder from "./CustomerOrder.vue";
 import CustomerRightSide from "./CustomerRightSide.vue";
+import CreateOrder from "./CreateOrder.vue";
 
 export default {
   name: "Customer",
@@ -91,6 +102,7 @@ export default {
     Loader,
     CustomerOrder,
     CustomerRightSide,
+    CreateOrder,
   },
   data: () => ({
     viewAll: false,
@@ -99,6 +111,7 @@ export default {
     summOrders: {},
     states_hashes,
     loading: false,
+    isCreateOrder: false,
     scrollSettings: {
       suppressScrollX: true,
       wheelPropagation: false,
