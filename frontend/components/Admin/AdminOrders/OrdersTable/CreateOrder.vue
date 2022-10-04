@@ -2,7 +2,7 @@
   <div class="row justify-content-center">
     <div class="col-10 mt-3">
       <div class="d-flex w-100 mb-3 d-flex align-items-center">
-        <button v-on:click="$emit('closeCreateOrder')" class="mr-3">
+        <button v-on:click="$emit('setIsTable')" class="mr-3">
           <BIconArrowLeft />
         </button>
         <h6 class="m-0">Create order</h6>
@@ -55,7 +55,7 @@
           <div class="block p-3">
             <div class="d-flex justify-content-between align-items-center">
               <h6>Customer</h6>
-              <a href="#" v-on:click.prevent="">Add custom customer</a>
+              <a href="#" v-on:click.prevent="">Add customer</a>
             </div>
             <div class="d-flex align-items-center position-relative">
               <BIconSearch class="search-icon d-flex position-absolute" />
