@@ -84,6 +84,7 @@ export default {
       "BIconPersonFill",
       "BIconSearch",
       "BIconDot",
+      "BIconX",
       "BIconCheckCircle",
       "BAvatar",
       "BProgress",

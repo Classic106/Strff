@@ -94,7 +94,7 @@
           id="s-contact-no"
           type="text"
           placeholder="Enter your cellphone"
-          v-model="userInfo.contactNo"
+          v-model="userInfo.cellphone"
           required
           autofocus="true"
           class=""
@@ -203,10 +203,6 @@ export default {
       this.saved = true;
       this.setUserInfo(this.userInfo);
       this.$emit("setUserInfo", this.userInfo);
-    },
-    cancel: function () {
-      this.question = false;
-      this.createAccount = false;
     },
   },
   mounted() {
