@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 import Loader from "~/components/common/Loader";
 import OrdersTable from "./OrdersTable";
@@ -31,11 +31,15 @@ export default {
   },
   methods: {
     ...mapActions({ getOrders: "admin_orders/getOrders" }),
+    ...mapMutations({ clearOrders: "admin_orders/clearOrders" }),
   },
   async mounted() {
     this.loading = true;
     await this.getOrders();
     this.loading = false;
+  },
+  destroyed() {
+    this.clearOrders();
   },
 };
 </script>

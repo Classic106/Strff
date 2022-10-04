@@ -1,5 +1,5 @@
 <template>
-  <div class="text-ellipsis">{{ getCustomer() }}</div>
+  <div class="text-ellipsis">{{ getCustomerName() }}</div>
 </template>
 
 <script>
@@ -9,15 +9,9 @@ export default {
     order: Object,
   },
   methods: {
-    getCustomer: function () {
-      const { first_name, last_name, user } = this.order;
-
-      if (!user) {
-        return `${first_name} ${last_name}`;
-      } else {
-        const { first_name, last_name } = user;
-        return `${first_name} ${last_name}`;
-      }
+    getCustomerName: function () {
+      const { firstName, lastName } = this.order;
+      return `${firstName} ${lastName}`;
     },
   },
 };

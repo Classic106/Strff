@@ -12,9 +12,7 @@
           <div class="w-100 px-3">
             <div class="d-flex flex-column">
               <h6 class="m-0 px-2 font-weight-bold">{{ getCustomerName() }}</h6>
-              <span
-                >{{ showHash(selected.state) }} {{ customerDuration() }}</span
-              >
+              <span>{{ selected.state }} {{ customerDuration() }}</span>
             </div>
           </div>
         </div>
@@ -70,10 +68,7 @@
               </div>
             </div>
           </div>
-          <div class="col-5 d-flex flex-column">
-            <div class="block mb-3"></div>
-            <div class="block d-flex flex-column align-items-center"></div>
-          </div>
+          <CustomerRightSide class="col-5" :order="selected" />
         </div>
       </div>
     </div>
@@ -88,10 +83,15 @@ import { states_hashes } from "@/data";
 
 import Loader from "~/components/common/Loader.vue";
 import CustomerOrder from "./CustomerOrder.vue";
+import CustomerRightSide from "./CustomerRightSide.vue";
 
 export default {
   name: "Customer",
-  components: { Loader, CustomerOrder },
+  components: {
+    Loader,
+    CustomerOrder,
+    CustomerRightSide,
+  },
   data: () => ({
     viewAll: false,
     customerOrders: [],
@@ -115,29 +115,12 @@ export default {
       clearOrders: "admin_orders/clearOrders",
       setSelectedOrders: "admin_orders/setSelectedOrders",
     }),
-    showHash: function (hash) {
-      if (
-        !this.selected &&
-        this.selected.state &&
-        this.selected.state.name === hash.name
-      ) {
-        return hash.abbreviation;
-      }
-
-      return hash && hash.name;
-    },
     openModal: function (modal) {
       this.$root.$emit("bv::show::modal", modal);
     },
     customerDuration: function () {
-      const { created_at, user } = this.selected;
-      let customerRegistrationDate = new Date(created_at);
-
-      /*if (user) {
-        customerRegistrationDate = new Date(user.created_at);
-      } else {
-        customerRegistrationDate = new Date(created_at);
-      }*/
+      const { created_at } = this.selected;
+      const regDate = new Date(created_at);
 
       const intervals = [
         { label: "year", seconds: 31536000 },
@@ -148,92 +131,28 @@ export default {
         { label: "second", seconds: 1 },
       ];
 
-      const seconds = Math.floor(
-        (Date.now() - customerRegistrationDate.getTime()) / 1000
-      );
+      const seconds = Math.floor((Date.now() - regDate.getTime()) / 1000);
       const interval = intervals.find((i) => i.seconds < seconds);
       const count = Math.floor(seconds / interval.seconds);
       return `${count} ${interval.label}${count !== 1 ? "s" : ""} ago`;
     },
     getCustomerName: function () {
-      const { first_name, last_name, user } = this.selected;
-
-      if (!user) {
-        return `${first_name} ${last_name}`;
-      } else {
-        const { first_name, last_name } = user;
-        return `${first_name} ${last_name}`;
-      }
-    },
-    getCustomerEmail: function () {
-      const { email, user } = this.selected;
-
-      if (!user) {
-        return email;
-      } else {
-        const { email } = user;
-        return email;
-      }
-    },
-    getCustomerAdress: function () {
-      const { address1, user } = this.selected;
-
-      if (!user) {
-        return address1;
-      } else {
-        const { address1 } = user;
-        return address1;
-      }
-    },
-    getCustomerPhone: function () {
-      const { cellphone, user } = this.selected;
-
-      if (!user) {
-        return cellphone;
-      } else {
-        const { cellphone } = user;
-        return cellphone;
-      }
+      const { firstName, lastName } = this.selected;
+      return `${firstName} ${lastName}`;
     },
   },
   async mounted() {
     this.loading = true;
-    const { user, last_name, first_name } = this.selected;
+    const { firstName, lastName } = this.selected;
 
-    const orders = await this.$strapi.$orders.find();
+    const orders = await this.$strapi.$http.$get(
+      `/orders?firstName=${firstName}&lastName=${lastName}`
+    );
 
-    this.customerOrders = orders.filter((order) => {
-      const compareName = (user_order, firstName, lastLame) => {
-        const { last_name, first_name } = user_order;
-        if (firstName === first_name && lastLame === last_name) {
-          return true;
-        }
-        return false;
-      };
-
-      const {
-        user: orderUser,
-        last_name: ordeFirstName,
-        first_name: orderLastName,
-      } = order;
-
-      if (user && orderUser) {
-        return compareName(orderUser, ordeFirstName, orderLastName);
-      }
-      if (user) {
-        return compareName(orderUser, last_name, first_name);
-      }
-
-      return compareName(order, last_name, first_name);
-    });
-
-    if (this.customerOrders.length) {
-      this.customerOrders.sort((a, b) => {
-        const dateA = new Date(a.order_date);
-        const dateB = new Date(b.order_date);
-
-        return dateA < dateB;
-      });
+    if (orders.length) {
+      this.customerOrders = orders.sort(
+        (a, b) => new Date(a.order_date) < new Date(b.order_date)
+      );
 
       this.ordersSpent = this.customerOrders.reduce(
         (acc, order) => (acc += order.total),

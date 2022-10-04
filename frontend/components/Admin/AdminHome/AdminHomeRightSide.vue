@@ -55,7 +55,7 @@ export default {
       },
       {
         date: new Date(),
-        summ: 65464,
+        summ: 658464,
       },
     ],
   }),
