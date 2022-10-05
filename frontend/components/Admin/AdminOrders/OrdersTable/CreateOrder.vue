@@ -189,10 +189,9 @@ export default {
     },
     addCustomer: function (customer) {
       this.customer = customer;
-      console.log(customer);
     },
     submit: function () {
-      const data = { ...this.order, ...customer };
+      const data = { ...this.order, ...this.customer };
       console.log(data);
     },
   },
