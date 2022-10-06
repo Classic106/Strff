@@ -6,7 +6,7 @@
         class="btn btn-success text-nowrap my-auto mr-2"
         v-on:click="$emit('setIsTable')"
       >
-        Add Product
+        Add Bundle
       </button>
     </div>
     <vueCustomScrollbar
@@ -15,7 +15,7 @@
     >
       <vue-good-table
         :columns="columns"
-        :rows="currentProducts"
+        :rows="currentBundles"
         :select-options="{
           enabled: true,
           selectOnCheckboxOnly: true,
@@ -31,13 +31,9 @@
         compactMode
       >
         <template slot="table-row" slot-scope="props">
-          <ProductTableColumn
-            :item="props.row"
-            v-if="props.column.field == 'title'"
-          />
-          <CategoryTableColumn
-            :categories="props.row.categories"
-            v-else-if="props.column.field == 'categories'"
+          <BundleProducts
+            v-if="props.column.field == 'products'"
+            :products="props.row.products"
           />
           <span v-else class="d-flex align-items-center">
             {{ props.formattedRow[props.column.field] }}
@@ -46,10 +42,6 @@
         <div slot="selected-row-actions">
           <button class="btn btn-danger" v-on:click="deleteItems">
             Delete
-          </button>
-          <button class="btn btn-success" v-on:click="publish">Publish</button>
-          <button class="btn btn-warning" v-on:click="unPublish">
-            Unpublish
           </button>
         </div>
       </vue-good-table>
@@ -61,31 +53,27 @@
 import { mapGetters, mapMutations } from "vuex";
 import { prevCurrNextItems } from "~/helpers";
 
-import ProductTableColumn from "./ProductTableColumn.vue";
-import CategoryTableColumn from "./CategoryTableColumn.vue";
+import BundleProducts from "./BundleProducts.vue";
 
 export default {
-  name: "ProductsTable",
-  components: {
-    ProductTableColumn,
-    CategoryTableColumn,
-  },
+  name: "BundleTable",
+  components: { BundleProducts },
   data: () => ({
-    currentProducts: [],
+    currentBundles: [],
     selectedRows: [],
     columns: [
       {
-        label: "Product",
-        field: "title",
+        label: "Bundle",
+        field: "products",
         width: "250px",
       },
       {
-        label: "Status",
-        field: "status",
+        label: "Title",
+        field: "title",
       },
       {
-        label: "Categories",
-        field: "categories",
+        label: "Price",
+        field: "price",
       },
     ],
     scrollSettings: {
@@ -94,19 +82,19 @@ export default {
     },
   }),
   computed: {
-    ...mapGetters({ products: "admin_products/products" }),
+    ...mapGetters({ bundles: "admin_bundles/bundles" }),
   },
   methods: {
     prevCurrNextItems,
     ...mapMutations({
-      setSelectedProducts: "admin_products/setSelectedProducts",
-      setProducts: "admin_products/setProducts",
+      setSelectedBundles: "admin_bundles/setSelectedBundles",
+      setBundles: "admin_bundles/setBundles",
     }),
     onCellClick: function (params) {
-      const result = this.prevCurrNextItems(params.row, this.currentProducts);
+      const result = this.prevCurrNextItems(params.row, this.currentBundles);
 
-      this.setSelectedProducts(result);
-      this.setProducts(this.currentProducts);
+      this.setSelectedBundles(result);
+      this.setBundles(this.currentBundles);
       // params.row - row object
       // params.pageIndex - index of this row on the current page.
       // params.selected - if selection is enabled this argument
@@ -126,31 +114,25 @@ export default {
       const { field, type } = params[0];
 
       if (type === "asc") {
-        if (field === "title" || field === "status") {
-          this.currentProducts.sort((a, b) => {
-            return a[field].localeCompare(b[field]);
-          });
+        if (field === "products") {
+          this.currentBundles.sort((a, b) => a.id < b.id);
         }
-        if (field === "categories") {
-          this.currentProducts.sort((a, b) => {
-            const nameA = a.categories[0].name;
-            const nameB = b.categories[0].name;
-            return nameA.localeCompare(nameB);
-          });
+        if (field === "title") {
+          this.currentBundles.sort((a, b) => a.title.localeCompare(b.title));
+        }
+        if (field === "price") {
+          this.currentBundles.sort((a, b) => a.price < b.price);
         }
       }
       if (type === "desc") {
-        if (field === "title" || field === "status") {
-          this.currentProducts.sort((a, b) => {
-            return b[field].localeCompare(a[field]);
-          });
+        if (field === "products") {
+          this.currentBundles.sort((a, b) => a.id > b.id);
         }
-        if (field === "categories") {
-          this.currentProducts.sort((a, b) => {
-            const nameA = a.categories[0].name;
-            const nameB = b.categories[0].name;
-            return nameB.localeCompare(nameA);
-          });
+        if (field === "title") {
+          this.currentBundles.sort((a, b) => b.title.localeCompare(a.title));
+        }
+        if (field === "price") {
+          this.currentBundles.sort((a, b) => a.price > b.price);
         }
       }
       // params[0].sortType - ascending or descending
@@ -170,13 +152,43 @@ export default {
     },
   },
   mounted() {
-    this.currentProducts = JSON.parse(JSON.stringify(this.products));
+    this.currentBundles = JSON.parse(JSON.stringify(this.bundles));
   },
 };
 </script>
 
 <style scoped>
+@media (min-width: 300px) {
+  .product.col-sm-6 {
+    flex: 0 0 44%;
+    max-width: 44%;
+  }
+}
+
+@media (min-width: 768px) {
+  .product.col-md-4 {
+    flex: 0 0 31%;
+    max-width: 31%;
+  }
+}
+
+@media (min-width: 992px) {
+  .product.col-lg-3 {
+    flex: 0 0 23%;
+    max-width: 23%;
+  }
+}
+
 .scroll {
   height: calc(100% - 65px);
+}
+
+.product {
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.17);
+  border-radius: 10px;
+}
+
+.product:hover {
+  transform: scale(1.01);
 }
 </style>
