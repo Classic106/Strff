@@ -81,6 +81,7 @@ export default {
       "BIconHouseDoorFill",
       "BIconInboxFill",
       "BIconTagFill",
+      "BIconTagsFill",
       "BIconPersonFill",
       "BIconSearch",
       "BIconDot",

@@ -29,6 +29,15 @@
         >
       </li>
       <li
+        v-on:click="setCurrentPage('bundles')"
+        class="menu-item d-flex align-items-center"
+        :class="currentPage === 'bundles' && 'active'"
+      >
+        <span class="d-flex align-items-center w-100 p-1"
+          ><BIconTagsFill class="mr-2" />Bundles</span
+        >
+      </li>
+      <li
         v-on:click="setCurrentPage('customers')"
         class="menu-item d-flex align-items-center"
         :class="currentPage === 'customers' && 'active'"
