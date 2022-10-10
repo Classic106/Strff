@@ -15,7 +15,7 @@
     >
       <vue-good-table
         :columns="columns"
-        :rows="orders"
+        :rows="currentOrders"
         :select-options="{
           enabled: true,
           selectOnCheckboxOnly: true,
@@ -222,14 +222,9 @@ export default {
       console.log(ids);
     },
     getCustomerName: function (order) {
-      const { first_name, last_name, user } = order;
+      const { first_name, last_name } = order;
 
-      if (!user) {
-        return `${first_name} ${last_name}`;
-      } else {
-        const { first_name, last_name } = user;
-        return `${first_name} ${last_name}`;
-      }
+      return `${first_name} ${last_name}`;
     },
   },
   mounted() {
