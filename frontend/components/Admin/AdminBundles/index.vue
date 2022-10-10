@@ -18,7 +18,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 
 import Loader from "~/components/common/Loader";
 import BundlesTable from "./BundlesTable";
-import AdminBundle from "./AdminBundle";
+import AdminBundle from "./AdminBundle.vue";
 
 export default {
   name: "AdminBundles",
