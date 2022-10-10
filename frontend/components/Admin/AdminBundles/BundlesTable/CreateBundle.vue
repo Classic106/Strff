@@ -7,18 +7,39 @@
         </button>
         <h6 class="m-0">Create bundle</h6>
       </div>
-      <div class="block p-3 mb-3">
-        
-      </div>
+      <BundleForm class="block mb-3 p-3" v-on:getBundle="getBundle" />
+      <button class="btn btn-success mb-3 w-100" v-on:click="save">
+        Create bundle
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import BundleForm from "../BundleForm";
+
 export default {
   name: "CreateBundle",
+  components: { BundleForm },
+  data: () => ({ bundle: null }),
+  methods: {
+    getBundle: function (data) {
+      this.bundle = data;
+    },
+    save: function () {
+      console.log(this.bundle);
+    },
+  },
+  async beforeMount() {
+    this.products = await this.$strapi.find("products");
+  },
 };
 </script>
 
 <style scoped>
+.block {
+  border: 1px solid #000;
+  border-radius: 10px;
+  background-color: #fff;
+}
 </style>
