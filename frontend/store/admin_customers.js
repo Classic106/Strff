@@ -1,15 +1,16 @@
 export const state = () => ({
-  bundles: [],
+  customers: [],
   selected: null,
   next: null,
   previous: null,
 });
 
 export const actions = {
-  async getBundles({ commit }) {
+  async getCustomers({ commit }) {
     try {
-      const result = await this.$strapi.find("bundles");
-      commit("setBundles", result);
+      const result = await this.$strapi.find("orders");
+      console.log(result);
+      commit("setCustomers", result);
     } catch (e) {
       console.log(e);
     }
@@ -17,27 +18,27 @@ export const actions = {
 };
 
 export const mutations = {
-  setBundles(state, bundles) {
-    state.bundles = bundles;
+  setCustomers(state, customers) {
+    state.customers = customers;
   },
-  setSelectedBundles(state, data) {
+  setSelectedCustomers(state, data) {
     const { selected, previous, next } = data;
 
     state.selected = selected;
     state.previous = previous;
     state.next = next;
   },
-  clearBundles(state) {
+  clearCustomers(state) {
     state.previous = null;
     state.selected = null;
     state.next = null;
-    state.bundles = [];
+    state.customers = [];
   },
 };
 
 export const getters = {
-  bundles: (state) => {
-    return state.bundles;
+  customers: (state) => {
+    return state.customers;
   },
   selected: (state) => {
     return state.selected;
