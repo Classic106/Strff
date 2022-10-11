@@ -25,6 +25,11 @@ export const actions = {
         let order = await this.$strapi.$http.$post('/orders/removeproduct', data);
         commit('setOrder', order);
     },
+    async removeItem({commit, state}, data) {
+        await this.$strapi.$http.$delete('/order-items', data.id);
+        let order = await this.$strapi.$http.$get('/orders/getorder', data.order);
+        commit('setOrder', order);
+    },
     async clearOrder({commit, state}) {
         let currentUser = this.$cookies.get('user');
         let data = {};

@@ -169,8 +169,7 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      user: "auth/user",
-      userInf: "userInfo/userInfo",
+      user: "auth/user"
     }),
   },
   watch: {
@@ -182,9 +181,6 @@ export default {
     },
   },
   methods: {
-    ...mapMutations({
-      setUserInfo: "userInfo/setUserInfo",
-    }),
     showHash: function (hash) {
       if (
         !this.openSelect &&
@@ -201,7 +197,6 @@ export default {
         this.userInfo.password = this.password;
       }
       this.saved = true;
-      this.setUserInfo(this.userInfo);
       this.$emit("setUserInfo", this.userInfo);
     },
     cancel: function () {

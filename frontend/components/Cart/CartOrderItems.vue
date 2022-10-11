@@ -79,7 +79,7 @@
           </div>
           <span
             class="icon icon-trash m-2"
-            v-on:click="removeProduct(item.id)"
+            v-on:click="removeItemFromCart(item)"
           ></span>
         </div>
       </div>
@@ -105,7 +105,6 @@ export default {
   }),
   methods: {
     ...mapActions({
-      removeProduct: "order/removeProduct",
       updateProduct: "order/updateProduct",
     }),
     quantityPlus: function (id) {
@@ -130,6 +129,9 @@ export default {
         const item = { ...this.order_items[index], ...types };
         this.updateProduct(item);
       }
+    },
+    removeItemFromCart(item) {
+        this.$store.dispatch('order/removeItem', item);
     }
   },
   async mounted () {

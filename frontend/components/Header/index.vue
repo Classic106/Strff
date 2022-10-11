@@ -169,7 +169,8 @@ export default {
       suppressScrollX: true,
       wheelPropagation: false,
     },
-    articles: []
+    articles: [],
+    categories: []
   }),
   methods: {
     handlerResize(e) {

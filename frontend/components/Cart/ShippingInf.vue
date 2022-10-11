@@ -82,8 +82,7 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      username: "auth/username",
-      userInf: "userInfo/userInfo",
+      username: "auth/username"
     }),
   },
   methods: {
