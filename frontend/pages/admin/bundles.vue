@@ -1,14 +1,13 @@
 <template>
-  <Home />
+  <Bundles />
 </template>
 
 <script>
-import Home from "~/components/Admin/AdminHome";
+import Bundles from "~/components/Admin/AdminBundles";
 
 export default {
-  name: "AdminPage",
   layout: "admin",
-  components: { Home },
+  components: { Bundles },
 };
 </script>
 

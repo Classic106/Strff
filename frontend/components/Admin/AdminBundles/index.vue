@@ -31,12 +31,19 @@ export default {
   },
   methods: {
     ...mapActions({ getBundles: "admin_bundles/getBundles" }),
-    ...mapMutations({ clearBundles: "admin_bundles/clearBundles" }),
+    ...mapMutations({
+      clearBundles: "admin_bundles/clearBundles",
+      setCurrentPage: "admin/setCurrentPage",
+    }),
   },
   async mounted() {
     this.loading = true;
     await this.getBundles();
     this.loading = false;
+  },
+  beforeMount() {
+    const page = this.$route.path.replace("/admin/", "");
+    this.setCurrentPage(page);
   },
   destroyed() {
     this.clearBundles();

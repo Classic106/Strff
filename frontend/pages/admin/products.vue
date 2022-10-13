@@ -1,14 +1,13 @@
 <template>
-  <Home />
+  <Products />
 </template>
 
 <script>
-import Home from "~/components/Admin/AdminHome";
+import Products from "~/components/Admin/AdminProducts";
 
 export default {
-  name: "AdminPage",
   layout: "admin",
-  components: { Home },
+  components: { Products },
 };
 </script>
 
