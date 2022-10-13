@@ -31,7 +31,14 @@ export default {
   },
   methods: {
     ...mapActions({ getProducts: "admin_products/getProducts" }),
-    ...mapMutations({ clearProducts: "admin_products/clearProducts" }),
+    ...mapMutations({
+      clearProducts: "admin_products/clearProducts",
+      setCurrentPage: "admin/setCurrentPage",
+    }),
+  },
+  beforeMount() {
+    const page = this.$route.path.replace("/admin/", "");
+    this.setCurrentPage(page);
   },
   async mounted() {
     this.loading = true;

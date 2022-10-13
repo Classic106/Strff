@@ -42,11 +42,22 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 import AdminHomeRightSide from "./AdminHomeRightSide.vue";
 
 export default {
   name: "AdminHome",
   components: { AdminHomeRightSide },
+  methods: {
+    ...mapMutations({
+      setCurrentPage: "admin/setCurrentPage",
+    }),
+  },
+  beforeMount() {
+    const page = this.$route.path.replace("/admin/", "");
+    this.setCurrentPage(page);
+  },
 };
 </script>
 

@@ -29,7 +29,14 @@ export default {
   },
   methods: {
     ...mapActions({ getCustomers: "admin_customers/getCustomers" }),
-    ...mapMutations({ clearCustomers: "admin_customers/clearCustomers" }),
+    ...mapMutations({
+      clearCustomers: "admin_customers/clearCustomers",
+      setCurrentPage: "admin/setCurrentPage",
+    }),
+  },
+  beforeMount() {
+    const page = this.$route.path.replace("/admin/", "");
+    this.setCurrentPage(page);
   },
   async mounted() {
     this.loading = true;

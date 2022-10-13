@@ -15,41 +15,27 @@
             : 'position-relative justify-content-between'
         "
       >
-        <AdminMenu />
+        <AdminMenu v-on:isOpen="isOpen" />
       </div>
-      <AdminContent class="content col-md-10 col-12 p-0" />
+      <Nuxt class="content col-md-10 col-12 p-0" />
     </main>
+    <LightBox />
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
-
-import AdminHeader from "./AdminHeader.vue";
-import AdminMenu from "./AdminMenu.vue";
-import AdminContent from "./AdminContent.vue";
+import AdminHeader from "~/components/Admin/AdminHeader";
+import AdminMenu from "~/components/Admin/AdminMenu.vue";
+import LightBox from "@/components/common/LightBox.vue";
 
 export default {
-  name: "Admin",
-  components: {
-    AdminHeader,
-    AdminMenu,
-    AdminContent,
-  },
+  name: "AdminPage",
+  components: { AdminHeader, AdminMenu, LightBox },
   data: () => ({
     isOpenMenu: false,
     isMobile: true,
   }),
-  computed: {
-    ...mapGetters({ currentPage: "admin/currentPage" }),
-  },
-  watch: {
-    currentPage: function () {
-      this.isOpenMenu = false;
-    },
-  },
   methods: {
-    ...mapMutations({ setCurrentPage: "admin/setCurrentPage" }),
     isOpen: function (isOpen) {
       this.isOpenMenu = isOpen;
     },
