@@ -1,44 +1,49 @@
 <template>
-  <div class="row w-100">
-    <div class="col-8 d-flex flex-column w-100 text-left p-3">
-      <p>Here`s what`s heppenning with your store today.</p>
-      <div class="row justify-content-between m-0">
-        <div class="block bg-white p-3 col-md-6 col-12 d-flex flex-column">
-          <p class="text-uppercase m-0">total sessions</p>
-          <div
-            class="
-              border-bottom
-              d-flex
-              justify-content-between
-              align-items-center
-            "
-          >
-            <h6>18</h6>
-          </div>
-          <div class="d-flex justify-content-between align-items-center mt-2">
-            <div class="d-flex align-items-center">
-              <span class="live d-flex align-items-center p-2 mr-2"
-                ><BIconDot />LIVE</span
-              >
-              <span>1 visitor</span>
+  <vueCustomScrollbar
+    class="scroll w-100 overflow-auto col-8"
+    :settings="scrollSettings"
+  >
+    <div class="row w-100 h-100 m-0">
+      <div class="d-flex col-8 flex-column w-100 text-left p-3">
+        <p>Here`s what`s heppenning with your store today.</p>
+        <div class="row justify-content-between m-0">
+          <div class="block bg-white p-3 col-md-6 col-12 d-flex flex-column">
+            <p class="text-uppercase m-0">total sessions</p>
+            <div
+              class="
+                border-bottom
+                d-flex
+                justify-content-between
+                align-items-center
+              "
+            >
+              <h6>18</h6>
             </div>
-            <nuxt-link to="/#">See Live View</nuxt-link>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <div class="d-flex align-items-center">
+                <span class="live d-flex align-items-center p-2 mr-2"
+                  ><BIconDot />LIVE</span
+                >
+                <span>1 visitor</span>
+              </div>
+              <nuxt-link to="/#">See Live View</nuxt-link>
+            </div>
           </div>
-        </div>
-        <div class="block bg-white col-md-6 col-12 p-3 mt-md-0 mt-2">
-          <p class="text-uppercase m-0">total sales</p>
-          <span class="border-bottom d-flex w-100">No sales yet</span>
-          <div class="d-flex justify-content-between mt-2">
-            <span>No orders yet</span>
-            <nuxt-link to="/#">View report</nuxt-link>
+          <div class="block bg-white col-md-6 col-12 p-3 mt-md-0 mt-2">
+            <p class="text-uppercase m-0">total sales</p>
+            <span class="border-bottom d-flex w-100">No sales yet</span>
+            <div class="d-flex justify-content-between mt-2">
+              <span>No orders yet</span>
+              <nuxt-link to="/#">View report</nuxt-link>
+            </div>
           </div>
         </div>
       </div>
+      <div class="right-side col-4 p-0">
+        <AdminHomeRightSide class="bg-white h-100" />
+      </div>
     </div>
-    <div class="right-side col-4 p-0">
-      <AdminHomeRightSide class="bg-white h-100" />
-    </div>
-  </div>
+  </vueCustomScrollbar>
 </template>
 
 <script>
@@ -49,6 +54,12 @@ import AdminHomeRightSide from "./AdminHomeRightSide.vue";
 export default {
   name: "AdminHome",
   components: { AdminHomeRightSide },
+  data: () => ({
+    scrollSettings: {
+      suppressScrollX: true,
+      wheelPropagation: false,
+    },
+  }),
   methods: {
     ...mapMutations({
       setCurrentPage: "admin/setCurrentPage",

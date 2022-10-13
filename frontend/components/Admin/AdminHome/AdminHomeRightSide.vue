@@ -21,7 +21,7 @@
       </div>
       <span>There were no products sold during this time</span>
     </div>
-    <div class="d-flex flex-column border-bottom p-3">
+    <div class="d-flex flex-column p-3">
       <p class="text-uppercase">payout shedule</p>
       <div class="d-flex flex-column justify-content-between">
         <div

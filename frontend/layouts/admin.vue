@@ -4,7 +4,7 @@
       <AdminHeader :isOpenMenu="isOpenMenu" v-on:isOpenMenuHeader="isOpen" />
     </header>
     <main class="h-100 w-100 m-0 row position-relative">
-      <div
+      <section
         ref="menu"
         class="col-md-2 p-0"
         :class="
@@ -16,8 +16,8 @@
         "
       >
         <AdminMenu v-on:isOpen="isOpen" />
-      </div>
-      <Nuxt class="content col-md-10 col-12 p-0" />
+      </section>
+      <Nuxt class="content col-md-10 col-12 p-0 ml-auto" />
     </main>
     <LightBox />
   </div>

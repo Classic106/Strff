@@ -24,7 +24,7 @@ export default {
   name: "AdminBundles",
   components: { Loader, BundlesTable, AdminBundle },
   data: () => ({
-    loading: false,
+    loading: true,
   }),
   computed: {
     ...mapGetters({ selected: "admin_bundles/selected" }),

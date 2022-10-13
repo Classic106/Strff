@@ -1,5 +1,5 @@
 export const state = () => ({
-  currentPage: "home",
+  currentPage: "",
 });
 
 export const mutations = {

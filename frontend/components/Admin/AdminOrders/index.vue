@@ -24,7 +24,7 @@ export default {
   name: "AdminOrders",
   components: { Loader, OrdersTable, AdminOrder },
   data: () => ({
-    loading: false,
+    loading: true,
   }),
   computed: {
     ...mapGetters({ selected: "admin_orders/selected" }),

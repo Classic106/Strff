@@ -22,7 +22,7 @@ export default {
   name: "AdminCusmomers",
   components: { Loader, CustomersTable },
   data: () => ({
-    loading: false,
+    loading: true,
   }),
   computed: {
     ...mapGetters({ selected: "admin_customers/selected" }),
