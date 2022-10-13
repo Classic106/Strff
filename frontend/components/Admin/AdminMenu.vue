@@ -51,26 +51,27 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
-
 export default {
   name: "AdminMenu",
-  computed: {
-    ...mapGetters({ currentPage: "admin/currentPage" }),
-  },
+  data: () => ({ currentPage: "" }),
   methods: {
-    ...mapMutations({
-      setCurrentPage: "admin/setCurrentPage",
-    }),
     setPage: function (page = "") {
       this.$emit("isOpen", false);
-      this.setCurrentPage(page);
       this.$router.push(`/admin/${page}`);
+    },
+    popstate: function () {
+      const page = this.$route.path.replace("/admin/", "");
+      console.log(page);
     },
   },
   beforeMount() {
-    const page = this.$route.path.replace("/admin/", "");
-    this.setCurrentPage(page);
+    this.popstate();
+  },
+  mounted() {
+    window.addEventListener("popstate", this.popstate);
+  },
+  destroyed() {
+    window.removeEventListener("popstate", this.popstate);
   },
 };
 </script>
