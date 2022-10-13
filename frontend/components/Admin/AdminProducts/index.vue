@@ -24,7 +24,7 @@ export default {
   name: "AdminProducts",
   components: { Loader, ProductTable, AdminProduct },
   data: () => ({
-    loading: false,
+    loading: true,
   }),
   computed: {
     ...mapGetters({ selected: "admin_products/selected" }),
