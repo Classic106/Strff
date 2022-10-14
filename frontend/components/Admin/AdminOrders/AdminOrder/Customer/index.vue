@@ -1,8 +1,5 @@
 <template>
-  <AddOrder
-    v-if="isAddOrder"
-    v-on:closeCreateOrder="isAddOrder = false"
-  />
+  <AddOrder v-if="isAddOrder" v-on:closeCreateOrder="isAddOrder = false" />
   <vueCustomScrollbar
     v-else
     class="w-100 h-100 overflow-auto d-flex justify-content-center"
@@ -69,16 +66,13 @@
                   class="mr-2"
                   >{{ viewAll ? "Hide all oeders" : "View all orders" }}</a
                 >
-                <button
-                  class="btn btn-success"
-                  v-on:click="isAddOrder = true"
-                >
+                <button class="btn btn-success" v-on:click="isAddOrder = true">
                   Add order
                 </button>
               </div>
             </div>
           </div>
-          <CustomerRightSide class="col-5" :order="selected" />
+          <CustomerRightSide class="col-5" :customer="selected.customer" />
         </div>
       </div>
     </div>
@@ -150,19 +144,24 @@ export default {
       return `${count} ${interval.label}${count !== 1 ? "s" : ""} ago`;
     },
     getCustomerName: function () {
-      const { firstName, lastName } = this.selected;
+      const { customer } = this.selected;
+      const { firstName, lastName } = customer;
+
       return `${firstName} ${lastName}`;
     },
   },
   async mounted() {
     this.loading = true;
-    const { firstName, lastName } = this.selected;
+    const { customer } = this.selected;
+    const { firstName, lastName } = customer;
 
-    const orders = await this.$strapi.$http.$get(
-      `/orders?firstName=${firstName}&lastName=${lastName}`
+    const currentCustomer = await this.$strapi.$http.$get(
+      `/customers?firstName=${firstName}&lastName=${lastName}`
     );
 
-    if (orders.length) {
+    const { orders } = currentCustomer[0];
+
+    if (orders && orders.length) {
       this.customerOrders = orders.sort(
         (a, b) => new Date(a.order_date) < new Date(b.order_date)
       );

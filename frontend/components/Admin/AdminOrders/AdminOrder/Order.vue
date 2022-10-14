@@ -266,7 +266,8 @@ export default {
       return `${month} ${day}, at ${hours}: ${minutes}`;
     },
     getCustomerName: function () {
-      const { firstName, lastName } = this.selected;
+      const { customer } = this.selected;
+      const { firstName, lastName } = customer;
       return `${firstName} ${lastName}`;
     },
   },
