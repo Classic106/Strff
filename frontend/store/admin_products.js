@@ -27,8 +27,10 @@ export const mutations = {
     state.previous = previous;
     state.next = next;
   },
-  setNextProduct(state, product) {
-    state.nextProduct = product;
+  clearSelectedProducts(state) {
+    state.previous = null;
+    state.selected = null;
+    state.next = null;
   },
   clearProducts(state) {
     state.previous = null;

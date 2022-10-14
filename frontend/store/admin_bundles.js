@@ -27,6 +27,11 @@ export const mutations = {
     state.previous = previous;
     state.next = next;
   },
+  clearSelectedBundles(state) {
+    state.previous = null;
+    state.selected = null;
+    state.next = null;
+  },
   clearBundles(state) {
     state.previous = null;
     state.selected = null;

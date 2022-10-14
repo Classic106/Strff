@@ -6,7 +6,7 @@
     <div class="row w-100 justify-content-center">
       <div class="d-flex flex-column col-md-8 col-12">
         <div class="d-flex align-items-start my-3">
-          <button v-on:click="clearBundles()" class="button">
+          <button v-on:click="clearSelectedBundles()" class="button">
             <BIconArrowLeft />
           </button>
           <div class="w-100 px-3">
@@ -70,7 +70,7 @@ export default {
     getStrapiMedia,
     prevCurrNextItems,
     ...mapMutations({
-      clearBundles: "admin_bundles/clearBundles",
+      clearSelectedBundles: "admin_bundles/clearSelectedBundles",
       setSelectedBundles: "admin_bundles/setSelectedBundles",
     }),
     setNextBundle: function () {
