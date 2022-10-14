@@ -45,10 +45,10 @@ export default {
   plugins: [
     "~/plugins/tel-input.js",
     "~/plugins/country-region-select.js",
-    { src: "~/plugins/vue-good-table", ssr: false },
+    "~/plugins/vue-custom-scrollbar.js",
+    "~/plugins/vue-good-table",
+    "~/plugins/vue-cool-lightbox.js",
     { src: "~/plugins/v-credit-card-form.js", mode: "client" },
-    { src: "~/plugins/vue-cool-lightbox.js", mode: "ssr" },
-    { src: "~/plugins/vue-custom-scrollbar.js", mode: "client" },
   ],
   /*
    ** Auto import components
