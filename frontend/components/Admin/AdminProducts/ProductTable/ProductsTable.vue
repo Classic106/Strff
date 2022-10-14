@@ -9,51 +9,44 @@
         Add Product
       </button>
     </div>
-    <vueCustomScrollbar
-      class="scroll w-100 overflow-auto"
-      :settings="scrollSettings"
+    <vue-good-table
+      :columns="columns"
+      :rows="currentProducts"
+      :select-options="{
+        enabled: true,
+        selectOnCheckboxOnly: true,
+      }"
+      :search-options="{ enabled: true }"
+      :sort-options="{ enabled: true }"
+      :pagination-options="{ enabled: true, position: 'top' }"
+      @on-cell-click="onCellClick"
+      @on-sort-change="onSortChange"
+      @on-selected-rows-change="selectionChanged"
+      @on-select-all="onSelectAll"
+      styleClass="vgt-table"
+      compactMode
     >
-      <vue-good-table
-        :columns="columns"
-        :rows="currentProducts"
-        :select-options="{
-          enabled: true,
-          selectOnCheckboxOnly: true,
-        }"
-        :search-options="{ enabled: true }"
-        :sort-options="{ enabled: true }"
-        :pagination-options="{ enabled: true, position: 'top' }"
-        @on-cell-click="onCellClick"
-        @on-sort-change="onSortChange"
-        @on-selected-rows-change="selectionChanged"
-        @on-select-all="onSelectAll"
-        styleClass="vgt-table"
-        compactMode
-      >
-        <template slot="table-row" slot-scope="props">
-          <ProductTableColumn
-            :item="props.row"
-            v-if="props.column.field == 'title'"
-          />
-          <CategoryTableColumn
-            :categories="props.row.categories"
-            v-else-if="props.column.field == 'categories'"
-          />
-          <span v-else class="d-flex align-items-center">
-            {{ props.formattedRow[props.column.field] }}
-          </span>
-        </template>
-        <div slot="selected-row-actions">
-          <button class="btn btn-danger" v-on:click="deleteItems">
-            Delete
-          </button>
-          <button class="btn btn-success" v-on:click="publish">Publish</button>
-          <button class="btn btn-warning" v-on:click="unPublish">
-            Unpublish
-          </button>
-        </div>
-      </vue-good-table>
-    </vueCustomScrollbar>
+      <template slot="table-row" slot-scope="props">
+        <ProductTableColumn
+          :item="props.row"
+          v-if="props.column.field == 'title'"
+        />
+        <CategoryTableColumn
+          :categories="props.row.categories"
+          v-else-if="props.column.field == 'categories'"
+        />
+        <span v-else class="d-flex align-items-center">
+          {{ props.formattedRow[props.column.field] }}
+        </span>
+      </template>
+      <div slot="selected-row-actions">
+        <button class="btn btn-danger" v-on:click="deleteItems">Delete</button>
+        <button class="btn btn-success" v-on:click="publish">Publish</button>
+        <button class="btn btn-warning" v-on:click="unPublish">
+          Unpublish
+        </button>
+      </div>
+    </vue-good-table>
   </div>
 </template>
 
@@ -88,10 +81,6 @@ export default {
         field: "categories",
       },
     ],
-    scrollSettings: {
-      suppressScrollX: true,
-      wheelPropagation: false,
-    },
   }),
   computed: {
     ...mapGetters({ products: "admin_products/products" }),

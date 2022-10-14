@@ -17,7 +17,14 @@
       >
         <AdminMenu v-on:isOpen="isOpen" />
       </section>
-      <Nuxt class="content col-md-10 col-12 p-0 ml-auto" />
+      <client-only>
+        <vueCustomScrollbar
+          class="content overflow-auto p-0 col-md-10 col-12 ml-auto"
+          :settings="scrollSettings"
+        >
+          <Nuxt class="p-0 m-0" />
+        </vueCustomScrollbar>
+      </client-only>
     </main>
     <LightBox />
   </div>
@@ -34,6 +41,10 @@ export default {
   data: () => ({
     isOpenMenu: false,
     isMobile: true,
+    scrollSettings: {
+      suppressScrollX: false,
+      wheelPropagation: true,
+    },
   }),
   methods: {
     isOpen: function (isOpen) {
