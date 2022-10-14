@@ -1,5 +1,5 @@
 <template>
-  <div class="w-100">
+  <div class="w-100 h-100">
     <div
       v-if="loading"
       class="w-100 h-100 d-flex align-items-center justify-content-center"
@@ -33,12 +33,7 @@ export default {
     ...mapActions({ getProducts: "admin_products/getProducts" }),
     ...mapMutations({
       clearProducts: "admin_products/clearProducts",
-      setCurrentPage: "admin/setCurrentPage",
     }),
-  },
-  beforeMount() {
-    const page = this.$route.path.replace("/admin/", "");
-    this.setCurrentPage(page);
   },
   async mounted() {
     this.loading = true;

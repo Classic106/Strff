@@ -57,11 +57,11 @@ export default {
   methods: {
     setPage: function (page = "") {
       this.$emit("isOpen", false);
+      this.currentPage = page;
       this.$router.push(`/admin/${page}`);
     },
     popstate: function () {
-      const page = this.$route.path.replace("/admin/", "");
-      console.log(page);
+      this.currentPage = window.location.pathname.replace("/admin/", "");
     },
   },
   beforeMount() {

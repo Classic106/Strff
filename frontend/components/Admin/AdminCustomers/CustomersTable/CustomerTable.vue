@@ -9,42 +9,35 @@
         Add customer
       </button>
     </div>
-    <vueCustomScrollbar
-      class="scroll w-100 overflow-auto"
-      :settings="scrollSettings"
+    <vue-good-table
+      :columns="columns"
+      :rows="currentCustomers"
+      :select-options="{
+        enabled: true,
+        selectOnCheckboxOnly: true,
+      }"
+      :search-options="{ enabled: true }"
+      :sort-options="{ enabled: true }"
+      :pagination-options="{ enabled: true, position: 'top' }"
+      @on-cell-click="onCellClick"
+      @on-sort-change="onSortChange"
+      @on-selected-rows-change="selectionChanged"
+      @on-select-all="onSelectAll"
+      styleClass="vgt-table"
+      compactMode
     >
-      <vue-good-table
-        :columns="columns"
-        :rows="currentCustomers"
-        :select-options="{
-          enabled: true,
-          selectOnCheckboxOnly: true,
-        }"
-        :search-options="{ enabled: true }"
-        :sort-options="{ enabled: true }"
-        :pagination-options="{ enabled: true, position: 'top' }"
-        @on-cell-click="onCellClick"
-        @on-sort-change="onSortChange"
-        @on-selected-rows-change="selectionChanged"
-        @on-select-all="onSelectAll"
-        styleClass="vgt-table"
-        compactMode
-      >
-        <template slot="table-row" slot-scope="props">
-          <span v-if="props.column.field == 'firstName'"
-            >{{ getCustomerName(props.row) }}
-          </span>
-          <span v-else class="d-flex align-items-center">
-            {{ props.formattedRow[props.column.field] }}
-          </span>
-        </template>
-        <div slot="selected-row-actions">
-          <button class="btn btn-danger" v-on:click="deleteItems">
-            Delete
-          </button>
-        </div>
-      </vue-good-table>
-    </vueCustomScrollbar>
+      <template slot="table-row" slot-scope="props">
+        <span v-if="props.column.field == 'firstName'"
+          >{{ getCustomerName(props.row) }}
+        </span>
+        <span v-else class="d-flex align-items-center">
+          {{ props.formattedRow[props.column.field] }}
+        </span>
+      </template>
+      <div slot="selected-row-actions">
+        <button class="btn btn-danger" v-on:click="deleteItems">Delete</button>
+      </div>
+    </vue-good-table>
   </div>
 </template>
 
@@ -79,10 +72,6 @@ export default {
         field: "spent",
       },
     ],
-    scrollSettings: {
-      suppressScrollX: true,
-      wheelPropagation: false,
-    },
   }),
   computed: {
     ...mapGetters({ customers: "admin_customers/customers" }),

@@ -9,55 +9,48 @@
         Create order
       </button>
     </div>
-    <vueCustomScrollbar
-      class="scroll w-100 overflow-auto"
-      :settings="scrollSettings"
+    <vue-good-table
+      :columns="columns"
+      :rows="currentOrders"
+      :select-options="{
+        enabled: true,
+        selectOnCheckboxOnly: true,
+      }"
+      :search-options="{ enabled: true }"
+      :sort-options="{ enabled: true }"
+      :pagination-options="{ enabled: true, position: 'top' }"
+      @on-cell-click="onCellClick"
+      @on-sort-change="onSortChange"
+      @on-selected-rows-change="selectionChanged"
+      @on-select-all="onSelectAll"
+      styleClass="vgt-table"
+      compactMode
     >
-      <vue-good-table
-        :columns="columns"
-        :rows="currentOrders"
-        :select-options="{
-          enabled: true,
-          selectOnCheckboxOnly: true,
-        }"
-        :search-options="{ enabled: true }"
-        :sort-options="{ enabled: true }"
-        :pagination-options="{ enabled: true, position: 'top' }"
-        @on-cell-click="onCellClick"
-        @on-sort-change="onSortChange"
-        @on-selected-rows-change="selectionChanged"
-        @on-select-all="onSelectAll"
-        styleClass="vgt-table"
-        compactMode
-      >
-        <template slot="table-row" slot-scope="props">
-          <OrderDate
-            :date="props.row.order_date"
-            v-if="props.column.field == 'order_date'"
-          />
-          <OrderItems
-            :items="props.row.order_items"
-            v-else-if="props.column.field == 'order_items'"
-          />
-          <OrderItems
-            :items="props.row.order_bundles"
-            v-else-if="props.column.field == 'order_bundles'"
-          />
-          <OrderCustomers
-            :order="props.row"
-            v-else-if="props.column.field == 'user'"
-          />
-          <span v-else class="d-flex align-items-center">
-            {{ props.formattedRow[props.column.field] }}
-          </span>
-        </template>
-        <div slot="selected-row-actions">
-          <button class="btn btn-danger" v-on:click="deleteItems">
-            Delete
-          </button>
-        </div>
-      </vue-good-table>
-    </vueCustomScrollbar>
+      <template slot="table-row" slot-scope="props">
+        <OrderDate
+          :date="props.row.order_date"
+          v-if="props.column.field == 'order_date'"
+        />
+        <OrderItems
+          :items="props.row.order_items"
+          v-else-if="props.column.field == 'order_items'"
+        />
+        <OrderItems
+          :items="props.row.order_bundles"
+          v-else-if="props.column.field == 'order_bundles'"
+        />
+        <OrderCustomers
+          :order="props.row"
+          v-else-if="props.column.field == 'user'"
+        />
+        <span v-else class="d-flex align-items-center">
+          {{ props.formattedRow[props.column.field] }}
+        </span>
+      </template>
+      <div slot="selected-row-actions">
+        <button class="btn btn-danger" v-on:click="deleteItems">Delete</button>
+      </div>
+    </vue-good-table>
   </div>
 </template>
 
@@ -105,10 +98,6 @@ export default {
         field: "order_bundles",
       },
     ],
-    scrollSettings: {
-      suppressScrollX: true,
-      wheelPropagation: false,
-    },
   }),
   computed: {
     ...mapGetters({ orders: "admin_orders/orders" }),

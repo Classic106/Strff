@@ -1,5 +1,5 @@
 <template>
-  <div class="w-100">
+  <div class="w-100 h-100">
     <div
       v-if="loading"
       class="w-100 h-100 d-flex align-items-center justify-content-center"
@@ -24,7 +24,7 @@ export default {
   name: "AdminBundles",
   components: { Loader, BundlesTable, AdminBundle },
   data: () => ({
-    loading: true,
+    loading: false,
   }),
   computed: {
     ...mapGetters({ selected: "admin_bundles/selected" }),
@@ -33,17 +33,12 @@ export default {
     ...mapActions({ getBundles: "admin_bundles/getBundles" }),
     ...mapMutations({
       clearBundles: "admin_bundles/clearBundles",
-      setCurrentPage: "admin/setCurrentPage",
     }),
   },
   async mounted() {
     this.loading = true;
     await this.getBundles();
     this.loading = false;
-  },
-  beforeMount() {
-    const page = this.$route.path.replace("/admin/", "");
-    this.setCurrentPage(page);
   },
   destroyed() {
     this.clearBundles();
