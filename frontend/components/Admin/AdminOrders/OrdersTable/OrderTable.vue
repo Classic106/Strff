@@ -223,7 +223,4 @@ export default {
 </script>
 
 <style scoped>
-.scroll {
-  height: calc(100% - 65px);
-}
 </style>

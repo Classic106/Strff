@@ -6,7 +6,7 @@
     <div class="row w-100 justify-content-center">
       <div class="d-flex flex-column col-md-6 col-12">
         <div class="d-flex align-items-center">
-          <button v-on:click="clearProducts()" class="button">
+          <button v-on:click="clearSelectedProducts()" class="button">
             <BIconArrowLeft />
           </button>
           <p class="text-ellipsis m-0 ml-2">{{ title }}</p>
@@ -133,7 +133,7 @@ export default {
     getStrapiMedia,
     prevCurrNextItems,
     ...mapMutations({
-      clearProducts: "admin_products/clearProducts",
+      clearSelectedProducts: "admin_products/clearSelectedProducts",
       setSelectedProducts: "admin_products/setSelectedProducts",
       setImages: "cool_light_box/setImages",
       setImageIndex: "cool_light_box/setImageIndex",

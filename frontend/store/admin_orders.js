@@ -27,6 +27,11 @@ export const mutations = {
     state.previous = previous;
     state.next = next;
   },
+  clearSelectedOrders(state) {
+    state.previous = null;
+    state.selected = null;
+    state.next = null;
+  },
   clearOrders(state) {
     state.previous = null;
     state.selected = null;

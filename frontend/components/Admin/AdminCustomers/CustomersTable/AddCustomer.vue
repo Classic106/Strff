@@ -1,161 +1,156 @@
 <template>
-  <vueCustomScrollbar
-    class="w-100 h-100 overflow-auto"
-    :settings="scrollSettings"
-  >
-    <div class="row justify-content-center w-100 h-100">
-      <div class="col-10 h-100 mt-3">
-        <div class="d-flex w-100 mb-3 d-flex align-items-center">
-          <button v-on:click="$emit('setIsTable')" class="mr-3">
-            <BIconArrowLeft />
-          </button>
-          <h6 class="m-0">Add customer</h6>
-        </div>
-        <form
-          autocomplete="off"
-          id="add-customer-form"
-          v-on:submit.stop.prevent="save"
-          class="block mb-3 p-3"
-        >
-          <div class="p-2">
-            <div class="row mb-2">
-              <div class="col-6">
-                <label class="d-flex" for="first-name"> First Name </label>
-                <input
-                  id="first-name"
-                  type="text"
-                  placeholder="Enter first name"
-                  v-model="customer.firstName"
-                  required
-                  autofocus="true"
-                  class="w-100"
-                />
-              </div>
-              <div class="col-6">
-                <label class="d-flex" for="last-name"> Last Name </label>
-                <input
-                  id="last-name"
-                  type="text"
-                  placeholder="Enter last name"
-                  v-model="customer.lastName"
-                  required
-                  autofocus="true"
-                  class="w-100"
-                />
-              </div>
-            </div>
-            <div class="row mb-2">
-              <div class="col-6">
-                <label class="d-flex" for="s-contact-no"> Cellphone </label>
-                <vue-tel-input
-                  id="cellphone"
-                  v-model="customer.cellphone"
-                  v-bind="vueTelInputProps(false)"
-                ></vue-tel-input>
-              </div>
-              <div class="col-6">
-                <label class="d-flex" for="s-email"> Email </label>
-                <input
-                  id="s-email"
-                  type="text"
-                  placeholder="Enter email"
-                  v-model="customer.email"
-                  required
-                  autofocus="true"
-                  class="w-100"
-                />
-              </div>
-            </div>
-            <div class="mb-2">
-              <label class="d-flex" for="s-address"> Address </label>
+  <div class="row justify-content-center w-100 h-100">
+    <div class="col-10 h-100 mt-3">
+      <div class="d-flex w-100 mb-3 d-flex align-items-center">
+        <button v-on:click="$emit('setIsTable')" class="mr-3">
+          <BIconArrowLeft />
+        </button>
+        <h6 class="m-0">Add customer</h6>
+      </div>
+      <form
+        autocomplete="off"
+        id="add-customer-form"
+        v-on:submit.stop.prevent="save"
+        class="block mb-3 p-3"
+      >
+        <div class="p-2">
+          <div class="row mb-2">
+            <div class="col-6">
+              <label class="d-flex" for="first-name"> First Name </label>
               <input
-                id="s-address"
+                id="first-name"
                 type="text"
-                placeholder="Enter your address"
-                v-model="customer.address1"
+                placeholder="Enter first name"
+                v-model="customer.firstName"
                 required
                 autofocus="true"
                 class="w-100"
               />
             </div>
-            <div class="mb-2">
-              <label class="d-flex" for="s-city"> City </label>
+            <div class="col-6">
+              <label class="d-flex" for="last-name"> Last Name </label>
               <input
-                id="s-city"
+                id="last-name"
                 type="text"
-                placeholder="Enter your city"
-                v-model="customer.city"
+                placeholder="Enter last name"
+                v-model="customer.lastName"
                 required
-                autofocus="true"
-                class="w-100"
-              />
-            </div>
-            <div class="mb-2">
-              <label class="d-flex" for="s-state"> State </label>
-              <select
-                size="1"
-                name="states_hash"
-                v-model="customer.state"
-                ref="select"
-                required
-                class="w-100"
-                :class="customer.state && 'chosed'"
-              >
-                <option disabled :value="''">Chose state</option>
-                <option
-                  v-for="hash in states_hashes"
-                  :key="hash.name"
-                  :value="hash"
-                >
-                  {{ showHash(hash) }}
-                </option>
-              </select>
-            </div>
-            <div class="mb-2">
-              <label class="d-flex" for="s-zip-code"> Zip Code </label>
-              <input
-                id="s-zip-code"
-                type="text"
-                placeholder="Enter your Zip code"
-                v-model="customer.zip"
-                required
-                autofocus="true"
-                class="w-100"
-              />
-            </div>
-            <div class="mb-2">
-              <label class="d-flex" for="s-company"> Company </label>
-              <input
-                id="s-company"
-                type="text"
-                placeholder="Enter company name"
-                v-model="customer.company"
                 autofocus="true"
                 class="w-100"
               />
             </div>
           </div>
-        </form>
-        <div class="w-100 d-flex justify-content-end">
-          <button
-            size="sm"
-            class="btn btn-light mr-2"
-            v-on:click="$emit('setIsTable')"
-          >
-            Cancel
-          </button>
-          <button
-            size="sm"
-            class="btn btn-success"
-            type="submit"
-            form="add-customer-form"
-          >
-            Save
-          </button>
+          <div class="row mb-2">
+            <div class="col-6">
+              <label class="d-flex" for="s-contact-no"> Cellphone </label>
+              <vue-tel-input
+                id="cellphone"
+                v-model="customer.cellphone"
+                v-bind="vueTelInputProps(false)"
+              ></vue-tel-input>
+            </div>
+            <div class="col-6">
+              <label class="d-flex" for="s-email"> Email </label>
+              <input
+                id="s-email"
+                type="text"
+                placeholder="Enter email"
+                v-model="customer.email"
+                required
+                autofocus="true"
+                class="w-100"
+              />
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="d-flex" for="s-address"> Address </label>
+            <input
+              id="s-address"
+              type="text"
+              placeholder="Enter your address"
+              v-model="customer.address1"
+              required
+              autofocus="true"
+              class="w-100"
+            />
+          </div>
+          <div class="mb-2">
+            <label class="d-flex" for="s-city"> City </label>
+            <input
+              id="s-city"
+              type="text"
+              placeholder="Enter your city"
+              v-model="customer.city"
+              required
+              autofocus="true"
+              class="w-100"
+            />
+          </div>
+          <div class="mb-2">
+            <label class="d-flex" for="s-state"> State </label>
+            <select
+              size="1"
+              name="states_hash"
+              v-model="customer.state"
+              ref="select"
+              required
+              class="w-100"
+              :class="customer.state && 'chosed'"
+            >
+              <option disabled :value="''">Chose state</option>
+              <option
+                v-for="hash in states_hashes"
+                :key="hash.name"
+                :value="hash"
+              >
+                {{ showHash(hash) }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="d-flex" for="s-zip-code"> Zip Code </label>
+            <input
+              id="s-zip-code"
+              type="text"
+              placeholder="Enter your Zip code"
+              v-model="customer.zip"
+              required
+              autofocus="true"
+              class="w-100"
+            />
+          </div>
+          <div class="mb-2">
+            <label class="d-flex" for="s-company"> Company </label>
+            <input
+              id="s-company"
+              type="text"
+              placeholder="Enter company name"
+              v-model="customer.company"
+              autofocus="true"
+              class="w-100"
+            />
+          </div>
         </div>
+      </form>
+      <div class="w-100 d-flex justify-content-end">
+        <button
+          size="sm"
+          class="btn btn-light mr-2"
+          v-on:click="$emit('setIsTable')"
+        >
+          Cancel
+        </button>
+        <button
+          size="sm"
+          class="btn btn-success"
+          type="submit"
+          form="add-customer-form"
+        >
+          Save
+        </button>
       </div>
     </div>
-  </vueCustomScrollbar>
+  </div>
 </template>
 
 <script>
@@ -177,10 +172,6 @@ export default {
       email: "",
     },
     states_hashes,
-    scrollSettings: {
-      suppressScrollX: true,
-      wheelPropagation: true,
-    },
   }),
   methods: {
     vueTelInputProps: (required = true) => ({
