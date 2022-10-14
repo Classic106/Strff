@@ -17,14 +17,12 @@
       >
         <AdminMenu v-on:isOpen="isOpen" />
       </section>
-      <client-only>
-        <vueCustomScrollbar
-          class="content overflow-auto p-0 col-md-10 col-12 ml-auto"
-          :settings="scrollSettings"
-        >
-          <Nuxt class="p-0 m-0" />
-        </vueCustomScrollbar>
-      </client-only>
+      <vueCustomScrollbar
+        class="content overflow-auto p-0 col-md-10 col-12 ml-auto"
+        :settings="scrollSettings"
+      >
+        <Nuxt class="p-0 m-0" />
+      </vueCustomScrollbar>
     </main>
     <LightBox />
   </div>
