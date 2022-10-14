@@ -7,7 +7,7 @@
           <input
             id="customer-email"
             type="text"
-            v-model="order.email"
+            v-model="order.customer.email"
             required
             autofocus="true"
             disabled

@@ -8,7 +8,7 @@ export const state = () => ({
 export const actions = {
   async getCustomers({ commit }) {
     try {
-      const result = await this.$strapi.find("orders");
+      const result = await this.$strapi.find("customers");
       commit("setCustomers", result);
     } catch (e) {
       console.log(e);

@@ -30,6 +30,18 @@
         <span v-if="props.column.field == 'firstName'"
           >{{ getCustomerName(props.row) }}
         </span>
+        <span
+          v-else-if="props.column.field == 'orders'"
+          class="d-flex align-items-center"
+        >
+          {{ props.row.orders.length }} orders
+        </span>
+        <span
+          v-else-if="props.column.field == 'id'"
+          class="d-flex align-items-center"
+        >
+          $ {{ spent(props.row) | formatNumber }}
+        </span>
         <span v-else class="d-flex align-items-center">
           {{ props.formattedRow[props.column.field] }}
         </span>
@@ -44,6 +56,8 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 import { prevCurrNextItems } from "~/helpers";
+
+import "~/utils/filters";
 
 export default {
   name: "CustomerTable",
@@ -69,7 +83,7 @@ export default {
       },
       {
         label: "Spent",
-        field: "spent",
+        field: "id",
       },
     ],
   }),
@@ -114,6 +128,31 @@ export default {
             return aName < bName;
           });
         }
+        if (field === "email") {
+          this.currentCustomers.sort((a, b) => a.email.localeCompare(b.email));
+        }
+        if (field === "state") {
+          this.currentCustomers.sort((a, b) => a.state.localeCompare(b.state));
+        }
+        if (field === "state") {
+          this.currentCustomers.sort(
+            (a, b) => a.orders.length < b.orders.length
+          );
+        }
+        if (field === "id") {
+          this.currentCustomers.sort((a, b) => {
+            const totalA = a.orders.reduce(
+              (acc, order) => (acc += order.total),
+              0
+            );
+            const totalB = b.orders.reduce(
+              (acc, order) => (acc += order.total),
+              0
+            );
+
+            return totalA < totalB;
+          });
+        }
       }
       if (type === "desc") {
         if (field === "firstName") {
@@ -124,6 +163,31 @@ export default {
             return aName > bName;
           });
         }
+        if (field === "email") {
+          this.currentCustomers.sort((a, b) => b.email.localeCompare(a.email));
+        }
+        if (field === "state") {
+          this.currentCustomers.sort((a, b) => b.state.localeCompare(a.state));
+        }
+        if (field === "state") {
+          this.currentCustomers.sort(
+            (a, b) => a.orders.length > b.orders.length
+          );
+        }
+        if (field === "id") {
+          this.currentCustomers.sort((a, b) => {
+            const totalA = a.orders.reduce(
+              (acc, order) => (acc += order.total),
+              0
+            );
+            const totalB = b.orders.reduce(
+              (acc, order) => (acc += order.total),
+              0
+            );
+
+            return totalA > totalB;
+          });
+        }
       }
       // params[0].sortType - ascending or descending
       // params[0].columnIndex - index of column being sorted
@@ -131,6 +195,10 @@ export default {
     deleteItems() {
       const ids = this.selectedRows.map((item) => item.id);
       console.log(ids);
+    },
+    spent: function (customer) {
+      const { orders } = customer;
+      return orders.reduce((acc, order) => (acc += order.total), 0);
     },
     getCustomerName: function (customer) {
       const { firstName, lastName } = customer;

@@ -10,12 +10,13 @@ export default {
   },
   methods: {
     getCustomerName: function () {
-      const { firstName, lastName } = this.order;
+      const { customer } = this.order;
+      const { firstName, lastName } = customer;
       return `${firstName} ${lastName}`;
     },
   },
 };
-</script scoped>
+</script>
 
-<style>
+<style scoped>
 </style>
