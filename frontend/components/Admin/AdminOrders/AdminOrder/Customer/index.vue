@@ -64,7 +64,7 @@
                   href="#"
                   v-on:click.prevent="viewAll = !viewAll"
                   class="mr-2"
-                  >{{ viewAll ? "Hide all oeders" : "View all orders" }}</a
+                  >{{ viewAll ? "Hide all orders" : "View all orders" }}</a
                 >
                 <button class="btn btn-success" v-on:click="isAddOrder = true">
                   Add order
@@ -153,13 +153,13 @@ export default {
   async mounted() {
     this.loading = true;
     const { customer } = this.selected;
-    const { firstName, lastName } = customer;
 
-    const currentCustomer = await this.$strapi.$http.$get(
-      `/customers?firstName=${firstName}&lastName=${lastName}`
+    const currentCustomer = await this.$strapi.findOne(
+      "customers",
+      customer.id
     );
 
-    const { orders } = currentCustomer[0];
+    const { orders } = currentCustomer;
 
     if (orders && orders.length) {
       this.customerOrders = orders.sort(
