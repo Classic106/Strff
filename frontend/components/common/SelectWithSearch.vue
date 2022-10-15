@@ -7,7 +7,7 @@
     >
       <input
         type="text"
-        v-model="text"
+        v-model.trim="text"
         placeholder="Search product"
         class="w-100 p-0"
         v-on:input="fiterData"
