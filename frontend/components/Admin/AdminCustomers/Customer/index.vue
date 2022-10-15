@@ -82,7 +82,7 @@ import { states_hashes } from "@/data";
 import Loader from "~/components/common/Loader.vue";
 import CustomerOrder from "./CustomerOrder.vue";
 import CustomerRightSide from "./CustomerRightSide.vue";
-import AddOrder from "./AddOrder.vue";
+import AddOrder from "./AddOrder";
 
 export default {
   name: "Customer",
@@ -140,7 +140,7 @@ export default {
     const { id } = this.selected;
 
     const currentCustomer = await this.$strapi.findOne("customers", id);
-    console.log(this.selected);
+
     const { orders } = currentCustomer;
 
     if (orders && orders.length) {

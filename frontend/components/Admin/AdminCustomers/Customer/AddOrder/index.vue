@@ -1,0 +1,114 @@
+<template>
+  <div class="row justify-content-center w-100">
+    <div class="col-10 mt-3">
+      <div class="d-flex w-100 mb-3 d-flex align-items-center">
+        <button v-on:click="$emit('closeCreateOrder')" class="mr-3">
+          <BIconArrowLeft />
+        </button>
+        <h6 class="m-0">Create order</h6>
+      </div>
+      <div>
+        <div class="block p-3 mb-3">
+          <h6>Products</h6>
+          <ProductsBlock v-on:setProducts="setProducts" />
+        </div>
+        <div class="block p-3 mb-3">
+          <h6>Bundles</h6>
+          <BundlesBlock v-on:setBundles="setBundles" />
+        </div>
+        <div class="d-flex flex-column">
+          <div class="block mb-3 d-flex flex-column p-3">
+            <h6>Customer</h6>
+            <p>{{ selected.email }}</p>
+            <p>{{ getCustomerName() }}</p>
+            <p>{{ selected.address1 && selected.address2 }}</p>
+            <p>{{ selected.state }}</p>
+            <p>{{ selected.cellphone }}</p>
+          </div>
+        </div>
+        <div class="block p-3 mb-3">
+          <h6>Payment</h6>
+          <div class="d-flex justify-content-between">
+            <p>Subtotal</p>
+            <p>$ {{ total | formatNumber }}</p>
+          </div>
+          <div class="d-flex justify-content-between">
+            <p>Total</p>
+            <p>$ {{ total | formatNumber }}</p>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-success w-100" v-on:click="send">
+        Create order
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapGetters } from "vuex";
+
+import PreloaderImage from "~/components/common/PreloaderImage.vue";
+import ProductsBlock from "./ProductsBlock.vue";
+import BundlesBlock from "./BundlesBlock.vue";
+
+export default {
+  name: "AddOrder",
+  components: { PreloaderImage, ProductsBlock, BundlesBlock },
+  data: () => ({
+    total: 0,
+    order_status: "1",
+    order_bundles: [],
+    order_items: [],
+    paid: false,
+    customer: null,
+  }),
+  computed: {
+    ...mapGetters({
+      selected: "admin_customers/selected",
+    }),
+  },
+  methods: {
+    setProducts: function (data) {
+      this.order_items = data;
+      this.total = this.calcTotal();
+    },
+    setBundles: function (data) {
+      this.order_bundles = data;
+      this.total = this.calcTotal();
+    },
+    getCustomerName: function () {
+      const { firstFame, lastName } = this.selected;
+
+      return `${firstFame} ${lastName}`;
+    },
+    calcTotal: function () {
+      const totalProducts = this.order_items.reduce(
+        (acc, item) => (acc += item.total),
+        0
+      );
+
+      const totalBundles = this.order_bundles.reduce(
+        (acc, item) => (acc += item.bundle.price),
+        0
+      );
+
+      return totalProducts + totalBundles;
+    },
+    send: function () {
+      console.log(this.order_items);
+    },
+  },
+  mouted() {
+    this.total = this.calcTotal();
+  },
+};
+</script>
+
+<style scoped>
+.block {
+  border: 1px solid #000;
+  border-radius: 10px;
+  background-color: #fff;
+}
+</style>
