@@ -8,6 +8,7 @@
     </div>
     <div v-else class="w-100 h-100">
       <CustomersTable v-if="!selected" />
+      <Customer v-else />
     </div>
   </div>
 </template>
@@ -17,10 +18,11 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 
 import Loader from "~/components/common/Loader";
 import CustomersTable from "./CustomersTable";
+import Customer from "./Customer";
 
 export default {
   name: "AdminCusmomers",
-  components: { Loader, CustomersTable },
+  components: { Loader, CustomersTable, Customer },
   data: () => ({
     loading: true,
   }),
