@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-content-center w-100 h-100">
+  <div class="row justify-content-center w-100 h-100 m-0">
     <div class="col-10 h-100 mt-3">
       <div class="d-flex w-100 mb-3 d-flex align-items-center">
         <button v-on:click="$emit('setIsTable')" class="mr-3">

@@ -1,5 +1,5 @@
 <template>
-  <div class="row w-100 justify-content-center">
+  <div class="row w-100 m-0 justify-content-center">
     <div class="d-flex flex-column col-md-8 col-12">
       <div class="d-flex align-items-start mt-3">
         <button v-on:click="clearSelectedOrders()" class="button">

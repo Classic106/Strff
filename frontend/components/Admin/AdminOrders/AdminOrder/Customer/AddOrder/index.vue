@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-content-center w-100 m-0">
+  <div class="row justify-content-center w-100">
     <div class="col-10 mt-3">
       <div class="d-flex w-100 mb-3 d-flex align-items-center">
         <button v-on:click="$emit('closeCreateOrder')" class="mr-3">
@@ -19,11 +19,11 @@
         <div class="d-flex flex-column">
           <div class="block mb-3 d-flex flex-column p-3">
             <h6>Customer</h6>
-            <p>{{ selected.email }}</p>
+            <p>{{ selected.customer.email }}</p>
             <p>{{ getCustomerName() }}</p>
-            <p>{{ selected.address1 && selected.address2 }}</p>
-            <p>{{ selected.state }}</p>
-            <p>{{ selected.cellphone }}</p>
+            <p>{{ selected.customer.address1 && selected.address2 }}</p>
+            <p>{{ selected.customer.state }}</p>
+            <p>{{ selected.customer.cellphone }}</p>
           </div>
         </div>
         <div class="block p-3 mb-3">
@@ -38,7 +38,7 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-success w-100 mb-3" v-on:click="send">
+      <button class="btn btn-success w-100" v-on:click="send">
         Create order
       </button>
     </div>
@@ -65,7 +65,7 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      selected: "admin_customers/selected",
+      selected: "admin_orders/selected",
     }),
   },
   methods: {

@@ -1,82 +1,76 @@
 <template>
   <AddOrder v-if="isAddOrder" v-on:closeCreateOrder="isAddOrder = false" />
-  <vueCustomScrollbar
-    v-else
-    class="w-100 h-100 overflow-auto d-flex justify-content-center"
-    :settings="scrollSettings"
-  >
-    <div class="row w-100 justify-content-center">
-      <div class="d-flex flex-column col-md-8 col-12">
-        <div class="d-flex align-items-start mt-3">
-          <button v-on:click="$emit('setCustomer')" class="button">
-            <BIconArrowLeft />
-          </button>
-          <div class="w-100 px-3">
-            <div class="d-flex flex-column">
-              <h6 class="m-0 px-2 font-weight-bold">{{ getCustomerName() }}</h6>
-              <span>{{ selected.state }} {{ customerDuration() }}</span>
-            </div>
+  <div v-else class="row w-100 justify-content-center">
+    <div class="d-flex flex-column col-md-8 col-12">
+      <div class="d-flex align-items-start mt-3">
+        <button v-on:click="$emit('setCustomer')" class="button">
+          <BIconArrowLeft />
+        </button>
+        <div class="w-100 px-3">
+          <div class="d-flex flex-column">
+            <h6 class="m-0 px-2 font-weight-bold">{{ getCustomerName() }}</h6>
+            <span>{{ selected.state }} {{ customerDuration() }}</span>
           </div>
-        </div>
-        <Loader
-          v-if="loading"
-          class="w-100 h-100 d-flex align-items-center justify-content-center"
-        />
-        <div v-else class="row mb-3">
-          <div class="col-7">
-            <div class="block w-100 d-flex justify-content-between mb-3 p-3">
-              <div>
-                <h6 class="text-center font-weight-bold">
-                  {{ `$ ${ordersSpent}` }}
-                </h6>
-                <p>Amount spent</p>
-              </div>
-              <div>
-                <h6 class="text-center font-weight-bold">
-                  {{ customerOrders.length }}
-                </h6>
-                <p>Orders</p>
-              </div>
-              <div>
-                <h6 class="text-center font-weight-bold">
-                  {{ `$ ${ordersSpent / customerOrders.length}` }}
-                </h6>
-                <p>Average order value</p>
-              </div>
-            </div>
-            <div class="block w-100">
-              <div v-if="viewAll === false" class="p-3">
-                <h6 class="w-100">Last order place</h6>
-                <CustomerOrder :order="customerOrders[0]" />
-              </div>
-              <div v-else class="p-3">
-                <h6 class="w-100">All orders</h6>
-                <CustomerOrder
-                  v-for="customerOrder in customerOrders"
-                  :order="customerOrder"
-                  :key="customerOrder.id"
-                />
-              </div>
-              <div
-                class="bottom d-flex justify-content-end align-items-center p-3"
-              >
-                <a
-                  href="#"
-                  v-on:click.prevent="viewAll = !viewAll"
-                  class="mr-2"
-                  >{{ viewAll ? "Hide all orders" : "View all orders" }}</a
-                >
-                <button class="btn btn-success" v-on:click="isAddOrder = true">
-                  Add order
-                </button>
-              </div>
-            </div>
-          </div>
-          <CustomerRightSide class="col-5" :customer="selected.customer" />
         </div>
       </div>
+      <Loader
+        v-if="loading"
+        class="w-100 h-100 d-flex align-items-center justify-content-center"
+      />
+      <div v-else class="row mb-3">
+        <div class="col-7">
+          <div class="block w-100 d-flex justify-content-between mb-3 p-3">
+            <div>
+              <h6 class="text-center font-weight-bold">
+                {{ `$ ${ordersSpent}` }}
+              </h6>
+              <p>Amount spent</p>
+            </div>
+            <div>
+              <h6 class="text-center font-weight-bold">
+                {{ customerOrders.length }}
+              </h6>
+              <p>Orders</p>
+            </div>
+            <div>
+              <h6 class="text-center font-weight-bold">
+                {{ `$ ${ordersSpent / customerOrders.length}` }}
+              </h6>
+              <p>Average order value</p>
+            </div>
+          </div>
+          <div class="block w-100">
+            <div v-if="viewAll === false" class="p-3">
+              <h6 class="w-100">Last order place</h6>
+              <CustomerOrder :order="customerOrders[0]" />
+            </div>
+            <div v-else class="p-3">
+              <h6 class="w-100">All orders</h6>
+              <CustomerOrder
+                v-for="customerOrder in customerOrders"
+                :order="customerOrder"
+                :key="customerOrder.id"
+              />
+            </div>
+            <div
+              class="bottom d-flex justify-content-end align-items-center p-3"
+            >
+              <a
+                href="#"
+                v-on:click.prevent="viewAll = !viewAll"
+                class="mr-2"
+                >{{ viewAll ? "Hide all orders" : "View all orders" }}</a
+              >
+              <button class="btn btn-success" v-on:click="isAddOrder = true">
+                Add order
+              </button>
+            </div>
+          </div>
+        </div>
+        <CustomerRightSide class="col-5" :customer="selected.customer" />
+      </div>
     </div>
-  </vueCustomScrollbar>
+  </div>
 </template>
 
 <script>
@@ -88,7 +82,7 @@ import { states_hashes } from "@/data";
 import Loader from "~/components/common/Loader.vue";
 import CustomerOrder from "./CustomerOrder.vue";
 import CustomerRightSide from "./CustomerRightSide.vue";
-import AddOrder from "./AddOrder.vue";
+import AddOrder from "./AddOrder";
 
 export default {
   name: "Customer",
@@ -106,10 +100,6 @@ export default {
     states_hashes,
     loading: false,
     isAddOrder: false,
-    scrollSettings: {
-      suppressScrollX: true,
-      wheelPropagation: false,
-    },
   }),
   computed: {
     ...mapGetters({

@@ -1,9 +1,9 @@
 <template>
   <AddOrder v-if="isAddOrder" v-on:closeCreateOrder="isAddOrder = false" />
-  <div v-else class="row w-100 justify-content-center">
+  <div v-else class="row w-100 h-100 justify-content-center m-0">
     <div class="d-flex flex-column col-md-8 col-12">
       <div class="d-flex align-items-start mt-3">
-        <button v-on:click="$emit('setCustomer')" class="button">
+        <button v-on:click="clearSelectedCustomers" class="button">
           <BIconArrowLeft />
         </button>
         <div class="w-100 px-3">
