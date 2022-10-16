@@ -78,7 +78,7 @@ export default {
 <style scoped>
 .menu-mobile {
   display: flex !important;
-  height: 100vh;
+  height: 100%;
   position: absolute;
   top: 0;
   left: -100vw;
@@ -87,7 +87,7 @@ export default {
 
 .menu-mobile.open {
   left: 0vw;
-  height: 100vh;
+  height: 100%;
 }
 
 .content {
