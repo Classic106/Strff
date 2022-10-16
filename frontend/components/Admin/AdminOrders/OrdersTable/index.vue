@@ -5,7 +5,7 @@
 
 <script>
 import OrderTable from "./OrderTable.vue";
-import CreateOrder from "./CreateOrder.vue";
+import CreateOrder from "./CreateOrder";
 
 export default {
   name: "OrdersTable",

@@ -11,65 +11,13 @@
         <div class="col-6">
           <div class="block p-3 mb-3">
             <h6>Products</h6>
-            <div class="d-flex align-items-center position-relative">
-              <BIconSearch class="search-icon d-flex position-absolute" />
-              <input
-                v-model="product"
-                type="text"
-                placeholder="Search product"
-                class="bg-grey py-1 w-100"
-              />
-            </div>
-            <select v-if="products.length" multiple :size="1" class="w-100">
-              <option
-                :value="product.id"
-                v-for="product in products"
-                :key="product.id"
-                class="row"
-              >
-                <div class="col-2">
-                  <PreloaderImage :image="product.image[0].url" />
-                </div>
-                <div class="text-ellipsis col-8 d-flex align-items-center">
-                  {{ product.title }}
-                </div>
-                <div class="col-2 d-flex align-items-center text-nowrap">
-                  $ {{ product.price }}
-                </div>
-              </option>
-            </select>
+            <ProductsBlock v-on:setProducts="setProducts" />
           </div>
         </div>
         <div class="col-6">
           <div class="block p-3 mb-3">
             <h6>Bundles</h6>
-            <div class="d-flex align-items-center position-relative">
-              <BIconSearch class="search-icon d-flex position-absolute" />
-              <input
-                v-model="product"
-                type="text"
-                placeholder="Search product"
-                class="bg-grey py-1 w-100"
-              />
-            </div>
-            <select v-if="products.length" multiple :size="1" class="w-100">
-              <option
-                :value="product.id"
-                v-for="product in products"
-                :key="product.id"
-                class="row"
-              >
-                <div class="col-2">
-                  <PreloaderImage :image="product.image[0].url" />
-                </div>
-                <div class="text-ellipsis col-8 d-flex align-items-center">
-                  {{ product.title }}
-                </div>
-                <div class="col-2 d-flex align-items-center text-nowrap">
-                  $ {{ product.price }}
-                </div>
-              </option>
-            </select>
+            <BundlesBlock v-on:setBundles="setBundles" />
           </div>
         </div>
       </div>
@@ -125,11 +73,11 @@
         <h6>Payment</h6>
         <div class="d-flex justify-content-between">
           <p>Subtotal</p>
-          <p>$ 00.00</p>
+          <p>$ {{ total | formatNumber }}</p>
         </div>
         <div class="d-flex justify-content-between">
           <p>Total</p>
-          <p>$ 00.00</p>
+          <p>$ {{ total | formatNumber }}</p>
         </div>
       </div>
       <button class="btn btn-success w-100" v-on:click="submit">
@@ -141,47 +89,45 @@
 </template>
 
 <script>
+import "~/utils/filters";
+
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
-import AddCustomerModal from "./AddCustomerModal.vue";
+import AddCustomerModal from "../AddCustomerModal.vue";
+import BundlesBlock from "./BundlesBlock.vue";
+import ProductsBlock from "./ProductsBlock.vue";
 
 export default {
   name: "CreateOrder",
-  components: { PreloaderImage, AddCustomerModal },
+  components: { PreloaderImage, AddCustomerModal, BundlesBlock, ProductsBlock },
   data: () => ({
-    product: "",
     customer: "",
-    bundle: "",
-    products: [],
-    bundles: [],
+    order_items: [],
+    order_bundles: [],
     customers: [],
     order: {},
+    total: 0,
   }),
-  watch: {
-    product: function () {
-      this.searchProduct();
-    },
-    bundle: function () {
-      this.searchBundle();
-    },
-  },
   methods: {
-    searchProduct: async function () {
-      const products = await this.$strapi.$http.$get(
-        `/products?title=${this.product}`
-      );
-      console.log(products);
+    setProducts: function (data) {
+      this.order_items = data;
+      this.total = this.calcTotal();
     },
-    searchBundle: async function () {
-      const bundles = await this.$strapi.$http.$get(
-        `/bundles?title=${this.bundle}`
-      );
-      console.log(bundles);
+    setBundles: function (data) {
+      this.order_bundles = data;
+      this.total = this.calcTotal();
     },
-    searchCustomer: async function () {
-      const customers = await this.$strapi.$http.$get(
-        `/orders?firstName=${this.customer}&lastName=${this.customer}`
+    calcTotal: function () {
+      const totalProducts = this.order_items.reduce(
+        (acc, item) => (acc += item.total),
+        0
       );
-      console.log(customers);
+
+      const totalBundles = this.order_bundles.reduce(
+        (acc, item) => (acc += item.bundle.price),
+        0
+      );
+
+      return totalProducts + totalBundles;
     },
     getCustomerName: function (customer) {
       const { firstName, lastName } = customer;
