@@ -5,6 +5,7 @@
       :data="products"
       :filter="filterProducts"
       :clickItem="addProduct"
+      :placeholder="'Serch products'"
       class="mb-3"
     >
       <template v-slot:item="products">
