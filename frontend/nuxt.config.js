@@ -34,6 +34,9 @@ export default {
     ],
     script: [],
   },
+  router: {
+    middleware: ["authLayout"],
+  },
   /*
    ** Global CSS
    */
