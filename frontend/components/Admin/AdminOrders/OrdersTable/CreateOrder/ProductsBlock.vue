@@ -17,27 +17,44 @@
         <li
           v-for="(item, index) in selectedProducts"
           :key="item.product.id"
-          class="row w-100 mb-2 mx-auto"
+          class="row w-100 mb-2 mx-auto justify-content-center"
         >
-          <div class="wrap-img col-2">
+          <div class="wrap-img p-0 col-md-2 col-6 p-0 mb-md-0 mb-2">
             <PreloaderImage :image="item.product.image[0].url" />
           </div>
-          <div class="text-ellipsis col-5 d-flex align-items-center">
+          <div
+            class="
+              text-ellipsis text-center
+              col-md-3 col-12
+              d-flex
+              align-items-center
+              mb-md-0 mb-2
+            "
+          >
             {{ item.product.title }}
           </div>
-          <div class="col-2 d-flex align-items-center text-nowrap">
+          <div
+            class="
+              col-md-2 col-12
+              d-flex
+              align-items-center
+              justify-content-center
+              text-nowrap
+              mb-md-0 mb-2
+            "
+          >
             $ {{ item.product.price }}
           </div>
           <div
             class="
-              col-2
+              col-md-4 col-12
               d-flex
               flex-column
               justify-content-center
               align-items-center
+              mb-md-0 mb-2
             "
           >
-            quantity
             <div class="number-input">
               <button v-on:click="minus(index)"></button>
               <input
@@ -51,7 +68,14 @@
             </div>
           </div>
           <div
-            class="col-1 d-flex justify-content-center align-items-start p-0"
+            class="
+              col-1
+              d-flex
+              justify-content-center
+              align-items-start
+              p-0
+              mb-md-0 mb-2
+            "
             v-on:click="deleteProduct(index)"
           >
             <BIconX />
@@ -154,8 +178,8 @@ input[type="number"]::-webkit-outer-spin-button {
   border: none;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   cursor: pointer;
   margin: 0;
   position: relative;
@@ -166,7 +190,7 @@ input[type="number"]::-webkit-outer-spin-button {
   display: inline-block;
   position: absolute;
   content: "";
-  width: 1rem;
+  width: 0.5rem;
   height: 2px;
   background-color: #212121;
   transform: translate(-50%, -50%);
@@ -177,12 +201,12 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .number-input input[type="number"] {
   font-family: sans-serif;
-  max-width: 5rem;
+  max-width: 2rem;
   padding: 0.5rem;
   border: solid #ddd;
   border-width: 0 2px;
-  font-size: 2rem;
-  height: 3rem;
+  font-size: 1rem;
+  height: 2rem;
   font-weight: bold;
   text-align: center;
 }

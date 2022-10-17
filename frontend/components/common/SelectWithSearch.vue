@@ -8,7 +8,7 @@
       <input
         type="text"
         v-model.trim="text"
-        placeholder="Search product"
+        :placeholder="placeholder || 'Search...'"
         class="w-100 p-0"
         v-on:input="fiterData"
       />
@@ -36,7 +36,7 @@
 
 <script>
 export default {
-  name: "SelectBundles",
+  name: "SelectWithSearch",
   props: {
     data: Array,
     filter: {
@@ -51,6 +51,9 @@ export default {
       type: Number,
       required: false,
       default: 0,
+    },
+    placeholder: {
+      type: String,
     },
   },
   data: () => ({

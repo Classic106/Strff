@@ -27,15 +27,40 @@
           :key="item.bundle.id"
           class="row w-100 mb-2 mx-auto justify-content-center"
         >
-          <BundleItem class="col-2" :bundle="item.bundle" />
-          <div class="text-ellipsis col-7 d-flex align-items-center">
+          <BundleItem class="col-md-4 col-12 p-0 justify-content-center" :bundle="item.bundle" />
+          <div
+            class="
+              text-ellipsis
+              col-md-4 col-12
+              d-flex
+              justify-content-center
+              align-items-center
+              mb-md-0 mb-2
+            "
+          >
             {{ item.bundle.title }}
           </div>
-          <div class="col-2 d-flex align-items-center text-nowrap">
+          <div
+            class="
+              col-md-3 col-12
+              d-flex
+              justify-content-center
+              align-items-center
+              text-nowrap
+              mb-md-0 mb-2
+            "
+          >
             $ {{ item.bundle.price }}
           </div>
           <div
-            class="col-1 d-flex justify-content-center align-items-start p-0"
+            class="
+              col-md-1 col-12
+              d-flex
+              justify-content-center
+              align-items-start
+              p-0
+              mb-md-0 mb-2
+            "
             v-on:click="deleteProduct(index)"
           >
             <BIconX />

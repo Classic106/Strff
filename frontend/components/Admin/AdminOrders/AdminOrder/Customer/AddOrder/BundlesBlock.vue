@@ -5,6 +5,7 @@
       :data="bundles"
       :filter="filterBundles"
       :clickItem="addBundle"
+      :placeholder="'Serch bundles'"
       class="mb-3"
     >
       <template v-slot:item="bundles">

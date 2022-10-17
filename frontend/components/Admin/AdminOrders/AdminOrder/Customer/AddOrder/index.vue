@@ -48,6 +48,8 @@
 <script>
 import { mapGetters } from "vuex";
 
+import "~/utils/filters";
+
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
 import ProductsBlock from "./ProductsBlock.vue";
 import BundlesBlock from "./BundlesBlock.vue";
