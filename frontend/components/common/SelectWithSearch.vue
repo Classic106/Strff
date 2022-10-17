@@ -1,5 +1,10 @@
 <template>
-  <div class="custom-select" v-on:blur="open = false" :tabindex="tabindex">
+  <div
+    class="custom-select"
+    :tabindex="tabindex"
+    @focus="open = true"
+    @focusout="open = false"
+  >
     <div
       class="text-ellipsis selected"
       :class="{ open: open }"
@@ -102,6 +107,11 @@ input {
 
 .scroll {
   max-height: 40vh;
+}
+
+.scroll > li {
+  display: flex;
+  z-index: 1;
 }
 
 .custom-select {
