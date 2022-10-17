@@ -33,41 +33,7 @@
             >Add customer</a
           >
         </div>
-        <div v-if="!customer">
-          <div class="d-flex align-items-center position-relative">
-            <BIconSearch class="search-icon d-flex position-absolute" />
-            <input
-              v-model="customer"
-              type="text"
-              placeholder="Search customer"
-              class="bg-grey py-1 w-100"
-            />
-          </div>
-          <select v-if="customers.length" multiple :size="1" class="w-100">
-            <option
-              :value="customer.id"
-              v-for="customer in customers"
-              :key="customer.id"
-              class="row"
-            >
-              <div class="col-6">{{ getCustomerName(customer) }}</div>
-              <div class="col-6">{{ customer.email }}</div>
-            </option>
-          </select>
-        </div>
-        <div v-else class="row">
-          <div class="col-11">
-            <p>{{ getCustomerName(customer) }}</p>
-            <p>{{ customer.email }}</p>
-            <p>{{ customer.address1 && customer.address2 }}</p>
-            <p>{{ customer.state.name }}</p>
-            <p>{{ customer.zip }}</p>
-            <p>{{ customer.cellphone }}</p>
-          </div>
-          <div class="col-1 d-flex align-items-start justify-content-center">
-            <BIconX v-on:click="customer = ''" />
-          </div>
-        </div>
+        <CustomersBlock v-on:setCustomer="setCustomer" />
       </div>
       <div class="block p-3 mb-3">
         <h6>Payment</h6>
@@ -92,19 +58,24 @@
 import "~/utils/filters";
 
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
-import AddCustomerModal from "../AddCustomerModal.vue";
+import AddCustomerModal from "./AddCustomerModal.vue";
 import BundlesBlock from "./BundlesBlock.vue";
 import ProductsBlock from "./ProductsBlock.vue";
+import CustomersBlock from "./CustomersBlock.vue";
 
 export default {
   name: "CreateOrder",
-  components: { PreloaderImage, AddCustomerModal, BundlesBlock, ProductsBlock },
+  components: {
+    PreloaderImage,
+    AddCustomerModal,
+    BundlesBlock,
+    ProductsBlock,
+    CustomersBlock,
+  },
   data: () => ({
-    customer: "",
     order_items: [],
     order_bundles: [],
-    customers: [],
-    order: {},
+    customer: null,
     total: 0,
   }),
   methods: {
@@ -115,6 +86,9 @@ export default {
     setBundles: function (data) {
       this.order_bundles = data;
       this.total = this.calcTotal();
+    },
+    setCustomer: function (customer) {
+      this.customer = customer;
     },
     calcTotal: function () {
       const totalProducts = this.order_items.reduce(
@@ -137,8 +111,16 @@ export default {
       this.customer = customer;
     },
     submit: function () {
-      const data = { ...this.order, ...this.customer };
-      console.log(data);
+      const { order_items, order_bundles, customer, total } = this;
+      const order = {
+        order_items,
+        order_bundles,
+        customer,
+        total,
+        paid: false,
+        order_status: 1,
+      };
+      console.log(order);
     },
   },
 };
