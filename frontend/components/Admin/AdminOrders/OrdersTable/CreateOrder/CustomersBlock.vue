@@ -9,7 +9,7 @@
       class="mb-3"
     >
       <template v-slot:item="customers">
-        <div class="row p-3">
+        <div class="row p-3 w-100">
           <div class="text-ellipsis col-6">
             {{ getCustomerName(customers.item) }}
           </div>
