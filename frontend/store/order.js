@@ -22,15 +22,29 @@ export const actions = {
     }
   },
   async confirmOrder({ state, commit }, userInfo = {}) {
-    const order = {
-      ...state,
-      ...userInfo,
-      order_status: 7,
-      order_date: new Date(),
-    };
+    const { cellphone, email } = userInfo;
 
-    const result = await this.$strapi.$http.$put(`/orders/${state.id}`, order);
-    commit("clearOrder");
+    const customer = await this.$strapi.$http.$get(
+      `/customers?cellphone=${cellphone}&email=${email}`
+    );
+
+    try {
+      if (customer.length) {
+        const result = await this.$strapi.update("orders", state.id, {
+          customer: customer[0].id,
+        });
+      } else {
+        const result = await this.$strapi.create("customers", {
+          ...userInfo,
+          state: userInfo.state.name,
+          orders: [state.id],
+        });
+      }
+
+      commit("clearOrder");
+    } catch (e) {
+      console.log(e);
+    }
   },
   async addProduct({ commit, state }, order_item) {
     const item = state.order_items.filter(

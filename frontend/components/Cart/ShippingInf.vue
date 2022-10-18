@@ -100,6 +100,9 @@ export default {
       const isUserInfo = Object.keys(this.userInfo).length !== 0;
       const isCard = Object.keys(this.card).length !== 0;
 
+      const data = { ...this.userInfo };
+      this.confirmOrder(data);
+
       if (isUserInfo && isCard) {
         const data = { ...this.userInfo };
         data.state = this.userInfo.state.name;
