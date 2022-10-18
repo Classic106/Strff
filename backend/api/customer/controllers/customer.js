@@ -31,4 +31,11 @@ module.exports = {
 
     return result;
   },
+  async create(ctx) {
+    const { body } = ctx.request;
+
+    const result = await strapi.services.customer.create(body);
+
+    return result;
+  },
 };
