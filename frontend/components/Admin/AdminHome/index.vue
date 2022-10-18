@@ -1,5 +1,5 @@
 <template>
-  <div class="row w-100 h-100">
+  <div class="row w-100 h-100 m-0">
     <div class="d-flex col-8 flex-column w-100 text-left p-3">
       <p>Here`s what`s heppenning with your store today.</p>
       <div class="row justify-content-between m-0">
