@@ -8,8 +8,15 @@ export const state = () => ({
 export const actions = {
   async getProducts({ commit }) {
     try {
-      const result = await this.$strapi.find("products");
-      commit("setProducts", result);
+      const token = this.$cookies.get("token");
+
+      const { data } = await this.$axios.get(`/products`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      commit("setProducts", data);
     } catch (e) {
       console.log(e);
     }

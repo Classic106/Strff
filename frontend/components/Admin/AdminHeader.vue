@@ -63,7 +63,14 @@ export default {
       if (this.user) {
         const { first_name, last_name } = this.user;
 
-        return `${first_name[0]} ${last_name[0]}`;
+        const first = first_name ? first_name[0] : "";
+        const last = last_name ? first_name[0] : "";
+
+        if (!first && !last) {
+          return `u`;
+        }
+
+        return `${first} ${last}`.trim();
       }
       return "u";
     },

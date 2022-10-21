@@ -7,10 +7,10 @@
       class="d-flex flex-column justify-content-center"
     >
       <div class="form-field">
-        <input type="text" v-model="login" placeholder="login" />
+        <input type="text" v-model.trim="identifier" placeholder="login" />
       </div>
       <div class="form-field">
-        <input type="text" v-model="pass" placeholder="password" />
+        <input type="text" v-model.trim="password" placeholder="password" />
       </div>
       <div class="form-field">
         <button class="btn btn-succcess" type="submit">Log in</button>
@@ -20,15 +20,20 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "AdminLogin",
   data: () => ({
-    login: "",
-    pass: "",
+    identifier: "",
+    password: "",
   }),
   methods: {
+    ...mapActions({ login: "auth/login" }),
     send: function () {
-      console.log(this.login, this.pass);
+      const data = { identifier: "test@test.test", password: "test123456" };
+      //const data = { identifier: this.identifier, password: this.password };
+      this.login(data);
     },
   },
 };
