@@ -1,5 +1,5 @@
 <template>
-  <AdminLogin v-if="user" />
+  <AdminLogin v-if="!user" />
   <div v-else>
     <slot name="page"></slot>
   </div>
