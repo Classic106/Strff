@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column w-100 h-100">
     <div class="d-flex justify-content-between">
-      <h6 class="w-100 text-left p-3 m-0">Orders</h6>
+      <h6 class="w-100 text-left p-3 m-0">Customers</h6>
       <button
         v-on:click.prevent="$emit('setIsTable')"
         class="btn btn-success text-nowrap my-auto mr-2"
