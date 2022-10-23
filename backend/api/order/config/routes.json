@@ -81,6 +81,14 @@
         }
     },
     {
+        "method": "POST",
+        "path": "/order/updateitem",
+        "handler": "order.updateItem",
+        "config": {
+           "policies": []
+        }
+    },
+    {
         "method": "GET",
         "path": "/order/getorder",
         "handler": "order.getOrder",

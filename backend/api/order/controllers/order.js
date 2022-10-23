@@ -157,6 +157,17 @@ module.exports = {
             ctx.send(order);
         }
     },
+    async updateItem(ctx) {
+        let params = ctx.request.body;
+
+        let orderItem = await strapi.services['order-item'].findOne({ id: params.id });
+        if (orderItem) {
+            orderItem.quantity = params.quantity;
+            await strapi.services['order-item'].update({ id: orderItem.id }, orderItem);
+        }
+
+        ctx.send(orderItem);
+    },
     async emptyOrder(ctx) {
         let params = ctx.request.body;
 

@@ -25,29 +25,32 @@
         </div>
         <div class="d-flex flex-column mt-3">
           <div class="d-flex flex-sm-row flex-column">
-            <p class="w-25 mb-2 grey mr-2 text-uppercase">quantity</p>
-            <div class="d-flex">
+            <p class="w-25 mb-2 grey mr-2 text-uppercase">Quantity</p>
+            <div class="d-flex" v-if="isEdit">
               <button
-                v-if="edit"
-                v-on:click="quantityMinus(item.id)"
+                v-if="isEdit"
+                v-on:click="quantityMinus()"
                 class="gold-background"
               >
                 -
               </button>
-              <p class="my-auto text-uppercase" :class="edit && 'mx-3'">
-                {{ item.quantity }}
+              <p class="my-auto text-uppercase" :class="isEdit && 'mx-3'">
+                {{ selectedItem.quantity }}
               </p>
               <button
-                v-if="edit"
-                v-on:click="quantityPlus(item.id)"
+                v-if="isEdit"
+                v-on:click="quantityPlus()"
                 class="gold-background"
               >
                 +
               </button>
             </div>
+            <div class="d-flex" v-else>
+                {{ item.quantity }}
+            </div>
           </div>
           <div class="d-flex flex-sm-row flex-column">
-            <p class="w-25 mb-2 grey mr-2 text-uppercase">category</p>
+            <p class="w-25 mb-2 grey mr-2 text-uppercase">Category</p>
             <p
               v-for="category in item.product.categories"
               :key="category.id"
@@ -58,23 +61,23 @@
           </div>
           <div class="d-flex flex-sm-row flex-column">
             <p class="w-25 mb-2 grey mr-2 text-uppercase">Purchase</p>
-            <p class="mb-2" v-if="!edit">
-              {{ item.purchase_type.name }}
+            <p class="mb-2" v-if="!isEdit">
+              {{ item.purchase_type.title + (item.subscription_type? ' - ' + item.subscription_type.title: '') }}
             </p>
             <PurchaseTypes
               v-else
               cart
-              :purType="item.purchase_type ? item.purchase_type : null"
-              :subType="item.subscription_type ? item.subscription_type : null"
+              :purType="item.purchase_type ? item.purchase_type.id : null"
+              :subType="item.subscription_type ? item.subscription_type.id : null"
               v-on:setTypes="(types) => setTypes(types, item.id)"
             />
           </div>
         </div>
         <div class="w-100 d-flex justify-content-between">
-          <div class="d-flex align-items-center pen" v-on:click="edit = !edit">
+          <div class="d-flex align-items-center pen" v-on:click="editOrSaveItem(item)">
             <span class="icon icon-pen m-2"></span>
             <p class="m-0 pl-1 gold text-uppercase">
-              {{ edit ? "save" : "edit" }}
+              {{ isEdit ? "save" : "edit" }}
             </p>
           </div>
           <span
@@ -100,38 +103,50 @@ export default {
   },
   components: { PreloaderImage, PurchaseTypes },
   data: () => ({
-    edit: false,
-    purchaseTypes: []
+    isEdit: false,
+    purchaseTypes: [],
+    selectedItem: {
+        id: null,
+        quantity: 0,
+        purchaseTypeId: null,
+        subscriptionTypeId: null,
+        orderId: null
+    }
   }),
   methods: {
-    ...mapActions({
-      updateProduct: "order/updateProduct",
-    }),
-    quantityPlus: function (id) {
-      const index = this.order_items.findIndex((item) => item.id === id);
-      if (index !== -1 && this.order_items[index].quantity < 99) {
-        const item = { ...this.order_items[index] };
-        item.quantity = item.quantity + 1;
-        this.updateProduct(item);
-      }
+    quantityPlus() {
+        if (this.selectedItem.quantity < 99) {
+            this.selectedItem.quantity += 1
+        }
     },
-    quantityMinus: function (id) {
-      const index = this.order_items.findIndex((item) => item.id === id);
-      if (index !== -1 && this.order_items[index].quantity > 1) {
-        const item = { ...this.order_items[index] };
-        item.quantity = item.quantity - 1;
-        this.updateProduct(item);
-      }
+    quantityMinus() {
+        if (this.selectedItem.quantity > 1) {
+            this.selectedItem.quantity -= 1
+        }
     },
     setTypes: function (types, id) {
-      const index = this.order_items.findIndex((item) => item.id === id);
-      if (index !== -1) {
-        const item = { ...this.order_items[index], ...types };
-        this.updateProduct(item);
-      }
+        this.selectedItem.purchaseTypeId = types.purchase_type;
+        this.selectedItem.subscriptionTypeId = types.subscription_type;
     },
     removeItemFromCart(item) {
         this.$store.dispatch('order/removeItem', item);
+    },
+    editOrSaveItem(item) {
+        if (this.isEdit) {
+            console.log(this.selectedItem);
+            this.updateCart(this.selectedItem);
+            this.isEdit = false;
+        } else {
+            this.selectedItem.id = item.id;
+            this.selectedItem.quantity = item.quantity;
+            this.selectedItem.purchaseTypeId = item.purchase_type.id? item.purchase_type: null;
+            this.selectedItem.subscriptionTypeId = item.subscription_type? item.subscription_type.id: null;
+            this.orderId = item.order.id;
+            this.isEdit = true;
+        }
+    },
+    updateCart: async function (data) {
+        this.$store.dispatch("order/updateItem", data);
     }
   },
   async mounted () {
@@ -161,6 +176,10 @@ li {
   width: 18px;
   height: 20px;
   background-size: cover;
+}
+
+.pen {
+  cursor: pointer;
 }
 
 .icon-pen {

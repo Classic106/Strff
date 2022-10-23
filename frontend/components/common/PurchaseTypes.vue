@@ -85,9 +85,10 @@ export default {
       )[0];
 
       if (item && item.subscription_types.length) {
-        const { id } = item.subscription_types[0];
-
-        this.subscription_type = id;
+        if (!this.subscription_type) {
+            const { id } = item.subscription_types[0];
+            this.subscription_type = id;
+        }
         this.options = [...item.subscription_types];
         this.setTypes();
         return;
@@ -105,6 +106,7 @@ export default {
   },
   async mounted () {
     this.purchaseTypes = await this.$strapi.find('purchase-types');
+    this.setOptions(this.purchase_type);
   }
 };
 </script>

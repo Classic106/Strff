@@ -30,8 +30,8 @@
       "via": "order"
     },
     "order_items": {
-      "collection": "order-item",
-      "via": "order"
+      "via": "order",
+      "collection": "order-item"
     },
     "order_no": {
       "type": "string"

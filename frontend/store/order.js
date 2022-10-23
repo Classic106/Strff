@@ -25,9 +25,14 @@ export const actions = {
         let order = await this.$strapi.$http.$post('/orders/removeproduct', data);
         commit('setOrder', order);
     },
+    async updateItem({commit, state}, data) {
+        await this.$strapi.$http.$post('/order/updateitem', data);
+        let order = await this.$strapi.$http.$get('/order/getorder', { id: data.orderId});
+        commit('setOrder', order);
+    },
     async removeItem({commit, state}, data) {
-        await this.$strapi.$http.$delete('/order-items', data.id);
-        let order = await this.$strapi.$http.$get('/orders/getorder', data.order);
+        await this.$strapi.$http.$delete('/order-items/' + data.id);
+        let order = await this.$strapi.$http.$get('/order/getorder', { id: data.order.id});
         commit('setOrder', order);
     },
     async clearOrder({commit, state}) {
