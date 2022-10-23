@@ -21,6 +21,21 @@ export const actions = {
       console.log(e);
     }
   },
+  async createProduct({ commit }, product) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const { data } = await this.$axios.post(`/products`, product, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
+  },
 };
 
 export const mutations = {
