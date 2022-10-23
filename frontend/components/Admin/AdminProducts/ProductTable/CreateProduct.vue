@@ -19,7 +19,7 @@
               id="title"
               type="text"
               placeholder="Enter title"
-              v-model="form.title"
+              v-model.trim="form.title"
               required
               autofocus="true"
               class="w-100"
@@ -31,7 +31,7 @@
               id="description"
               type="text"
               placeholder="Enter description"
-              v-model="form.description"
+              v-model.trim="form.description"
               required
               autofocus="true"
               class="w-100"
@@ -75,11 +75,7 @@
           </div>
         </form>
       </div>
-      <button
-        class="btn btn-success w-100"
-        v-on:click="submit"
-        form="add-product-form"
-      >
+      <button class="btn btn-success w-100" form="add-product-form">
         Create product
       </button>
     </div>
@@ -87,7 +83,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import Dropzone from "nuxt-dropzone";
 import "nuxt-dropzone/dropzone.css";
 
@@ -111,6 +107,7 @@ export default {
     ...mapGetters({ categories: "categories/categories" }),
   },
   methods: {
+    ...mapActions({ createProduct: "admin_products/createProduct" }),
     addFiles: function (data) {
       console.log(data);
     },
@@ -120,16 +117,9 @@ export default {
     previewFiles: function (event) {
       this.image = event.target.files;
     },
-    submit: function () {
-      console.log(this.form);
+    submit: async function () {
+      await this.createProduct(this.form);
       this.$refs.form.reset();
-      this.form = {
-        title: "",
-        description: "",
-        price: 0,
-        category: "",
-        image: null,
-      };
     },
   },
 };

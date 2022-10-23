@@ -5,7 +5,7 @@
       "path": "/products",
       "handler": "product.find",
       "config": {
-        "policies": ["global::isAuthenticated"]
+        "policies": []
       }
     },
     {
@@ -29,7 +29,7 @@
       "path": "/products",
       "handler": "product.create",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -37,7 +37,7 @@
       "path": "/products/:id",
       "handler": "product.update",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -45,7 +45,7 @@
       "path": "/products/:id",
       "handler": "product.delete",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     }
   ]

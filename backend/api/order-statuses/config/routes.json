@@ -5,7 +5,7 @@
       "path": "/order-statuses",
       "handler": "order-statuses.find",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -13,7 +13,7 @@
       "path": "/order-statuses/count",
       "handler": "order-statuses.count",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -21,7 +21,7 @@
       "path": "/order-statuses/:id",
       "handler": "order-statuses.findOne",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -29,7 +29,7 @@
       "path": "/order-statuses",
       "handler": "order-statuses.create",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -37,7 +37,7 @@
       "path": "/order-statuses/:id",
       "handler": "order-statuses.update",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {

@@ -29,7 +29,7 @@
       "path": "/bundles",
       "handler": "bundle.create",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -37,7 +37,7 @@
       "path": "/bundles/:id",
       "handler": "bundle.update",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -45,7 +45,7 @@
       "path": "/bundles/:id",
       "handler": "bundle.delete",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     }
   ]

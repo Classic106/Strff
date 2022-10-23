@@ -5,7 +5,7 @@
       "path": "/order-items",
       "handler": "order-item.find",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -13,7 +13,7 @@
       "path": "/order-items/count",
       "handler": "order-item.count",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -21,7 +21,7 @@
       "path": "/order-items/:id",
       "handler": "order-item.findOne",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -29,7 +29,7 @@
       "path": "/order-items",
       "handler": "order-item.create",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -37,7 +37,7 @@
       "path": "/order-items/:id",
       "handler": "order-item.update",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -45,7 +45,7 @@
       "path": "/order-items/:id",
       "handler": "order-item.delete",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     }
   ]
