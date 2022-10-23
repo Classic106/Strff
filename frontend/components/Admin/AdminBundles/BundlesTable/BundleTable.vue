@@ -1,7 +1,7 @@
 <template>
   <div class="w-100 h-100 p-0">
     <div class="d-flex justify-content-between">
-      <h6 class="w-100 text-left p-3 m-0">Products</h6>
+      <h6 class="w-100 text-left p-3 m-0">Bundles</h6>
       <button
         class="btn btn-success text-nowrap my-auto mr-2"
         v-on:click="$emit('setIsTable')"
