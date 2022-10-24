@@ -170,6 +170,57 @@ module.exports = {
 
         ctx.send(orderItem);
     },
+    async addBundle(ctx) {
+        let params = ctx.request.body;
+
+        const bundle = await strapi.services.bundle.findOne({ id: params.bundleId });
+        const orderStatus = await strapi.services['order-statuses'].findOne({ code: 1 });
+
+        let options = null;
+        if (params.userId) {
+            options = { 'order_status.id': orderStatus.id, 'user.id': params.userId };
+        } else {
+            options = { 'order_status.id': orderStatus.id, 'order_token': params.orderToken };
+        }
+        let order = await strapi.services.order.findOne(options);
+        if (!order) {
+            order = await strapi.services.order.create({
+                order_no: null,
+                order_date: Date.now(),
+                order_items: [],
+                total: bundle.price,
+                order_status: orderStatus.id,
+                user: params.userId,
+                order_token: params.orderToken
+            });
+        } else {
+            order.total += bundle.price;
+            order.user = params.userId;
+            order.order_token = params.orderToken;
+            order = await strapi.services.order.update({ id: order.id }, order);
+        }
+        if (order.id) {
+            let orderBundle = await strapi.services['order-bundle'].create({
+                bundle: bundle.id,
+                order: order.id,
+                price: bundle.price
+            });
+        }
+
+        order = await strapi.services.order.findOne({ 'id': order.id }, [
+            'order_status',
+            'user',
+            'order_items',
+            'order_items.product',
+            'order_items.product.image',
+            'order_items.product.categories',
+            'order_items.size',
+            'order_items.purchase_type',
+            'order_items.subscription_type',
+            'order_bundles'
+        ]);
+        ctx.send(order);
+    },
     async emptyOrder(ctx) {
         let params = ctx.request.body;
 

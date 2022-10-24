@@ -66,6 +66,14 @@
     },
     {
         "method": "POST",
+        "path": "/orders/addbundle",
+        "handler": "order.addBundle",
+        "config": {
+           "policies": []
+        }
+    },
+    {
+        "method": "POST",
         "path": "/orders/empty",
         "handler": "order.emptyOrder",
         "config": {

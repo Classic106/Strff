@@ -35,6 +35,13 @@ export const actions = {
         let order = await this.$strapi.$http.$get('/order/getorder', { id: data.order.id});
         commit('setOrder', order);
     },
+    async addBundle({ commit, state }, data) {
+        let currentUser = this.$cookies.get('user');
+        data.userId = currentUser? currentUser.id: null;
+        data.orderToken = this.$cookies.get('order_token');
+        let order = await this.$strapi.$http.$post('/orders/addbundle', data);
+        commit('setOrder', order);
+    },
     async clearOrder({commit, state}) {
         let currentUser = this.$cookies.get('user');
         let data = {};

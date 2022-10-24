@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "order_bundles",
   "info": {
-    "name": "Order Bundle"
+    "name": "Order Bundle",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -17,6 +18,9 @@
     "order": {
       "via": "order_bundles",
       "model": "order"
+    },
+    "price": {
+      "type": "decimal"
     }
   }
 }

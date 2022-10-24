@@ -26,8 +26,8 @@
       "model": "user"
     },
     "order_bundles": {
-      "collection": "order-bundle",
-      "via": "order"
+      "via": "order",
+      "collection": "order-bundle"
     },
     "order_items": {
       "via": "order",
