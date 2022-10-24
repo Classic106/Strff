@@ -163,6 +163,8 @@ module.exports = {
         let orderItem = await strapi.services['order-item'].findOne({ id: params.id });
         if (orderItem) {
             orderItem.quantity = params.quantity;
+            orderItem.purchase_type = params.purchaseTypeId;
+            orderItem.subscription_type = params.subscriptionTypeId;
             await strapi.services['order-item'].update({ id: orderItem.id }, orderItem);
         }
 
