@@ -3,13 +3,51 @@ export const state = () => ({
   selected: null,
   next: null,
   previous: null,
+  sortParams: null,
 });
 
 export const actions = {
   async getCustomers({ commit }) {
     try {
-      const result = await this.$strapi.find("customers");
-      commit("setCustomers", result);
+      const token = this.$cookies.get("token");
+
+      const { data } = await this.$axios.get(`/customers`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      commit("setCustomers", data);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  async createCustomer({ commit }, customer) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const { data } = await this.$axios.post(`/customers`, customer, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      commit("addCustomer", data);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  async deleteCustomers({ commit }, customersIds) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const { data } = await this.$axios.delete(`/customers/${customersIds}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      commit("deleteCustomers", customersIds);
     } catch (e) {
       console.log(e);
     }
@@ -17,6 +55,20 @@ export const actions = {
 };
 
 export const mutations = {
+  setSortParams(state, params) {
+    state.sortParams = params;
+  },
+  addCustomer(state, customer) {
+    state.customers.push(customer);
+  },
+  deleteCustomers(state, customersIds) {
+    const newCustomers = state.customers.reduce((acc, item) => {
+      if (!customersIds.includes(item.id)) {
+        acc.push(item);
+      }
+    }, []);
+    state.customers = newCustomers;
+  },
   setCustomers(state, customers) {
     state.customers = customers;
   },
@@ -41,6 +93,9 @@ export const mutations = {
 };
 
 export const getters = {
+  sortParams: (state) => {
+    return state.sortParams;
+  },
   customers: (state) => {
     return state.customers;
   },

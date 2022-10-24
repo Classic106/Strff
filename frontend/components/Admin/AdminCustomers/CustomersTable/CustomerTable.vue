@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { prevCurrNextItems } from "~/helpers";
 
 import "~/utils/filters";
@@ -88,13 +88,23 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters({ customers: "admin_customers/customers" }),
+    ...mapGetters({
+      customers: "admin_customers/customers",
+      sortParams: "admin_customers/sortParams",
+    }),
+  },
+  watch: {
+    customers: function () {
+      this.onSortChange(this.sortParams);
+    },
   },
   methods: {
     prevCurrNextItems,
+    ...mapActions({ deleteCustomers: "admin_customers/deleteCustomers" }),
     ...mapMutations({
       setSelectedCustomers: "admin_customers/setSelectedCustomers",
       setCustomers: "admin_customers/setCustomers",
+      setSortParams: "admin_customers/setSortParams",
     }),
     onCellClick: function (params) {
       const result = this.prevCurrNextItems(params.row, this.currentCustomers);
@@ -117,6 +127,8 @@ export default {
       // params.selectedRows - all rows that are selected (this page)
     },
     onSortChange(params) {
+      this.setSortParams(params);
+
       const { field, type } = params[0];
 
       if (type === "asc") {
@@ -192,9 +204,9 @@ export default {
       // params[0].sortType - ascending or descending
       // params[0].columnIndex - index of column being sorted
     },
-    deleteItems() {
+    async deleteItems() {
       const ids = this.selectedRows.map((item) => item.id);
-      console.log(ids);
+      await this.deleteCustomers(ids);
     },
     spent: function (customer) {
       const { orders } = customer;

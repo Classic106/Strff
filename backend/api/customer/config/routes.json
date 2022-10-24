@@ -42,10 +42,10 @@
     },
     {
       "method": "DELETE",
-      "path": "/customers/:id",
+      "path": "/customers/:ids",
       "handler": "customer.delete",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     }
   ]

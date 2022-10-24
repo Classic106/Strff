@@ -31,11 +31,17 @@ module.exports = {
 
     return result;
   },
-  async create(ctx) {
-    const { body } = ctx.request;
+  async delete(ctx) {
+    const { ids } = ctx.params;
 
-    const result = await strapi.services.customer.create(body);
+    const delteItems = ids.split(",");
 
-    return result;
+    const result = await Promise.all(
+      delteItems.map(
+        async (id) => await strapi.services["customer"].delete({ id })
+      )
+    );
+
+    return result.length;
   },
 };

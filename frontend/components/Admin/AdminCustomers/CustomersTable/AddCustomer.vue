@@ -12,6 +12,7 @@
         id="add-customer-form"
         v-on:submit.stop.prevent="save"
         class="block mb-3 p-3"
+        ref="form"
       >
         <div class="p-2">
           <div class="row mb-2">
@@ -21,7 +22,7 @@
                 id="first-name"
                 type="text"
                 placeholder="Enter first name"
-                v-model="customer.firstName"
+                v-model.trim="customer.firstName"
                 required
                 autofocus="true"
                 class="w-100"
@@ -33,7 +34,7 @@
                 id="last-name"
                 type="text"
                 placeholder="Enter last name"
-                v-model="customer.lastName"
+                v-model.trim="customer.lastName"
                 required
                 autofocus="true"
                 class="w-100"
@@ -45,7 +46,7 @@
               <label class="d-flex" for="s-contact-no"> Cellphone </label>
               <vue-tel-input
                 id="cellphone"
-                v-model="customer.cellphone"
+                v-model.trim="customer.cellphone"
                 v-bind="vueTelInputProps(false)"
               ></vue-tel-input>
             </div>
@@ -68,7 +69,7 @@
               id="s-address"
               type="text"
               placeholder="Enter your address"
-              v-model="customer.address1"
+              v-model.trim="customer.address1"
               required
               autofocus="true"
               class="w-100"
@@ -80,7 +81,7 @@
               id="s-city"
               type="text"
               placeholder="Enter your city"
-              v-model="customer.city"
+              v-model.trim="customer.city"
               required
               autofocus="true"
               class="w-100"
@@ -113,7 +114,7 @@
               id="s-zip-code"
               type="text"
               placeholder="Enter your Zip code"
-              v-model="customer.zip"
+              v-model.trim="customer.zip"
               required
               autofocus="true"
               class="w-100"
@@ -125,7 +126,7 @@
               id="s-company"
               type="text"
               placeholder="Enter company name"
-              v-model="customer.company"
+              v-model.trim="customer.company"
               autofocus="true"
               class="w-100"
             />
@@ -154,6 +155,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 import { states_hashes } from "@/data";
 
 export default {
@@ -174,6 +177,9 @@ export default {
     states_hashes,
   }),
   methods: {
+    ...mapActions({
+      createCustomer: "admin_customers/createCustomer",
+    }),
     vueTelInputProps: (required = true) => ({
       mode: "international",
       validCharactersOnly: true,
@@ -189,8 +195,14 @@ export default {
 
       return hash.name;
     },
-    save: function () {
-      console.log(this.customer);
+    save: async function () {
+      const { state } = this.customer;
+      const data = {
+        ...this.customer,
+        state: state.name,
+      };
+      await this.createCustomer(data);
+      this.$refs.form.reset();
     },
   },
 };
