@@ -6,7 +6,7 @@
         id="title"
         type="text"
         placeholder="Enter title"
-        v-model="currentBundle.title"
+        v-model.trim="currentBundle.title"
         required
         autofocus="true"
         class="w-100"
@@ -18,7 +18,7 @@
         id="description"
         type="text"
         placeholder="Enter description"
-        v-model="currentBundle.description"
+        v-model.trim="currentBundle.description"
         required
         autofocus="true"
         class="w-100"

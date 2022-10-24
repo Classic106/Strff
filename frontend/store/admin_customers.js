@@ -66,6 +66,7 @@ export const mutations = {
       if (!customersIds.includes(item.id)) {
         acc.push(item);
       }
+      return acc;
     }, []);
     state.customers = newCustomers;
   },
