@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { prevCurrNextItems } from "~/helpers";
 
 import BundleProducts from "./BundleProducts.vue";
@@ -70,14 +70,30 @@ export default {
       },
     ],
   }),
+  watch: {
+    bundles: function () {
+      if (this.sortParams) {
+        this.onCellClick(this.sortParams);
+      } else {
+        this.currentBundles = JSON.parse(JSON.stringify(this.bundles));
+      }
+    },
+  },
   computed: {
-    ...mapGetters({ bundles: "admin_bundles/bundles" }),
+    ...mapGetters({
+      bundles: "admin_bundles/bundles",
+      sortParams: "admin_bundles/sortParams",
+    }),
   },
   methods: {
     prevCurrNextItems,
+    ...mapActions({
+      deleteBundles: "admin_bundles/deleteBundles",
+    }),
     ...mapMutations({
       setSelectedBundles: "admin_bundles/setSelectedBundles",
       setBundles: "admin_bundles/setBundles",
+      setSortParams: "admin_bundles/setSortParams",
     }),
     onCellClick: function (params) {
       const result = this.prevCurrNextItems(params.row, this.currentBundles);
@@ -100,6 +116,8 @@ export default {
       // params.selectedRows - all rows that are selected (this page)
     },
     onSortChange(params) {
+      this.setSortParams(params);
+
       const { field, type } = params[0];
 
       if (type === "asc") {
@@ -129,7 +147,7 @@ export default {
     },
     deleteItems() {
       const ids = this.selectedRows.map((item) => item.id);
-      console.log(ids);
+      this.deleteBundles(ids);
     },
     publish() {
       const ids = this.selectedRows.map((item) => item.id);

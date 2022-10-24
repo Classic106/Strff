@@ -95,7 +95,11 @@ export default {
   },
   watch: {
     customers: function () {
-      this.onSortChange(this.sortParams);
+      if (this.sortParams) {
+        this.onSortChange(this.sortParams);
+      } else {
+        this.currentCustomers = JSON.parse(JSON.stringify(this.customers));
+      }
     },
   },
   methods: {

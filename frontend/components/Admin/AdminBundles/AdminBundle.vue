@@ -1,47 +1,42 @@
 <template>
-  <vueCustomScrollbar
-    class="w-100 h-100 overflow-auto d-flex justify-content-center"
-    :settings="scrollSettings"
-  >
-    <div class="row w-100 justify-content-center">
-      <div class="d-flex flex-column col-md-8 col-12">
-        <div class="d-flex align-items-start my-3">
-          <button v-on:click="clearSelectedBundles()" class="button">
-            <BIconArrowLeft />
-          </button>
-          <div class="w-100 px-3">
-            <h6 class="m-0 px-2 font-weight-bold">{{ currentBundle.title }}</h6>
-          </div>
-          <button
-            class="border-left"
-            v-on:click="setPreviousBundle"
-            :disabled="!previous"
-          >
-            <BIconChevronLeft />
-          </button>
-          <button
-            class="border-right"
-            v-on:click="setNextBundle"
-            :disabled="!next"
-          >
-            <BIconChevronRight />
-          </button>
+  <div class="row w-100 justify-content-center">
+    <div class="d-flex flex-column col-md-8 col-12">
+      <div class="d-flex align-items-start my-3">
+        <button v-on:click="clearSelectedBundles" class="button">
+          <BIconArrowLeft />
+        </button>
+        <div class="w-100 px-3">
+          <h6 class="m-0 px-2 font-weight-bold">{{ currentBundle.title }}</h6>
         </div>
-        <BundleForm
-          class="block mb-3 p-3"
-          :bundle="currentBundle"
-          v-on:getBundle="getBundle"
-        />
-        <button class="btn btn-success mb-3" v-on:click="save">
-          Save bundle
+        <button
+          class="border-left"
+          v-on:click="setPreviousBundle"
+          :disabled="!previous"
+        >
+          <BIconChevronLeft />
+        </button>
+        <button
+          class="border-right"
+          v-on:click="setNextBundle"
+          :disabled="!next"
+        >
+          <BIconChevronRight />
         </button>
       </div>
+      <BundleForm
+        class="block mb-3 p-3"
+        :bundle="currentBundle"
+        v-on:getBundle="getBundle"
+      />
+      <button class="btn btn-success mb-3" v-on:click="save">
+        Save bundle
+      </button>
     </div>
-  </vueCustomScrollbar>
+  </div>
 </template>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 
 import { getStrapiMedia } from "~/utils/medias";
 import { prevCurrNextItems } from "~/helpers";
@@ -53,10 +48,6 @@ export default {
   components: { BundleForm },
   data: () => ({
     currentBundle: null,
-    scrollSettings: {
-      suppressScrollX: true,
-      wheelPropagation: false,
-    },
   }),
   computed: {
     ...mapGetters({
@@ -69,6 +60,9 @@ export default {
   methods: {
     getStrapiMedia,
     prevCurrNextItems,
+    ...mapActions({
+      updateBundle: "admin_bundles/updateBundle",
+    }),
     ...mapMutations({
       clearSelectedBundles: "admin_bundles/clearSelectedBundles",
       setSelectedBundles: "admin_bundles/setSelectedBundles",
@@ -111,8 +105,10 @@ export default {
 
       return `${month} ${day}, at ${hours}: ${minutes}`;
     },
-    save: function () {
-      console.log(this.currentBundle);
+    save: async function () {
+      const products = this.currentBundle.products.map((item) => item.id);
+      const bundle = { ...this.currentBundle, products };
+      await this.updateBundle(bundle);
     },
   },
   async beforeMount() {

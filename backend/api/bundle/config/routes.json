@@ -42,7 +42,7 @@
     },
     {
       "method": "DELETE",
-      "path": "/bundles/:id",
+      "path": "/bundles/:ids",
       "handler": "bundle.delete",
       "config": {
         "policies": ["global::isAuthenticated"]
