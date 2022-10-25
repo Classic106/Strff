@@ -63,32 +63,38 @@ module.exports = {
 
     return result;
   },
-  async delete(ctx) {
-    const { id } = ctx.params;
+  async deleteMany(ctx) {
+    const { ids } = ctx.params;
 
-    const order = await strapi.services["order"].findOne({ id });
+    const delteItems = ids.split(",");
 
-    if (order) {
-      const { order_items, order_bundles } = order;
+    const deletedOrders = await Promise.all(
+      delteItems.map(async (id) => {
+        const order = await strapi.services["order"].findOne({ id });
 
-      if (order_items.length) {
-        for (let k = 0; k < order_items.length; k++) {
-          await strapi.services["order-item"].delete({ id: order_items[k].id });
+        if (order) {
+          const { order_items, order_bundles } = order;
+
+          if (order_items.length) {
+            for (let k = 0; k < order_items.length; k++) {
+              await strapi.services["order-item"].delete({
+                id: order_items[k].id,
+              });
+            }
+          }
+
+          if (order_bundles.length) {
+            for (let k = 0; k < order_bundles.length; k++) {
+              await strapi.services["order-bundle"].delete({
+                id: order_bundles[k].id,
+              });
+            }
+          }
         }
-      }
+        return await strapi.services["order"].delete({ id });
+      })
+    );
 
-      if (order_bundles.length) {
-        for (let k = 0; k < order_bundles.length; k++) {
-          await strapi.services["order-bundle"].delete({
-            id: order_bundles[k].id,
-          });
-        }
-      }
-    }
-    const result = await strapi.services["order"].delete({
-      id: order.id,
-    });
-
-    return result;
+    return deletedOrders.length;
   },
 };

@@ -31,20 +31,25 @@
         <BIconX />
       </div>
     </div>
+    <AddCustomerModal v-on:addCustomer="addCustomer" />
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
+import AddCustomerModal from "./AddCustomerModal.vue";
 
 export default {
   name: "CustomersBlock",
-  components: { SelectWithSearch },
+  components: { SelectWithSearch, AddCustomerModal },
   data: () => ({
     customers: [],
     customer: null,
   }),
   methods: {
+    ...mapActions({ getCustomers: "admin_orders/getCustomers" }),
     filterCustomers: function (text, data) {
       return data.filter(
         (item) =>
@@ -68,7 +73,7 @@ export default {
     },
   },
   async beforeMount() {
-    this.customers = await this.$strapi.find("customers");
+    this.customers = await this.getCustomers();
   },
 };
 </script>

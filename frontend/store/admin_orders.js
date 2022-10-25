@@ -3,13 +3,80 @@ export const state = () => ({
   selected: null,
   next: null,
   previous: null,
+  sortParams: null,
 });
 
 export const actions = {
   async getOrders({ commit }) {
     try {
-      const result = await this.$strapi.find("orders");
-      commit("setOrders", result);
+      const token = this.$cookies.get("token");
+
+      const { data } = await this.$axios.get(`/orders`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      commit("setOrders", data);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  async getCustomers() {
+    try {
+      const token = this.$cookies.get("token");
+
+      const { data } = await this.$axios.get(`/customers`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  async createOrder({ commit }, order) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const { data } = await this.$axios.post(`/orders`, order, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      commit("addOrder", data);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  async updateOrder({ commit }, order) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const { id } = bundle;
+      const { data } = await this.$axios.put(`/orders/${id}`, order, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      commit("updateOrder", data);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  async deleteOrders({ commit }, ordersIds) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const { data } = await this.$axios.delete(`/orders/${ordersIds}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      commit("deleteOrders", ordersIds);
     } catch (e) {
       console.log(e);
     }
@@ -17,6 +84,27 @@ export const actions = {
 };
 
 export const mutations = {
+  setSortParams(state, params) {
+    state.sortParams = params;
+  },
+  addOrder(state, order) {
+    state.orders.push(order);
+  },
+  updateOrder(state, order) {
+    const index = state.orders.findIndex((item) => item.id === order.id);
+    if (index !== -1) {
+      state.orders[index] = order;
+    }
+  },
+  deleteOrders(state, ordersIds) {
+    const newOrders = state.orders.reduce((acc, item) => {
+      if (!ordersIds.includes(item.id)) {
+        acc.push(item);
+      }
+      return acc;
+    }, []);
+    state.orders = newOrders;
+  },
   setOrders(state, orders) {
     state.orders = orders;
   },
@@ -41,6 +129,9 @@ export const mutations = {
 };
 
 export const getters = {
+  sortParams: (state) => {
+    return state.sortParams;
+  },
   orders: (state) => {
     return state.orders;
   },
