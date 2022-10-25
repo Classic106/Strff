@@ -34,12 +34,21 @@
             </div>
             <div>
               <h6 class="text-center font-weight-bold">
-                {{ `$ ${ordersSpent / customerOrders.length}` }}
+                {{ `$ ${averageValue()}` }}
               </h6>
               <p>Average order value</p>
             </div>
           </div>
-          <div class="block w-100">
+          <div
+            class="block w-100 d-flex flex-column p-3"
+            v-if="!customerOrders.length"
+          >
+            <p class="text-center">Customer hasn`t any orders</p>
+            <button class="btn btn-success" v-on:click="isAddOrder = true">
+              Add order
+            </button>
+          </div>
+          <div class="block w-100" v-else>
             <div v-if="viewAll === false" class="p-3">
               <h6 class="w-100">Last order place</h6>
               <CustomerOrder :order="customerOrders[0]" />
@@ -74,7 +83,7 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 
 import { prevCurrNextItems } from "~/helpers";
 import { states_hashes } from "@/data";
@@ -108,9 +117,18 @@ export default {
   },
   methods: {
     prevCurrNextItems,
+    ...mapActions({
+      getCustomer: "admin_customers/getCustomer",
+    }),
     ...mapMutations({
       clearSelectedCustomers: "admin_customers/clearSelectedCustomers",
     }),
+    averageValue: function () {
+      if (this.ordersSpent > 0) {
+        return this.ordersSpent / this.customerOrders.length;
+      }
+      return 0;
+    },
     customerDuration: function () {
       const { created_at } = this.selected;
       const regDate = new Date(created_at);
@@ -139,7 +157,7 @@ export default {
     this.loading = true;
     const { id } = this.selected;
 
-    const currentCustomer = await this.$strapi.findOne("customers", id);
+    const currentCustomer = await this.getCustomer(id);
 
     const { orders } = currentCustomer;
 

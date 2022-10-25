@@ -22,6 +22,21 @@ export const actions = {
       console.log(e);
     }
   },
+  async getCustomer(_, id) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const { data } = await this.$axios.get(`/customers/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      //console.log(data);
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
+  },
   async createCustomer({ commit }, customer) {
     try {
       const token = this.$cookies.get("token");
