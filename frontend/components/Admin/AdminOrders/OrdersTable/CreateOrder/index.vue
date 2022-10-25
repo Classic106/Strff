@@ -7,58 +7,69 @@
         </button>
         <h6 class="m-0">Create order</h6>
       </div>
-      <div class="row">
-        <div class="col-6">
-          <div class="block p-3 mb-3">
-            <h6>Products</h6>
-            <ProductsBlock v-on:setProducts="setProducts" />
+      <form
+        autocomplete="off"
+        id="add-customer-form"
+        v-on:submit.prevent="submit"
+        class="mb-3"
+      >
+        <div class="row">
+          <div class="col-6">
+            <div class="block p-3 mb-3">
+              <label class="d-flex" for="products"> Products </label>
+              <ProductsBlock v-on:setProducts="setProducts" id="products" />
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="block p-3 mb-3">
+              <label class="d-flex" for="bundles"> Bundles </label>
+              <BundlesBlock v-on:setBundles="setBundles" id="bundles" />
+            </div>
           </div>
         </div>
-        <div class="col-6">
-          <div class="block p-3 mb-3">
-            <h6>Bundles</h6>
-            <BundlesBlock v-on:setBundles="setBundles" />
+        <div class="block p-3 mb-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <label class="d-flex" for="customer"> Customer </label>
+            <a
+              href="#"
+              id="customer"
+              v-if="!order.customer"
+              v-on:click.prevent="
+                !order.customer &&
+                  $root.$emit('bv::show::modal', 'create-order-modal')
+              "
+              >Add customer</a
+            >
+          </div>
+          <CustomersBlock v-on:setCustomer="setCustomer" />
+        </div>
+        <div class="block p-3 mb-3">
+          <label class="d-flex" for="payment"> Payment </label>
+          <div id="payment">
+            <div class="d-flex justify-content-between">
+              <p>Subtotal</p>
+              <p>$ {{ order.total | formatNumber }}</p>
+            </div>
+            <div class="d-flex justify-content-between">
+              <p>Total</p>
+              <p>$ {{ order.total | formatNumber }}</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="block p-3 mb-3">
-        <div class="d-flex justify-content-between align-items-center">
-          <h6>Customer</h6>
-          <a
-            href="#"
-            v-if="!customer"
-            v-on:click.prevent="
-              !customer && $root.$emit('bv::show::modal', 'create-order-modal')
-            "
-            >Add customer</a
-          >
-        </div>
-        <CustomersBlock v-on:setCustomer="setCustomer" />
-      </div>
-      <div class="block p-3 mb-3">
-        <h6>Payment</h6>
-        <div class="d-flex justify-content-between">
-          <p>Subtotal</p>
-          <p>$ {{ total | formatNumber }}</p>
-        </div>
-        <div class="d-flex justify-content-between">
-          <p>Total</p>
-          <p>$ {{ total | formatNumber }}</p>
-        </div>
-      </div>
-      <button class="btn btn-success w-100" v-on:click="submit">
-        Create order
-      </button>
-      <AddCustomerModal v-on:addCustomer="addCustomer" />
+        <button class="btn btn-success w-100" type="submit">
+          Create order
+        </button>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 import "~/utils/filters";
 
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
-import AddCustomerModal from "./AddCustomerModal.vue";
 import BundlesBlock from "./BundlesBlock.vue";
 import ProductsBlock from "./ProductsBlock.vue";
 import CustomersBlock from "./CustomersBlock.vue";
@@ -67,36 +78,38 @@ export default {
   name: "CreateOrder",
   components: {
     PreloaderImage,
-    AddCustomerModal,
     BundlesBlock,
     ProductsBlock,
     CustomersBlock,
   },
   data: () => ({
-    order_items: [],
-    order_bundles: [],
-    customer: null,
-    total: 0,
+    order: {
+      order_items: [],
+      order_bundles: [],
+      customer: null,
+      total: 0,
+    },
   }),
   methods: {
+    ...mapActions({ createOrder: "admin_orders/createOrder" }),
     setProducts: function (data) {
-      this.order_items = data;
-      this.total = this.calcTotal();
+      this.order.order_items = data;
+      this.order.total = this.calcTotal();
     },
     setBundles: function (data) {
-      this.order_bundles = data;
-      this.total = this.calcTotal();
+      this.order.order_bundles = data;
+      this.order.total = this.calcTotal();
     },
     setCustomer: function (customer) {
-      this.customer = customer;
+      this.order.customer = customer;
     },
     calcTotal: function () {
-      const totalProducts = this.order_items.reduce(
+      const totalProducts = this.order.order_items.reduce(
         (acc, item) => (acc += item.total),
         0
       );
 
-      const totalBundles = this.order_bundles.reduce(
+      const totalBundles = this.order.order_bundles.reduce(
         (acc, item) => (acc += item.bundle.price),
         0
       );
@@ -104,23 +117,42 @@ export default {
       return totalProducts + totalBundles;
     },
     getCustomerName: function (customer) {
-      const { firstName, lastName } = customer;
+      const { firstName, lastName } = orer.customer;
       return `${firstName} ${lastName}`;
     },
     addCustomer: function (customer) {
-      this.customer = customer;
+      this.order.customer = customer;
     },
-    submit: function () {
-      const { order_items, order_bundles, customer, total } = this;
+    submit: async function () {
+      const { order_items, order_bundles, customer, total } = this.order;
+
+      if (!customer) {
+        return;
+      }
+
+      const { id } = customer;
+
+      const items = order_items.map((item) => item.id);
+      const bundles = order_bundles.map((item) => item.id);
+
       const order = {
-        order_items,
-        order_bundles,
-        customer,
+        order_items: items,
+        order_bundles: bundles,
+        customer: id,
         total,
         paid: false,
         order_status: 1,
+        order_date: new Date(),
       };
-      console.log(order);
+
+      await this.createOrder(order);
+
+      this.order = {
+        order_items: [],
+        order_bundles: [],
+        customer: null,
+        total: 0,
+      };
     },
   },
 };

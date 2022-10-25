@@ -5,13 +5,9 @@
     title="Add customer"
     centered
     scrollable
+    :hide-footer="true"
   >
-    <form
-      autocomplete="off"
-      id="add-customer-form"
-      v-on:submit.stop.prevent="save"
-      class="mb-3"
-    >
+    <form v-on:submit.stop.prevent="save" class="mb-3" ref="form">
       <div class="p-2">
         <div class="row mb-2">
           <div class="col-6">
@@ -20,7 +16,7 @@
               id="first-name"
               type="text"
               placeholder="Enter first name"
-              v-model="userInfo.firstName"
+              v-model.trim="userInfo.firstName"
               required
               autofocus="true"
               class="w-100"
@@ -32,7 +28,7 @@
               id="last-name"
               type="text"
               placeholder="Enter last name"
-              v-model="userInfo.lastName"
+              v-model.trim="userInfo.lastName"
               required
               autofocus="true"
               class="w-100"
@@ -46,7 +42,7 @@
               id="s-contact-no"
               type="text"
               placeholder="Enter cellphone"
-              v-model="userInfo.cellphone"
+              v-model.trim="userInfo.cellphone"
               required
               autofocus="true"
               class="w-100"
@@ -58,7 +54,7 @@
               id="s-email"
               type="text"
               placeholder="Enter email"
-              v-model="userInfo.email"
+              v-model.trim="userInfo.email"
               required
               autofocus="true"
               class="w-100"
@@ -71,7 +67,7 @@
             id="s-address"
             type="text"
             placeholder="Enter your address"
-            v-model="userInfo.address1"
+            v-model.trim="userInfo.address1"
             required
             autofocus="true"
             class=""
@@ -83,7 +79,7 @@
             id="s-city"
             type="text"
             placeholder="Enter your city"
-            v-model="userInfo.city"
+            v-model.trim="userInfo.city"
             required
             autofocus="true"
             class=""
@@ -94,7 +90,7 @@
           <select
             size="1"
             name="states_hash"
-            v-model="userInfo.state"
+            v-model.trim="userInfo.state"
             ref="select"
             required
             :class="userInfo.state && 'chosed'"
@@ -115,7 +111,7 @@
             id="s-zip-code"
             type="text"
             placeholder="Enter your Zip code"
-            v-model="userInfo.zip"
+            v-model.trim="userInfo.zip"
             required
             autofocus="true"
             class=""
@@ -127,28 +123,19 @@
             id="s-company"
             type="text"
             placeholder="Enter company name"
-            v-model="userInfo.company"
+            v-model.trim="userInfo.company"
             autofocus="true"
             class=""
           />
         </div>
       </div>
-    </form>
-    <template #modal-footer>
       <div class="w-100 d-flex justify-content-end">
         <button size="sm" class="btn btn-light mr-2" v-on:click="show = false">
           Cancel
         </button>
-        <button
-          size="sm"
-          class="btn btn-success"
-          type="submit"
-          form="add-customer-form"
-        >
-          Save
-        </button>
+        <button size="sm" class="btn btn-success" type="submit">Save</button>
       </div>
-    </template>
+    </form>
   </BModal>
 </template>
 
@@ -187,9 +174,24 @@ export default {
 
       return hash.name;
     },
-    save: function () {
-      this.$emit("addCustomer", this.userInfo);
-      this.show = false;
+    save: async function () {
+      const { name } = this.userInfo.state;
+      const form = { ...this.userInfo, state: name };
+
+      try {
+        const token = this.$cookies.get("token");
+
+        const { data } = await this.$axios.post(`/customers`, form, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        this.$emit("addCustomer", data);
+        this.$refs.form.reset();
+        this.show = false;
+      } catch (e) {
+        console.log(e);
+      }
     },
   },
 };

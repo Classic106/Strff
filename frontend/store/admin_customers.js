@@ -31,7 +31,6 @@ export const actions = {
           Authorization: `Bearer ${token}`,
         },
       });
-      //console.log(data);
       return data;
     } catch (e) {
       console.log(e);

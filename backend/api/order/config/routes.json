@@ -42,8 +42,8 @@
     },
     {
       "method": "DELETE",
-      "path": "/orders/:id",
-      "handler": "order.delete",
+      "path": "/orders/:ids",
+      "handler": "order.deleteMany",
       "config": {
         "policies": []
       }
