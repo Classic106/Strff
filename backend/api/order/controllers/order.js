@@ -82,12 +82,16 @@ module.exports = {
             'order_status',
             'user',
             'order_items',
+            'order_bundles',
             'order_items.product',
             'order_items.product.image',
             'order_items.product.categories',
             'order_items.size',
             'order_items.purchase_type',
-            'order_items.subscription_type'
+            'order_items.subscription_type',
+            'order_bundles.bundle',
+            'order_bundles.bundle.products',
+            'order_bundles.bundle.products.image'
         ]);
         ctx.send(order);
     },
@@ -147,12 +151,16 @@ module.exports = {
                 'order_status',
                 'user',
                 'order_items',
+                'order_bundles',
                 'order_items.product',
                 'order_items.product.image',
                 'order_items.product.categories',
                 'order_items.size',
                 'order_items.purchase_type',
-                'order_items.subscription_type'
+                'order_items.subscription_type',
+                'order_bundles.bundle',
+                'order_bundles.bundle.products',
+                'order_bundles.bundle.products.image'
             ]);
             ctx.send(order);
         }
@@ -211,13 +219,16 @@ module.exports = {
             'order_status',
             'user',
             'order_items',
+            'order_bundles',
             'order_items.product',
             'order_items.product.image',
             'order_items.product.categories',
             'order_items.size',
             'order_items.purchase_type',
             'order_items.subscription_type',
-            'order_bundles'
+            'order_bundles.bundle',
+            'order_bundles.bundle.products',
+            'order_bundles.bundle.products.image'
         ]);
         ctx.send(order);
     },
@@ -244,12 +255,16 @@ module.exports = {
                 'order_status',
                 'user',
                 'order_items',
+                'order_bundles',
                 'order_items.product',
                 'order_items.product.image',
                 'order_items.product.categories',
                 'order_items.size',
                 'order_items.purchase_type',
-                'order_items.subscription_type'
+                'order_items.subscription_type',
+                'order_bundles.bundle',
+                'order_bundles.bundle.products',
+                'order_bundles.bundle.products.image'
             ]);
             ctx.send(order);
         }
@@ -299,12 +314,16 @@ module.exports = {
             'order_status',
             'user',
             'order_items',
+            'order_bundles',
             'order_items.product',
             'order_items.product.image',
             'order_items.product.categories',
             'order_items.size',
             'order_items.purchase_type',
-            'order_items.subscription_type'
+            'order_items.subscription_type',
+            'order_bundles.bundle',
+            'order_bundles.bundle.products',
+            'order_bundles.bundle.products.image'
         ]);
         ctx.send(order);
     }

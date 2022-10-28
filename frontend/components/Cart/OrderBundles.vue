@@ -1,17 +1,10 @@
 <template>
   <ul class="p-0">
-    <li
-      v-for="order_bundle in order_bundles"
-      :key="order_bundle.id"
-      class="p-3 mb-3"
-    >
+    <li v-for="order_bundle in order_bundles" :key="order_bundle.id" class="p-3 mb-3">
       <div class="d-flex flex-column">
         <div class="row">
           <div class="col-6">
-            <div
-              v-for="(product, index) in order_bundle.bundle.products"
-              :key="product.id + index"
-            >
+            <div v-for="(product, index) in order_bundle.bundle.products" :key="product.id + index">
               <div v-if="(index - 1) % 2" class="row w-100 p-0 m-0">
                 <div
                   v-if="order_bundle.bundle.products[index + 1]"
@@ -114,7 +107,7 @@
         <div class="w-100 d-flex justify-content-end">
           <span
             class="icon icon-trash m-2"
-            v-on:click="removeBundle(order_bundle.id)"
+            v-on:click="removeBundle(order_bundle)"
           ></span>
         </div>
       </div>
@@ -138,6 +131,7 @@ export default {
       removeBundle: "order/removeBundle",
     }),
   },
+  mounted () {}
 };
 </script>
 

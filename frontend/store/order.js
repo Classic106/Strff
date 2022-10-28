@@ -42,6 +42,11 @@ export const actions = {
         let order = await this.$strapi.$http.$post('/orders/addbundle', data);
         commit('setOrder', order);
     },
+    async removeBundle({ commit, state }, data) {
+        await this.$strapi.$http.$delete('/order-bundles/' + data.id);
+        let order = await this.$strapi.$http.$get('/order/getorder', { id: data.order.id});
+        commit('setOrder', order);
+    },
     async clearOrder({commit, state}) {
         let currentUser = this.$cookies.get('user');
         let data = {};
@@ -91,7 +96,7 @@ export const getters = {
         return state.order && state.order.order_items? (state.order.order_items.reduce((accumulator, item) => accumulator + item.quantity, 0)): 0;
     },
     orderBundleNoOfItems (state) {
-        return state.order && state.order.order_bundles? (state.order.order_bundles.reduce((accumulator, item) => accumulator + item.quantity, 0)): 0;
+        return state.order && state.order.order_bundles? state.order.order_bundles.length: 0;
     },
     orderTotal(state) {
         return state.order? state.order.total: 0;
