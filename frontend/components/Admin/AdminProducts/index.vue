@@ -6,7 +6,7 @@
     >
       <Loader />
     </div>
-    <div v-else class="w-100 h-100">
+    <div v-else class="w-100">
       <ProductTable v-if="!selected" />
       <AdminProduct v-else />
     </div>
@@ -18,7 +18,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 
 import Loader from "~/components/common/Loader";
 import ProductTable from "./ProductTable";
-import AdminProduct from "./AdminProduct.vue";
+import AdminProduct from "./AdminProduct";
 
 export default {
   name: "AdminProducts",

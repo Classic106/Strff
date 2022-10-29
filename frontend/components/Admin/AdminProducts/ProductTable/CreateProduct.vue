@@ -51,7 +51,7 @@
           </div>
           <div class="mb-2">
             <label class="d-flex" for="last-name"> Category </label>
-            <select required v-model="form.category" class="w-100">
+            <select required v-model="form.categories" class="w-100">
               <option
                 v-for="category in categories"
                 :key="category.id"
@@ -62,16 +62,8 @@
             </select>
           </div>
           <div class="mb-2">
-            <label class="d-flex" for="last-name"> Media </label>
-            <Dropzone
-              id="foo"
-              ref="el"
-              :options="options"
-              destroyDropzone
-              duplicateCheck
-              v-on:vdropzone-files-added="addFiles"
-              v-on:vdropzone-removed-file="removeFile"
-            ></Dropzone>
+            <label class="d-flex" for="media"> Media </label>
+            <UploadImages v-on:changed="handleImages" :max="5" id="media" />
           </div>
         </form>
       </div>
@@ -84,23 +76,19 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import Dropzone from "nuxt-dropzone";
-import "nuxt-dropzone/dropzone.css";
+
+import UploadImages from "vue-upload-drop-images";
 
 export default {
   name: "CreateProduct",
-  components: { Dropzone },
+  components: { UploadImages },
   data: () => ({
     form: {
       title: "",
       description: "",
       price: 0,
-      category: "",
-      image: null,
-    },
-    options: {
-      url: "http://httpbin.org/anything",
-      uploadMultiple: true,
+      categories: null,
+      image: [],
     },
   }),
   computed: {
@@ -108,18 +96,14 @@ export default {
   },
   methods: {
     ...mapActions({ createProduct: "admin_products/createProduct" }),
-    addFiles: function (data) {
-      console.log(data);
-    },
-    removeFile: function (data) {
-      console.log(data);
-    },
-    previewFiles: function (event) {
-      this.image = event.target.files;
+    handleImages(files) {
+      this.form.image = files;
     },
     submit: async function () {
+      //console.log(this.form);
       await this.createProduct(this.form);
-      this.$refs.form.reset();
+      //this.$refs.form.reset();
+      //this.form.image = [];
     },
   },
 };

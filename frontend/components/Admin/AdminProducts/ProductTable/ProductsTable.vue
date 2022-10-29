@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { prevCurrNextItems } from "~/helpers";
 
 import ProductTableColumn from "./ProductTableColumn.vue";
@@ -83,13 +83,27 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters({ products: "admin_products/products" }),
+    ...mapGetters({
+      products: "admin_products/products",
+      sortParams: "admin_products/sortParams",
+    }),
+  },
+  watch: {
+    products: function () {
+      if (this.sortParams) {
+        this.onSortChange(this.sortParams);
+      } else {
+        this.currentProducts = JSON.parse(JSON.stringify(this.products));
+      }
+    },
   },
   methods: {
     prevCurrNextItems,
+    ...mapActions({ deleteProducts: "admin_products/deleteProducts" }),
     ...mapMutations({
       setSelectedProducts: "admin_products/setSelectedProducts",
       setProducts: "admin_products/setProducts",
+      setSortParams: "admin_products/setSortParams",
     }),
     onCellClick: function (params) {
       const result = this.prevCurrNextItems(params.row, this.currentProducts);
@@ -112,6 +126,7 @@ export default {
       // params.selectedRows - all rows that are selected (this page)
     },
     onSortChange(params) {
+      this.setSortParams(params);
       const { field, type } = params[0];
 
       if (type === "asc") {
@@ -147,7 +162,7 @@ export default {
     },
     deleteItems() {
       const ids = this.selectedRows.map((item) => item.id);
-      console.log(ids);
+      this.deleteProducts(ids);
     },
     publish() {
       const ids = this.selectedRows.map((item) => item.id);
