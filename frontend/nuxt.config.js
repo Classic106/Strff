@@ -162,6 +162,8 @@ export default {
    ** Build configuration
    ** See https://nuxtjs.org/api/configuration-build/
    */
-  build: {},
+  build: {
+    transpile: ["vue-upload-drop-images"],
+  },
   buildModules: ["vue-ssr-carousel/nuxt"],
 };
