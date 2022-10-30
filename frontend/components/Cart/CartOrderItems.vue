@@ -133,7 +133,6 @@ export default {
     },
     editOrSaveItem(item) {
         if (this.isEdit) {
-            console.log(this.selectedItem);
             this.updateCart(this.selectedItem);
             this.isEdit = false;
         } else {

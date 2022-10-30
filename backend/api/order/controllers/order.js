@@ -43,7 +43,6 @@ module.exports = {
                 order_token: params.orderToken
             });
         } else {
-            order.total += (params.quantity * product.price);
             order.user = params.userId;
             order.order_token = params.orderToken;
             order = await strapi.services.order.update({ id: order.id }, order);
@@ -76,23 +75,10 @@ module.exports = {
                 orderItem.total = orderItem.quantity * orderItem.price;
                 orderItem = await strapi.services['order-item'].update({ id: orderItem.id }, orderItem);
             }
+            await this.recomputeOrder(order.id);
         }
 
-        order = await strapi.services.order.findOne({ 'id': order.id }, [
-            'order_status',
-            'user',
-            'order_items',
-            'order_bundles',
-            'order_items.product',
-            'order_items.product.image',
-            'order_items.product.categories',
-            'order_items.size',
-            'order_items.purchase_type',
-            'order_items.subscription_type',
-            'order_bundles.bundle',
-            'order_bundles.bundle.products',
-            'order_bundles.bundle.products.image'
-        ]);
+        order = await this.pullOrder(order.id);
         ctx.send(order);
     },
     async removeProduct(ctx) {
@@ -132,38 +118,31 @@ module.exports = {
             if (subscriptionType) {
                 options['subscription_type.id'] = subscriptionType.id;
             }
-            let orderItem = null;
             let orderItems = await strapi.services['order-item'].find(options);
-            if (orderItems.length) {
-                orderItem = orderItems[0];
+            if (orderItems && orderItems.length) {
+                let orderItem = orderItems[0];
                 orderItem.quantity -= params.quantity;
-                order.total -= (params.quantity * orderItem.price);
                 orderItem.total = orderItem.quantity * orderItem.price;
                 if (orderItem.quantity > 0) {
                     await strapi.services['order-item'].update({ id: orderItem.id }, orderItem);
                 } else {
                     await strapi.services['order-item'].delete({ id: orderItem.id });
                 }
-                order = await strapi.services.order.update({ id: order.id }, order);
+                await this.recomputeOrder(order.id);
             }
 
-            order = await strapi.services.order.findOne({ 'id': order.id }, [
-                'order_status',
-                'user',
-                'order_items',
-                'order_bundles',
-                'order_items.product',
-                'order_items.product.image',
-                'order_items.product.categories',
-                'order_items.size',
-                'order_items.purchase_type',
-                'order_items.subscription_type',
-                'order_bundles.bundle',
-                'order_bundles.bundle.products',
-                'order_bundles.bundle.products.image'
-            ]);
+            order = await this.pullOrder(order.id);
             ctx.send(order);
         }
+    },
+    async removeItem(ctx) {
+        let params = ctx.request.body;
+
+        await strapi.services['order-item'].delete({ id: params.id });
+        await this.recomputeOrder(params.orderId);
+
+        let order = await this.pullOrder(params.orderId);
+        ctx.send(order);
     },
     async updateItem(ctx) {
         let params = ctx.request.body;
@@ -174,8 +153,8 @@ module.exports = {
             orderItem.purchase_type = params.purchaseTypeId;
             orderItem.subscription_type = params.subscriptionTypeId;
             await strapi.services['order-item'].update({ id: orderItem.id }, orderItem);
+            await this.recomputeOrder(orderItem.order.id);
         }
-
         ctx.send(orderItem);
     },
     async addBundle(ctx) {
@@ -202,7 +181,6 @@ module.exports = {
                 order_token: params.orderToken
             });
         } else {
-            order.total += bundle.price;
             order.user = params.userId;
             order.order_token = params.orderToken;
             order = await strapi.services.order.update({ id: order.id }, order);
@@ -213,23 +191,19 @@ module.exports = {
                 order: order.id,
                 price: bundle.price
             });
+            await this.recomputeOrder(order.id);
         }
 
-        order = await strapi.services.order.findOne({ 'id': order.id }, [
-            'order_status',
-            'user',
-            'order_items',
-            'order_bundles',
-            'order_items.product',
-            'order_items.product.image',
-            'order_items.product.categories',
-            'order_items.size',
-            'order_items.purchase_type',
-            'order_items.subscription_type',
-            'order_bundles.bundle',
-            'order_bundles.bundle.products',
-            'order_bundles.bundle.products.image'
-        ]);
+        order = await this.pullOrder(order.id);
+        ctx.send(order);
+    },
+    async removeBundle(ctx) {
+        let params = ctx.request.body;
+
+        await strapi.services['order-bundle'].delete({ id: params.id });
+        await this.recomputeOrder(params.orderId);
+
+        let order = await this.pullOrder(params.orderId);
         ctx.send(order);
     },
     async emptyOrder(ctx) {
@@ -251,21 +225,9 @@ module.exports = {
                     await strapi.services['order-item'].delete({ id: orderItems[i].id });
                 }
             }
-            order = await strapi.services.order.findOne({ 'id': order.id }, [
-                'order_status',
-                'user',
-                'order_items',
-                'order_bundles',
-                'order_items.product',
-                'order_items.product.image',
-                'order_items.product.categories',
-                'order_items.size',
-                'order_items.purchase_type',
-                'order_items.subscription_type',
-                'order_bundles.bundle',
-                'order_bundles.bundle.products',
-                'order_bundles.bundle.products.image'
-            ]);
+            await this.recomputeOrder(order.id);
+
+            order = await this.pullOrder(order.id);
             ctx.send(order);
         }
     },
@@ -310,21 +272,45 @@ module.exports = {
     },
     async getOrder(ctx) {
         let params = ctx.request.query;
-        const order = await strapi.services.order.findOne(params, [
+        const order = await this.pullOrder(params.id);
+        ctx.send(order);
+    },
+    async pullOrder(id) {
+        const order = await strapi.services.order.findOne({ id: id}, [
             'order_status',
             'user',
             'order_items',
-            'order_bundles',
             'order_items.product',
             'order_items.product.image',
             'order_items.product.categories',
             'order_items.size',
             'order_items.purchase_type',
             'order_items.subscription_type',
+            'order_bundles',
             'order_bundles.bundle',
             'order_bundles.bundle.products',
             'order_bundles.bundle.products.image'
         ]);
-        ctx.send(order);
+        return order;
+    },
+    async recomputeOrder(id) {
+        let order = await strapi.services.order.findOne({ id: id});
+        if (order) {
+            let total = 0;
+            let orderItems = await strapi.services['order-item'].find({ 'order.id': order.id });
+            if (orderItems) {
+                for (let i = 0; i < orderItems.length; i++) {
+                    total += (orderItems[i].quantity * orderItems[i].price);
+                }
+            }
+            let orderBundles = await strapi.services['order-bundle'].find({ 'order.id': order.id });
+            if (orderBundles) {
+                for (let i = 0; i < orderBundles.length; i++) {
+                    total += orderBundles[i].price;
+                }
+            }
+            order.total = total;
+            await strapi.services.order.update({ id: order.id }, order);
+        }
     }
 };

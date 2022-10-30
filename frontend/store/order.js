@@ -31,8 +31,7 @@ export const actions = {
         commit('setOrder', order);
     },
     async removeItem({commit, state}, data) {
-        await this.$strapi.$http.$delete('/order-items/' + data.id);
-        let order = await this.$strapi.$http.$get('/order/getorder', { id: data.order.id});
+        let order = await this.$strapi.$http.$post('/order/removeitem', { id: data.id, orderId: data.order.id});
         commit('setOrder', order);
     },
     async addBundle({ commit, state }, data) {
@@ -43,8 +42,7 @@ export const actions = {
         commit('setOrder', order);
     },
     async removeBundle({ commit, state }, data) {
-        await this.$strapi.$http.$delete('/order-bundles/' + data.id);
-        let order = await this.$strapi.$http.$get('/order/getorder', { id: data.order.id});
+        let order = await this.$strapi.$http.$post('/order/removebundle', { id: data.id, orderId: data.order.id});
         commit('setOrder', order);
     },
     async clearOrder({commit, state}) {
