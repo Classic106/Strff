@@ -1,23 +1,63 @@
+import qs from "qs";
+
 export const state = () => ({
+  total: 0,
+  params: {
+    sort: {
+      field: "",
+      type: "none",
+    },
+    search: "",
+    page: 1,
+    currentPerPage: 10,
+  },
   products: [],
   selected: null,
   next: null,
   previous: null,
-  sortParams: null,
 });
 
 export const actions = {
-  async getProducts({ commit }) {
+  async getProducts({ commit, state }) {
     try {
       const token = this.$cookies.get("token");
 
-      const { data } = await this.$axios.get(`/products`, {
+      const { sort, search, page, currentPerPage } = state.params;
+      const { field, type } = sort;
+
+      const queryData = {
+        _start: (page - 1) * currentPerPage,
+        _limit: currentPerPage,
+      };
+
+      if (sort && type !== "none") {
+        queryData._sort = `${field}:${type.toUpperCase()}`;
+      }
+
+      if (search) {
+        if (!isNaN(+search)) {
+          queryData.price = search;
+        } else {
+          queryData.title_containss = search;
+        }
+      }
+
+      const query = qs.stringify(queryData);
+
+      const total = await this.$axios.get(`/products/count?${query}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      commit("setProducts", data);
+      const products = await this.$axios.get(`/products?${query}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      commit("setTotal", total.data);
+      commit("setProducts", products.data);
     } catch (e) {
       console.log(e);
     }
@@ -113,8 +153,11 @@ export const actions = {
 };
 
 export const mutations = {
-  setSortParams(state, params) {
-    state.sortParams = params;
+  setTotal(state, total) {
+    state.total = total;
+  },
+  setParams(state, params) {
+    state.params = params;
   },
   setProducts(state, products) {
     state.products = products;
@@ -157,8 +200,11 @@ export const mutations = {
 };
 
 export const getters = {
-  sortParams: (state) => {
-    return state.sortParams;
+  total(state) {
+    return state.total;
+  },
+  params(state) {
+    return state.params;
   },
   products: (state) => {
     return state.products;
