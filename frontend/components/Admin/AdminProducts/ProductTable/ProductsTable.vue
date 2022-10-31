@@ -10,18 +10,29 @@
       </button>
     </div>
     <vue-good-table
+      mode="remote"
       :columns="columns"
-      :rows="currentProducts"
+      :rows="products"
       :select-options="{
         enabled: true,
         selectOnCheckboxOnly: true,
       }"
       :search-options="{ enabled: true }"
       :sort-options="{ enabled: true }"
-      :pagination-options="{ enabled: true, position: 'top' }"
+      :pagination-options="{
+        enabled: true,
+        position: 'top',
+        dropdownAllowAll: false,
+        infoFn: (params) =>
+          `Showing ${params.firstRecordOnPage} to ${params.lastRecordOnPage} of page ${params.currentPage}`,
+      }"
+      :totalRows="total"
+      @on-page-change="onPageChange"
+      @on-per-page-change="onPerPageChange"
       @on-cell-click="onCellClick"
       @on-sort-change="onSortChange"
       @on-selected-rows-change="selectionChanged"
+      @on-search="onSearch"
       @on-select-all="onSelectAll"
       styleClass="vgt-table"
       compactMode
@@ -64,8 +75,8 @@ export default {
     CategoryTableColumn,
   },
   data: () => ({
-    currentProducts: [],
     selectedRows: [],
+    timer: null,
     columns: [
       {
         label: "Product",
@@ -85,80 +96,61 @@ export default {
   computed: {
     ...mapGetters({
       products: "admin_products/products",
-      sortParams: "admin_products/sortParams",
+      params: "admin_products/params",
+      total: "admin_products/total",
     }),
-  },
-  watch: {
-    products: function () {
-      if (this.sortParams) {
-        this.onSortChange(this.sortParams);
-      } else {
-        this.currentProducts = JSON.parse(JSON.stringify(this.products));
-      }
-    },
   },
   methods: {
     prevCurrNextItems,
-    ...mapActions({ deleteProducts: "admin_products/deleteProducts" }),
+    ...mapActions({
+      deleteProducts: "admin_products/deleteProducts",
+      getProducts: "admin_products/getProducts",
+      totalRecords: "admin_products/totalRecords",
+      loadData: "admin_products/loadData",
+    }),
     ...mapMutations({
+      setParams: "admin_products/setParams",
       setSelectedProducts: "admin_products/setSelectedProducts",
       setProducts: "admin_products/setProducts",
       setSortParams: "admin_products/setSortParams",
     }),
+    onPageChange(params) {
+      this.setParams({ ...this.params, page: params.currentPage });
+      this.getProducts();
+    },
+    onPerPageChange(params) {
+      this.setParams({ ...this.params, currentPerPage: params.currentPerPage });
+      this.getProducts();
+    },
     onCellClick: function (params) {
       const result = this.prevCurrNextItems(params.row, this.currentProducts);
 
       this.setSelectedProducts(result);
       this.setProducts(this.currentProducts);
-      // params.row - row object
-      // params.pageIndex - index of this row on the current page.
-      // params.selected - if selection is enabled this argument
-      // indicates selected or not
-      // params.event - click event
     },
     selectionChanged(params) {
       this.selectedRows = params.selectedRows;
-      // params.selectedRows - all rows that are selected (this page)
     },
     onSelectAll(params) {
       this.selectedRows = params.selectedRows;
-      // params.selected - whether the select-all checkbox is checked or unchecked
-      // params.selectedRows - all rows that are selected (this page)
+    },
+    onSearch(params) {
+      clearTimeout(this.timer);
+      this.timer = null;
+
+      this.setParams({ ...this.params, search: params.searchTerm });
+
+      this.timer = setTimeout(() => {
+        this.getProducts();
+      }, 1000);
     },
     onSortChange(params) {
-      this.setSortParams(params);
-      const { field, type } = params[0];
-
-      if (type === "asc") {
-        if (field === "title" || field === "status") {
-          this.currentProducts.sort((a, b) => {
-            return a[field].localeCompare(b[field]);
-          });
-        }
-        if (field === "categories") {
-          this.currentProducts.sort((a, b) => {
-            const nameA = a.categories[0].name;
-            const nameB = b.categories[0].name;
-            return nameA.localeCompare(nameB);
-          });
-        }
+      const { field } = params[0];
+      if (field === "categories") {
+        params[0].field = "categories.name";
       }
-      if (type === "desc") {
-        if (field === "title" || field === "status") {
-          this.currentProducts.sort((a, b) => {
-            return b[field].localeCompare(a[field]);
-          });
-        }
-        if (field === "categories") {
-          this.currentProducts.sort((a, b) => {
-            const nameA = a.categories[0].name;
-            const nameB = b.categories[0].name;
-            return nameB.localeCompare(nameA);
-          });
-        }
-      }
-      // params[0].sortType - ascending or descending
-      // params[0].columnIndex - index of column being sorted
+      this.sort = params[0];
+      this.getData();
     },
     deleteItems() {
       const ids = this.selectedRows.map((item) => item.id);
@@ -172,9 +164,6 @@ export default {
       const ids = this.selectedRows.map((item) => item.id);
       console.log(ids);
     },
-  },
-  mounted() {
-    this.currentProducts = JSON.parse(JSON.stringify(this.products));
   },
 };
 </script>

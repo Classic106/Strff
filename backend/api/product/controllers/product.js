@@ -7,8 +7,8 @@ module.exports = {
    * @return {Object}
    */
 
-  async find() {
-    const entity = await strapi.services.product.find({ _limit: -1 });
+  async find(ctx) {
+    const entity = await strapi.services.product.find(ctx.query);
     return sanitizeEntity(entity, { model: strapi.models.product });
   },
   async findOne(ctx) {
