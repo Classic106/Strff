@@ -111,7 +111,6 @@ export default {
     ...mapMutations({
       setParams: "admin_products/setParams",
       setSelectedProducts: "admin_products/setSelectedProducts",
-      setProducts: "admin_products/setProducts",
       setSortParams: "admin_products/setSortParams",
     }),
     onPageChange(params) {
@@ -123,10 +122,9 @@ export default {
       this.getProducts();
     },
     onCellClick: function (params) {
-      const result = this.prevCurrNextItems(params.row, this.currentProducts);
+      const result = this.prevCurrNextItems(params.row, this.products);
 
       this.setSelectedProducts(result);
-      this.setProducts(this.currentProducts);
     },
     selectionChanged(params) {
       this.selectedRows = params.selectedRows;
