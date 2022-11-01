@@ -109,6 +109,8 @@ export default {
       previous: "admin_products/previous",
       selected: "admin_products/selected",
       next: "admin_products/next",
+      params: "admin_products/params",
+      total: "admin_products/total",
       categories: "categories/categories",
     }),
   },
@@ -122,30 +124,72 @@ export default {
     ...mapActions({
       updateProduct: "admin_products/updateProduct",
       deleteProducts: "admin_products/deleteProducts",
+      getProducts: "admin_products/getProducts",
+      getPreviousOrNextProductsByPage:
+        "admin_products/getPreviousOrNextProductsByPage",
     }),
     ...mapMutations({
+      setParams: "admin_products/setParams",
       clearSelectedProducts: "admin_products/clearSelectedProducts",
       setSelectedProducts: "admin_products/setSelectedProducts",
       setImages: "cool_light_box/setImages",
       setImageIndex: "cool_light_box/setImageIndex",
     }),
-    setNextProduct: function () {
+    setNextProduct: async function () {
       const index = this.findIndex();
-      const result = this.prevCurrNextItems(
+
+      const { page, currentPerPage } = this.params;
+
+      const isMax = page * currentPerPage + index === this.total;
+
+      const { selected, next, previous } = this.prevCurrNextItems(
         this.products[index + 1],
         this.products
       );
 
-      this.setSelectedProducts(result);
+      if (!isMax && !next) {
+        const { page } = this.params;
+
+        this.setParams({ ...this.params, page: page + 1 });
+
+        await this.getProducts();
+
+        const result = this.prevCurrNextItems(this.products[0], [
+          selected,
+          ...this.products,
+        ]);
+
+        this.setSelectedProducts(result);
+      } else {
+        this.setSelectedProducts({ selected, next, previous });
+      }
     },
-    setPreviousProduct: function () {
+    setPreviousProduct: async function () {
       const index = this.findIndex();
-      const result = this.prevCurrNextItems(
+
+      const { page, currentPerPage } = this.params;
+
+      const { selected, next, previous } = this.prevCurrNextItems(
         this.products[index - 1],
         this.products
       );
 
-      this.setSelectedProducts(result);
+      const isMin = this.total - (page * currentPerPage + index) === 0;
+      debugger;
+      if (!isMin && !previous) {
+        const { page } = this.params;
+        this.setParams({ ...this.params, page: page - 1 });
+
+        await this.getProducts();
+
+        const result = this.prevCurrNextItems(
+          this.products[this.products.length - 1],
+          [...this.products, selected]
+        );
+        this.setSelectedProducts(result);
+      } else {
+        this.setSelectedProducts({ selected, next, previous });
+      }
     },
     findIndex: function () {
       return this.products.findIndex((item) => item.id === this.selected.id);
@@ -168,6 +212,10 @@ export default {
       (item) => item.id
     );
     this.images = [...image];
+  },
+  async destroyed() {
+    this.setParams({ ...this.params, page: 1 });
+    await this.getProducts();
   },
 };
 </script>
