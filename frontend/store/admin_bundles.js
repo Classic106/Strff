@@ -1,16 +1,56 @@
+import qs from "qs";
+
 export const state = () => ({
+  total: 0,
+  params: {
+    sort: {
+      field: "",
+      type: "none",
+    },
+    search: "",
+    page: 1,
+    currentPerPage: 10,
+  },
   bundles: [],
   selected: null,
   next: null,
   previous: null,
-  sortParams: null,
 });
 
 export const actions = {
-  async getBundles({ commit }) {
+  async getBundles({ commit, state }) {
     try {
-      const result = await this.$strapi.find("bundles");
-      commit("setBundles", result);
+      const { sort, search, page, currentPerPage } = state.params;
+      const { field, type } = sort;
+
+      const queryData = {
+        _start: (page - 1) * currentPerPage,
+        _limit: currentPerPage,
+      };
+
+      if (sort && type !== "none") {
+        queryData._sort = `${field}:${type.toUpperCase()}`;
+      }
+
+      if (search) {
+        if (!isNaN(+search)) {
+          if (field === "id") {
+            queryData.id = search;
+          } else {
+            queryData.price = search;
+          }
+        } else {
+          queryData.title = search;
+        }
+      }
+
+      const query = qs.stringify(queryData);
+
+      const total = await this.$axios.get(`/bundles/count?${query}`);
+      const result = await this.$axios.get(`/bundles?${query}`);
+
+      commit("setTotal", total.data);
+      commit("setBundles", result.data);
     } catch (e) {
       console.log(e);
     }
@@ -61,8 +101,14 @@ export const actions = {
 };
 
 export const mutations = {
-  setSortParams(state, params) {
-    state.sortParams = params;
+  setTotal(state, total) {
+    state.total = total;
+  },
+  setParams(state, params) {
+    state.params = params;
+  },
+  setBundles(state, bundles) {
+    state.bundles = bundles;
   },
   addBundle(state, bundle) {
     state.bundles.push(bundle);
@@ -82,9 +128,6 @@ export const mutations = {
     }, []);
     state.bundles = newBundless;
   },
-  setBundles(state, bundles) {
-    state.bundles = bundles;
-  },
   setSelectedBundles(state, data) {
     const { selected, previous, next } = data;
 
@@ -102,12 +145,24 @@ export const mutations = {
     state.selected = null;
     state.next = null;
     state.bundles = [];
+    state.params = {
+      sort: {
+        field: "",
+        type: "none",
+      },
+      search: "",
+      page: 1,
+      currentPerPage: 10,
+    };
   },
 };
 
 export const getters = {
-  sortParams: (state) => {
-    return state.sortParams;
+  total(state) {
+    return state.total;
+  },
+  params(state) {
+    return state.params;
   },
   bundles: (state) => {
     return state.bundles;

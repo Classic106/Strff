@@ -10,18 +10,29 @@
       </button>
     </div>
     <vue-good-table
+      mode="remote"
       :columns="columns"
-      :rows="currentBundles"
+      :rows="bundles"
       :select-options="{
         enabled: true,
         selectOnCheckboxOnly: true,
       }"
       :search-options="{ enabled: true }"
       :sort-options="{ enabled: true }"
-      :pagination-options="{ enabled: true, position: 'top' }"
+      :pagination-options="{
+        enabled: true,
+        position: 'top',
+        dropdownAllowAll: false,
+        infoFn: (params) =>
+          `Showing ${params.firstRecordOnPage} to ${params.lastRecordOnPage} of page ${params.currentPage}`,
+      }"
+      :totalRows="total"
+      @on-page-change="onPageChange"
+      @on-per-page-change="onPerPageChange"
       @on-cell-click="onCellClick"
       @on-sort-change="onSortChange"
       @on-selected-rows-change="selectionChanged"
+      @on-search="onSearch"
       @on-select-all="onSelectAll"
       styleClass="vgt-table"
       compactMode
@@ -52,7 +63,6 @@ export default {
   name: "BundleTable",
   components: { BundleProducts },
   data: () => ({
-    currentBundles: [],
     selectedRows: [],
     columns: [
       {
@@ -70,80 +80,60 @@ export default {
       },
     ],
   }),
-  watch: {
-    bundles: function () {
-      if (this.sortParams) {
-        this.onCellClick(this.sortParams);
-      } else {
-        this.currentBundles = JSON.parse(JSON.stringify(this.bundles));
-      }
-    },
-  },
   computed: {
     ...mapGetters({
       bundles: "admin_bundles/bundles",
-      sortParams: "admin_bundles/sortParams",
+      params: "admin_bundles/params",
+      total: "admin_bundles/total",
     }),
   },
   methods: {
     prevCurrNextItems,
     ...mapActions({
       deleteBundles: "admin_bundles/deleteBundles",
+      getBundles: "admin_bundles/getBundles",
     }),
     ...mapMutations({
       setSelectedBundles: "admin_bundles/setSelectedBundles",
-      setBundles: "admin_bundles/setBundles",
-      setSortParams: "admin_bundles/setSortParams",
+      setParams: "admin_bundles/setParams",
     }),
+    onPageChange(params) {
+      this.setParams({ ...this.params, page: params.currentPage });
+      this.getBundles();
+    },
+    onPerPageChange(params) {
+      this.setParams({ ...this.params, currentPerPage: params.currentPerPage });
+      this.getBundles();
+    },
     onCellClick: function (params) {
-      const result = this.prevCurrNextItems(params.row, this.currentBundles);
-
+      const result = this.prevCurrNextItems(params.row, this.bundles);
       this.setSelectedBundles(result);
-      this.setBundles(this.currentBundles);
-      // params.row - row object
-      // params.pageIndex - index of this row on the current page.
-      // params.selected - if selection is enabled this argument
-      // indicates selected or not
-      // params.event - click event
     },
     selectionChanged(params) {
       this.selectedRows = params.selectedRows;
-      // params.selectedRows - all rows that are selected (this page)
     },
     onSelectAll(params) {
       this.selectedRows = params.selectedRows;
-      // params.selected - whether the select-all checkbox is checked or unchecked
-      // params.selectedRows - all rows that are selected (this page)
     },
-    onSortChange(params) {
-      this.setSortParams(params);
+    onSearch(params) {
+      clearTimeout(this.timer);
+      this.timer = null;
 
-      const { field, type } = params[0];
+      this.setParams({ ...this.params, search: params.searchTerm });
 
-      if (type === "asc") {
-        if (field === "products") {
-          this.currentBundles.sort((a, b) => a.id < b.id);
-        }
-        if (field === "title") {
-          this.currentBundles.sort((a, b) => a.title.localeCompare(b.title));
-        }
-        if (field === "price") {
-          this.currentBundles.sort((a, b) => a.price < b.price);
-        }
+      this.timer = setTimeout(() => {
+        this.getBundles();
+      }, 1000);
+    },
+    onSortChange: async function (params) {
+      console.log(params)
+      const { field } = params[0];
+      if (field === "products") {
+        params[0].field = 'id';
       }
-      if (type === "desc") {
-        if (field === "products") {
-          this.currentBundles.sort((a, b) => a.id > b.id);
-        }
-        if (field === "title") {
-          this.currentBundles.sort((a, b) => b.title.localeCompare(a.title));
-        }
-        if (field === "price") {
-          this.currentBundles.sort((a, b) => a.price > b.price);
-        }
-      }
-      // params[0].sortType - ascending or descending
-      // params[0].columnIndex - index of column being sorted
+
+      this.setParams({ ...this.params, sort: params[0] });
+      this.getBundles();
     },
     deleteItems() {
       const ids = this.selectedRows.map((item) => item.id);

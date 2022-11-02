@@ -55,6 +55,8 @@ export default {
       previous: "admin_bundles/previous",
       selected: "admin_bundles/selected",
       next: "admin_bundles/next",
+      params: "admin_products/params",
+      total: "admin_products/total",
     }),
   },
   methods: {
@@ -62,32 +64,82 @@ export default {
     prevCurrNextItems,
     ...mapActions({
       updateBundle: "admin_bundles/updateBundle",
+      getBundles: "admin_bundles/getBundles",
     }),
     ...mapMutations({
+      setParams: "admin_bundles/setParams",
       clearSelectedBundles: "admin_bundles/clearSelectedBundles",
       setSelectedBundles: "admin_bundles/setSelectedBundles",
     }),
-    setNextBundle: function () {
-      const index = this.findCurrentIndex();
-      const result = this.prevCurrNextItems(
+    setNextBundle: async function () {
+      const index = this.findIndex();
+
+      const { page, currentPerPage } = this.params;
+
+      let isMax = false;
+
+      if (
+        this.total / currentPerPage - page <= 0 &&
+        index === this.bundles.length - 2
+      ) {
+        isMax = true;
+      }
+
+      const { selected, next, previous } = this.prevCurrNextItems(
         this.bundles[index + 1],
         this.bundles
       );
 
-      this.setSelectedBundles(result);
-      this.currentBundle = { ...this.selected };
+      if (!isMax && !next) {
+        const { page } = this.params;
+
+        this.setParams({ ...this.params, page: page + 1 });
+
+        await this.getBundles();
+
+        const result = this.prevCurrNextItems(this.bundles[0], [
+          selected,
+          ...this.bundles,
+        ]);
+debugger
+        this.setSelectedBundles(result);
+      } else {
+        this.setSelectedBundles({ selected, next, previous });
+      }
     },
-    setPreviousBundle: function () {
-      const index = this.findCurrentIndex();
-      const result = this.prevCurrNextItems(
+    setPreviousBundle: async function () {
+      const index = this.findIndex();
+
+      const { page } = this.params;
+
+      const { selected, next, previous } = this.prevCurrNextItems(
         this.bundles[index - 1],
         this.bundles
       );
 
-      this.setSelectedBundles(result);
-      this.currentBundle = { ...this.selected };
+      let isMin = false;
+
+      if (page >= 1 && index === 1) {
+        isMin = true;
+      }
+
+      if (!isMin && !previous) {
+        const { page } = this.params;
+        this.setParams({ ...this.params, page: page - 1 });
+
+        await this.getBundles();
+
+        const result = this.prevCurrNextItems(
+          this.bundles[this.bundles.length - 1],
+          [...this.bundles, selected]
+        );
+        
+        this.setSelectedBundles(result);
+      } else {
+        this.setSelectedBundles({ selected, next, previous });
+      }
     },
-    findCurrentIndex: function () {
+    findIndex: function () {
       return this.bundles.findIndex((item) => item.id === this.selected.id);
     },
     getBundle: function (data) {
