@@ -196,7 +196,7 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 
 import { getStrapiMedia } from "~/utils/medias";
 import { prevCurrNextItems } from "~/helpers";
@@ -220,37 +220,92 @@ export default {
       previous: "admin_orders/previous",
       selected: "admin_orders/selected",
       next: "admin_orders/next",
+      params: "admin_orders/params",
+      total: "admin_orders/total",
     }),
   },
   methods: {
     getStrapiMedia,
     prevCurrNextItems,
+    ...mapActions({
+      getOrders: "admin_orders/getOrders",
+    }),
     ...mapMutations({
       clearSelectedOrders: "admin_orders/clearSelectedOrders",
       setSelectedOrders: "admin_orders/setSelectedOrders",
+      setParams: "admin_orders/setParams",
     }),
     openModal: function (modal) {
       this.$root.$emit("bv::show::modal", modal);
     },
-    setNextOrder: function () {
-      const index = this.findCurrentIndex();
-      const result = this.prevCurrNextItems(
+    setNextOrder: async function () {
+      const index = this.findIndex();
+
+      const { page, currentPerPage } = this.params;
+
+      let isMax = false;
+
+      if (
+        this.total / currentPerPage - page <= 0 &&
+        index === this.orders.length - 2
+      ) {
+        isMax = true;
+      }
+
+      const { selected, next, previous } = this.prevCurrNextItems(
         this.orders[index + 1],
         this.orders
       );
 
-      this.setSelectedOrders(result);
+      if (!isMax && !next) {
+        const { page } = this.params;
+
+        this.setParams({ ...this.params, page: page + 1 });
+
+        await this.getOrders();
+
+        const result = this.prevCurrNextItems(this.orders[0], [
+          selected,
+          ...this.orders,
+        ]);
+        debugger;
+        this.setSelectedOrders(result);
+      } else {
+        this.setSelectedOrders({ selected, next, previous });
+      }
     },
-    setPreviousOrder: function () {
-      const index = this.findCurrentIndex();
-      const result = this.prevCurrNextItems(
+    setPreviousOrder: async function () {
+      const index = this.findIndex();
+
+      const { page } = this.params;
+
+      const { selected, next, previous } = this.prevCurrNextItems(
         this.orders[index - 1],
         this.orders
       );
 
-      this.setSelectedOrders(result);
+      let isMin = false;
+
+      if (page >= 1 && index === 1) {
+        isMin = true;
+      }
+      debugger;
+      if (!isMin && !previous) {
+        const { page } = this.params;
+        this.setParams({ ...this.params, page: page - 1 });
+
+        await this.getOrders();
+
+        const result = this.prevCurrNextItems(
+          this.orders[this.orders.length - 1],
+          [...this.orders, selected]
+        );
+        this.setSelectedOrders(result);
+      } else {
+        this.setSelectedOrders({ selected, next, previous });
+      }
     },
-    findCurrentIndex: function () {
+    findIndex: function () {
       return this.orders.findIndex((item) => item.id === this.selected.id);
     },
     parseDate: function (date) {
@@ -270,6 +325,10 @@ export default {
       const { firstName, lastName } = customer;
       return `${firstName} ${lastName}`;
     },
+  },
+  async destroyed() {
+    this.setParams({ ...this.params, page: 1 });
+    await this.getOrders();
   },
 };
 </script>

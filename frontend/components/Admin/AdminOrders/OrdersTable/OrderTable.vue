@@ -10,18 +10,29 @@
       </button>
     </div>
     <vue-good-table
+      mode="remote"
       :columns="columns"
-      :rows="currentOrders"
+      :rows="orders"
       :select-options="{
         enabled: true,
         selectOnCheckboxOnly: true,
       }"
       :search-options="{ enabled: true }"
       :sort-options="{ enabled: true }"
-      :pagination-options="{ enabled: true, position: 'top' }"
+      :pagination-options="{
+        enabled: true,
+        position: 'top',
+        dropdownAllowAll: false,
+        infoFn: (params) =>
+          `Showing ${params.firstRecordOnPage} to ${params.lastRecordOnPage} of page ${params.currentPage}`,
+      }"
+      :totalRows="total"
+      @on-page-change="onPageChange"
+      @on-per-page-change="onPerPageChange"
       @on-cell-click="onCellClick"
       @on-sort-change="onSortChange"
       @on-selected-rows-change="selectionChanged"
+      @on-search="onSearch"
       @on-select-all="onSelectAll"
       styleClass="vgt-table"
       compactMode
@@ -66,8 +77,8 @@ export default {
   name: "OrderTable",
   components: { OrderItems, OrderCustomers, OrderDate },
   data: () => ({
-    currentOrders: [],
     selectedRows: [],
+    timer: null,
     columns: [
       {
         label: "Order",
@@ -102,127 +113,55 @@ export default {
   computed: {
     ...mapGetters({
       orders: "admin_orders/orders",
-      sortParams: "admin_orders/sortParams",
+      params: "admin_orders/params",
+      total: "admin_orders/total",
     }),
-  },
-  watch: {
-    orders: function () {
-      if (this.sortParams) {
-        this.onCellClick(this.sortParams);
-      } else {
-        this.currentOrders = JSON.parse(JSON.stringify(this.orders));
-      }
-    },
   },
   methods: {
     prevCurrNextItems,
     ...mapActions({
       deleteOrders: "admin_orders/deleteOrders",
+      getOrders: "admin_orders/getOrders",
     }),
     ...mapMutations({
       setSelectedOrders: "admin_orders/setSelectedOrders",
-      setOrders: "admin_orders/setOrders",
-      setSortParams: "admin_orders/setSortParams",
+      setParams: "admin_orders/setParams",
     }),
+    onPageChange(params) {
+      this.setParams({ ...this.params, page: params.currentPage });
+      this.getOrders();
+    },
+    onPerPageChange(params) {
+      this.setParams({ ...this.params, currentPerPage: params.currentPerPage });
+      this.getOrders();
+    },
     onCellClick: function (params) {
-      const result = this.prevCurrNextItems(params.row, this.currentOrders);
-
+      const result = this.prevCurrNextItems(params.row, this.orders);
       this.setSelectedOrders(result);
-      this.setOrders(this.currentOrders);
-      // params.row - row object
-      // params.pageIndex - index of this row on the current page.
-      // params.selected - if selection is enabled this argument
-      // indicates selected or not
-      // params.event - click event
     },
     selectionChanged(params) {
       this.selectedRows = params.selectedRows;
-      // params.selectedRows - all rows that are selected (this page)
     },
     onSelectAll(params) {
       this.selectedRows = params.selectedRows;
-      // params.selected - whether the select-all checkbox is checked or unchecked
-      // params.selectedRows - all rows that are selected (this page)
+    },
+    onSearch(params) {
+      clearTimeout(this.timer);
+      this.timer = null;
+
+      this.setParams({ ...this.params, search: params.searchTerm });
+
+      this.timer = setTimeout(() => {
+        this.getOrders();
+      }, 1000);
     },
     onSortChange(params) {
-      this.setSortParams(params);
-
-      const { field, type } = params[0];
-
-      if (type === "asc") {
-        if (field === "id") {
-          this.currentOrders.sort((a, b) => {
-            return a.id < b.id;
-          });
-        }
-        if (field === "total") {
-          this.currentOrders.sort((a, b) => {
-            return a.total < b.total;
-          });
-        }
-        if (field === "order_date") {
-          this.currentOrders.sort((a, b) => {
-            const dateA = new Date(a.order_date);
-            const dateB = new Date(b.order_date);
-            return dateA < dateB;
-          });
-        }
-        if (field === "user") {
-          this.currentOrders.sort((a, b) => {
-            const nameA = this.getCustomerName(a);
-            const nameB = this.getCustomerName(b);
-            return nameA < nameB;
-          });
-        }
-        if (field === "order_items") {
-          this.currentOrders.sort((a, b) => {
-            return a.order_items.length < b.order_items.length;
-          });
-        }
-        if (field === "order_bundles") {
-          this.currentOrders.sort((a, b) => {
-            return a.order_bundles.length < b.order_bundles.length;
-          });
-        }
+      const { field } = params[0];
+      if (field === "order_items" || field === "order_bundles") {
+        params[0].field = `${field}.name`;
       }
-      if (type === "desc") {
-        if (field === "id") {
-          this.currentOrders.sort((a, b) => {
-            return a.id > b.id;
-          });
-        }
-        if (field === "total") {
-          this.currentOrders.sort((a, b) => {
-            return a.total > b.total;
-          });
-        }
-        if (field === "order_date") {
-          this.currentOrders.sort((a, b) => {
-            const dateA = new Date(a.order_date);
-            const dateB = new Date(b.order_date);
-            return dateA > dateB;
-          });
-        }
-        if (field === "user") {
-          this.currentOrders.sort((a, b) => {
-            const nameA = this.getCustomerName(a);
-            const nameB = this.getCustomerName(b);
-            return nameA > nameB;
-          });
-        }
-        if (field === "order_items") {
-          this.currentOrders.sort((a, b) => {
-            return a.order_items.length > b.order_items.length;
-          });
-        }
-        if (field === "order_bundles") {
-          this.currentOrders.sort((a, b) => {
-            return a.order_bundles.length > b.order_bundles.length;
-          });
-        }
-      }
-      // params[0].sortType - ascending or descending
-      // params[0].columnIndex - index of column being sorted
+
+      this.setParams({ ...this.params, sort: params });
     },
     deleteItems() {
       const ids = this.selectedRows.map((item) => item.id);
@@ -233,9 +172,6 @@ export default {
 
       return `${first_name} ${last_name}`;
     },
-  },
-  mounted() {
-    this.currentOrders = JSON.parse(JSON.stringify(this.orders));
   },
 };
 </script>
