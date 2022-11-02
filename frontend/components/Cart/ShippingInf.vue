@@ -19,13 +19,35 @@
           >
             <h6
               class="py-3 p-3 text-nowrap"
-              v-on:click.self="isAddressOpen = !isAddressOpen"
+              v-on:click.self="isShippingAddressOpen = !isShippingAddressOpen"
             >
               + Add Shipping Address
             </h6>
-            <CloseButton class="mr-3 my-2" v-on:close="isAddressOpen = false" />
+            <CloseButton class="mr-3 my-2" v-on:close="isShippingAddressOpen = false" />
           </div>
-          <UserForm v-if="isAddressOpen" v-on:setUserInfo="setUserInfo" />
+          <AddressForm :address-type="1" v-if="isShippingAddressOpen" v-on:setAddress="setAddress" />
+        </div>
+        <div class="d-flex flex-column">
+          <div
+            class="
+              head
+              mb-3
+              d-flex
+              w-100
+              rounded
+              justify-content-between
+              align-items-center
+            "
+          >
+            <h6
+              class="py-3 p-3 text-nowrap"
+              v-on:click.self="isBillingAddressOpen = !isBillingAddressOpen"
+            >
+              + Add Billing Address
+            </h6>
+            <CloseButton class="mr-3 my-2" v-on:close="isBillingAddressOpen = false" />
+          </div>
+          <AddressForm :address-type="2" v-if="isBillingAddressOpen" v-on:setAddress="setAddress" />
         </div>
         <div class="d-flex flex-column">
           <div
@@ -63,17 +85,18 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import Sign from "@/components/Sign";
-import UserForm from "@/components/UserForm";
+import AddressForm from "@/components/AddressForm";
 import Card from "./Card.vue";
 import CloseButton from "@/components/common/CloseButton";
 
 export default {
-  components: { Sign, UserForm, Card, CloseButton },
+  components: { Sign, AddressForm, Card, CloseButton },
   props: ["isShipping"],
   data: () => ({
     userInfo: {},
     card: {},
-    isAddressOpen: false,
+    isShippingAddressOpen: false,
+    isBillingAddressOpen: false,
     isCardOpen: false,
     settings: {
       suppressScrollX: true,
@@ -82,15 +105,21 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      username: "auth/username"
+        username: "auth/username",
+        order: "order/order"
     }),
   },
   methods: {
     ...mapActions({
       confirmOrder: "order/confirmOrder",
     }),
-    setUserInfo: function (val) {
-      this.userInfo = val;
+    setAddress: function (address) {
+      /* this.userInfo = address; */
+
+      this.$store.dispatch('order/updateOrder', {
+        id: this.order.id,
+        address: address
+      });
     },
     setCard: function (val) {
       this.card = val;

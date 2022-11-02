@@ -206,6 +206,40 @@ module.exports = {
         let order = await this.pullOrder(params.orderId);
         ctx.send(order);
     },
+    async updateOrder(ctx) {
+        let params = ctx.request.body;
+
+        let order = await strapi.services.order.findOne({ id: params.id });
+        if (order) {
+            if (params.address.type == 1) {
+                order.shipping_first_name = params.address.firstName;
+                order.shipping_last_name = params.address.lastName;
+                order.shipping_company = params.address.company;
+                order.shipping_address_1 = params.address.address1;
+                order.shipping_address_2 = params.address.address2;
+                order.shipping_city = params.address.city;
+                order.shipping_state = params.address.state;
+                order.shipping_zip_code = params.address.zip;
+                order.shipping_contact_no = params.address.contactNo;
+                order.shipping_email = params.address.email;
+            } else {
+                order.billing_first_name = params.address.firstName;
+                order.billing_last_name = params.address.lastName;
+                order.billing_company = params.address.company;
+                order.billing_address_1 = params.address.address1;
+                order.billing_address_2 = params.address.address2;
+                order.billing_city = params.address.city;
+                order.billing_state = params.address.state;
+                order.billing_zip_code = params.address.zip;
+                order.billing_contact_no = params.address.contactNo;
+                order.billing_email = params.address.email;
+            }
+            order = await strapi.services.order.update({ id: order.id }, order);
+        }
+
+        order = await this.pullOrder(params.id);
+        ctx.send(order);
+    },
     async emptyOrder(ctx) {
         let params = ctx.request.body;
 

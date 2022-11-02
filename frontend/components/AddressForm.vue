@@ -7,10 +7,9 @@
           id="first-name"
           type="text"
           placeholder="Enter your first name"
-          v-model="userInfo.firstName"
+          v-model="address.firstName"
           required
           autofocus="true"
-          class=""
         />
       </div>
       <div class="mb-2">
@@ -19,10 +18,9 @@
           id="last-name"
           type="text"
           placeholder="Enter your last name"
-          v-model="userInfo.lastName"
+          v-model="address.lastName"
           required
           autofocus="true"
-          class=""
         />
       </div>
       <div class="mb-2">
@@ -31,9 +29,8 @@
           id="s-company"
           type="text"
           placeholder="Enter company name"
-          v-model="userInfo.company"
+          v-model="address.company"
           autofocus="true"
-          class=""
         />
       </div>
       <div class="mb-2">
@@ -42,10 +39,9 @@
           id="s-address"
           type="text"
           placeholder="Enter your address"
-          v-model="userInfo.address1"
+          v-model="address.address1"
           required
           autofocus="true"
-          class=""
         />
       </div>
       <div class="mb-2">
@@ -54,10 +50,9 @@
           id="s-city"
           type="text"
           placeholder="Enter your city"
-          v-model="userInfo.city"
+          v-model="address.city"
           required
           autofocus="true"
-          class=""
         />
       </div>
       <div class="mb-2">
@@ -65,14 +60,14 @@
         <select
           size="1"
           name="states_hash"
-          v-model="userInfo.state"
+          v-model="address.state"
           ref="select"
           required
-          :class="userInfo.state && 'chosed'"
+          :class="address.state && 'chosed'"
         >
           <option disabled :value="''">Chose state</option>
-          <option v-for="hash in states_hashes" :key="hash.name" :value="hash">
-            {{ showHash(hash) }}
+          <option v-for="state in states" :key="state.name" :value="state.name">
+            {{ state.name }}
           </option>
         </select>
       </div>
@@ -82,22 +77,20 @@
           id="s-zip-code"
           type="text"
           placeholder="Enter your Zip code"
-          v-model="userInfo.zip"
+          v-model="address.zip"
           required
           autofocus="true"
-          class=""
         />
       </div>
       <div class="mb-2">
-        <label class="" for="s-contact-no"> cellphone </label>
+        <label class="" for="s-contact-no"> Cellphone </label>
         <input
           id="s-contact-no"
           type="text"
           placeholder="Enter your cellphone"
-          v-model="userInfo.contactNo"
+          v-model="address.contactNo"
           required
           autofocus="true"
-          class=""
         />
       </div>
       <div class="mb-2">
@@ -106,39 +99,15 @@
           id="s-email"
           type="text"
           placeholder="Enter your email"
-          v-model="userInfo.email"
+          v-model="address.email"
           required
           autofocus="true"
-          class=""
         />
-      </div>
-      <div v-if="false">
-        <div class="mb-2">
-          <label class="" for="s-password"> Password </label>
-          <input
-            class=""
-            id="s-password"
-            type="password"
-            placeholder="******************"
-            v-model="password"
-          />
-        </div>
-        <div class="mb-2">
-          <label class="" for="s-comfirm-password"> Confirm Password </label>
-          <input
-            class=""
-            id="s-comfirm-password"
-            type="password"
-            placeholder="******************"
-            v-model="password"
-          />
-        </div>
       </div>
       <button
         class="text-uppercase w-100 p-2 save gold-background"
-        type="submit"
-      >
-        {{ saved ? "saved" : "save" }}
+        type="submit">
+        {{ isSaved ? "Saved" : "Save" }}
       </button>
     </div>
   </form>
@@ -146,58 +115,43 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
-import { states_hashes } from "@/data";
+import { states } from "@/data";
 
 export default {
+  props: {
+    addressType: {
+      type: Number,
+      default: 1
+    }
+  },
   data: () => ({
-    password: "",
-    userInfo: {
-      firstName: "",
-      lastName: "",
-      company: "",
-      address1: "",
-      address2: "",
-      city: "",
-      state: "",
-      zip: "",
-      cellphone: "",
-      email: "",
+    address: {
+      firstName: '',
+      lastName: '',
+      company: '',
+      address1: '',
+      address2: '',
+      city: '',
+      state: '',
+      zip: '',
+      contactNo: '',
+      email: '',
+      type: 0
     },
-    saved: false,
+    isSaved: false,
     openSelect: false,
-    states_hashes,
+    states,
   }),
   computed: {
     ...mapGetters({
-      user: "auth/user"
+      order: "order/order"
     }),
   },
-  watch: {
-    userInfo: {
-      handler() {
-        this.choseState = false;
-      },
-      deep: true,
-    },
-  },
   methods: {
-    showHash: function (hash) {
-      if (
-        !this.openSelect &&
-        this.userInfo.state &&
-        this.userInfo.state.name === hash.name
-      ) {
-        return hash.abbreviation;
-      }
-
-      return hash.name;
-    },
     send: function () {
-      if (this.password) {
-        this.userInfo.password = this.password;
-      }
-      this.saved = true;
-      this.$emit("setUserInfo", this.userInfo);
+      this.address.type = this.addressType;
+      this.isSaved = true;
+      this.$emit("setAddress", this.address);
     },
     cancel: function () {
       this.question = false;
@@ -205,34 +159,32 @@ export default {
     },
   },
   mounted() {
-    if (this.user) {
-      const {
-        firstName,
-        lastName,
-        company,
-        address1,
-        address2,
-        city,
-        state,
-        zip,
-        cellphone,
-        email,
-      } = this.user;
-
-      this.userInfo = {
-        firstName,
-        lastName,
-        company,
-        address1,
-        address2,
-        city,
-        state,
-        zip,
-        cellphone,
-        email,
+    if (this.addressType == 1) {
+      this.address = {
+        firstName: this.order.shipping_first_name,
+        lastName: this.order.shipping_last_name,
+        company: this.order.shipping_company,
+        address1: this.order.shipping_address_1,
+        address2: this.order.shipping_address_2,
+        city: this.order.shipping_city,
+        state: this.order.shipping_state,
+        zip: this.order.shipping_zip_code,
+        contactNo: this.order.shipping_contact_no,
+        email: this.order.shipping_email
       };
     } else {
-      this.userInfo = { ...this.userInfo, ...this.userInf };
+      this.address = {
+        firstName: this.order.billing_first_name,
+        lastName: this.order.billing_last_name,
+        company: this.order.billing_company,
+        address1: this.order.billing_address_1,
+        address2: this.order.billing_address_2,
+        city: this.order.billing_city,
+        state: this.order.billing_state,
+        zip: this.order.billing_zip_code,
+        contactNo: this.order.billing_contact_no,
+        email: this.order.billing_email
+      };
     }
 
     const { select } = this.$refs;

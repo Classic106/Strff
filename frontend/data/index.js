@@ -1,4 +1,4 @@
-const states_hashes = [
+const states = [
   {
     name: "Alabama",
     abbreviation: "AL",
@@ -237,4 +237,4 @@ const states_hashes = [
   },
 ];
 
-export { states_hashes };
+export { states };

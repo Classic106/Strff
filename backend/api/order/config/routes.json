@@ -113,6 +113,14 @@
         }
     },
     {
+        "method": "POST",
+        "path": "/order/updateorder",
+        "handler": "order.updateOrder",
+        "config": {
+           "policies": []
+        }
+    },
+    {
         "method": "GET",
         "path": "/order/getorder",
         "handler": "order.getOrder",

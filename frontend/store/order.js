@@ -45,6 +45,10 @@ export const actions = {
         let order = await this.$strapi.$http.$post('/order/removebundle', { id: data.id, orderId: data.order.id});
         commit('setOrder', order);
     },
+    async updateOrder({ commit, state }, data) {
+        let order = await this.$strapi.$http.$post('/order/updateorder', data);
+        commit('setOrder', order);
+    },
     async clearOrder({commit, state}) {
         let currentUser = this.$cookies.get('user');
         let data = {};
