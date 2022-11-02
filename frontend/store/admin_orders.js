@@ -1,22 +1,66 @@
+import qs from "qs";
+
 export const state = () => ({
+  total: 0,
+  params: {
+    sort: {
+      field: "",
+      type: "none",
+    },
+    search: "",
+    page: 1,
+    currentPerPage: 10,
+  },
   orders: [],
   selected: null,
   next: null,
   previous: null,
-  sortParams: null,
 });
 
 export const actions = {
-  async getOrders({ commit }) {
+  async getOrders({ commit, state }) {
     try {
       const token = this.$cookies.get("token");
 
-      const { data } = await this.$axios.get(`/orders`, {
+      const { sort, search, page, currentPerPage } = state.params;
+      const { field, type } = sort;
+
+      const queryData = {
+        _start: (page - 1) * currentPerPage,
+        _limit: currentPerPage,
+      };
+
+      if (sort && type !== "none") {
+        queryData._sort = `${field}:${type.toUpperCase()}`;
+      }
+
+      if (search) {
+        if (!isNaN(+search)) {
+          queryData.total = search;
+        } else {
+          queryData._or = [
+            { "customer.firstName_containss": search },
+            { "customer.email_containss": search },
+          ];
+        }
+      }
+
+      const query = qs.stringify(queryData);
+
+      const total = await this.$axios.get(`/orders/count?${query}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      commit("setOrders", data);
+
+      const orders = await this.$axios.get(`/orders?${query}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      commit("setTotal", total.data);
+      commit("setOrders", orders.data);
     } catch (e) {
       console.log(e);
     }
@@ -84,8 +128,14 @@ export const actions = {
 };
 
 export const mutations = {
-  setSortParams(state, params) {
-    state.sortParams = params;
+  setTotal(state, total) {
+    state.total = total;
+  },
+  setParams(state, params) {
+    state.params = params;
+  },
+  setOrders(state, orders) {
+    state.orders = orders;
   },
   addOrder(state, order) {
     state.orders.push(order);
@@ -104,9 +154,6 @@ export const mutations = {
       return acc;
     }, []);
     state.orders = newOrders;
-  },
-  setOrders(state, orders) {
-    state.orders = orders;
   },
   setSelectedOrders(state, data) {
     const { selected, previous, next } = data;
@@ -129,8 +176,11 @@ export const mutations = {
 };
 
 export const getters = {
-  sortParams: (state) => {
-    return state.sortParams;
+  total(state) {
+    return state.total;
+  },
+  params(state) {
+    return state.params;
   },
   orders: (state) => {
     return state.orders;

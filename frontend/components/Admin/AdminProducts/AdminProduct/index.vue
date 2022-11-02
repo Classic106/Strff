@@ -125,8 +125,6 @@ export default {
       updateProduct: "admin_products/updateProduct",
       deleteProducts: "admin_products/deleteProducts",
       getProducts: "admin_products/getProducts",
-      getPreviousOrNextProductsByPage:
-        "admin_products/getPreviousOrNextProductsByPage",
     }),
     ...mapMutations({
       setParams: "admin_products/setParams",
@@ -140,7 +138,14 @@ export default {
 
       const { page, currentPerPage } = this.params;
 
-      const isMax = page * currentPerPage + index === this.total;
+      let isMax = false;
+
+      if (
+        this.total / currentPerPage - page <= 0 &&
+        index === this.products.length - 2
+      ) {
+        isMax = true;
+      }
 
       const { selected, next, previous } = this.prevCurrNextItems(
         this.products[index + 1],
@@ -167,15 +172,19 @@ export default {
     setPreviousProduct: async function () {
       const index = this.findIndex();
 
-      const { page, currentPerPage } = this.params;
+      const { page } = this.params;
 
       const { selected, next, previous } = this.prevCurrNextItems(
         this.products[index - 1],
         this.products
       );
 
-      const isMin = this.total - (page * currentPerPage + index) === 0;
-      debugger;
+      let isMin = false;
+
+      if (page >= 1 && index === 1) {
+        isMin = true;
+      }
+
       if (!isMin && !previous) {
         const { page } = this.params;
         this.setParams({ ...this.params, page: page - 1 });

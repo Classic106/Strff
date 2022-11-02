@@ -105,13 +105,10 @@ export default {
     ...mapActions({
       deleteProducts: "admin_products/deleteProducts",
       getProducts: "admin_products/getProducts",
-      totalRecords: "admin_products/totalRecords",
-      loadData: "admin_products/loadData",
     }),
     ...mapMutations({
       setParams: "admin_products/setParams",
       setSelectedProducts: "admin_products/setSelectedProducts",
-      setSortParams: "admin_products/setSortParams",
     }),
     onPageChange(params) {
       this.setParams({ ...this.params, page: params.currentPage });
@@ -147,8 +144,8 @@ export default {
       if (field === "categories") {
         params[0].field = "categories.name";
       }
-      this.sort = params[0];
-      this.getData();
+
+      this.setParams({ ...this.params, sort: params });
     },
     deleteItems() {
       const ids = this.selectedRows.map((item) => item.id);
