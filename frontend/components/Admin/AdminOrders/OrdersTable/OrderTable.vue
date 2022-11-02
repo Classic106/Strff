@@ -161,7 +161,8 @@ export default {
         params[0].field = `${field}.name`;
       }
 
-      this.setParams({ ...this.params, sort: params });
+      this.setParams({ ...this.params, sort: params[0] });
+      this.getOrders();
     },
     deleteItems() {
       const ids = this.selectedRows.map((item) => item.id);

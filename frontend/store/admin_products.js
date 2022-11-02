@@ -196,6 +196,15 @@ export const mutations = {
     state.selected = null;
     state.next = null;
     state.products = [];
+    state.params = {
+      sort: {
+        field: "",
+        type: "none",
+      },
+      search: "",
+      page: 1,
+      currentPerPage: 10,
+    };
   },
 };
 
