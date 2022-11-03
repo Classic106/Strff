@@ -9,7 +9,7 @@
       class="h-100 px-sm-3 px-1 d-flex flex-lg-row flex-column overflow-auto"
       :settings="scrollAreaSettings"
     >
-      <ShippingInf :isShipping="isShipping" v-on:nextStep="$emit('nextStep')" />
+      <CartDetail :isShipping="isShipping" v-on:nextStep="$emit('nextStep')" />
       <div class="cart d-flex flex-column px-sm-3 px-1">
         <h6 class="text-uppercase text-center my-3">
           total price: {{ totalPrice | formatNumber }} $
@@ -45,7 +45,7 @@ import CartOrderItems from "./CartOrderItems.vue";
 import OrderBundles from "./OrderBundles.vue";
 import PurchaseTypes from "~/components/common/PurchaseTypes";
 import PreloaderImage from "~/components/PreloaderImage";
-import ShippingInf from "./ShippingInf";
+import CartDetail from "./CartDetail";
 
 export default {
   props: ["isOpen"],
@@ -54,7 +54,7 @@ export default {
     OrderBundles,
     PurchaseTypes,
     PreloaderImage,
-    ShippingInf,
+    CartDetail,
   },
   data: () => ({
     isShipping: false,

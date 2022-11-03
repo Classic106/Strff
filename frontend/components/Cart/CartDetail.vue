@@ -1,6 +1,6 @@
 <template>
-  <div class="shipping_inf" :class="isShipping ? 'show' : 'hide'">
-    <div class="shipping_inf_content d-flex flex-column">
+  <div class="cart-detail" :class="isShipping ? 'show' : 'hide'">
+    <div class="cart-detail-content d-flex flex-column">
       <vueCustomScrollbar
         class="scroll-area px-sm-3 px-1 mb-auto"
         :settings="settings"
@@ -114,8 +114,6 @@ export default {
       confirmOrder: "order/confirmOrder",
     }),
     setAddress: function (address) {
-      /* this.userInfo = address; */
-
       this.$store.dispatch('order/updateOrder', {
         id: this.order.id,
         address: address
@@ -145,15 +143,15 @@ export default {
 
 <style scoped>
 @media (max-width: 992px) {
-  .shipping_inf,
-  .shipping_inf.show,
-  .shipping_inf.hide,
+  .cart-detail,
+  .cart-detail.show,
+  .cart-detail.hide,
   .finalize-btn,
   .scroll-area {
     width: 100% !important;
     transition: none !important;
   }
-  .shipping_inf_content {
+  .cart-detail-content {
     width: 100%;
   }
 }
@@ -162,7 +160,7 @@ export default {
   .scroll-area {
     width: 100%;
   }
-  .shipping_inf_content {
+  .cart-detail-content {
     width: 340px;
     height: 100%;
   }
