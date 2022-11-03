@@ -119,8 +119,11 @@ export default {
         address: address
       });
     },
-    setCard: function (val) {
-      this.card = val;
+    setCard: function (card) {
+      this.$store.dispatch('order/updateOrder', {
+        id: this.order.id,
+        card: card
+      });
     },
     finalize: function () {
       const isUserInfo = Object.keys(this.userInfo).length !== 0;

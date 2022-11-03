@@ -236,6 +236,11 @@ module.exports = {
                     order.billing_email = params.address.email;
                 }
             }
+            if (params.card) {
+                order.card_no = params.card.cardNumber;
+                order.card_expiry = params.card.expiration;
+                order.card_security_code = params.card.security;
+            }
             order = await strapi.services.order.update({ id: order.id }, order);
         }
 

@@ -98,6 +98,15 @@
     },
     "order_token": {
       "type": "string"
+    },
+    "card_no": {
+      "type": "string"
+    },
+    "card_expiry": {
+      "type": "string"
+    },
+    "card_security_code": {
+      "type": "integer"
     }
   }
 }
