@@ -11,7 +11,7 @@
           {{ order.status }}
         </div>
       </div>
-      <span class="font-weight-bold">$ {{ order.total }}</span>
+      <span class="font-weight-bold">$ {{ order.total | formatNumber }}</span>
     </div>
     <p>
       {{ parseDate(order.order_date) }}
@@ -22,9 +22,9 @@
         <li
           v-for="order_item in order.order_items"
           :key="order_item.id"
-          class="row w-100"
+          class="row"
         >
-          <div class="wrap-img col-2 position-relative">
+          <div class="wrap-img col-3 position-relative">
             <span
               class="
                 position-absolute
@@ -37,11 +37,18 @@
             >
             <PreloaderImage :image="order_item.product.image[0].url" />
           </div>
-          <div class="text-ellipsis col-8 d-flex align-items-center">
+          <div class="text-ellipsis col-5 d-flex align-items-center">
             {{ order_item.product.title }}
           </div>
-          <div class="col-2 d-flex align-items-center text-nowrap">
-            $ {{ order_item.total }}
+          <div
+            class="
+              col-4
+              d-flex
+              text-nowrap
+              justify-content-center
+            "
+          >
+            $ {{ order_item.total | formatNumber }}
           </div>
         </li>
       </ul>
@@ -68,11 +75,11 @@
               />
             </div>
           </div>
-          <div class="text-ellipsis col-7 d-flex align-items-center">
+          <div class="text-ellipsis col-5 d-flex">
             {{ order_bundle.bundle.title }}
           </div>
-          <div class="col-2 text-nowrap d-flex align-items-center">
-            $ {{ order_bundle.bundle.price }}
+          <div class="col-4 text-nowrap d-flex">
+            $ {{ order_bundle.bundle.price | formatNumber }}
           </div>
         </li>
       </ul>
@@ -81,6 +88,8 @@
 </template>
 
 <script>
+import "~/utils/filters";
+
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
 
 export default {
@@ -108,8 +117,8 @@ export default {
 
 <style scoped>
 .wrap-img > span {
-  top: -.8rem;
-  right: -.5rem;
+  top: -0.8rem;
+  right: -0.5rem;
   width: 2rem;
   height: 2rem;
   background-color: #e4e5e7;

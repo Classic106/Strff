@@ -22,7 +22,7 @@
           <div class="block w-100 d-flex justify-content-between mb-3 p-3">
             <div>
               <h6 class="text-center font-weight-bold">
-                {{ `$ ${ordersSpent}` }}
+                $ {{ ordersSpent | formatNumber }}
               </h6>
               <p>Amount spent</p>
             </div>
@@ -34,7 +34,7 @@
             </div>
             <div>
               <h6 class="text-center font-weight-bold">
-                {{ `$ ${averageValue()}` }}
+                $ {{ averageValue() | formatNumber }}
               </h6>
               <p>Average order value</p>
             </div>
@@ -87,6 +87,7 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 
 import { prevCurrNextItems } from "~/helpers";
 import { states_hashes } from "@/data";
+import "~/utils/filters";
 
 import Loader from "~/components/common/Loader.vue";
 import CustomerOrder from "./CustomerOrder.vue";

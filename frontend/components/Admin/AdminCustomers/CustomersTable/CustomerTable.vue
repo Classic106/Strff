@@ -10,18 +10,29 @@
       </button>
     </div>
     <vue-good-table
+      mode="remote"
       :columns="columns"
-      :rows="currentCustomers"
+      :rows="customers"
       :select-options="{
         enabled: true,
         selectOnCheckboxOnly: true,
       }"
       :search-options="{ enabled: true }"
       :sort-options="{ enabled: true }"
-      :pagination-options="{ enabled: true, position: 'top' }"
+      :pagination-options="{
+        enabled: true,
+        position: 'top',
+        dropdownAllowAll: false,
+        infoFn: (params) =>
+          `Showing ${params.firstRecordOnPage} to ${params.lastRecordOnPage} of page ${params.currentPage}`,
+      }"
+      :totalRows="total"
+      @on-page-change="onPageChange"
+      @on-per-page-change="onPerPageChange"
       @on-cell-click="onCellClick"
       @on-sort-change="onSortChange"
       @on-selected-rows-change="selectionChanged"
+      @on-search="onSearch"
       @on-select-all="onSelectAll"
       styleClass="vgt-table"
       compactMode
@@ -31,16 +42,16 @@
           >{{ getCustomerName(props.row) }}
         </span>
         <span
-          v-else-if="props.column.field == 'orders'"
+          v-else-if="props.column.field == 'orders_count'"
           class="d-flex align-items-center"
         >
-          {{ props.row.orders.length }} orders
+          {{ props.row.orders_count }} orders
         </span>
         <span
-          v-else-if="props.column.field == 'id'"
+          v-else-if="props.column.field == 'total_price'"
           class="d-flex align-items-center"
         >
-          $ {{ spent(props.row) | formatNumber }}
+          $ {{ props.row.total_price | formatNumber }}
         </span>
         <span v-else class="d-flex align-items-center">
           {{ props.formattedRow[props.column.field] }}
@@ -62,8 +73,8 @@ import "~/utils/filters";
 export default {
   name: "CustomerTable",
   data: () => ({
-    currentCustomers: [],
     selectedRows: [],
+    timer: null,
     columns: [
       {
         label: "Customer name",
@@ -79,150 +90,71 @@ export default {
       },
       {
         label: "Orders",
-        field: "orders",
+        field: "orders_count",
       },
       {
         label: "Spent",
-        field: "id",
+        field: "total_price",
       },
     ],
   }),
   computed: {
     ...mapGetters({
       customers: "admin_customers/customers",
-      sortParams: "admin_customers/sortParams",
+      params: "admin_customers/params",
+      total: "admin_customers/total",
     }),
-  },
-  watch: {
-    customers: function () {
-      if (this.sortParams) {
-        this.onSortChange(this.sortParams);
-      } else {
-        this.currentCustomers = JSON.parse(JSON.stringify(this.customers));
-      }
-    },
   },
   methods: {
     prevCurrNextItems,
-    ...mapActions({ deleteCustomers: "admin_customers/deleteCustomers" }),
+    ...mapActions({
+      deleteCustomers: "admin_customers/deleteCustomers",
+      getCustomers: "admin_customers/getCustomers",
+    }),
     ...mapMutations({
       setSelectedCustomers: "admin_customers/setSelectedCustomers",
-      setCustomers: "admin_customers/setCustomers",
-      setSortParams: "admin_customers/setSortParams",
+      setParams: "admin_customers/setParams",
     }),
+    onPageChange(params) {
+      this.setParams({ ...this.params, page: params.currentPage });
+      this.getCustomers();
+    },
+    onPerPageChange(params) {
+      this.setParams({ ...this.params, currentPerPage: params.currentPerPage });
+      this.getCustomers();
+    },
     onCellClick: function (params) {
-      const result = this.prevCurrNextItems(params.row, this.currentCustomers);
-
+      const result = this.prevCurrNextItems(params.row, this.customers);
       this.setSelectedCustomers(result);
-      this.setCustomers(this.currentCustomers);
-      // params.row - row object
-      // params.pageIndex - index of this row on the current page.
-      // params.selected - if selection is enabled this argument
-      // indicates selected or not
-      // params.event - click event
     },
     selectionChanged(params) {
       this.selectedRows = params.selectedRows;
-      // params.selectedRows - all rows that are selected (this page)
     },
     onSelectAll(params) {
       this.selectedRows = params.selectedRows;
-      // params.selected - whether the select-all checkbox is checked or unchecked
-      // params.selectedRows - all rows that are selected (this page)
+    },
+    onSearch(params) {
+      clearTimeout(this.timer);
+      this.timer = null;
+
+      this.setParams({ ...this.params, search: params.searchTerm });
+
+      this.timer = setTimeout(() => {
+        this.getCustomers();
+      }, 1000);
     },
     onSortChange(params) {
-      this.setSortParams(params);
-
-      const { field, type } = params[0];
-
-      if (type === "asc") {
-        if (field === "firstName") {
-          this.currentCustomers.sort((a, b) => {
-            const aName = this.getCustomerName(a);
-            const bName = this.getCustomerName(b);
-
-            return aName < bName;
-          });
-        }
-        if (field === "email") {
-          this.currentCustomers.sort((a, b) => a.email.localeCompare(b.email));
-        }
-        if (field === "state") {
-          this.currentCustomers.sort((a, b) => a.state.localeCompare(b.state));
-        }
-        if (field === "state") {
-          this.currentCustomers.sort(
-            (a, b) => a.orders.length < b.orders.length
-          );
-        }
-        if (field === "id") {
-          this.currentCustomers.sort((a, b) => {
-            const totalA = a.orders.reduce(
-              (acc, order) => (acc += order.total),
-              0
-            );
-            const totalB = b.orders.reduce(
-              (acc, order) => (acc += order.total),
-              0
-            );
-
-            return totalA < totalB;
-          });
-        }
-      }
-      if (type === "desc") {
-        if (field === "firstName") {
-          this.currentCustomers.sort((a, b) => {
-            const aName = this.getCustomerName(a);
-            const bName = this.getCustomerName(b);
-
-            return aName > bName;
-          });
-        }
-        if (field === "email") {
-          this.currentCustomers.sort((a, b) => b.email.localeCompare(a.email));
-        }
-        if (field === "state") {
-          this.currentCustomers.sort((a, b) => b.state.localeCompare(a.state));
-        }
-        if (field === "state") {
-          this.currentCustomers.sort(
-            (a, b) => a.orders.length > b.orders.length
-          );
-        }
-        if (field === "id") {
-          this.currentCustomers.sort((a, b) => {
-            const totalA = a.orders.reduce(
-              (acc, order) => (acc += order.total),
-              0
-            );
-            const totalB = b.orders.reduce(
-              (acc, order) => (acc += order.total),
-              0
-            );
-
-            return totalA > totalB;
-          });
-        }
-      }
-      // params[0].sortType - ascending or descending
-      // params[0].columnIndex - index of column being sorted
+      this.setParams({ ...this.params, sort: params[0] });
+      this.getCustomers();
     },
     async deleteItems() {
       const ids = this.selectedRows.map((item) => item.id);
       await this.deleteCustomers(ids);
     },
-    spent: function (customer) {
-      const { orders } = customer;
-      return orders.reduce((acc, order) => (acc += order.total), 0);
-    },
     getCustomerName: function (customer) {
       const { firstName, lastName } = customer;
       return `${firstName} ${lastName}`;
     },
-  },
-  mounted() {
-    this.currentCustomers = JSON.parse(JSON.stringify(this.customers));
   },
 };
 </script>
