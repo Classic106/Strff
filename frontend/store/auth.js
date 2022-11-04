@@ -6,13 +6,10 @@ export const actions = {
   logout({ commit }) {
     this.$cookies.remove("token");
     commit("setUser", null);
-    commit("order/dropOrder");
   },
   async login({ commit }, login) {
     try {
-      const result = await this.$strapi.$http.$post("auth/local", login);
-
-      const { jwt, user } = result;
+      const { jwt, user } = await this.$strapi.$http.$post("auth/local", login);
 
       this.$cookies.set("token", jwt);
       commit("setUser", user);
