@@ -6,11 +6,7 @@
         <CloseButton class="mr-3 my-2" v-on:close="$emit('close')" />
       </div>
       <div class="steps">
-        <FirstStep
-          v-if="step === 1"
-          :nextStep="nextStep"
-          v-on:close="$emit('close')"
-        />
+        <FirstStep v-if="step === 1" v-on:nextStep="nextStep" v-on:close="$emit('close')"/>
         <SecondStep v-if="step === 2" v-on:firstStep="firstStep" />
       </div>
     </div>
@@ -37,12 +33,6 @@ export default {
       wheelPropagation: false,
     },
   }),
-  computed: {
-    ...mapGetters({
-      order_items: "order/getOrderItems",
-      order_bundles: "order/getBundleItems",
-    }),
-  },
   methods: {
     nextStep: function () {
       this.step = this.step + 1;

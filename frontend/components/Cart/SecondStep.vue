@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex justify-content-center align-items-center">
-    <h4 class="text-uppercase">thank you</h4>
+    <h4 class="text-uppercase">Thank You</h4>
   </div>
 </template>
 

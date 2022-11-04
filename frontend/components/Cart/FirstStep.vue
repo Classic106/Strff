@@ -14,10 +14,7 @@
         <h6 class="text-uppercase text-center my-3">
           total price: {{ totalPrice | formatNumber }} $
         </h6>
-        <vueCustomScrollbar
-          class="px-sm-3 px-1 mb-auto"
-          :settings="itemsSettings"
-        >
+        <vueCustomScrollbar class="px-sm-3 px-1 mb-auto" :settings="itemsSettings">
           <CartOrderItems
             v-if="orderNoOfItems"
             :order_items="orderItems"
@@ -29,8 +26,7 @@
         </vueCustomScrollbar>
         <button
           class="text-uppercase p-3 my-3 gold-background d-none d-lg-block"
-          v-on:click="isShipping = !isShipping"
-        >
+          v-on:click="isShipping = !isShipping">
           {{ isShipping ? "close checkout" : "go to checkout" }}
         </button>
       </div>
@@ -80,7 +76,7 @@ export default {
   methods: {
     calcTotalPrice: function () {
       return 0
-    },
+    }
   },
   async mounted() {
     this.calcTotalPrice();

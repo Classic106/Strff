@@ -5,12 +5,6 @@
       :trans="translations"
       :noCard="true"
     />
-    <button
-      class="text-uppercase w-100 mt-4 p-2 save gold-background"
-      v-on:click="save"
-    >
-      save
-    </button>
   </div>
 </template>
 
@@ -42,14 +36,13 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      username: "auth/username",
+       order: 'order/order'
     }),
   },
   methods: {
     creditInfoChanged(values) {
       this.cardData = values;
-    },
-    save: function () {
+
       const isCardNumber = this.cardData.cardNumber.length === 19;
       const isExpiration = this.cardData.expiration.length === 5;
       const isSecurity = this.cardData.security.length === 4;
@@ -57,7 +50,7 @@ export default {
         this.$emit('setCard', this.cardData);
       }
     },
-  },
+  }
 };
 </script>
 

@@ -61,11 +61,8 @@
               align-items-center
             "
           >
-            <h6
-              class="p-3 text-nowrap"
-              v-on:click.self="isCardOpen = !isCardOpen"
-            >
-              + Add Credit Card
+            <h6 class="p-3 text-nowrap" v-on:click.self="isCardOpen = !isCardOpen">
+              Credit Card Payment
             </h6>
             <CloseButton class="mr-3 my-2" v-on:close="isCardOpen = false" />
           </div>
@@ -105,14 +102,10 @@ export default {
   }),
   computed: {
     ...mapGetters({
-        username: "auth/username",
         order: "order/order"
     }),
   },
   methods: {
-    ...mapActions({
-      confirmOrder: "order/confirmOrder",
-    }),
     setAddress: function (address) {
       this.$store.dispatch('order/updateOrder', {
         id: this.order.id,
@@ -126,17 +119,8 @@ export default {
       });
     },
     finalize: function () {
-      const isUserInfo = Object.keys(this.userInfo).length !== 0;
-      const isCard = Object.keys(this.card).length !== 0;
-
-      if (isUserInfo && isCard) {
-        const data = { ...this.userInfo };
-        data.state = this.userInfo.state.name;
-
-        this.confirmOrder(data);
-        this.$emit("nextStep");
-      }
-    },
+        this.$emit('nextStep');
+    }
   },
   mounted() {
     this.userInfo = this.userInf;
