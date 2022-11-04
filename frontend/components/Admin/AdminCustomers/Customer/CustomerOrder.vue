@@ -40,14 +40,7 @@
           <div class="text-ellipsis col-5 d-flex align-items-center">
             {{ order_item.product.title }}
           </div>
-          <div
-            class="
-              col-4
-              d-flex
-              text-nowrap
-              justify-content-center
-            "
-          >
+          <div class="col-4 d-flex text-nowrap justify-content-center">
             $ {{ order_item.total | formatNumber }}
           </div>
         </li>
@@ -106,8 +99,15 @@ export default {
 
       const month = new Intl.DateTimeFormat("en-US", options).format(d);
       const day = d.getDate();
-      const hours = d.getHours();
-      const minutes = d.getMinutes();
+      let hours = d.getHours();
+      let minutes = d.getMinutes();
+
+      if (hours < 10) {
+        hours = "0" + hours;
+      }
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
 
       return `${month} ${day}, at ${hours}: ${minutes}`;
     },

@@ -30,11 +30,11 @@
           <h6>Payment</h6>
           <div class="d-flex justify-content-between">
             <p>Subtotal</p>
-            <p>$ {{ total | formatNumber }}</p>
+            <p>$ {{ order.total | formatNumber }}</p>
           </div>
           <div class="d-flex justify-content-between">
             <p>Total</p>
-            <p>$ {{ total | formatNumber }}</p>
+            <p>$ {{ order.total | formatNumber }}</p>
           </div>
         </div>
       </div>
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
 import ProductsBlock from "./ProductsBlock.vue";
@@ -56,12 +56,14 @@ export default {
   name: "AddOrder",
   components: { PreloaderImage, ProductsBlock, BundlesBlock },
   data: () => ({
-    total: 0,
-    order_status: "1",
-    order_bundles: [],
-    order_items: [],
-    paid: false,
-    customer: null,
+    order: {
+      total: 0,
+      order_status: "1",
+      order_bundles: [],
+      order_items: [],
+      paid: false,
+      customer: null,
+    },
   }),
   computed: {
     ...mapGetters({
@@ -69,12 +71,15 @@ export default {
     }),
   },
   methods: {
+    ...mapActions({
+      createOrder: "admin_orders/createOrder",
+    }),
     setProducts: function (data) {
-      this.order_items = data;
+      this.order.order_items = data;
       this.total = this.calcTotal();
     },
     setBundles: function (data) {
-      this.order_bundles = data;
+      this.order.order_bundles = data;
       this.total = this.calcTotal();
     },
     getCustomerName: function () {
@@ -83,24 +88,21 @@ export default {
       return `${firstName} ${lastName}`;
     },
     calcTotal: function () {
-      const totalProducts = this.order_items.reduce(
+      const totalProducts = this.order.order_items.reduce(
         (acc, item) => (acc += item.total),
         0
       );
 
-      const totalBundles = this.order_bundles.reduce(
+      const totalBundles = this.order.order_bundles.reduce(
         (acc, item) => (acc += item.bundle.price),
         0
       );
 
       return totalProducts + totalBundles;
     },
-    send: function () {
-      console.log(this.order_items);
+    send: async function () {
+      await this.createOrder({ ...this.order, customer: this.selected.id });
     },
-  },
-  mouted() {
-    this.total = this.calcTotal();
   },
 };
 </script>
