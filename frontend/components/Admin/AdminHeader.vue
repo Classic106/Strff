@@ -3,13 +3,15 @@
     class="
       header
       bg-white
-      d-flex
+      row
+      w-100
       justify-content-between
       align-items-center
+      m-0
       py-3
     "
   >
-    <div class="left-side d-flex align-items-center font-italic">
+    <div class="left-side col-3 d-flex align-items-center font-italic">
       <div ref="menuButton" class="d-flex d-md-none pl-3">
         <BurgerMenuButton
           :isOpenMenu="isOpenMenu"
@@ -20,7 +22,7 @@
       <h5 class="px-3 m-0">strf</h5>
       <span class="p-1">{{ getDate() }}</span>
     </div>
-    <div class="d-flex align-items-center position-relative">
+    <div class="col-3 d-flex align-items-center position-relative">
       <BIconSearch class="search-icon d-flex position-absolute" />
       <input
         v-model="text"
@@ -29,17 +31,21 @@
         class="bg-grey py-1"
       />
     </div>
-    <div class="d-flex">
-      <BAvatar :text="chortUserName()" class="text-uppercase" />
-      <span class="px-3 text-ellipsis">{{
-        (user && user.first_name) || "user"
-      }}</span>
+    <div class="col-3 d-flex">
+      <div class="d-flex w-100 align-items-center">
+        <span class="text-ellipsis px-3 align-items-center p-0">
+          {{ (user && user.username) || "user" }}
+        </span>
+      </div>
+      <BDropdown id="dropdown-1" right :text="shortUserName()" class="m-md-2">
+        <BDropdownItem v-on:click="exit">logout</BDropdownItem>
+      </BDropdown>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 import { getSeason } from "~/helpers";
 import BurgerMenuButton from "~/components/common/BurgerMenuButton.vue";
@@ -59,9 +65,18 @@ export default {
   },
   methods: {
     getSeason,
-    chortUserName: function () {
+    ...mapActions({ logout: "auth/logout" }),
+    exit: function () {
+      this.$router.push("/admin/login");
+      this.logout();
+    },
+    shortUserName: function () {
       if (this.user) {
-        const { first_name, last_name } = this.user;
+        const { username, first_name, last_name } = this.user;
+
+        if (username) {
+          return username[0];
+        }
 
         const first = first_name ? first_name[0] : "";
         const last = last_name ? first_name[0] : "";
@@ -105,6 +120,6 @@ input {
 
 .search-icon {
   z-index: 1;
-  left: 6px;
+  left: 1.4rem;
 }
 </style>

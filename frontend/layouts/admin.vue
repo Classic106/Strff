@@ -91,6 +91,6 @@ export default {
 }
 
 .content {
-  height: calc(100vh - 76px);
+  height: calc(100vh - 4.8rem);
 }
 </style>

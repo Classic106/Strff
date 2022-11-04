@@ -94,6 +94,8 @@ export default {
       "BProgress",
       "BProgressBar",
       "BModal",
+      "BDropdown",
+      "BDropdownItem"
     ],
   },
   axios: {
