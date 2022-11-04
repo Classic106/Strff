@@ -29,12 +29,16 @@ export const actions = {
       };
 
       if (sort && type !== "none") {
-        queryData._sort = `${field}:${type.toUpperCase()}`;
+        if (field === "products") {
+          queryData._sort = `id:${type.toUpperCase()}`;
+        } else {
+          queryData._sort = `${field}:${type.toUpperCase()}`;
+        }
       }
 
       if (search) {
         if (!isNaN(+search)) {
-          if (field === "id") {
+          if (field === "products") {
             queryData.id = search;
           } else {
             queryData.price = search;
