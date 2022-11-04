@@ -1,23 +1,65 @@
+import qs from "qs";
+
 export const state = () => ({
   customers: [],
   selected: null,
   next: null,
   previous: null,
-  sortParams: null,
+  total: 0,
+  params: {
+    sort: {
+      field: "",
+      type: "none",
+    },
+    search: "",
+    page: 1,
+    currentPerPage: 10,
+  },
 });
 
 export const actions = {
-  async getCustomers({ commit }) {
+  async getCustomers({ commit, state }) {
     try {
       const token = this.$cookies.get("token");
 
-      const { data } = await this.$axios.get(`/customers`, {
+      const { sort, search, page, currentPerPage } = state.params;
+      const { field, type } = sort;
+
+      const queryData = {
+        _start: (page - 1) * currentPerPage,
+        _limit: currentPerPage,
+      };
+
+      if (sort && type !== "none") {
+        queryData._sort = `${field}:${type.toUpperCase()}`;
+      }
+
+      if (search) {
+        if (!isNaN(+search)) {
+          queryData._or = [{ orders_count: search }, { total_price: search }];
+        } else {
+          queryData._or = [
+            { firstName_containss: search },
+            { email_containss: search },
+          ];
+        }
+      }
+
+      const query = qs.stringify(queryData);
+
+      const total = await this.$axios.get(`/customers/count?${query}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const result = await this.$axios.get(`/customers?${query}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      commit("setCustomers", data);
+      commit("setTotal", total.data);
+      commit("setCustomers", result.data);
     } catch (e) {
       console.log(e);
     }
@@ -69,8 +111,11 @@ export const actions = {
 };
 
 export const mutations = {
-  setSortParams(state, params) {
-    state.sortParams = params;
+  setTotal(state, total) {
+    state.total = total;
+  },
+  setParams(state, params) {
+    state.params = params;
   },
   addCustomer(state, customer) {
     state.customers.push(customer);
@@ -104,12 +149,24 @@ export const mutations = {
     state.selected = null;
     state.next = null;
     state.customers = [];
+    state.params = {
+      sort: {
+        field: "",
+        type: "none",
+      },
+      search: "",
+      page: 1,
+      currentPerPage: 10,
+    };
   },
 };
 
 export const getters = {
-  sortParams: (state) => {
-    return state.sortParams;
+  total(state) {
+    return state.total;
+  },
+  params(state) {
+    return state.params;
   },
   customers: (state) => {
     return state.customers;

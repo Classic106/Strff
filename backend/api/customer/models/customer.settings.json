@@ -45,6 +45,12 @@
     "orders": {
       "via": "customer",
       "collection": "order"
+    },
+    "orders_count": {
+      "type": "integer"
+    },
+    "total_price": {
+      "type": "decimal"
     }
   }
 }

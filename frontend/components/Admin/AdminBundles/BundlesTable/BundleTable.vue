@@ -64,6 +64,7 @@ export default {
   components: { BundleProducts },
   data: () => ({
     selectedRows: [],
+    timer: null,
     columns: [
       {
         label: "Bundle",
@@ -126,7 +127,6 @@ export default {
       }, 1000);
     },
     onSortChange: async function (params) {
-      console.log(params)
       const { field } = params[0];
       if (field === "products") {
         params[0].field = 'id';
@@ -147,9 +147,6 @@ export default {
       const ids = this.selectedRows.map((item) => item.id);
       console.log(ids);
     },
-  },
-  mounted() {
-    this.currentBundles = JSON.parse(JSON.stringify(this.bundles));
   },
 };
 </script>

@@ -132,12 +132,9 @@ export default {
 
       const { id } = customer;
 
-      const items = order_items.map((item) => item.id);
-      const bundles = order_bundles.map((item) => item.id);
-
       const order = {
-        order_items: items,
-        order_bundles: bundles,
+        order_items,
+        order_bundles,
         customer: id,
         total,
         paid: false,
