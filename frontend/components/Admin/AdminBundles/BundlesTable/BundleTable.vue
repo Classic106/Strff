@@ -127,11 +127,6 @@ export default {
       }, 1000);
     },
     onSortChange: async function (params) {
-      const { field } = params[0];
-      if (field === "products") {
-        params[0].field = 'id';
-      }
-
       this.setParams({ ...this.params, sort: params[0] });
       this.getBundles();
     },
