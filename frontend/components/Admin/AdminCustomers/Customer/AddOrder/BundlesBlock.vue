@@ -32,7 +32,7 @@
             {{ item.bundle.title }}
           </div>
           <div class="col-2 d-flex align-items-center text-nowrap">
-            $ {{ item.bundle.price }}
+            $ {{ item.bundle.price | formatNumber}}
           </div>
           <div
             class="col-1 d-flex justify-content-center align-items-start p-0"

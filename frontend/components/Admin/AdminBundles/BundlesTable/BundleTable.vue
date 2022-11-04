@@ -42,9 +42,19 @@
           v-if="props.column.field == 'products'"
           :products="props.row.products"
         />
-        <span v-else class="d-flex align-items-center">
-          {{ props.formattedRow[props.column.field] }}
-        </span>
+        <div
+          v-else-if="props.column.field == 'price'"
+          class="d-flex align-items-center"
+        >
+          <p class="text-ellipsis m-0">
+            $ {{ props.formattedRow[props.column.field] | formatNumber }}
+          </p>
+        </div>
+        <div v-else class="d-flex align-items-center">
+          <p class="text-ellipsis m-0">
+            {{ props.formattedRow[props.column.field] }}
+          </p>
+        </div>
       </template>
       <div slot="selected-row-actions">
         <button class="btn btn-danger" v-on:click="deleteItems">Delete</button>
@@ -57,6 +67,7 @@
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import { prevCurrNextItems } from "~/helpers";
 
+import "~/utils/filters";
 import BundleProducts from "./BundleProducts.vue";
 
 export default {

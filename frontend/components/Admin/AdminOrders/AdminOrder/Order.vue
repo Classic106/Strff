@@ -103,23 +103,25 @@
                   }}
                   items
                 </p>
-                <p>${{ selected.total }}</p>
+                <p>${{ selected.total | formatNumber }}</p>
               </div>
               <div
                 class="d-flex flex-lg-row flex-column justify-content-between"
               >
                 <p>Shipping</p>
                 <p class="text-center">Flat Rate (0.07 rate lb)</p>
-                <p>${{ selected.total }}</p>
+                <p>${{ selected.total | formatNumber }}</p>
               </div>
               <div class="d-flex justify-content-between">
                 <p class="font-weight-bold">Total</p>
-                <p class="font-weight-bold">${{ selected.total }}</p>
+                <p class="font-weight-bold">
+                  ${{ selected.total | formatNumber }}
+                </p>
               </div>
             </div>
             <div class="d-flex justify-content-between p-3">
               <p class="m-0">Paid by customer</p>
-              <p class="m-0">${{ selected.total }}</p>
+              <p class="m-0">${{ selected.total | formatNumber }}</p>
             </div>
           </div>
         </div>
@@ -130,7 +132,7 @@
             </div>
             <div class="block-main pt-0 px-3">
               <a href="#" v-on:click.prevent="$emit('setCustomer')">
-                {{ getCustomerName() }}
+                <p class="text-ellipsis m-0">{{ getCustomerName() }}</p>
               </a>
               <p>1 order</p>
             </div>
@@ -139,16 +141,20 @@
                 <h6 class="text-uppercase m-0">Contact information</h6>
                 <span v-on:click="openModal('contact-modal')">Edit</span>
               </div>
-              <p>{{ selected.email }} customer</p>
+              <p class="text-ellipsis">{{ selected.email }} customer</p>
             </div>
             <div class="block-main p-3">
               <div class="d-flex justify-content-between align-items-center">
                 <h6 class="text-uppercase m-0">Shipping address</h6>
                 <span v-on:click="openModal('shipping-modal')">Edit</span>
               </div>
-              <p>{{ getCustomerName() }}</p>
-              <p>{{ selected.address1 && selected.address2 }}</p>
-              <p>{{ selected.cellphone }}</p>
+              <p class="text-ellipsis">{{ getCustomerName() }}</p>
+              <p class="text-ellipsis">
+                {{ selected.address1 || selected.address2 || "undefined" }}
+              </p>
+              <p class="text-ellipsis">
+                {{ selected.cellphone || "undefined" }}
+              </p>
               <a href="#">View map</a>
             </div>
             <div class="p-3">
@@ -200,6 +206,7 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 
 import { getStrapiMedia } from "~/utils/medias";
 import { prevCurrNextItems } from "~/helpers";
+import "~/utils/filters";
 
 import ContactModal from "./modals/ContactModal.vue";
 import ShippingModal from "./modals/ShippingModal.vue";
@@ -268,7 +275,6 @@ export default {
           selected,
           ...this.orders,
         ]);
-        debugger;
         this.setSelectedOrders(result);
       } else {
         this.setSelectedOrders({ selected, next, previous });
@@ -289,7 +295,7 @@ export default {
       if (page >= 1 && index === 1) {
         isMin = true;
       }
-      debugger;
+
       if (!isMin && !previous) {
         const { page } = this.params;
         this.setParams({ ...this.params, page: page - 1 });
@@ -315,8 +321,15 @@ export default {
 
       const month = new Intl.DateTimeFormat("en-US", options).format(d);
       const day = d.getDate();
-      const hours = d.getHours();
-      const minutes = d.getMinutes();
+      let hours = d.getHours();
+      let minutes = d.getMinutes();
+
+      if (hours < 10) {
+        hours = "0" + hours;
+      }
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
 
       return `${month} ${day}, at ${hours}: ${minutes}`;
     },

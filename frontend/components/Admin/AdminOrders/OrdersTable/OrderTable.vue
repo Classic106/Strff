@@ -54,9 +54,27 @@
           :order="props.row"
           v-else-if="props.column.field == 'user'"
         />
-        <span v-else class="d-flex align-items-center">
-          {{ props.formattedRow[props.column.field] }}
-        </span>
+        <div
+          v-else-if="props.column.field == 'total'"
+          class="d-flex align-items-center"
+        >
+          <p class="text-ellipsis m-0">
+            $ {{ props.formattedRow[props.column.field] | formatNumber }}
+          </p>
+        </div>
+        <div
+          v-else-if="props.column.field == 'order_status'"
+          class="d-flex align-items-center"
+        >
+          <p class="text-ellipsis m-0">
+            {{ props.formattedRow[props.column.field].title }}
+          </p>
+        </div>
+        <div v-else class="d-flex align-items-center">
+          <p class="text-ellipsis m-0">
+            {{ props.formattedRow[props.column.field] }}
+          </p>
+        </div>
       </template>
       <div slot="selected-row-actions">
         <button class="btn btn-danger" v-on:click="deleteItems">Delete</button>
@@ -69,6 +87,7 @@
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import { prevCurrNextItems } from "~/helpers";
 
+import "~/utils/filters";
 import OrderItems from "./OrderItems.vue";
 import OrderCustomers from "./OrderCustomers.vue";
 import OrderDate from "./OrderDate.vue";
@@ -98,7 +117,7 @@ export default {
       },
       {
         label: "Status",
-        field: "status",
+        field: "order_status",
       },
       {
         label: "Items",
@@ -173,6 +192,9 @@ export default {
 
       return `${first_name} ${last_name}`;
     },
+  },
+  mounted() {
+    console.log(this.orders);
   },
 };
 </script>

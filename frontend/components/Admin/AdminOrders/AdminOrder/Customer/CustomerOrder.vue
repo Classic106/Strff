@@ -38,10 +38,12 @@
             <PreloaderImage :image="order_item.product.image[0].url" />
           </div>
           <div class="text-ellipsis col-8 d-flex align-items-center">
-            {{ order_item.product.title }}
+            <p class="text-ellipsis m-0">
+              {{ order_item.product.title }}
+            </p>
           </div>
           <div class="col-2 d-flex align-items-center text-nowrap">
-            $ {{ order_item.total }}
+            <p class="m-0">$ {{ order_item.total | formatNumber }}</p>
           </div>
         </li>
       </ul>
@@ -69,10 +71,12 @@
             </div>
           </div>
           <div class="text-ellipsis col-7 d-flex align-items-center">
-            {{ order_bundle.bundle.title }}
+            <p class="text-ellipsis m-0">
+              {{ order_bundle.bundle.title }}
+            </p>
           </div>
           <div class="col-2 text-nowrap d-flex align-items-center">
-            $ {{ order_bundle.bundle.price }}
+            <p class="m-0">$ {{ order_bundle.bundle.price | formatNumber }}</p>
           </div>
         </li>
       </ul>
@@ -81,6 +85,7 @@
 </template>
 
 <script>
+import "~/utils/filters";
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
 
 export default {
@@ -97,8 +102,15 @@ export default {
 
       const month = new Intl.DateTimeFormat("en-US", options).format(d);
       const day = d.getDate();
-      const hours = d.getHours();
-      const minutes = d.getMinutes();
+      let hours = d.getHours();
+      let minutes = d.getMinutes();
+
+      if (hours < 10) {
+        hours = "0" + hours;
+      }
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
 
       return `${month} ${day}, at ${hours}: ${minutes}`;
     },
@@ -108,8 +120,8 @@ export default {
 
 <style scoped>
 .wrap-img > span {
-  top: -.8rem;
-  right: -.5rem;
+  top: -0.8rem;
+  right: -0.5rem;
   width: 2rem;
   height: 2rem;
   background-color: #e4e5e7;

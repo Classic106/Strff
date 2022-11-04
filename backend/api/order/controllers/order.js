@@ -9,6 +9,7 @@ module.exports = {
   async find(ctx) {
     const result = await strapi.services["order"].find(ctx.query, [
       "customer",
+      "order_status",
       "order_items.product",
       "order_items.product.image",
       "order_items.product.categories",
@@ -23,6 +24,7 @@ module.exports = {
 
     const result = await strapi.services["order"].findOne({ id }, [
       "customer",
+      "order_status",
       "order_items.product",
       "order_items.product.image",
       "order_items.product.categories",
