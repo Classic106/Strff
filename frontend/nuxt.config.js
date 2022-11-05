@@ -46,7 +46,7 @@ export default {
    ** https://nuxtjs.org/guide/plugins
    */
   plugins: [
-    "~/plugins/tel-input.js",
+    "~/plugins/text-mask.js",
     "~/plugins/country-region-select.js",
     "~/plugins/vue-custom-scrollbar.js",
     "~/plugins/vue-good-table",
@@ -95,7 +95,7 @@ export default {
       "BProgressBar",
       "BModal",
       "BDropdown",
-      "BDropdownItem"
+      "BDropdownItem",
     ],
   },
   axios: {
