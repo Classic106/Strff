@@ -11,7 +11,15 @@
       py-3
     "
   >
-    <div class="left-side col-lg-3 col-sm-5 col-6 d-flex align-items-center font-italic">
+    <div
+      class="
+        left-side
+        col-lg-3 col-sm-5 col-6
+        d-flex
+        align-items-center
+        font-italic
+      "
+    >
       <div ref="menuButton" class="d-flex d-md-none pl-3">
         <BurgerMenuButton
           :isOpenMenu="isOpenMenu"
@@ -22,7 +30,14 @@
       <h5 class="px-3 m-0">strf</h5>
       <span class="p-1">{{ getDate() }}</span>
     </div>
-    <div class="col-lg-5 col-sm-3 col-4 d-flex align-items-center position-relative">
+    <div
+      class="
+        col-lg-5 col-sm-3 col-4
+        d-flex
+        align-items-center
+        position-relative
+      "
+    >
       <BIconSearch class="search-icon d-flex position-absolute" />
       <input
         v-model="text"

@@ -56,7 +56,13 @@ export const actions = {
       commit("setTotal", total.data);
       commit("setBundles", result.data);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async createBundle({ commit }, bundle) {
@@ -70,7 +76,13 @@ export const actions = {
       });
       commit("addBundle", data);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async updateBundle({ commit }, bundle) {
@@ -85,7 +97,13 @@ export const actions = {
       });
       commit("updateBundle", data);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async deleteBundles({ commit }, bundlesIds) {
@@ -99,7 +117,13 @@ export const actions = {
       });
       commit("deleteBundles", bundlesIds);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
 };

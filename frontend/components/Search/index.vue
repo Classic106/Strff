@@ -135,16 +135,25 @@ export default {
   async mounted() {
     this.isLoading = true;
 
-    this.products = await this.$strapi.find("products");
-    this.articles = await this.$strapi.find("articles");
+    try {
+      this.products = await this.$strapi.find("products");
+      this.articles = await this.$strapi.find("articles");
 
-    const result = await this.$strapi.find("bestsellers");
+      const result = await this.$strapi.find("bestsellers");
 
-    if (result.length && result[0].products) {
-      this.bestSellers = this.shuffleArray(result[0].products);
-      this.bestSellers.length = 4;
+      if (result.length && result[0].products) {
+        this.bestSellers = this.shuffleArray(result[0].products);
+        this.bestSellers.length = 4;
+      }
+    } catch (e) {
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      this.$notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
-
     this.isLoading = false;
   },
 };

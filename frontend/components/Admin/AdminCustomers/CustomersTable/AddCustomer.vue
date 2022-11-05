@@ -44,11 +44,15 @@
           <div class="row mb-2">
             <div class="col-6">
               <label class="d-flex" for="s-contact-no"> Cellphone </label>
-              <vue-tel-input
-                id="cellphone"
+              <masked-input
+                type="text"
+                name="s-contact-no"
+                class="w-100"
                 v-model.trim="customer.cellphone"
-                v-bind="vueTelInputProps(false)"
-              ></vue-tel-input>
+                :mask="phoneMask"
+                :guide="true"
+                placeholder="+1(___)-___-____"
+              />
             </div>
             <div class="col-6">
               <label class="d-flex" for="s-email"> Email </label>
@@ -174,6 +178,25 @@ export default {
       cellphone: "",
       email: "",
     },
+    phoneMask: [
+      "+",
+      "1",
+      " ",
+      "(",
+      /[1-9]/,
+      /\d/,
+      /\d/,
+      ")",
+      " ",
+      /\d/,
+      /\d/,
+      /\d/,
+      "-",
+      /\d/,
+      /\d/,
+      /\d/,
+      /\d/,
+    ],
     states_hashes,
   }),
   methods: {

@@ -190,7 +190,13 @@ export default {
         this.$refs.form.reset();
         this.show = false;
       } catch (e) {
-        console.log(e);
+        const { data } = e.response;
+        const messge = data.message[0].messages[0].id;
+        this.$notify({
+          group: "all",
+          type: "error",
+          text: messge,
+        });
       }
     },
   },

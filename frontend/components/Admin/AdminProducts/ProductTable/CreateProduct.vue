@@ -100,10 +100,9 @@ export default {
       this.form.image = files;
     },
     submit: async function () {
-      //console.log(this.form);
       await this.createProduct(this.form);
-      //this.$refs.form.reset();
-      //this.form.image = [];
+      this.$refs.form.reset();
+      this.form.image = [];
     },
   },
 };
