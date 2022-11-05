@@ -46,7 +46,7 @@
               "
             >
               <h6 class="text-center text-uppercase mr-1">
-                {{ new Date(article.created_at).getDate() | formatDate }}
+                {{ new Date(article.created_at).getDate() | formatDay }}
               </h6>
               <h6>
                 {{ new Date(article.created_at).getMonth() | parseMonth }}

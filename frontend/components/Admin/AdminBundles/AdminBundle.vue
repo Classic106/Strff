@@ -101,7 +101,7 @@ export default {
           selected,
           ...this.bundles,
         ]);
-debugger
+
         this.setSelectedBundles(result);
       } else {
         this.setSelectedBundles({ selected, next, previous });
@@ -144,25 +144,6 @@ debugger
     },
     getBundle: function (data) {
       this.currentBundle = data;
-    },
-    parseDate: function (date) {
-      const options = { month: "long" };
-
-      const d = new Date(date);
-
-      const month = new Intl.DateTimeFormat("en-US", options).format(d);
-      const day = d.getDate();
-      let hours = d.getHours();
-      let minutes = d.getMinutes();
-
-      if (hours < 10) {
-        hours = "0" + hours;
-      }
-      if (minutes < 10) {
-        minutes = "0" + minutes;
-      }
-
-      return `${month} ${day}, at ${hours}: ${minutes}`;
     },
     save: async function () {
       const products = this.currentBundle.products.map((item) => item.id);

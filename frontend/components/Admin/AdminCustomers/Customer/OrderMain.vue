@@ -106,7 +106,6 @@ export default {
     viewAll: false,
     customerOrders: [],
     ordersSpent: 0,
-    summOrders: {},
     states_hashes,
     loading: false,
   }),
@@ -125,10 +124,8 @@ export default {
       clearSelectedCustomers: "admin_customers/clearSelectedCustomers",
     }),
     averageValue: function () {
-      if (this.ordersSpent > 0) {
-        return this.ordersSpent / this.customerOrders.length;
-      }
-      return 0;
+      const { total_price, orders_count } = this.selected;
+      return total_price / orders_count;
     },
     customerDuration: function () {
       const { created_at } = this.selected;
@@ -195,21 +192,6 @@ export default {
   left: 0;
   right: 0;
   display: flex;
-}
-
-.status,
-.paid {
-  border-radius: 20px;
-  font-size: 15px;
-  background: #e4e5e7;
-}
-
-.status {
-  background: yellow;
-}
-
-.paid.active {
-  background: green;
 }
 
 .icon-circle-wrap {

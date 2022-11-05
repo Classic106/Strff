@@ -18,7 +18,7 @@
               <BIconDot scale="2" /> {{ selected.status }}
             </div>
           </div>
-          <p>{{ parseDate(selected.order_date) }}</p>
+          <p>{{ selected.order_date | formatDate }}</p>
         </div>
         <button
           class="border-left"
@@ -313,25 +313,6 @@ export default {
     },
     findIndex: function () {
       return this.orders.findIndex((item) => item.id === this.selected.id);
-    },
-    parseDate: function (date) {
-      const options = { month: "long" };
-
-      const d = new Date(date);
-
-      const month = new Intl.DateTimeFormat("en-US", options).format(d);
-      const day = d.getDate();
-      let hours = d.getHours();
-      let minutes = d.getMinutes();
-
-      if (hours < 10) {
-        hours = "0" + hours;
-      }
-      if (minutes < 10) {
-        minutes = "0" + minutes;
-      }
-
-      return `${month} ${day}, at ${hours}: ${minutes}`;
     },
     getCustomerName: function () {
       const { customer } = this.selected;

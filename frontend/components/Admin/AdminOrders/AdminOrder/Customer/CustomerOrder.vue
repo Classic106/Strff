@@ -14,7 +14,7 @@
       <span class="font-weight-bold">$ {{ order.total }}</span>
     </div>
     <p>
-      {{ parseDate(order.order_date) }}
+      {{ order.order_date || formatDate }}
     </p>
     <div v-if="order.order_items.length">
       <h6 class="mb-3">Products</h6>
@@ -94,27 +94,6 @@ export default {
     order: [Object, null],
   },
   components: { PreloaderImage },
-  methods: {
-    parseDate: function (date) {
-      const options = { month: "long" };
-
-      const d = new Date(date);
-
-      const month = new Intl.DateTimeFormat("en-US", options).format(d);
-      const day = d.getDate();
-      let hours = d.getHours();
-      let minutes = d.getMinutes();
-
-      if (hours < 10) {
-        hours = "0" + hours;
-      }
-      if (minutes < 10) {
-        minutes = "0" + minutes;
-      }
-
-      return `${month} ${day}, at ${hours}: ${minutes}`;
-    },
-  },
 };
 </script>
 
