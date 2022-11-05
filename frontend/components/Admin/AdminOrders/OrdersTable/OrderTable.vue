@@ -193,9 +193,6 @@ export default {
       return `${first_name} ${last_name}`;
     },
   },
-  mounted() {
-    console.log(this.orders);
-  },
 };
 </script>
 
