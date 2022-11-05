@@ -14,7 +14,7 @@
       <span class="font-weight-bold">$ {{ order.total }}</span>
     </div>
     <p>
-      {{ parseDate(order.order_date) }}
+      {{ order.order_date || formatDate }}
     </p>
     <div v-if="order.order_items.length">
       <h6 class="mb-3">Products</h6>
@@ -38,10 +38,12 @@
             <PreloaderImage :image="order_item.product.image[0].url" />
           </div>
           <div class="text-ellipsis col-8 d-flex align-items-center">
-            {{ order_item.product.title }}
+            <p class="text-ellipsis m-0">
+              {{ order_item.product.title }}
+            </p>
           </div>
           <div class="col-2 d-flex align-items-center text-nowrap">
-            $ {{ order_item.total }}
+            <p class="m-0">$ {{ order_item.total | formatNumber }}</p>
           </div>
         </li>
       </ul>
@@ -69,10 +71,12 @@
             </div>
           </div>
           <div class="text-ellipsis col-7 d-flex align-items-center">
-            {{ order_bundle.bundle.title }}
+            <p class="text-ellipsis m-0">
+              {{ order_bundle.bundle.title }}
+            </p>
           </div>
           <div class="col-2 text-nowrap d-flex align-items-center">
-            $ {{ order_bundle.bundle.price }}
+            <p class="m-0">$ {{ order_bundle.bundle.price | formatNumber }}</p>
           </div>
         </li>
       </ul>
@@ -81,6 +85,7 @@
 </template>
 
 <script>
+import "~/utils/filters";
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
 
 export default {
@@ -89,27 +94,13 @@ export default {
     order: [Object, null],
   },
   components: { PreloaderImage },
-  methods: {
-    parseDate: function (date) {
-      const options = { month: "long" };
-
-      const d = new Date(date);
-
-      const month = new Intl.DateTimeFormat("en-US", options).format(d);
-      const day = d.getDate();
-      const hours = d.getHours();
-      const minutes = d.getMinutes();
-
-      return `${month} ${day}, at ${hours}: ${minutes}`;
-    },
-  },
 };
 </script>
 
 <style scoped>
 .wrap-img > span {
-  top: -.8rem;
-  right: -.5rem;
+  top: -0.8rem;
+  right: -0.5rem;
   width: 2rem;
   height: 2rem;
   background-color: #e4e5e7;

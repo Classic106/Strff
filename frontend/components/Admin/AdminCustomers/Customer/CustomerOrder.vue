@@ -8,13 +8,17 @@
         </div>
         <div class="status p-1 pl-2 pr-3 mr-2">
           <BIconDot scale="2" />
-          {{ order.status }}
+          {{ order.order_status.title }}
         </div>
       </div>
-      <span class="font-weight-bold">$ {{ order.total | formatNumber }}</span>
+      <div>
+        <span class="text-nowrap font-weight-bold">
+          $ {{ order.total | formatNumber }}
+        </span>
+      </div>
     </div>
     <p>
-      {{ parseDate(order.order_date) }}
+      {{ order.order_date | formatDate }}
     </p>
     <div v-if="order.order_items.length">
       <h6 class="mb-3">Products</h6>
@@ -37,11 +41,13 @@
             >
             <PreloaderImage :image="order_item.product.image[0].url" />
           </div>
-          <div class="text-ellipsis col-5 d-flex align-items-center">
-            {{ order_item.product.title }}
+          <div class="col-5 d-flex align-items-center">
+            <p class="text-ellipsis m-0">{{ order_item.product.title }}</p>
           </div>
-          <div class="col-4 d-flex text-nowrap justify-content-center">
-            $ {{ order_item.total | formatNumber }}
+          <div class="col-4 d-flex justify-content-end align-items-center">
+            <p class="m-0 text-nowrap">
+              $ {{ order_item.total | formatNumber }}
+            </p>
           </div>
         </li>
       </ul>
@@ -68,11 +74,13 @@
               />
             </div>
           </div>
-          <div class="text-ellipsis col-5 d-flex">
-            {{ order_bundle.bundle.title }}
+          <div class="col-5 d-flex">
+            <p class="text-ellipsis m-0">{{ order_bundle.bundle.title }}</p>
           </div>
-          <div class="col-4 text-nowrap d-flex">
-            $ {{ order_bundle.bundle.price | formatNumber }}
+          <div class="col-4 d-flex justify-content-end">
+            <p class="m-0 text-nowrap">
+              $ {{ order_bundle.bundle.price | formatNumber }}
+            </p>
           </div>
         </li>
       </ul>
@@ -81,8 +89,6 @@
 </template>
 
 <script>
-import "~/utils/filters";
-
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
 
 export default {
@@ -91,31 +97,25 @@ export default {
     order: [Object, null],
   },
   components: { PreloaderImage },
-  methods: {
-    parseDate: function (date) {
-      const options = { month: "long" };
-
-      const d = new Date(date);
-
-      const month = new Intl.DateTimeFormat("en-US", options).format(d);
-      const day = d.getDate();
-      let hours = d.getHours();
-      let minutes = d.getMinutes();
-
-      if (hours < 10) {
-        hours = "0" + hours;
-      }
-      if (minutes < 10) {
-        minutes = "0" + minutes;
-      }
-
-      return `${month} ${day}, at ${hours}: ${minutes}`;
-    },
-  },
 };
 </script>
 
 <style scoped>
+.status,
+.paid {
+  border-radius: 20px;
+  font-size: 15px;
+  background: #e4e5e7;
+}
+
+.status {
+  background: yellow;
+}
+
+.paid.active {
+  background: green;
+}
+
 .wrap-img > span {
   top: -0.8rem;
   right: -0.5rem;

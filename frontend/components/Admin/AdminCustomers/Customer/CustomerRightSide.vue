@@ -2,7 +2,7 @@
   <div class="d-flex flex-column">
     <div class="block mb-3 d-flex flex-column p-3">
       <h6>Customer</h6>
-      <p>{{ customer.email }}</p>
+      <p class="text-ellipsis">{{ customer.email }}</p>
     </div>
     <div class="block d-flex flex-column p-3">
       <h6>Default address</h6>

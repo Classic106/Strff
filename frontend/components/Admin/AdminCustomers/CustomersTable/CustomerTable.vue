@@ -38,24 +38,26 @@
       compactMode
     >
       <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'firstName'"
-          >{{ getCustomerName(props.row) }}
-        </span>
-        <span
+        <div v-if="props.column.field == 'firstName'">
+          <p class="text-ellipsis m-0">{{ getCustomerName(props.row) }}</p>
+        </div>
+        <div
           v-else-if="props.column.field == 'orders_count'"
           class="d-flex align-items-center"
         >
-          {{ props.row.orders_count }} orders
-        </span>
-        <span
+          <p class="m-0">{{ props.row.orders_count }} orders</p>
+        </div>
+        <div
           v-else-if="props.column.field == 'total_price'"
           class="d-flex align-items-center"
         >
-          $ {{ props.row.total_price | formatNumber }}
-        </span>
-        <span v-else class="d-flex align-items-center">
-          {{ props.formattedRow[props.column.field] }}
-        </span>
+          <p class="m-0">$ {{ props.row.total_price | formatNumber }}</p>
+        </div>
+        <div v-else class="d-flex align-items-center">
+          <p class="text-ellipsis m-0">
+            {{ props.formattedRow[props.column.field] }}
+          </p>
+        </div>
       </template>
       <div slot="selected-row-actions">
         <button class="btn btn-danger" v-on:click="deleteItems">Delete</button>

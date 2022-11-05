@@ -3,11 +3,11 @@
     <div class="col-2">
       <PreloaderImage :image="item.image[0].url" />
     </div>
-    <div class="text-ellipsis col-7 d-flex align-items-center">
-      {{ item.title }}
+    <div class="col-7 d-flex align-items-center">
+      <p class="text-ellipsis m-0">{{ item.title }}</p>
     </div>
     <div class="col-3 d-flex align-items-center justify-content-center">
-      $ {{ item.price }}
+      <p class="m-0">$ {{ item.price }}</p>
     </div>
   </div>
 </template>

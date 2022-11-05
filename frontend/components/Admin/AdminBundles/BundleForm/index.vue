@@ -59,11 +59,19 @@
             <div class="wrap-img col-2">
               <PreloaderImage :image="product.image[0].url" />
             </div>
-            <div class="text-ellipsis col-7 d-flex align-items-center">
-              {{ product.title }}
+            <div class="col-7 d-flex align-items-center">
+              <p class="text-ellipsis m-0">{{ product.title }}</p>
             </div>
-            <div class="col-2 d-flex align-items-center text-nowrap">
-              $ {{ product.price }}
+            <div
+              class="
+                col-2
+                d-flex
+                align-items-center
+                justify-content-end
+                text-nowrap
+              "
+            >
+              <p class="m-0">$ {{ product.price }}</p>
             </div>
             <div
               class="col-1 d-flex justify-content-center align-items-start p-0"

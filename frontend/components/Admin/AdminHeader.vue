@@ -11,7 +11,7 @@
       py-3
     "
   >
-    <div class="left-side col-3 d-flex align-items-center font-italic">
+    <div class="left-side col-lg-3 col-sm-5 col-6 d-flex align-items-center font-italic">
       <div ref="menuButton" class="d-flex d-md-none pl-3">
         <BurgerMenuButton
           :isOpenMenu="isOpenMenu"
@@ -22,17 +22,17 @@
       <h5 class="px-3 m-0">strf</h5>
       <span class="p-1">{{ getDate() }}</span>
     </div>
-    <div class="col-3 d-flex align-items-center position-relative">
+    <div class="col-lg-5 col-sm-3 col-4 d-flex align-items-center position-relative">
       <BIconSearch class="search-icon d-flex position-absolute" />
       <input
         v-model="text"
         type="text"
         placeholder="Search"
-        class="bg-grey py-1"
+        class="bg-grey py-1 w-100"
       />
     </div>
-    <div class="col-3 d-flex">
-      <div class="d-flex w-100 align-items-center">
+    <div class="col-sm-3 col-1 d-flex justify-content-end">
+      <div class="user-name d-sm-flex d-none align-items-center">
         <span class="text-ellipsis px-3 align-items-center p-0">
           {{ (user && user.username) || "user" }}
         </span>
@@ -121,5 +121,9 @@ input {
 .search-icon {
   z-index: 1;
   left: 1.4rem;
+}
+
+.user-name {
+  width: calc(100% - 54px);
 }
 </style>
