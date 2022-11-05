@@ -59,6 +59,11 @@ export default {
       total: "admin_products/total",
     }),
   },
+  watch: {
+    selected: function () {
+      this.currentBundle = JSON.parse(JSON.stringify(this.selected));
+    },
+  },
   methods: {
     getStrapiMedia,
     prevCurrNextItems,
@@ -133,7 +138,7 @@ export default {
           this.bundles[this.bundles.length - 1],
           [...this.bundles, selected]
         );
-        
+
         this.setSelectedBundles(result);
       } else {
         this.setSelectedBundles({ selected, next, previous });
@@ -152,7 +157,7 @@ export default {
     },
   },
   async beforeMount() {
-    this.currentBundle = { ...this.selected };
+    this.currentBundle = JSON.parse(JSON.stringify(this.selected));
   },
 };
 </script>
