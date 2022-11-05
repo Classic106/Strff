@@ -19,6 +19,13 @@ export const actions = {
         commit("order/setOrder", data);
       } catch (e) {
         this.$cookies.remove("order");
+        const { data } = e.response;
+        const messge = data.message[0].messages[0].id;
+        Vue.notify({
+          group: "all",
+          type: "error",
+          text: messge,
+        });
       }
     }
     if (Object.keys(userInfo).length) {

@@ -14,7 +14,13 @@ export const actions = {
       this.$cookies.set("token", jwt);
       commit("setUser", user);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async loginByToken({ commit }, token) {
@@ -27,7 +33,13 @@ export const actions = {
 
       commit("setUser", data);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
 };

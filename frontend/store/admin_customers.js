@@ -1,3 +1,4 @@
+import Vue from "vue";
 import qs from "qs";
 
 export const state = () => ({
@@ -61,7 +62,13 @@ export const actions = {
       commit("setTotal", total.data);
       commit("setCustomers", result.data);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async getCustomer(_, id) {
@@ -75,7 +82,13 @@ export const actions = {
       });
       return data;
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async createCustomer({ commit }, customer) {
@@ -90,7 +103,13 @@ export const actions = {
 
       commit("addCustomer", data);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async deleteCustomers({ commit }, customersIds) {
@@ -105,7 +124,13 @@ export const actions = {
 
       commit("deleteCustomers", customersIds);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
 };

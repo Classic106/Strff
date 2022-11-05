@@ -23,6 +23,7 @@
       id="snipcart"
       data-api-key="ODhhNWUxOGEtNTk0OC00OTQwLWJkOWMtM2M1ZmNjODU1ZDJhNjM3MzMyNzM0NjM1OTMyNjcz"
     ></div>
+    <notifications group="all" position="bottom right" />
   </div>
 </template>
 

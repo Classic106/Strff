@@ -55,7 +55,6 @@ export default {
       const isSecurity = this.cardData.security.length === 4;
 
       if (isCardNumber && isExpiration && isSecurity) {
-        console.log(this.cardData);
         this.$emit("setCard");
       }
     },

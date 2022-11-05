@@ -25,6 +25,7 @@
       </vueCustomScrollbar>
     </main>
     <LightBox />
+    <notifications group="all" position="top center" />
   </div>
 </template>
 

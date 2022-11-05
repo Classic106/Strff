@@ -18,7 +18,13 @@ export const actions = {
       commit("setOrder", result);
       commit("setOrderCookie");
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async confirmOrder({ state, commit }, userInfo = {}) {
@@ -43,7 +49,13 @@ export const actions = {
 
       commit("clearOrder");
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async addProduct({ commit, state }, order_item) {

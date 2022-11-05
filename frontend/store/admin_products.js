@@ -59,7 +59,13 @@ export const actions = {
       commit("setTotal", total.data);
       commit("setProducts", products.data);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async createProduct({ commit }, product) {
@@ -94,7 +100,13 @@ export const actions = {
 
       commit("addProduct", data);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async updateProduct({ commit }, product) {
@@ -131,7 +143,13 @@ export const actions = {
       );
       commit("updateProduct", data);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async deleteProducts({ commit }, ids) {
@@ -147,7 +165,13 @@ export const actions = {
       commit("deleteProducts", ids);
       commit("clearSelectedProducts");
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
 };

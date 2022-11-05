@@ -62,7 +62,13 @@ export const actions = {
       commit("setTotal", total.data);
       commit("setOrders", orders.data);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async getCustomers() {
@@ -76,7 +82,13 @@ export const actions = {
       });
       return data;
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async createOrder({ commit }, order) {
@@ -91,7 +103,13 @@ export const actions = {
 
       commit("addOrder", data);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async updateOrder({ commit }, order) {
@@ -107,7 +125,13 @@ export const actions = {
 
       commit("updateOrder", data);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
   async deleteOrders({ commit }, ordersIds) {
@@ -122,7 +146,13 @@ export const actions = {
 
       commit("deleteOrders", ordersIds);
     } catch (e) {
-      console.log(e);
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
   },
 };

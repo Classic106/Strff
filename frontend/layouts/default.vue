@@ -12,7 +12,6 @@ export default {};
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
-@import "vue-custom-scrollbar/dist/vueScrollbar.css";
 
 .h-100vh {
   height: 100vh !important;
