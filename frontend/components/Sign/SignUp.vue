@@ -4,15 +4,15 @@
       <div class="w-full max-w-md my-0 mx-auto">
         <form class="px-8 pt-6 pb-8 mb-4" autocomplete="off" @submit.stop.prevent="handleSubmit">
           <div class="mb-4">
-            <input id="username" type="text" placeholder="Enter your username" v-model="username"
+            <input id="username" type="text" placeholder="Enter your username" v-model="username" autocomplete="off"
               required autofocus="true" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
           </div>
           <div class="mb-4">
-            <input id="email" type="email" placeholder="Enter your email" v-model="email" required autofocus="true"
+            <input id="email" type="email" placeholder="Enter your email" v-model="email" required autofocus="true" autocomplete="off"
               class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
           </div>
           <div class="mb-4">
-            <input id="password" type="password" placeholder="Enter your password" v-model="password" required autofocus="true"
+            <input id="password" type="password" placeholder="Enter your password" v-model="password" required autofocus="true" autocomplete="off"
               class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
           </div>
           <div class="flex items-center justify-between">

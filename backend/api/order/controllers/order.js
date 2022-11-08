@@ -313,7 +313,7 @@ module.exports = {
     },
     async getOrder(ctx) {
         let params = ctx.request.query;
-        let order = await strapi.services.order.find(params);
+        let order = await strapi.services.order.findOne(params);
         order = await this.pullOrder(order.id);
         ctx.send(order);
     },
