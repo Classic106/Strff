@@ -5,7 +5,7 @@ export const state = () => ({
 export const actions = {
   logout({ commit }) {
     commit('setUser', null);
-    commit('order/dropOrder');
+    commit('order/setOrder', null, { root: true })
   },
 };
 

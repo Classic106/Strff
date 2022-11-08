@@ -1,17 +1,17 @@
 <template>
   <div class="flex justify-between ml-6 mr-6 mt-4">
     <nuxt-link to="/">
-      <span class="emoji"> STRFF </span>
+      <span class="emoji">STRFF</span>
     </nuxt-link>
     <div class="flex items-center">
-      <nuxt-link to="/login" v-if="!username">
+      <nuxt-link to="/login" v-if="!currentUserName">
         <span class="mx-3">Signin</span>
       </nuxt-link>
-      <nuxt-link to="/signup" v-if="!username">
+      <nuxt-link to="/signup" v-if="!currentUserName">
         <span class="mx-3 mr-6">Signup</span>
       </nuxt-link>
-      <div v-if="username">
-        <span>Hi {{ username }}</span>
+      <div v-if="currentUserName">
+        <span>Hi {{ currentUserName }}</span>
         <a href="#" class="mx-3 mr-6" @click="logout"> Logout </a>
       </div>
       <button class="go-to-checkout flex items-center" @click="goToCheckout">
@@ -35,16 +35,16 @@ export default {
   },
   computed: {
     ...mapGetters({
-      orderNoOfItems: "cart/orderNoOfItems",
-      username: "auth/username",
+      orderNoOfItems: 'order/orderNoOfItems',
+      currentUserName: 'auth/username',
     }),
   },
   methods: {
     logout() {
-      this.$store.dispatch("auth/logout");
+      this.$store.dispatch('auth/logout');
     },
     goToCheckout() {
-      const isConnected = this.$store.getters["auth/username"];
+      const isConnected = this.currentUserName;
       if (!isConnected) {
         this.$router.push("/login");
         return;

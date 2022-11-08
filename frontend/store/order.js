@@ -67,7 +67,7 @@ export const actions = {
     async syncByUser({commit, state}, userId) {
         let orderStatusPending = await this.$strapi.find('order-statuses', { 'code': 1 });
         orderStatusPending = orderStatusPending[0];
-        order = await this.$strapi.$http.$get('/order/getorder', { 'order_status.id': orderStatusPending.id, 'user.id': userId });
+        let order = await this.$strapi.$http.$get('/order/getorder', { 'order_status.id': orderStatusPending.id, 'user.id': userId });
         commit('setOrder', order);
     }
 }
@@ -75,7 +75,7 @@ export const actions = {
 export const mutations = {
     setOrder (state, order) {
         state.order = order;
-        this.$cookies.set('order', JSON.stringify(state.order));
+        this.$cookies.set('order', order? JSON.stringify(order): null);
 	},
     setToken (state, token) {
 		state.token = token;

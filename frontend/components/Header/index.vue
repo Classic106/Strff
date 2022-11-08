@@ -1,51 +1,22 @@
 <template>
   <header
-    class="
-      d-flex
-      flex-column
-      p-0
-      m-0
-      justify-content-center
-      align-items-center
-      w-100
-      position-sticky
-    "
-  >
-    <div
-      class="
-        head
-        d-flex
-        flex-column
-        px-4
-        my-4
-        mb-lg-2
-        justify-content-between
-        align-items-center
-        text-uppercase
-        w-100
-        position-relative
-      "
-    >
+    class="d-flex flex-column p-0 m-0 justify-content-center align-items-center w-100 position-sticky">
+    <div class="head d-flex flex-column px-4 my-4 mb-lg-2 justify-content-between align-items-center text-uppercase w-100 position-relative">
       <div class="w-100 d-flex">
-        <div
-          ref="menuButton"
-          class="nav-menu-arrow d-flex d-lg-none"
-          :class="isOpenMenu && 'open'"
-          v-on:click="isOpenMenu = !isOpenMenu"
-        >
+        <div ref="menuButton" class="nav-menu-arrow d-flex d-lg-none" :class="isOpenMenu && 'open'" v-on:click="isOpenMenu = !isOpenMenu">
           <span></span>
           <span></span>
           <span></span>
         </div>
         <h6 class="d-flex justify-content-center align-items-center w-100 m-0">
-          <nuxt-link to="/" class="gold m-0">strff</nuxt-link>
+          <nuxt-link to="/" class="gold m-0">STRFF</nuxt-link>
         </h6>
       </div>
       <div class="right-menu-section">
         <div class="d-flex align-items-center ml-sm-4 ml-1 justify-content-end">
             <div v-if="currentUserName" class="mr-3">
                 Hi {{ currentUserName }}
-                <nuxt-link to="/logout" class="gold">Logout</nuxt-link>
+                <a href="#" class="gold" @click="logout">Logout</a>
             </div>
             <div v-if="!currentUserName" class="mr-3">
                 <nuxt-link to="/login" class="gold">Login</nuxt-link>
@@ -68,30 +39,9 @@
         "
       >
         <div class="menu-wrap col-lg col-sm-8 m-0">
-          <ul
-            ref="menu"
-            class="
-              pl-sm-4 pl-1
-              text-uppercase
-              d-flex
-              w-100
-              m-0
-              flex-column flex-lg-row
-              justify-content-center
-            "
-            :class="isMobile ? 'ul-mobile' : ''"
-          >
-            <li
-              v-for="category in categories"
-              :key="category.id"
-              class="px-md-3 px-1 py-2"
-            >
-              <NuxtLink
-                :to="`/categories/${category.slug}`"
-                class="gold"
-                v-on:click.native="lickClick(`/categories/${category.slug}`)"
-                >{{ category.name }}</NuxtLink
-              >
+          <ul ref="menu" class="pl-sm-4 pl-1 text-uppercase d-flex w-100 m-0 flex-column flex-lg-row justify-content-center" :class="isMobile ? 'ul-mobile' : ''">
+            <li v-for="category in categories" :key="category.id" class="px-md-3 px-1 py-2">
+              <NuxtLink :to="`/categories/${category.slug}`" class="gold" v-on:click.native="lickClick(`/categories/${category.slug}`)">{{ category.name }}</NuxtLink>
             </li>
             <li
               class="d-flex"
@@ -102,38 +52,13 @@
               "
               ref="additionalMenu"
             >
-              <a
-                v-on:click.prevent="isOpen = !isOpen"
-                class="
-                  gold
-                  cursor-pointer
-                  d-flex
-                  align-items-center
-                  text-nowrap
-                  m-0
-                "
-              >
+              <a v-on:click.prevent="isOpen = !isOpen" class="gold cursor-pointer d-flex align-items-center text-nowrap m-0">
                 MAN`S CARE
-                <Icon
-                  v-if="!isMobile"
-                  :icon="isOpen ? 'angle-up' : 'angle-down'"
-                  class="angle ml-1"
-                />
+                <Icon v-if="!isMobile" :icon="isOpen ? 'angle-up' : 'angle-down'" class="angle ml-1"/>
               </a>
-              <vueCustomScrollbar
-                class="
-                  scroll-area
-                  position-realtive
-                  d-flex
-                  flex-column
-                  overflow-auto
-                  rounded
-                  p-3
-                "
-                :settings="scrollSettings"
-                v-if="isMobile ? true : isOpen"
-                :class="isMobile ? '' : 'position-absolute additional_menu'"
-              >
+              <vueCustomScrollbar class="scroll-area position-realtive d-flex flex-column overflow-auto rounded p-3"
+                    :settings="scrollSettings" v-if="isMobile ? true : isOpen"
+                    :class="isMobile ? '' : 'position-absolute additional_menu'">
                 <ul class="p-0">
                   <li v-for="article in articles" :key="article.name">
                     <NuxtLink
@@ -217,6 +142,9 @@ export default {
         this.isOpen = false;
       }
     },
+    logout() {
+      this.$store.dispatch('auth/logout');
+    }
   },
   async mounted() {
     this.articles = await this.$strapi.find('articles');
