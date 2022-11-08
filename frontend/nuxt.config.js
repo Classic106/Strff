@@ -10,7 +10,7 @@ export default {
    */
 
   head: {
-    title: "Strff",
+    title: "STRFF",
     meta: [
       {
         charset: "utf-8",

@@ -18,8 +18,7 @@ export const actions = {
     let orderStatusPending = await this.$strapi.find('order-statuses', { 'code': 1 });
     if (orderStatusPending && orderStatusPending.length) {
         orderStatusPending = orderStatusPending[0];
-        let query = 'order_status.id=' + orderStatusPending.id + (user? '&user.id=' + user.id: '&order_token=' + token);
-        order = await this.$strapi.$http.$get('/order/getorder?' + query)
+        order = await this.$strapi.$http.$get('/order/getorder', { 'order_status.id': orderStatusPending.id, 'order_token': token });
     }
 
     console.log('Token: ', token);

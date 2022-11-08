@@ -40,13 +40,25 @@
         <h6 class="d-flex justify-content-center align-items-center w-100 m-0">
           <nuxt-link to="/" class="gold m-0">strff</nuxt-link>
         </h6>
-        <div class="d-flex align-items-center ml-sm-4 ml-1">
-          <Search class="cursor-pointer" />
-          <Cart class="cursor-pointer" />
+      </div>
+      <div class="right-menu-section">
+        <div class="d-flex align-items-center ml-sm-4 ml-1 justify-content-end">
+            <div v-if="currentUserName" class="mr-3">
+                Hi {{ currentUserName }}
+                <nuxt-link to="/logout" class="gold">Logout</nuxt-link>
+            </div>
+            <div v-if="!currentUserName" class="mr-3">
+                <nuxt-link to="/login" class="gold">Login</nuxt-link>
+            </div>
+            <div v-if="!currentUserName" class="mr-3">
+                <nuxt-link to="/register" class="gold">Register</nuxt-link>
+            </div>
+            <Search class="cursor-pointer" />
+            <Cart class="cursor-pointer" />
         </div>
       </div>
       <div
-        class="row m-0 w-100"
+        class="row m-0 w-50"
         :class="
           isMobile
             ? isOpenMenu
@@ -172,6 +184,11 @@ export default {
     articles: [],
     categories: []
   }),
+  computed: {
+    ...mapGetters({
+      currentUserName: 'auth/username',
+    }),
+  },
   methods: {
     handlerResize(e) {
       this.isMobile = !(e.target.innerWidth > 992);
@@ -335,5 +352,11 @@ a:hover {
   top: 17px;
   width: 20px;
   left: -4px;
+}
+.right-menu-section {
+    position: absolute;
+    top: 0;
+    right: 24px;
+    text-transform: none;
 }
 </style>

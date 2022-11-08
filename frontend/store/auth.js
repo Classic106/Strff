@@ -4,15 +4,15 @@ export const state = () => ({
 
 export const actions = {
   logout({ commit }) {
-    commit("setUser", null);
-    commit("order/dropOrder");
+    commit('setUser', null);
+    commit('order/dropOrder');
   },
 };
 
 export const mutations = {
   setUser(state, user) {
     state.user = user;
-    this.$cookies.set("user", user ? JSON.stringify(user) : null);
+    this.$cookies.set('user', user ? JSON.stringify(user) : null);
   },
 };
 

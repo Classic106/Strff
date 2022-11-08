@@ -4,7 +4,7 @@
       <span class="emoji"> STRFF </span>
     </nuxt-link>
     <div class="flex items-center">
-      <nuxt-link to="/signin" v-if="!username">
+      <nuxt-link to="/login" v-if="!username">
         <span class="mx-3">Signin</span>
       </nuxt-link>
       <nuxt-link to="/signup" v-if="!username">
@@ -46,7 +46,7 @@ export default {
     goToCheckout() {
       const isConnected = this.$store.getters["auth/username"];
       if (!isConnected) {
-        this.$router.push("/signin");
+        this.$router.push("/login");
         return;
       }
       this.$router.push("/checkout");

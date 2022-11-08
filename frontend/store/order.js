@@ -67,8 +67,7 @@ export const actions = {
     async syncByUser({commit, state}, userId) {
         let orderStatusPending = await this.$strapi.find('order-statuses', { 'code': 1 });
         orderStatusPending = orderStatusPending[0];
-        let orders = await this.$strapi.find('orders', { 'order_status.id': orderStatusPending.id, 'user.id': userId });
-        let order = orders && orders.length? orders[0]: null;
+        order = await this.$strapi.$http.$get('/order/getorder', { 'order_status.id': orderStatusPending.id, 'user.id': userId });
         commit('setOrder', order);
     }
 }
