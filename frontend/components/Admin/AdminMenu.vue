@@ -46,6 +46,15 @@
           ><BIconPersonFill class="mr-2" />Customers</span
         >
       </li>
+      <li
+        v-on:click="setPage('categories')"
+        class="menu-item d-flex align-items-center"
+        :class="currentPage === 'categories' && 'active'"
+      >
+        <span class="d-flex align-items-center w-100 p-1"
+          ><BIconStack class="mr-2" />Categories</span
+        >
+      </li>
     </ul>
   </div>
 </template>

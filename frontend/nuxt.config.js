@@ -51,6 +51,7 @@ export default {
     "~/plugins/vue-custom-scrollbar.js",
     "~/plugins/vue-good-table",
     "~/plugins/vue-cool-lightbox.js",
+    { src: "~/plugins/vue-tags-input", ssr: false },
     { src: "~plugins/notify.client", mode: "client" },
     { src: "~plugins/notify.server", mode: "server" },
     { src: "~/plugins/v-credit-card-form.js", mode: "client" },
@@ -91,6 +92,7 @@ export default {
       "BIconSearch",
       "BIconDot",
       "BIconX",
+      "BIconStack",
       "BIconCheckCircle",
       "BAvatar",
       "BProgress",
@@ -168,6 +170,7 @@ export default {
    */
   build: {
     transpile: ["vue-upload-drop-images"],
+    vendor: ["@johmun/vue-tags-input"],
   },
   buildModules: ["vue-ssr-carousel/nuxt"],
 };
