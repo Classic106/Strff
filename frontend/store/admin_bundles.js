@@ -75,6 +75,11 @@ export const actions = {
         },
       });
       commit("addBundle", data);
+      Vue.notify({
+        group: "all",
+        type: "success",
+        text: "Bundle successfully created",
+      });
     } catch (e) {
       const { data } = e.response;
       const messge = data.message[0].messages[0].id;
@@ -96,6 +101,11 @@ export const actions = {
         },
       });
       commit("updateBundle", data);
+      Vue.notify({
+        group: "all",
+        type: "success",
+        text: "Bundle successfully updated",
+      });
     } catch (e) {
       const { data } = e.response;
       const messge = data.message[0].messages[0].id;
@@ -116,6 +126,11 @@ export const actions = {
         },
       });
       commit("deleteBundles", bundlesIds);
+      Vue.notify({
+        group: "all",
+        type: "success",
+        text: "Bundle(s) successfully deleted",
+      });
     } catch (e) {
       const { data } = e.response;
       const messge = data.message[0].messages[0].id;
