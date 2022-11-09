@@ -102,6 +102,11 @@ export const actions = {
       });
 
       commit("addCustomer", data);
+      Vue.notify({
+        group: "all",
+        type: "success",
+        text: "Customer successfully created",
+      });
     } catch (e) {
       const { data } = e.response;
       const messge = data.message[0].messages[0].id;
@@ -123,6 +128,11 @@ export const actions = {
       });
 
       commit("deleteCustomers", customersIds);
+      Vue.notify({
+        group: "all",
+        type: "success",
+        text: "Customer(s) successfully deleted",
+      });
     } catch (e) {
       const { data } = e.response;
       const messge = data.message[0].messages[0].id;

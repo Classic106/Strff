@@ -102,6 +102,11 @@ export const actions = {
       });
 
       commit("addOrder", data);
+      Vue.notify({
+        group: "all",
+        type: "success",
+        text: "Order successfully created",
+      });
     } catch (e) {
       const { data } = e.response;
       const messge = data.message[0].messages[0].id;
@@ -124,6 +129,11 @@ export const actions = {
       });
 
       commit("updateOrder", data);
+      Vue.notify({
+        group: "all",
+        type: "success",
+        text: "Order successfully updated",
+      });
     } catch (e) {
       const { data } = e.response;
       const messge = data.message[0].messages[0].id;
@@ -145,6 +155,11 @@ export const actions = {
       });
 
       commit("deleteOrders", ordersIds);
+      Vue.notify({
+        group: "all",
+        type: "success",
+        text: "Order(s) successfully deleted",
+      });
     } catch (e) {
       const { data } = e.response;
       const messge = data.message[0].messages[0].id;

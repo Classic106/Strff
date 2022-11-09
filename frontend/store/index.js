@@ -33,14 +33,10 @@ export const actions = {
     }
 
     if (token) {
-      dispatch("auth/loginByToken", token);
+      await dispatch("auth/loginByToken", token);
     }
-    const categories = await this.$strapi.find("categories");
-    const articles = await this.$strapi.find("articles");
-    const purchaseTypes = await this.$strapi.find("purchase-types");
-
-    commit("categories/setCategories", categories);
-    commit("articles/setArticles", articles);
-    commit("purchase-types/setTypes", purchaseTypes);
+    await dispatch("categories/getCategories");
+    await dispatch("articles/getArticles");
+    await dispatch("purchase-types/getPurchaseTypes");
   },
 };

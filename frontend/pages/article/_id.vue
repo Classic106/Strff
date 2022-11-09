@@ -49,26 +49,33 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from "vuex";
+
 import "~/utils/filters";
 import { getStrapiMedia } from "~/utils/medias";
+
 import Loader from "@/components/common/Loader.vue";
 
 export default {
   layout: "club",
   components: { Loader },
-  data: () => ({ article: null, loading: true }),
-  methods: { getStrapiMedia },
+  data: () => ({
+    loading: true,
+  }),
+  computed: {
+    ...mapGetters({ article: "articles/article" }),
+  },
+  methods: {
+    getStrapiMedia,
+    ...mapActions({ getArticle: "articles/getArticle" }),
+    ...mapMutations({ setArticle: "articles/setArticle" }),
+  },
   async mounted() {
-    try {
-      const result = await this.$strapi.$articles.findOne(
-        this.$route.params.id
-      );
-      result.date = new Date(result.date);
-      this.article = result;
-      this.loading = false;
-    } catch (error) {
-      this.loading = false;
-    }
+    const { id } = this.$route.params;
+    await this.getArticle(id);
+  },
+  destroyed() {
+    this.setArticle(null);
   },
 };
 </script>
