@@ -127,6 +127,85 @@ export const actions = {
       });
     }
   },
+  async createSubscriptionType({ commit }, body) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const { data } = await this.$axios.post(`/subscription-types`, body, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      commit("addSubscriptionType", data);
+      Vue.notify({
+        group: "all",
+        type: "success",
+        text: "Subscription type successfully created",
+      });
+    } catch (e) {
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
+    }
+  },
+  async updateSubscriptionType({ commit }, { id, body }) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const { data } = await this.$axios.put(
+        `/subscription-types/${id}`,
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      commit("updateSubscriptionType", data);
+      Vue.notify({
+        group: "all",
+        type: "success",
+        text: "Subscription type successfully updated",
+      });
+    } catch (e) {
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
+    }
+  },
+  async deleteSubscriptionType({ commit }, id) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const { data } = await this.$axios.delete(`/subscription-types/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      commit("deleteSubscriptionType", id);
+      Vue.notify({
+        group: "all",
+        type: "success",
+        text: "Subscription type successfully deleted",
+      });
+    } catch (e) {
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
+    }
+  },
 };
 
 export const mutations = {
@@ -148,6 +227,21 @@ export const mutations = {
   },
   setSubscriptionTypes(state, types) {
     state.subscription_types = types;
+  },
+  addSubscriptionType(state, type) {
+    state.subscription_types.push(type);
+  },
+  updateSubscriptionType(state, type) {
+    const index = state.subscription_types.findIndex(
+      (item) => item.id === type.id
+    );
+    if (index !== -1) {
+      state.subscription_types[index] = type;
+    }
+  },
+  deleteSubscriptionType(state, id) {
+    const newTypes = state.subscription_types.filter((item) => item.id !== id);
+    state.subscription_types = newTypes;
   },
 };
 

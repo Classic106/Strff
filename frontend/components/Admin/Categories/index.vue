@@ -22,7 +22,7 @@
             v-else
             v-model.lazy="currentCategories[index].name"
             v-focus
-            :style="{ width: category.length + 'ch' }"
+            :style="{ width: category.name.length + 'ch' }"
             @blur="update(category)"
             @keyup.enter="update(category)"
           />
@@ -76,15 +76,14 @@ export default {
       this.tagValue = "";
     },
     update: async function (category) {
-      this.activeTag = null;
-
       if (this.activeTag === null) return;
+      this.activeTag = null;
 
       const { id, name } = category;
 
-      const cat = this.categories.filter((c) => c.id === category.id)[0];
-      debugger;
-      if (cat && cat.name === category.name) return;
+      const cat = this.categories.filter((c) => c.id === id)[0];
+
+      if (cat && cat.name === name) return;
 
       const body = {
         name: name[0].toUpperCase() + name.slice(1),
