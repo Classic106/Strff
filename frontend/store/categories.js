@@ -6,7 +6,6 @@ export const state = () => ({
 
 export const actions = {
   async getCategories({ commit }) {
-    debugger
     try {
       const { data } = await this.$axios.get(`/categories`);
 

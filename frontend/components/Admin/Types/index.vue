@@ -6,6 +6,7 @@
     <Loader />
   </div>
   <div v-else class="d-flex flex-column p-5">
+    <SubscriptionTypes class="mb-3"/>
     <div class="d-flex flex-column">
       <h6>Purchase Types</h6>
       <div class="tags-input-container w-100 p-2 d-flex align-items-center">
@@ -97,10 +98,11 @@
 import { mapActions, mapGetters } from "vuex";
 
 import Loader from "~/components/common/Loader";
+import SubscriptionTypes from "./SubscriptionTypes.vue";
 
 export default {
   name: "Types",
-  components: { Loader },
+  components: { Loader, SubscriptionTypes },
   data: () => ({
     loading: true,
     tagValue: "",
