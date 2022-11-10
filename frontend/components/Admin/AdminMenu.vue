@@ -55,6 +55,15 @@
           ><BIconStack class="mr-2" />Categories</span
         >
       </li>
+      <li
+        v-on:click="setPage('types')"
+        class="menu-item d-flex align-items-center"
+        :class="currentPage === 'categories' && 'active'"
+      >
+        <span class="d-flex align-items-center w-100 p-1"
+          ><BIconClipboard class="mr-2" />Types</span
+        >
+      </li>
     </ul>
   </div>
 </template>
