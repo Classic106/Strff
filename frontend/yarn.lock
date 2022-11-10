@@ -9426,6 +9426,11 @@
   "resolved" "https://registry.npmjs.org/vue-router/-/vue-router-3.5.4.tgz"
   "version" "3.5.4"
 
+"vue-select@^3.20.0":
+  "integrity" "sha512-Qau4BzpgAC+/9jM5oTlOrfA81ONdtTFH6PqeSDKvIB56f1F6EbIR8qAotpUxrIiNVppyPFjvVDkyriMfHjWBQA=="
+  "resolved" "https://registry.npmjs.org/vue-select/-/vue-select-3.20.0.tgz"
+  "version" "3.20.0"
+
 "vue-server-renderer@^2.6.12":
   "integrity" "sha512-HifYRa/LW7cKywg9gd4ZtvtRuBlstQBao5ZCWlg40fyB4OPoGfEXAzxb0emSLv4pBDOHYx0UjpqvxpiQFEuoLA=="
   "resolved" "https://registry.npmjs.org/vue-server-renderer/-/vue-server-renderer-2.6.14.tgz"
