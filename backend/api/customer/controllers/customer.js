@@ -33,7 +33,7 @@ module.exports = {
 
     return result;
   },
-  async delete(ctx) {
+  async deleteMany(ctx) {
     const { ids } = ctx.params;
 
     const delteItems = ids.split(",");

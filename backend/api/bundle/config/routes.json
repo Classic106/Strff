@@ -43,7 +43,7 @@
     {
       "method": "DELETE",
       "path": "/bundles/:ids",
-      "handler": "bundle.delete",
+      "handler": "bundle.deleteMany",
       "config": {
         "policies": ["global::isAuthenticated"]
       }
