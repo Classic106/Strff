@@ -43,7 +43,7 @@
     {
       "method": "DELETE",
       "path": "/customers/:ids",
-      "handler": "customer.delete",
+      "handler": "customer.deleteMany",
       "config": {
         "policies": ["global::isAuthenticated"]
       }

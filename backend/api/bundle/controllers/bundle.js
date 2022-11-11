@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-  async delete(ctx) {
+  async deleteMany(ctx) {
     const { ids } = ctx.params;
 
     const deleteItems = ids.split(",");
