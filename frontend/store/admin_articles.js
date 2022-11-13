@@ -12,14 +12,14 @@ export const state = () => ({
     page: 1,
     currentPerPage: 10,
   },
-  bundles: [],
+  articles: [],
   selected: null,
   next: null,
   previous: null,
 });
 
 export const actions = {
-  async getBundles({ commit, state }) {
+  async getArticles({ commit, state }) {
     try {
       const { sort, search, page, currentPerPage } = state.params;
       const { field, type } = sort;
@@ -30,32 +30,23 @@ export const actions = {
       };
 
       if (sort && type !== "none") {
-        if (field === "products") {
-          queryData._sort = `id:${type.toUpperCase()}`;
-        } else {
-          queryData._sort = `${field}:${type.toUpperCase()}`;
-        }
+        queryData._sort = `${field}:${type.toUpperCase()}`;
       }
 
       if (search) {
-        if (!isNaN(+search)) {
-          if (field === "products") {
-            queryData.id = search;
-          } else {
-            queryData.price = search;
-          }
-        } else {
-          queryData.title = search;
-        }
+        queryData._or = [
+          { name_containss: search },
+          { title_containss: search },
+        ];
       }
 
       const query = qs.stringify(queryData);
 
-      const total = await this.$axios.get(`/bundles/count?${query}`);
-      const result = await this.$axios.get(`/bundles?${query}`);
+      const total = await this.$axios.get(`/articles/count?${query}`);
+      const articles = await this.$axios.get(`/articles?${query}`);
 
       commit("setTotal", total.data);
-      commit("setBundles", result.data);
+      commit("setArticles", articles.data);
     } catch (e) {
       const { data } = e.response;
       const messge = data.message[0].messages[0].id;
@@ -66,20 +57,40 @@ export const actions = {
       });
     }
   },
-  async createBundle({ commit }, bundle) {
+  async createArticle({ commit }, article) {
     try {
       const token = this.$cookies.get("token");
 
-      const { data } = await this.$axios.post(`/bundles`, bundle, {
+      const headers = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      commit("addBundle", data);
+      };
+
+      const { image } = article;
+
+      const formData = new FormData();
+
+      if (image) {
+        formData.append("files", image[0], image[0].name);
+      }
+
+      const { data } = await this.$axios
+        .post("/upload", formData, headers)
+        .then(({ data }) => data[0].id)
+        .then((id) => {
+          debugger;
+          article.image = id;
+          article.date = new Date();
+
+          //return this.$axios.post(`/articles`, article, headers);
+        });
+
+      commit("addArticle", data);
       Vue.notify({
         group: "all",
         type: "success",
-        text: "Bundle successfully created",
+        text: "Article successfully created",
       });
     } catch (e) {
       const { data } = e.response;
@@ -91,23 +102,45 @@ export const actions = {
       });
     }
   },
-  async updateBundle({ commit }, bundle) {
+  async updateArticle({ commit }, article) {
     try {
       const token = this.$cookies.get("token");
 
-      const { id } = bundle;
-      const { data } = await this.$axios.put(`/bundles/${id}`, bundle, {
+      const headers = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      commit("updateBundle", data);
+      };
+
+      const { id, image } = article;
+
+      let newImage;
+      debugger;
+      if (image && typeof image !== "string" && image[0]) {
+        const formData = new FormData();
+        formData.append("files", image[0], image[0].name);
+
+        newImage = await this.$axios
+          .post("/upload", formData, headers)
+          .then(({ data }) => data[0].id);
+      }
+      debugger;
+      const updatedArticle = { ...article, image: newImage || image };
+      debugger;
+      const { data } = await this.$axios.put(
+        `/articles/${id}`,
+        updatedArticle,
+        headers
+      );
+      debugger;
+      commit("updateArticle", data);
       Vue.notify({
         group: "all",
         type: "success",
-        text: "Bundle successfully updated",
+        text: "Article successfully updated",
       });
     } catch (e) {
+      console.log(e);
       const { data } = e.response;
       const messge = data.message[0].messages[0].id;
       Vue.notify({
@@ -117,20 +150,22 @@ export const actions = {
       });
     }
   },
-  async deleteBundles({ commit }, bundlesIds) {
+  async deleteArticles({ commit }, ids) {
     try {
       const token = this.$cookies.get("token");
 
-      const { data } = await this.$axios.delete(`/bundles/${bundlesIds}`, {
+      const { data } = await this.$axios.delete(`/article/${ids}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      commit("deleteBundles", bundlesIds);
+
+      commit("deleteArticle", ids);
+      commit("clearSelectedArticles");
       Vue.notify({
         group: "all",
         type: "success",
-        text: "Bundle(s) successfully deleted",
+        text: "Article(s) successfully deleted",
       });
     } catch (e) {
       const { data } = e.response;
@@ -151,44 +186,43 @@ export const mutations = {
   setParams(state, params) {
     state.params = params;
   },
-  setBundles(state, bundles) {
-    state.bundles = bundles;
+  setArticles(state, articles) {
+    state.articles = articles;
   },
-  addBundle(state, bundle) {
-    state.bundles.push(bundle);
-  },
-  updateBundle(state, bundle) {
-    const index = state.bundles.findIndex((item) => item.id === bundle.id);
-    if (index !== -1) {
-      state.bundles[index] = bundle;
-    }
-  },
-  deleteBundles(state, bundlesIds) {
-    const newBundless = state.bundles.reduce((acc, item) => {
-      if (!bundlesIds.includes(item.id)) {
-        acc.push(item);
-      }
-      return acc;
-    }, []);
-    state.bundles = newBundless;
-  },
-  setSelectedBundles(state, data) {
+  setSelectedArticles(state, data) {
     const { selected, previous, next } = data;
 
     state.selected = selected;
     state.previous = previous;
     state.next = next;
   },
-  clearSelectedBundles(state) {
+  addArticle(state, article) {
+    state.articles.push(article);
+  },
+  updateArticle(state, article) {
+    const index = state.articles.findIndex((p) => p.id === article.id);
+    state.articles[index] = article;
+    state.selected = article;
+  },
+  deleteArticles(state, ids) {
+    const newArticles = state.articles.reduce((acc, item) => {
+      if (!ids.includes(item.id)) {
+        acc.push(item);
+      }
+      return acc;
+    }, []);
+    state.articles = newArticles;
+  },
+  clearSelectedArticles(state) {
     state.previous = null;
     state.selected = null;
     state.next = null;
   },
-  clearBundles(state) {
+  clearArticles(state) {
     state.previous = null;
     state.selected = null;
     state.next = null;
-    state.bundles = [];
+    state.articles = [];
     state.params = {
       sort: {
         field: "",
@@ -208,8 +242,8 @@ export const getters = {
   params(state) {
     return state.params;
   },
-  bundles: (state) => {
-    return state.bundles;
+  articles: (state) => {
+    return state.articles;
   },
   selected: (state) => {
     return state.selected;

@@ -89,6 +89,7 @@
 </template>
 
 <script>
+import "~/utils/filters";
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
 
 export default {
