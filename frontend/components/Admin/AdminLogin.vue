@@ -31,8 +31,8 @@ export default {
   methods: {
     ...mapActions({ login: "auth/login" }),
     send: async function () {
-      //const data = { identifier: "test@test.test", password: "test123456" };
-      const data = { identifier: this.identifier, password: this.password };
+      const data = { identifier: "test@test.test", password: "test123456" };
+      //const data = { identifier: this.identifier, password: this.password };
       await this.login(data);
 
       this.$router.push("/admin");

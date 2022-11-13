@@ -91,6 +91,7 @@ export default {
       "BIconPersonFill",
       "BIconSearch",
       "BIconDot",
+      "BIconJournalText",
       "BIconX",
       "BIconClipboard",
       "BIconStack",

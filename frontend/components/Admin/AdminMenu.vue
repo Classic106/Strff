@@ -64,6 +64,15 @@
           ><BIconClipboard class="mr-2" />Types</span
         >
       </li>
+      <li
+        v-on:click="setPage('articles')"
+        class="menu-item d-flex align-items-center"
+        :class="currentPage === 'articles' && 'active'"
+      >
+        <span class="d-flex align-items-center w-100 p-1"
+          ><BIconJournalText class="mr-2" />Articles</span
+        >
+      </li>
     </ul>
   </div>
 </template>
