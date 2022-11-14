@@ -29,6 +29,7 @@ export const actions = {
       const queryData = {
         _start: (page - 1) * currentPerPage,
         _limit: currentPerPage,
+        _publicationState: token ? "preview" : "live",
       };
 
       if (sort && type !== "none") {
@@ -180,6 +181,34 @@ export const actions = {
         type: "success",
         text: "Product(s) successfully deleted",
       });
+    } catch (e) {
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
+    }
+  },
+  async statusArticles({ dispatch }, { products, status }) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const result = await Promise.all(
+        products.map(async ({ id }) => {
+          const product = {
+            id,
+            published_at: status === "publish" ? new Date() : null,
+          };
+          return await this.$axios.put(`/products/${id}`, product, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        })
+      );
+      dispatch("getProducts");
     } catch (e) {
       const { data } = e.response;
       const messge = data.message[0].messages[0].id;

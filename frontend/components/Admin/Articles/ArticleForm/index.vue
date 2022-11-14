@@ -78,7 +78,7 @@ export default {
   },
   components: { UploadImages, ConfirmModal, ArticleMedia },
   data: () => ({
-    status: null,
+    status: "null",
     currentArticle: {
       name: "",
       title: "",

@@ -62,6 +62,13 @@
             </select>
           </div>
           <div class="mb-2">
+            <label class="d-flex" for="published_at">Status</label>
+            <select class="w-100" id="published_at" required v-model="status">
+              <option value="published">published</option>
+              <option value="null">draft</option>
+            </select>
+          </div>
+          <div class="mb-2">
             <label class="d-flex" for="media"> Media </label>
             <UploadImages v-on:changed="handleImages" :max="5" id="media" />
           </div>
@@ -83,6 +90,7 @@ export default {
   name: "CreateProduct",
   components: { UploadImages },
   data: () => ({
+    status: "null",
     form: {
       title: "",
       description: "",
@@ -100,9 +108,16 @@ export default {
       this.form.image = files;
     },
     submit: async function () {
+      if (this.status === "null") {
+        this.form.published_at = null;
+      } else {
+        this.form.published_at = new Date();
+      }
+
       await this.createProduct(this.form);
       this.$refs.form.reset();
       this.form.image = [];
+      this.status = "null";
     },
   },
 };
