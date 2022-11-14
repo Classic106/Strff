@@ -24,9 +24,12 @@ export const actions = {
       const { sort, search, page, currentPerPage } = state.params;
       const { field, type } = sort;
 
+      const token = this.$cookies.get("token");
+
       const queryData = {
         _start: (page - 1) * currentPerPage,
         _limit: currentPerPage,
+        _publicationState: token ? "preview" : "live",
       };
 
       if (sort && type !== "none") {
@@ -79,11 +82,10 @@ export const actions = {
         .post("/upload", formData, headers)
         .then(({ data }) => data[0].id)
         .then((id) => {
-          debugger;
           article.image = id;
           article.date = new Date();
 
-          //return this.$axios.post(`/articles`, article, headers);
+          return this.$axios.post(`/articles`, article, headers);
         });
 
       commit("addArticle", data);
@@ -115,7 +117,7 @@ export const actions = {
       const { id, image } = article;
 
       let newImage;
-      debugger;
+
       if (image && typeof image !== "string" && image[0]) {
         const formData = new FormData();
         formData.append("files", image[0], image[0].name);
@@ -124,15 +126,14 @@ export const actions = {
           .post("/upload", formData, headers)
           .then(({ data }) => data[0].id);
       }
-      debugger;
       const updatedArticle = { ...article, image: newImage || image };
-      debugger;
+
       const { data } = await this.$axios.put(
         `/articles/${id}`,
         updatedArticle,
         headers
       );
-      debugger;
+
       commit("updateArticle", data);
       Vue.notify({
         group: "all",
@@ -167,6 +168,34 @@ export const actions = {
         type: "success",
         text: "Article(s) successfully deleted",
       });
+    } catch (e) {
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
+    }
+  },
+  async statusArticles({ dispatch }, { articles, status }) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const result = await Promise.all(
+        articles.map(async ({ id }) => {
+          const article = {
+            id,
+            published_at: status === "publish" ? new Date() : null,
+          };
+          return await this.$axios.put(`/articles/${id}`, article, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        })
+      );
+      dispatch("getArticles");
     } catch (e) {
       const { data } = e.response;
       const messge = data.message[0].messages[0].id;

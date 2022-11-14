@@ -27,13 +27,15 @@
         v-model.trim="currentArticle.article"
       />
     </div>
-    <!--div class="block d-flex flex-column p-2 mt-2">
-      <label class="d-flex font-weight-bold" for="status">Article status</label>
-      <select id="status" required v-model="currentArticle.status">
+    <div class="block d-flex flex-column p-2 mt-2">
+      <label class="d-flex font-weight-bold" for="published_at"
+        >Article status</label
+      >
+      <select id="published_at" required v-model="status">
         <option value="published">published</option>
-        <option value="draft">draft</option>
+        <option value="null">draft</option>
       </select>
-    </div-->
+    </div>
     <div class="block mt-2 p-2 d-flex flex-column">
       <label class="d-flex font-weight-bold" for="media">Media</label>
       <ArticleMedia
@@ -76,25 +78,31 @@ export default {
   },
   components: { UploadImages, ConfirmModal, ArticleMedia },
   data: () => ({
+    status: null,
     currentArticle: {
       name: "",
       title: "",
       article: "",
       image: null,
-      status: "draft",
+      published_at: null,
     },
   }),
   watch: {
     article: function () {
       if (this.article) {
         this.currentArticle = JSON.parse(JSON.stringify(this.article));
+        const { published_at } = this.currentArticle;
+
+        if (published_at) {
+          this.status = "published";
+        }
       } else {
         this.currentArticle = {
           name: "",
           title: "",
           article: "",
           image: null,
-          status: "draft",
+          published_at: null,
         };
       }
     },
@@ -106,12 +114,19 @@ export default {
       createArticle: "admin_articles/createArticle",
     }),
     submit: function () {
+      const { published_at } = this.currentArticle;
+
+      if (this.status === "null") {
+        this.currentArticle.published_at = null;
+      } else if (this.status !== null && published_at === null) {
+        this.currentArticle.published_at = new Date();
+      }
+
       if (this.article) {
         this.updateArticle(this.currentArticle);
       } else {
         this.createArticle(this.currentArticle);
       }
-      //console.log(this.currentArticle);
     },
     handleImages(files) {
       this.currentArticle.image = files;
@@ -121,13 +136,17 @@ export default {
     },
     confirm: async function () {
       const { id } = this.currentArticle;
-      console.log(id);
-      //await this.deleteArticles([id]);
+      await this.deleteArticles([id]);
     },
   },
   mounted() {
     if (this.article) {
       this.currentArticle = JSON.parse(JSON.stringify(this.article));
+      const { published_at } = this.currentArticle;
+
+      if (published_at) {
+        this.status = "published";
+      }
     }
   },
 };
