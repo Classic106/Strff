@@ -8,8 +8,9 @@
   "options": {
     "increments": true,
     "timestamps": true,
-    "draftAndPublish": false
+    "draftAndPublish": true
   },
+  "pluginOptions": {},
   "attributes": {
     "title": {
       "type": "string",
@@ -61,8 +62,8 @@
       "model": "bundle"
     },
     "categories": {
-      "collection": "category",
       "via": "products",
+      "collection": "category",
       "dominant": true
     },
     "included": {

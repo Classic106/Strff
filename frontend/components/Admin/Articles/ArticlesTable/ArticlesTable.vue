@@ -52,6 +52,18 @@
             {{ props.formattedRow[props.column.field] }}
           </p>
         </div>
+        <div
+          v-else-if="props.column.field == 'published_at'"
+          class="d-flex align-items-center"
+        >
+          <p class="text-ellipsis m-0">
+            {{
+              props.formattedRow[props.column.field].length > 1
+                ? "Published"
+                : "Draft"
+            }}
+          </p>
+        </div>
         <div v-else class="d-flex align-items-center">
           <p class="text-ellipsis m-0">
             {{ props.formattedRow[props.column.field] }}
@@ -60,6 +72,10 @@
       </template>
       <div slot="selected-row-actions">
         <button class="btn btn-danger" v-on:click="deleteItems">Delete</button>
+        <button class="btn btn-success" v-on:click="publish">Publish</button>
+        <button class="btn btn-warning" v-on:click="unPublish">
+          Unpublish
+        </button>
       </div>
     </vue-good-table>
   </div>
@@ -87,6 +103,10 @@ export default {
         width: "250px",
       },
       {
+        label: "Status",
+        field: "published_at",
+      },
+      {
         label: "Date",
         field: "date",
       },
@@ -104,6 +124,7 @@ export default {
     ...mapActions({
       deleteArticles: "admin_articles/deleteArticles",
       getArticles: "admin_articles/getArticles",
+      statusArticles: "admin_articles/statusArticles",
     }),
     ...mapMutations({
       setParams: "admin_articles/setParams",
@@ -150,6 +171,15 @@ export default {
     deleteItems() {
       const ids = this.selectedRows.map((item) => item.id);
       this.deleteArticles(ids);
+    },
+    async publish() {
+      await this.statusArticles({
+        articles: this.selectedRows,
+        status: "publish",
+      });
+    },
+    async unPublish() {
+      await this.statusArticles({ articles: this.selectedRows });
     },
   },
 };

@@ -17,7 +17,7 @@ module.exports = {
 
     const article = await strapi.services.article.findOne({ id });
 
-    if (article.image) {
+    if (body.image && article.image) {
       await strapi.plugins["upload"].services.upload.remove({
         id: article.image.id,
       });
