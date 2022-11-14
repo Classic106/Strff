@@ -24,9 +24,12 @@ export const actions = {
       const { sort, search, page, currentPerPage } = state.params;
       const { field, type } = sort;
 
+      const token = this.$cookies.get("token");
+
       const queryData = {
         _start: (page - 1) * currentPerPage,
         _limit: currentPerPage,
+        _publicationState: token ? "preview" : "live",
       };
 
       if (sort && type !== "none") {
@@ -132,6 +135,34 @@ export const actions = {
         type: "success",
         text: "Bundle(s) successfully deleted",
       });
+    } catch (e) {
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
+    }
+  },
+  async statusBundles({ dispatch }, { bundles, status }) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const result = await Promise.all(
+        bundles.map(async ({ id }) => {
+          const article = {
+            id,
+            published_at: status === "publish" ? new Date() : null,
+          };
+          return await this.$axios.put(`/bundles/${id}`, article, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        })
+      );
+      dispatch("getBundles");
     } catch (e) {
       const { data } = e.response;
       const messge = data.message[0].messages[0].id;

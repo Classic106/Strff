@@ -44,15 +44,6 @@
       "repeatable": true,
       "component": "custom.custom-field"
     },
-    "status": {
-      "type": "enumeration",
-      "enum": [
-        "draft",
-        "published"
-      ],
-      "default": "published",
-      "required": true
-    },
     "bestseller": {
       "via": "products",
       "model": "bestseller"
