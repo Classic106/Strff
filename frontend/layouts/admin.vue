@@ -76,7 +76,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .menu-mobile {
   display: flex !important;
   height: 100%;
@@ -92,6 +92,12 @@ export default {
 }
 
 .content {
-  height: calc(100vh - 4.8rem);
+  height: calc(100vh - 5.5rem);
+}
+
+.block {
+  border: 1px solid #000;
+  border-radius: 10px;
+  background-color: #fff;
 }
 </style>

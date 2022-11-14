@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h6 for="tags-pills">Subscription types</h6>
-    <div class="tags-input-container w-100 p-2">
+    <h6 class="w-100 text-left p-3 m-0">Subscription types</h6>
+    <div class="block tags-input-container mx-5 p-2">
       <div
         class="tag p-1 m-1"
         :class="index === activeTag && 'active'"

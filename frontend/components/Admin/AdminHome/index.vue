@@ -58,11 +58,6 @@ export default {
   }
 }
 
-.block {
-  border-radius: 5px;
-  border: 1px solid #000;
-}
-
 .live {
   color: red;
   background-color: rgb(255, 115, 115);

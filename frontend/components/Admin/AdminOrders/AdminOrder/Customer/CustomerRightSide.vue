@@ -23,9 +23,4 @@ export default {
 </script>
 
 <style scoped>
-.block {
-  border: 1px solid #000;
-  border-radius: 10px;
-  background-color: #fff;
-}
 </style>

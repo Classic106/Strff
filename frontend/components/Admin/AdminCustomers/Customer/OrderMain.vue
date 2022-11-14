@@ -180,12 +180,6 @@ export default {
   background: none;
 }
 
-.block {
-  border: 1px solid #000;
-  border-radius: 10px;
-  background-color: #fff;
-}
-
 .image-wrap:hover > .image-buttons {
   top: 0;
   bottom: 0;

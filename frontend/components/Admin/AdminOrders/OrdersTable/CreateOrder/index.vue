@@ -163,12 +163,6 @@ input {
   padding-left: 30px;
 }
 
-.block {
-  border: 1px solid #000;
-  border-radius: 10px;
-  background-color: #fff;
-}
-
 .search-icon {
   z-index: 1;
   left: 6px;

@@ -5,11 +5,13 @@
   >
     <Loader />
   </div>
-  <div v-else class="d-flex flex-column p-5">
-    <SubscriptionTypes class="mb-3"/>
+  <div v-else class="d-flex flex-column">
+    <SubscriptionTypes class="mb-3" />
     <div class="d-flex flex-column">
-      <h6>Purchase Types</h6>
-      <div class="tags-input-container w-100 p-2 d-flex align-items-center">
+      <h6 class="w-100 text-left p-3 m-0">Purchase Types</h6>
+      <div
+        class="block tags-input-container p-2 mb-2 mx-5 d-flex align-items-center"
+      >
         <div
           class="tag pr-1 m-1"
           :class="index === activeTag && 'active'"
@@ -27,7 +29,7 @@
           New type
         </button>
       </div>
-      <form class="block p-3" v-on:submit.prevent.stop="submit">
+      <form class="block p-3 mx-5" v-on:submit.prevent.stop="submit">
         <div class="d-flex flex-column mb-2">
           <label for="title" class="d-flex">Title</label>
           <input id="title" type="text" v-model="currentPT.title" required />
