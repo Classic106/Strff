@@ -45,9 +45,9 @@
             <label class="d-flex font-weight-bold" for="status"
               >Product status</label
             >
-            <select id="status" required v-model="currentProduct.status">
+            <select id="status" required v-model="status">
               <option value="published">published</option>
-              <option value="draft">draft</option>
+              <option value="null">draft</option>
             </select>
           </div>
           <div class="block d-flex flex-column p-2 mt-2">
@@ -101,6 +101,7 @@ export default {
   name: "AdminProduct",
   components: { ProductMedia, ConfirmModal },
   data: () => ({
+    status: "null",
     currentProduct: null,
   }),
   computed: {
@@ -117,6 +118,12 @@ export default {
   watch: {
     selected: function () {
       this.currentProduct = JSON.parse(JSON.stringify(this.selected));
+
+      const { published_at } = this.currentProduct;
+
+      if (published_at) {
+        this.status = "published";
+      }
     },
   },
   methods: {
@@ -204,6 +211,14 @@ export default {
       return this.products.findIndex((item) => item.id === this.selected.id);
     },
     update: async function () {
+      const { published_at } = this.currentProduct;
+
+      if (this.status === "null") {
+        this.currentProduct.published_at = null;
+      } else if (this.status !== null && published_at === null) {
+        this.currentProduct.published_at = new Date();
+      }
+
       await this.updateProduct(this.currentProduct);
     },
     deleteProduct: function () {
@@ -215,12 +230,16 @@ export default {
     },
   },
   beforeMount() {
-    const { image } = this.selected;
+    const { image, published_at } = this.selected;
     this.currentProduct = JSON.parse(JSON.stringify(this.selected));
     this.currentProduct.categories = this.currentProduct.categories.map(
       (item) => item.id
     );
     this.images = [...image];
+
+    if (published_at) {
+      this.status = "published";
+    }
   },
   async destroyed() {
     this.setParams({ ...this.params, page: 1 });

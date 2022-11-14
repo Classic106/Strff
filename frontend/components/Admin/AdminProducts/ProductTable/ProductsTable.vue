@@ -46,6 +46,18 @@
           :categories="props.row.categories"
           v-else-if="props.column.field == 'categories'"
         />
+        <div
+          v-else-if="props.column.field == 'published_at'"
+          class="d-flex align-items-center"
+        >
+          <p class="text-ellipsis m-0">
+            {{
+              props.formattedRow[props.column.field].length > 1
+                ? "Published"
+                : "Draft"
+            }}
+          </p>
+        </div>
         <span v-else class="d-flex align-items-center">
           {{ props.formattedRow[props.column.field] }}
         </span>
@@ -85,7 +97,7 @@ export default {
       },
       {
         label: "Status",
-        field: "status",
+        field: "published_at",
       },
       {
         label: "Categories",
@@ -152,13 +164,14 @@ export default {
       const ids = this.selectedRows.map((item) => item.id);
       this.deleteProducts(ids);
     },
-    publish() {
-      const ids = this.selectedRows.map((item) => item.id);
-      console.log(ids);
+    async publish() {
+      await this.statusArticles({
+        products: this.selectedRows,
+        status: "publish",
+      });
     },
-    unPublish() {
-      const ids = this.selectedRows.map((item) => item.id);
-      console.log(ids);
+    async unPublish() {
+      await this.statusArticles({ products: this.selectedRows });
     },
   },
 };
