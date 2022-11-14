@@ -36,6 +36,13 @@
         class="w-100"
       />
     </div>
+    <div class="d-flex flex-column mb-2">
+      <label class="d-flex" for="published_at">Status</label>
+      <select id="published_at" required v-model="status">
+        <option value="published">published</option>
+        <option value="null">draft</option>
+      </select>
+    </div>
     <div class="mb-2">
       <label class="d-flex"> Products </label>
       <SelectWithSearch
@@ -98,6 +105,7 @@ export default {
     bundle: Object,
   },
   data: () => ({
+    status: "null",
     currentBundle: {
       products: [],
       title: "",
@@ -107,8 +115,27 @@ export default {
     products: [],
   }),
   watch: {
+    status: function () {
+      const { published_at } = this.currentBundle;
+
+      if (this.status === "null") {
+        this.currentBundle.published_at = null;
+      } else if (this.status !== null && published_at === null) {
+        this.currentBundle.published_at = new Date();
+      }
+
+      this.$emit("getBundle", this.currentBundle);
+    },
     currentBundle: {
       handler() {
+        const { published_at } = this.currentBundle;
+
+        if (this.status === "null") {
+          this.currentBundle.published_at = null;
+        } else if (this.status !== null && published_at === null) {
+          this.currentBundle.published_at = new Date();
+        }
+
         this.$emit("getBundle", this.currentBundle);
       },
       deep: true,
@@ -140,6 +167,9 @@ export default {
   async beforeMount() {
     if (this.bundle) {
       this.currentBundle = this.bundle;
+      if (this.currentBundle.published_at) {
+        this.status = "published";
+      }
     }
     this.products = await this.$strapi.find("products");
   },

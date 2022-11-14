@@ -50,6 +50,18 @@
             $ {{ props.formattedRow[props.column.field] | formatNumber }}
           </p>
         </div>
+        <div
+          v-else-if="props.column.field == 'published_at'"
+          class="d-flex align-items-center"
+        >
+          <p class="text-ellipsis m-0">
+            {{
+              props.formattedRow[props.column.field].length > 1
+                ? "Published"
+                : "Draft"
+            }}
+          </p>
+        </div>
         <div v-else class="d-flex align-items-center">
           <p class="text-ellipsis m-0">
             {{ props.formattedRow[props.column.field] }}
@@ -57,6 +69,8 @@
         </div>
       </template>
       <div slot="selected-row-actions">
+        <button class="btn btn-danger" v-on:click="deleteItems">Delete</button>
+        <button class="btn btn-success" v-on:click="publish">Publish</button>
         <button class="btn btn-danger" v-on:click="deleteItems">Delete</button>
       </div>
     </vue-good-table>
@@ -90,6 +104,10 @@ export default {
         label: "Price",
         field: "price",
       },
+      {
+        label: "Status",
+        field: "published_at",
+      },
     ],
   }),
   computed: {
@@ -104,6 +122,7 @@ export default {
     ...mapActions({
       deleteBundles: "admin_bundles/deleteBundles",
       getBundles: "admin_bundles/getBundles",
+      statusBundles: "admin_bundles/statusBundles",
     }),
     ...mapMutations({
       setSelectedBundles: "admin_bundles/setSelectedBundles",
@@ -145,13 +164,14 @@ export default {
       const ids = this.selectedRows.map((item) => item.id);
       this.deleteBundles(ids);
     },
-    publish() {
-      const ids = this.selectedRows.map((item) => item.id);
-      console.log(ids);
+    async publish() {
+      await this.statusBundles({
+        bundles: this.selectedRows,
+        status: "publish",
+      });
     },
-    unPublish() {
-      const ids = this.selectedRows.map((item) => item.id);
-      console.log(ids);
+    async unPublish() {
+      await this.statusBundles({ bundles: this.selectedRows });
     },
   },
 };

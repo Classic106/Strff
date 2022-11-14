@@ -33,8 +33,14 @@ export default {
     },
     save: async function () {
       if (this.bundle.products.length < 2) {
+        this.$notify({
+          group: "all",
+          type: "error",
+          text: "Chose 2 products",
+        });
         return;
       }
+
       const products = this.bundle.products.map((item) => item.id);
       const bundle = { ...this.bundle, products };
       await this.createBundle(bundle);
