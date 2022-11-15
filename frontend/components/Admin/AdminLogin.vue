@@ -1,7 +1,6 @@
 <template>
   <div class="vh-100 d-flex justify-content-center">
     <div id="bg"></div>
-
     <form
       v-on:submit.prevent="send"
       class="d-flex flex-column justify-content-center"
@@ -20,7 +19,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "AdminLogin",
@@ -28,14 +27,19 @@ export default {
     identifier: "",
     password: "",
   }),
+  computed: {
+    ...mapGetters({ user: "auth/user" }),
+  },
   methods: {
     ...mapActions({ login: "auth/login" }),
     send: async function () {
-      const data = { identifier: "test@test.test", password: "test123456" };
-      //const data = { identifier: this.identifier, password: this.password };
-      await this.login(data);
+      //const data = { identifier: "test@test.test", password: "test123456" };
+      const { identifier, password } = this;
+      await this.login({ identifier, password });
 
-      this.$router.push("/admin");
+      if (this.user) {
+        this.$router.push("/admin");
+      }
     },
   },
 };

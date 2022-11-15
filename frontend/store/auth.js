@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 export const state = () => ({
   user: null,
 });
@@ -9,17 +11,18 @@ export const actions = {
   },
   async login({ commit }, login) {
     try {
-      const { jwt, user } = await this.$strapi.$http.$post("auth/local", login);
+      const { jwt, user } = await this.$axios.$post("auth/local", login);
 
       this.$cookies.set("token", jwt);
       commit("setUser", user);
     } catch (e) {
       const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
+      const { message } = data.message[0].messages[0];
+
       Vue.notify({
         group: "all",
         type: "error",
-        text: messge,
+        text: message,
       });
     }
   },
@@ -34,11 +37,11 @@ export const actions = {
       commit("setUser", data);
     } catch (e) {
       const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
+      const message = data.message[0].messages[0].id;
       Vue.notify({
         group: "all",
         type: "error",
-        text: messge,
+        text: message,
       });
     }
   },
