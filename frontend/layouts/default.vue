@@ -3,6 +3,7 @@
     <div class="flex flex-col">
       <Nuxt />
     </div>
+    <notifications group="all" position="top center" />
   </div>
 </template>
 
