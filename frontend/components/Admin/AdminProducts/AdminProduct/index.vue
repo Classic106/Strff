@@ -254,12 +254,6 @@ export default {
   background: none;
 }
 
-.block {
-  border: 1px solid #000;
-  border-radius: 10px;
-  background-color: #fff;
-}
-
 .border-left {
   border-radius: 5px 0 0 5px;
   border: 1px solid #000;

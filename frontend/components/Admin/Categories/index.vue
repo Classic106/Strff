@@ -6,9 +6,9 @@
     >
       <Loader />
     </div>
-    <div v-else class="w-100 p-5">
-      <label for="tags-pills">Enter category</label>
-      <div class="tags-input-container w-100 p-2">
+    <div v-else class="w-100">
+      <h6 class="w-100 text-left p-3 m-0">Categories</h6>
+      <div class="block mx-5 tags-input-container p-2">
         <div
           class="tag p-1 m-1"
           :class="index === activeTag && 'active'"

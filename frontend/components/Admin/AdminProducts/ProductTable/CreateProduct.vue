@@ -129,10 +129,4 @@ input {
   border: 1px solid #000;
   border-radius: 5px;
 }
-
-.block {
-  border: 1px solid #000;
-  border-radius: 10px;
-  background-color: #fff;
-}
 </style>
