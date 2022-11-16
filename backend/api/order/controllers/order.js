@@ -150,6 +150,7 @@ module.exports = {
         let orderItem = await strapi.services['order-item'].findOne({ id: params.id });
         if (orderItem) {
             orderItem.quantity = params.quantity;
+            orderItem.total = orderItem.quantity * orderItem.product.price,
             orderItem.purchase_type = params.purchaseTypeId;
             orderItem.subscription_type = params.subscriptionTypeId;
             await strapi.services['order-item'].update({ id: orderItem.id }, orderItem);
@@ -314,7 +315,9 @@ module.exports = {
     async getOrder(ctx) {
         let params = ctx.request.query;
         let order = await strapi.services.order.findOne(params);
-        order = await this.pullOrder(order.id);
+        if (order) {
+            order = await this.pullOrder(order.id);
+        }
         ctx.send(order);
     },
     async pullOrder(id) {

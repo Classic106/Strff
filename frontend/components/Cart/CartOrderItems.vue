@@ -13,11 +13,11 @@
             <h6 class="block-with-text">{{ item.product.title }}</h6>
             <div>
               <p class="mb-2 grey text-uppercase">
-                price {{ item.product.price | formatNumber }} $
+                Price {{ item.product.price | formatNumber }} $
               </p>
             </div>
             <p v-if="item.quantity > 1">
-              total price
+              Total Price
               {{ (item.product.price * item.quantity) | formatNumber }}
               $
             </p>
@@ -27,21 +27,13 @@
           <div class="d-flex flex-sm-row flex-column">
             <p class="w-25 mb-2 grey mr-2 text-uppercase">Quantity</p>
             <div class="d-flex" v-if="isEdit">
-              <button
-                v-if="isEdit"
-                v-on:click="quantityMinus()"
-                class="gold-background"
-              >
+              <button v-if="isEdit" v-on:click="quantityMinus()" class="gold-background">
                 -
               </button>
               <p class="my-auto text-uppercase" :class="isEdit && 'mx-3'">
                 {{ selectedItem.quantity }}
               </p>
-              <button
-                v-if="isEdit"
-                v-on:click="quantityPlus()"
-                class="gold-background"
-              >
+              <button v-if="isEdit" v-on:click="quantityPlus()" class="gold-background">
                 +
               </button>
             </div>
@@ -51,11 +43,7 @@
           </div>
           <div class="d-flex flex-sm-row flex-column">
             <p class="w-25 mb-2 grey mr-2 text-uppercase">Category</p>
-            <p
-              v-for="category in item.product.categories"
-              :key="category.id"
-              class="mr-2 mb-2"
-            >
+            <p v-for="category in item.product.categories" :key="category.id" class="mr-2 mb-2">
               {{ category.name }}
             </p>
           </div>
@@ -77,13 +65,10 @@
           <div class="d-flex align-items-center pen" v-on:click="editOrSaveItem(item)">
             <span class="icon icon-pen m-2"></span>
             <p class="m-0 pl-1 gold text-uppercase">
-              {{ isEdit ? "save" : "edit" }}
+              {{ isEdit ? "Save" : "Edit" }}
             </p>
           </div>
-          <span
-            class="icon icon-trash m-2"
-            v-on:click="removeItemFromCart(item)"
-          ></span>
+          <span class="icon icon-trash m-2" v-on:click="removeItemFromCart(item)"></span>
         </div>
       </div>
     </li>
@@ -200,27 +185,17 @@ button {
 }
 
 .block-with-text {
-  /* hide text if it more than N lines  */
   overflow: hidden;
-  /* for set '...' in absolute position */
   position: relative;
-  /* use this value to count block height */
   line-height: 1.2em;
-  /* max-height = line-height (1.2) * lines max number (3) */
   max-height: 2.4em;
-  /* fix problem when last visible word doesn't adjoin right side  */
   text-align: justify;
-
-  /*margin-right: -1em; */
   padding-right: 1em;
 }
 
 .block-with-text:before {
-  /* points in the end */
   content: "...";
-  /* absolute position */
   position: absolute;
-  /* set position to right bottom corner of block */
   right: 0;
   bottom: 0;
 }

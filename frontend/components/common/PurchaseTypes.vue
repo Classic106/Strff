@@ -1,20 +1,19 @@
 <template>
   <div>
     <div v-for="purchaseType in purchaseTypes" :key="purchaseType.title">
-      <div class="d-flex align-items-center">
-        <input
-          name="push-notifications"
-          type="radio"
-          class="mt-2 align-self-start"
-          :id="`${purchaseType.title} ${cart ? 'cart' : ''}`"
-          :value="purchaseType.id"
-          v-model="purchase_type"
-          v-on:change="setOptions(purchaseType.id)"
-        />
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="w-25">
+            <input name="push-notifications"
+                type="radio"
+                class="mt-2 align-self-start"
+                :id="`${purchaseType.title} ${cart ? 'cart' : ''}`"
+                :value="purchaseType.id"
+                v-model="purchase_type"
+                v-on:change="setOptions(purchaseType.id)"/>
+        </div>
         <label
           :for="`${purchaseType.title} ${cart ? 'cart' : ''}`"
-          class="w-100 ml-3 d-flex flex-column"
-        >
+          class="w-100 ml-3 d-flex flex-column">
           {{ purchaseType.title }}
           <p class="mt-1" v-if="purchaseType.description">
             {{ purchaseType.description }}
@@ -98,7 +97,7 @@ export default {
       this.setTypes();
     },
     setTypes: function () {
-      this.$emit("setTypes", {
+      this.$emit('setTypes', {
         purchase_type: this.purchase_type,
         subscription_type: this.subscription_type,
       });

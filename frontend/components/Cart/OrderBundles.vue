@@ -6,22 +6,12 @@
           <div class="col-6">
             <div v-for="(product, index) in order_bundle.bundle.products" :key="product.id + index">
               <div v-if="(index - 1) % 2" class="row w-100 p-0 m-0">
-                <div
-                  v-if="order_bundle.bundle.products[index + 1]"
-                  class="row w-100 p-0 m-0"
-                >
+                <div v-if="order_bundle.bundle.products[index + 1]" class="row w-100 p-0 m-0">
                   <div class="col-5 p-0 d-flex flex-column">
                     <div class="m-auto">
-                      <PreloaderImage
-                        :classStyle="'m-auto gold-border'"
-                        :image="
-                          order_bundle.bundle.products[index].image[0].url
-                        "
-                      />
+                      <PreloaderImage :classStyle="'m-auto gold-border'" :image="order_bundle.bundle.products[index].image[0].url"/>
                     </div>
-                    <div
-                      class="d-flex flex-column justify-content-between mt-3"
-                    >
+                    <div class="d-flex flex-column justify-content-between mt-3">
                       <span class="font-weight-light block-with-text">
                         {{ order_bundle.bundle.products[index].title }}
                       </span>
@@ -38,24 +28,14 @@
                   </div>
                   <div class="col-5 p-0 d-flex flex-column">
                     <div class="m-auto">
-                      <PreloaderImage
-                        :classStyle="'m-auto gold-border'"
-                        :image="
-                          order_bundle.bundle.products[index + 1].image[0].url
-                        "
-                      />
+                      <PreloaderImage :classStyle="'m-auto gold-border'" :image="order_bundle.bundle.products[index + 1].image[0].url"/>
                     </div>
-                    <div
-                      class="d-flex flex-column justify-content-between mt-3"
-                    >
+                    <div class="d-flex flex-column justify-content-between mt-3">
                       <span class="font-weight-light block-with-text">
                         {{ order_bundle.bundle.products[index + 1].title }}
                       </span>
                       <span class="font-weight-light text-center grey">
-                        ${{
-                          order_bundle.bundle.products[index + 1].price
-                            | formatNumber
-                        }}
+                        ${{ order_bundle.bundle.products[index + 1].price | formatNumber }}
                       </span>
                     </div>
                   </div>
@@ -63,24 +43,14 @@
                 <div v-else class="d-flex justify-content-center">
                   <div class="col-5 p-0 d-flex flex-column">
                     <div class="m-auto">
-                      <PreloaderImage
-                        :classStyle="'m-auto gold-border'"
-                        :image="
-                          order_bundle.bundle.products[index].image[0].url
-                        "
-                      />
+                      <PreloaderImage :classStyle="'m-auto gold-border'" :image="order_bundle.bundle.products[index].image[0].url"/>
                     </div>
-                    <div
-                      class="d-flex flex-column justify-content-between mt-3"
-                    >
+                    <div class="d-flex flex-column justify-content-between mt-3">
                       <span class="font-weight-light block-with-text">
                         {{ order_bundle.bundle.products[index].title }}
                       </span>
                       <span class="font-weight-light text-center grey">
-                        ${{
-                          order_bundle.bundle.products[index].price
-                            | formatNumber
-                        }}
+                        ${{ order_bundle.bundle.products[index].price | formatNumber }}
                       </span>
                     </div>
                   </div>
@@ -90,25 +60,16 @@
           </div>
           <div class="mt-4 d-flex flex-column col-6">
             <p class="text-uppercase font-weight-bold m-0">
-              bundle price: ${{ order_bundle.bundle.price }}
+              Bundle Price: ${{ order_bundle.bundle.price }}
             </p>
             <p class="save-price">
-              You save: $
-              {{
-                order_bundle.bundle.price -
-                order_bundle.bundle.products.reduce(
-                  (prVal, curVal) => prVal + curVal.price,
-                  0
-                )
-              }}!
+              You Save: $
+              {{ order_bundle.bundle.price - order_bundle.bundle.products.reduce((prVal, curVal) => prVal + curVal.price, 0) }}!
             </p>
           </div>
         </div>
         <div class="w-100 d-flex justify-content-end">
-          <span
-            class="icon icon-trash m-2"
-            v-on:click="removeBundle(order_bundle)"
-          ></span>
+          <span class="icon icon-trash m-2" v-on:click="removeBundle(order_bundle)"></span>
         </div>
       </div>
     </li>
@@ -130,8 +91,7 @@ export default {
     ...mapActions({
       removeBundle: "order/removeBundle",
     }),
-  },
-  mounted () {}
+  }
 };
 </script>
 

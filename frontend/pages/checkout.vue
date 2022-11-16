@@ -89,7 +89,7 @@
                                     {{ item.product.title }}
                                 </p>
                                 <p class="pl-3">
-                                    {{ item.product.price | formatNumber }}
+                                    {{ item.total | formatNumber }}
                                 </p>
                                 <div>
                                     <span class="icon icon-trash ml-2" v-on:click="removeItemFromCart(item)"></span>
