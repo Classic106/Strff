@@ -1,185 +1,100 @@
 <template>
-  <div class="cart-detail" :class="isShipping ? 'show' : 'hide'">
-    <div class="cart-detail-content d-flex flex-column">
-      <vueCustomScrollbar
-        class="scroll-area px-sm-3 px-1 mb-auto"
-        :settings="settings"
-      >
-        <div class="d-flex flex-column">
-          <div
-            class="
-              head
-              mb-3
-              d-flex
-              w-100
-              rounded
-              justify-content-between
-              align-items-center
-            "
-          >
-            <h6
-              class="py-3 p-3 text-nowrap"
-              v-on:click.self="isShippingAddressOpen = !isShippingAddressOpen"
-            >
-              + Add Shipping Address
-            </h6>
-            <CloseButton class="mr-3 my-2" v-on:close="isShippingAddressOpen = false" />
-          </div>
-          <AddressForm :address-type="1" v-if="isShippingAddressOpen" v-on:setAddress="setAddress" />
-        </div>
-        <div class="d-flex flex-column">
-          <div
-            class="
-              head
-              mb-3
-              d-flex
-              w-100
-              rounded
-              justify-content-between
-              align-items-center
-            "
-          >
-            <h6
-              class="py-3 p-3 text-nowrap"
-              v-on:click.self="isBillingAddressOpen = !isBillingAddressOpen"
-            >
-              + Add Billing Address
-            </h6>
-            <CloseButton class="mr-3 my-2" v-on:close="isBillingAddressOpen = false" />
-          </div>
-          <AddressForm :address-type="2" v-if="isBillingAddressOpen" v-on:setAddress="setAddress" />
-        </div>
-        <div class="d-flex flex-column">
-          <div
-            class="
-              head
-              w-100
-              mb-3
-              d-flex
-              rounded
-              justify-content-between
-              align-items-center
-            "
-          >
-            <h6 class="p-3 text-nowrap" v-on:click.self="isCardOpen = !isCardOpen">
-              Credit Card Payment
-            </h6>
-            <CloseButton class="mr-3 my-2" v-on:close="isCardOpen = false" />
-          </div>
-          <Card v-if="isCardOpen" v-on:setCard="setCard" />
-        </div>
-      </vueCustomScrollbar>
-      <button
-        class="finalize-btn text-nowrap p-3 my-3 mx-1"
-        v-on:click="finalize"
-      >
-        FINALIZE AND PLACE ORDER
-      </button>
+  <div class="cart-detail d-flex flex-column">
+    <div v-if="!orderNoOfItems && !orderBundleNoOfItems" class="cart empty p-4 d-flex flex-column justify-content-center align-items-center m-auto">
+      <h6 class="text-center">Your Shopping Cart is Empty</h6>
+      <h6 class="gold cursor-pointer" v-on:click="$emit('close')">SHOP NOW</h6>
     </div>
+    <vueCustomScrollbar v-else class="h-100 px-sm-3 px-1 d-flex flex-lg-row flex-column overflow-auto" :settings="scrollAreaSettings">
+      <div class="cart d-flex flex-column px-sm-3 px-1">
+        <h6 class="text-uppercase text-center my-3">
+          Total Price: {{ totalPrice | formatNumber }} $
+        </h6>
+        <vueCustomScrollbar class="px-sm-3 px-1 mb-auto" :settings="itemsSettings">
+          <CartOrderItems v-if="orderNoOfItems" :order_items="orderItems"/>
+          <OrderBundles v-if="orderBundleNoOfItems" :order_bundles="orderBundles"/>
+        </vueCustomScrollbar>
+        <nuxt-link to="/checkout" v-on:click.native="linkClick" class="text-white text-uppercase text-center p-3 my-3 gold-background d-none d-lg-block">
+            Go To Checkout
+        </nuxt-link>
+      </div>
+    </vueCustomScrollbar>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import Sign from "@/components/Sign";
-import AddressForm from "@/components/AddressForm";
-import Card from "./Card.vue";
-import CloseButton from "@/components/common/CloseButton";
+import { mapGetters, mapMutations, mapActions } from "vuex";
+
+import CartOrderItems from "./CartOrderItems.vue";
+import OrderBundles from "./OrderBundles.vue";
+import PurchaseTypes from "~/components/common/PurchaseTypes";
+import PreloaderImage from "~/components/PreloaderImage";
 
 export default {
-  components: { Sign, AddressForm, Card, CloseButton },
-  props: ["isShipping"],
+  props: ["isOpen"],
+  components: {
+    CartOrderItems,
+    OrderBundles,
+    PurchaseTypes,
+    PreloaderImage,
+  },
   data: () => ({
-    userInfo: {},
-    card: {},
-    isShippingAddressOpen: false,
-    isBillingAddressOpen: false,
-    isCardOpen: false,
-    settings: {
+    scrollAreaSettings: {
+      suppressScrollX: true,
+      wheelPropagation: false,
+    },
+    itemsSettings: {
       suppressScrollX: true,
       wheelPropagation: true,
     },
+    purchaseTypes: [],
   }),
   computed: {
     ...mapGetters({
-        order: "order/order"
+        orderItems: 'order/orderItems',
+        orderBundles: 'order/orderBundles',
+        orderNoOfItems: 'order/orderNoOfItems',
+        orderBundleNoOfItems: 'order/orderBundleNoOfItems',
+        totalPrice: 'order/orderTotal'
     }),
   },
   methods: {
-    setAddress: function (address) {
-      this.$store.dispatch('order/updateOrder', {
-        id: this.order.id,
-        address: address
-      });
-    },
-    setCard: function (card) {
-      this.$store.dispatch('order/updateOrder', {
-        id: this.order.id,
-        card: card
-      });
-    },
-    finalize: function () {
-        this.$emit('nextStep');
+    linkClick() {
+      this.$emit('close');
     }
   },
-  mounted() {
-    this.userInfo = this.userInf;
+  async mounted() {
+    this.purchaseTypes = await this.$strapi.find('purchase-types');
   },
 };
 </script>
 
 <style scoped>
-@media (max-width: 992px) {
-  .cart-detail,
-  .cart-detail.show,
-  .cart-detail.hide,
-  .finalize-btn,
-  .scroll-area {
-    width: 100% !important;
-    transition: none !important;
-  }
-  .cart-detail-content {
-    width: 100%;
-  }
-}
-
 @media (min-width: 992px) {
-  .scroll-area {
-    width: 100%;
-  }
-  .cart-detail-content {
-    width: 340px;
-    height: 100%;
+  .cart.empty {
+    width: 600px;
   }
 }
 
-.icon {
-  filter: brightness(0) invert(1);
+.cart-detail {
+  background: #333333;
+  z-index: 1;
+  height: 100%;
 }
 
-.show {
-  width: 340px;
-  transition: width 1s ease-in-out;
+.cart {
+  max-width: 600px;
+  z-index: 1;
+  position: relative;
+  background: #333333;
 }
 
-.hide {
-  width: 0;
-  transition: width 1s ease-in-out;
-}
-
-.head {
-  cursor: pointer;
-  background: rgb(21, 21, 22);
+h6,
+p {
+  text-transform: uppercase;
 }
 
 button {
   color: #fff;
   border: none;
-}
-
-.finalize-btn {
-  width: 340px;
-  background: #5bb85d;
-  color: #fff;
 }
 </style>
