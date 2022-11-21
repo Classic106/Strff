@@ -28,7 +28,12 @@
                         <input type="text" placeholder="City" v-model="order.shippingInfo.city"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="State" v-model="order.shippingInfo.state"/>
+                        <select placeholder="State" v-model="order.shippingInfo.state">
+                            <option value="">State</option>
+                            <option v-for="option in states" v-bind:value="option.abbreviation" v-bind:key="option.abbreviation">
+                                {{ option.name }}
+                            </option>
+                        </select>
                     </div>
                     <div class="col-12 col-md-6">
                         <input type="text" placeholder="Zip" v-model="order.shippingInfo.zip"/>
@@ -36,17 +41,15 @@
                 </div>
             </div>
             <div class="block">
-                <h2>Shipping Method</h2>
-
-            </div>
-        </div>
-        <div class="col-12 col-md-4">
-            <div class="block">
-                <h2>Payment Method</h2>
-            </div>
-            <div class="block">
                 <h2>Billing Address</h2>
                 <div class="row">
+                    <div class="col-12 mb-2">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <input type="checkbox" v-model="isSameAsShipping" v-on:change="sameAsShipping()"/> Same as shipping
+                        </div>
+                    </div>
+                </div>
+                <div v-if="!isSameAsShipping" class="row">
                     <div class="col-12 col-md-6">
                         <input type="text" placeholder="First name" v-model="order.billingInfo.firstName"/>
                     </div>
@@ -66,12 +69,25 @@
                         <input type="text" placeholder="City" v-model="order.billingInfo.city"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="State" v-model="order.billingInfo.state"/>
+                        <select placeholder="State" v-model="order.billingInfo.state">
+                            <option value="">State</option>
+                            <option v-for="option in states" v-bind:value="option.abbreviation" v-bind:key="option.abbreviation">
+                                {{ option.name }}
+                            </option>
+                        </select>
                     </div>
                     <div class="col-12 col-md-6">
                         <input type="text" placeholder="Zip" v-model="order.billingInfo.zip"/>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="block">
+                <h2>Payment Method</h2>
+            </div>
+            <div class="block">
+                <h2>Shipping Method</h2>
             </div>
         </div>
         <div class="col-12 col-md-4">
@@ -164,7 +180,7 @@
                         </li>
                     </ul>
                 </div>
-                <input type="submit" value="Place Order" />
+                <input type="submit" value="Place Order" class="gold-background text-white border p-3 text-uppercase"/>
             </div>
         </div>
       </div>
@@ -172,12 +188,12 @@
   </template>
 
   <script>
-  import { mapGetters } from 'vuex'
-  import '~/utils/filters'
-  import { pad, convertObjectToQueryUrl } from '~/utils/functions'
-  import { v4 as uuidv4 } from 'uuid'
-
-  import PayWithNmi from '~/utils/payments/nmi'
+  import { mapGetters } from 'vuex';
+  import '~/utils/filters';
+  import { pad, convertObjectToQueryUrl } from '~/utils/functions';
+  import { v4 as uuidv4 } from 'uuid';
+  import PayWithNmi from '~/utils/payments/nmi';
+  import { states } from "@/data";
 
   export default {
     layout: "club",
@@ -220,8 +236,10 @@
               total: 0.0
           },
           loading: false,
+          isSameAsShipping: true,
           paymentType: 1,
           purchaseTypes: [],
+          states,
           selectedPaymentMethod: null,
           ccMonths: [
               {text: 'Jan', value: 1},
@@ -251,7 +269,32 @@
       })
     },
     methods: {
-      async handleSubmit() {
+      sameAsShipping() {
+        if (this.isSameAsShipping) {
+            this.order.billingInfo.firstName = this.order.shippingInfo.firstName;
+            this.order.billingInfo.lastName = this.order.shippingInfo.lastName;
+            this.order.billingInfo.company = this.order.shippingInfo.company;
+            this.order.billingInfo.address1 = this.order.shippingInfo.address1;
+            this.order.billingInfo.address2 = this.order.shippingInfo.address2;
+            this.order.billingInfo.city = this.order.shippingInfo.city;
+            this.order.billingInfo.state = this.order.shippingInfo.state;
+            this.order.billingInfo.zip = this.order.shippingInfo.zip;
+            this.order.billingInfo.contactNo = this.order.shippingInfo.contactNo;
+            this.order.billingInfo.email = this.order.shippingInfo.email;
+        } else {
+            this.order.billingInfo.firstName = '';
+            this.order.billingInfo.lastName = '';
+            this.order.billingInfo.company = '';
+            this.order.billingInfo.address1 = '';
+            this.order.billingInfo.address2 = '';
+            this.order.billingInfo.city = '';
+            this.order.billingInfo.state = '';
+            this.order.billingInfo.zip = '';
+            this.order.billingInfo.contactNo = '';
+            this.order.billingInfo.email = '';
+        }
+      },
+      async placeOrder() {
           this.loading = true;
           try {
               this.order.orderDate = Date.now();
@@ -320,6 +363,7 @@
       if (this.loggedUser) {
           this.order.shippingInfo.firstName = this.loggedUser.first_name;
           this.order.shippingInfo.lastName = this.loggedUser.last_name;
+          this.order.shippingInfo.email = this.loggedUser.email;
           this.order.billingInfo.firstName = this.loggedUser.first_name;
           this.order.billingInfo.lastName = this.loggedUser.last_name;
       }
@@ -340,6 +384,22 @@
   .checkout {
     margin-top: 50px;
     margin-bottom: 50px;
+
+    input[type="text"], select, textarea {
+        padding: 4px 10px;
+        width: 100%;
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+
+    select {
+        padding: 6px 10px;
+    }
+
+    input[type="checkbox"] {
+        width: auto;
+        margin-right: 15px;
+    }
   }
 
   .block {
@@ -349,12 +409,7 @@
         font-size: 17px;
         margin-top: 0;
         margin-bottom: 15px;
-    }
-
-    input {
-        width: 100%;
-        font-size: 15px;
-        margin-bottom: 10px;
+        font-weight: bold;
     }
   }
 
