@@ -22,16 +22,8 @@
       </div>
     </div>
     <div class="mt-1 position-relative" v-if="options.length">
-      <select
-        class="subscription_types position-relative w-100"
-        v-model="subscription_type"
-        v-on:change="change"
-      >
-        <option
-          v-for="option in options"
-          :value="option.id"
-          :key="option.title"
-        >
+      <select class="subscription_types position-relative w-100" v-model="subscription_type" v-on:change="change">
+        <option v-for="option in options" :value="option.id" :key="option.title">
           {{ option.title }}
         </option>
       </select>
