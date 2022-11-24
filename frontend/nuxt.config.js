@@ -52,6 +52,7 @@ export default {
     "~/plugins/vue-good-table",
     "~/plugins/vue-cool-lightbox.js",
     "~/plugins/v-select.js",
+    { src: "~plugins/fingerprint.js", mode: "client" },
     { src: "~plugins/notify.client", mode: "client" },
     { src: "~plugins/notify.server", mode: "server" },
     { src: "~/plugins/v-credit-card-form.js", mode: "client" },

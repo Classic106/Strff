@@ -86,6 +86,9 @@ export default {
   name: "Club",
   layout: "club",
   components: { BestSellers, Articles },
+  mounted() {
+    console.log(this.fingerprint())
+  },
 };
 </script>
 
