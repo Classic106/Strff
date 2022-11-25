@@ -12,13 +12,13 @@ export default class PayWithAuthorizeNet {
     async pay() {
         try {
             var lineItems = [];
-            for (let i = 0; i < this.order.items.length; i++) {
+            for (let i = 0; i < this.order.order_items.length; i++) {
                 lineItems.push({
                     'lineItem': {
                         'itemId': i + 1,
-                        'name': this.order.items[i].product.title,
-                        'quantity': this.order.items[i].quantity,
-                        'unitPrice': this.order.items[i].price
+                        'name': this.order.order_items[i].product.title,
+                        'quantity': this.order.order_items[i].quantity,
+                        'unitPrice': this.order.order_items[i].price
                     }
                 });
             }
@@ -29,41 +29,41 @@ export default class PayWithAuthorizeNet {
                         'name': this.apiLoginId,
                         'transactionKey': this.apiTransactionKey
                     },
-                    'refId': this.order.orderNo,
+                    'refId': this.order.order_no,
                     'transactionRequest': {
                         'transactionType': 'authCaptureTransaction',
                         'amount': this.order.total,
                         'payment': {
                             'creditCard': {
-                                'cardNumber': this.order.ccDetail.ccNo,
-                                'expirationDate': this.order.ccDetail.ccExpiryYear + '-' + pad(this.order.ccDetail.ccExpiryMonth, 2), //YYYY-MM
-                                'cardCode': this.order.ccDetail.cvv
+                                'cardNumber': this.order.card_no,
+                                'expirationDate': this.order.card_expiry, //YYYY-MM
+                                'cardCode': this.order.card_security_code
                             }
                         },
                         'lineItems': lineItems,
-                        'poNumber': this.order.orderNo,
+                        'poNumber': this.order.order_no,
                         'customer': {
                             'id': this.loggedUser.id,
                             'email': this.loggedUser.email
                         },
                         'billTo': {
-                            'firstName': this.order.billingInfo.firstName,
-                            'lastName': this.order.billingInfo.lastName,
-                            'company': this.order.billingInfo.company,
-                            'address': this.order.billingInfo.address1,
-                            'city': this.order.billingInfo.city,
-                            'state': this.order.billingInfo.state,
-                            'zip': this.order.billingInfo.zip,
+                            'firstName': this.order.billing_first_name,
+                            'lastName': this.order.billing_last_name,
+                            'company': this.order.billing_company,
+                            'address': this.order.billing_address_1,
+                            'city': this.order.billing_city,
+                            'state': this.order.billing_state,
+                            'zip': this.order.billing_zip_code,
                             'country': 'US'
                         },
                         'shipTo': {
-                            'firstName': this.order.shippingInfo.firstName,
-                            'lastName': this.order.shippingInfo.lastName,
-                            'company': this.order.shippingInfo.company,
-                            'address': this.order.shippingInfo.address1,
-                            'city': this.order.shippingInfo.city,
-                            'state': this.order.shippingInfo.state,
-                            'zip': this.order.shippingInfo.zip,
+                            'firstName': this.order.shipping_first_name,
+                            'lastName': this.order.shipping_last_name,
+                            'company': this.order.shipping_company,
+                            'address': this.order.shipping_address_1,
+                            'city': this.order.shipping_city,
+                            'state': this.order.shipping_state,
+                            'zip': this.order.shipping_zip_code,
                             'country': 'US'
                         },
                         'transactionSettings': {
