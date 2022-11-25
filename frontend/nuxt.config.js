@@ -73,11 +73,8 @@ export default {
     proxy: true,
   },
   proxy: {
-    "/payment-nmi/": {
-      target: "https://secure.networkmerchants.com/api/transact.php",
-      pathRewrite: { "^/payment-nmi/": "" },
-      changeOrigin: true,
-    }
+    '/payment-authorize-net/': { target: 'https://api.authorize.net/xml/v1/request.api', pathRewrite: {'^/payment-authorize-net/': ''}, changeOrigin: true },
+    '/payment-authorize-net-test/': { target: 'https://apitest.authorize.net/xml/v1/request.api', pathRewrite: {'^/payment-authorize-net-test/': ''}, changeOrigin: true }
   },
   strapi: {
     url: process.env.API_URL || "http://localhost:1338",

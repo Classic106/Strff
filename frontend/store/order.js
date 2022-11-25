@@ -58,9 +58,6 @@ export const actions = {
         commit('setOrder', order);
     },
     async placeOrder({commit, state}, data) {
-        let currentUser = this.$cookies.get('user');
-        data.userId = currentUser? currentUser.id: null;
-        data.orderToken = this.$cookies.get('order_token');
         await this.$strapi.$http.$post('/orders/placeorder', data);
         commit('setOrder', null);
     },

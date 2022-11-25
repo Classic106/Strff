@@ -24,9 +24,7 @@ export const actions = {
         } else {
             options = { 'order_status.id': orderStatusPending.id, 'order_token': token };
         }
-        console.log(options);
         order = await this.$strapi.$http.$get('/order/getorder', options);
-        console.log(order);
     }
 
     console.log('Token: ', token);

@@ -1,13 +1,17 @@
 
 export default class PayWithAuthorizeNet {
     constructor(order, axios) {
-        this.order = order
-        this.axios = axios
+        this.order = order;
+        this.axios = axios;
+        this.isTestMode = true;
+        this.apiLoginId = '28L598hq2TPH';
+        this.apiTransactionKey = '8Hp5QcxHPZ9598vj';
+        this.apiEndpoint = this.isTestMode? '/payment-authorize-net-test/' : '/payment-authorize-net/';
     }
 
     async pay() {
         try {
-            var lineItems = []
+            var lineItems = [];
             for (let i = 0; i < this.order.items.length; i++) {
                 lineItems.push({
                     'lineItem': {
@@ -16,14 +20,14 @@ export default class PayWithAuthorizeNet {
                         'quantity': this.order.items[i].quantity,
                         'unitPrice': this.order.items[i].price
                     }
-                })
+                });
             }
 
             var requestData = {
                 'createTransactionRequest': {
                     'merchantAuthentication': {
-                        'name': '5KP3u95bQpv',
-                        'transactionKey': '346HZ32z3fP4hTG2'
+                        'name': this.apiLoginId,
+                        'transactionKey': this.apiTransactionKey
                     },
                     'refId': this.order.orderNo,
                     'transactionRequest': {
@@ -76,24 +80,24 @@ export default class PayWithAuthorizeNet {
                         }
                     }
                 }
-            }
+            };
 
-            let paymentResponse = await this.axios.post('/payment-authorize-net/', requestData, {
+            let paymentResponse = await this.axios.post(this.apiEndpoint, requestData, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 timeout: 2 * 60 * 1000
-            })
-            console.log(paymentResponse)
+            });
+            console.log(paymentResponse);
 
             if (paymentResponse.status == 200) {
-                let responseData = paymentResponse.data
-                return parseInt(responseData.transactionResponse.responseCode) == 1
+                let responseData = paymentResponse.data;
+                return parseInt(responseData.transactionResponse.responseCode) == 1;
             }
         } catch (e) {
-            console.log('Error occurred')
-            console.error(e)
+            console.log('Error occurred');
+            console.error(e);
         }
-        return false
+        return false;
     }
 }

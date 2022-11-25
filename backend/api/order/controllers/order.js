@@ -276,40 +276,10 @@ module.exports = {
     async placeOrder(ctx) {
         let params = ctx.request.body;
 
-        const orderStatus = await strapi.services['order-statuses'].findOne({ code: 1 });
         const newOrderStatus = await strapi.services['order-statuses'].findOne({ code: 'completed' });
 
-        let options = null;
-        if (params.userId > 0) {
-            options = { 'order_status.id': orderStatus.id, 'user.id': params.userId };
-        } else {
-            options = { 'order_status.id': orderStatus.id, 'order_token': params.orderToken };
-        }
-        let order = await strapi.services.order.findOne(options);
-        if (order) {
-            order.order_status = newOrderStatus.id;
-            order.order_no = params.orderNo;
-            order.order_date = params.orderDate;
-            order.billing_first_name = params.billingFirstName;
-            order.billing_last_name = params.billingLastName;
-            order.billing_company = params.billingCompany;
-            order.billing_address_1 = params.billingAddress1;
-            order.billing_city = params.billingCity;
-            order.billing_state = params.billingState;
-            order.billing_zip_code = params.billingZipCode;
-            order.billing_contact_no = params.billingContactNo;
-            order.billing_email = params.billingEmail;
-            order.shipping_first_name = params.shippingFirstName;
-            order.shipping_last_name = params.shippingLastName;
-            order.shipping_company = params.shippingCompany;
-            order.shipping_address_1 = params.shippingAddress1;
-            order.shipping_city = params.shippingCity;
-            order.shipping_state = params.shippingState;
-            order.shipping_zip_code = params.shippingZipCode;
-            order.shipping_contact_no = params.shippingContactNo;
-            order.shipping_email = params.shippingEmail;
-            order = await strapi.services.order.update({ id: order.id }, order);
-        }
+        params.order_status = newOrderStatus.id;
+        await strapi.services.order.update({ id: params.id }, params);
         ctx.send(null);
     },
     async getOrder(ctx) {

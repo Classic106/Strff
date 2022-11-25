@@ -4,31 +4,31 @@
         <div class="col-12 col-md-4">
             <div class="block">
                 <h2>Contact Information</h2>
-                <input type="text" placeholder="Email" v-model="order.shippingInfo.email"/>
+                <input type="text" placeholder="Email" v-model="orderInputs.shippingInfo.email"/>
             </div>
             <div class="block">
                 <h2>Shipping Address</h2>
                 <div class="row">
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="First name" v-model="order.shippingInfo.firstName"/>
+                        <input type="text" placeholder="First name" v-model="orderInputs.shippingInfo.firstName"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Last name" v-model="order.shippingInfo.lastName"/>
+                        <input type="text" placeholder="Last name" v-model="orderInputs.shippingInfo.lastName"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Company (optional)" v-model="order.shippingInfo.company"/>
+                        <input type="text" placeholder="Company (optional)" v-model="orderInputs.shippingInfo.company"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Address 1" v-model="order.shippingInfo.address1"/>
+                        <input type="text" placeholder="Address 1" v-model="orderInputs.shippingInfo.address1"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Address 2" v-model="order.shippingInfo.address2"/>
+                        <input type="text" placeholder="Address 2" v-model="orderInputs.shippingInfo.address2"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="City" v-model="order.shippingInfo.city"/>
+                        <input type="text" placeholder="City" v-model="orderInputs.shippingInfo.city"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <select placeholder="State" v-model="order.shippingInfo.state">
+                        <select placeholder="State" v-model="orderInputs.shippingInfo.state">
                             <option value="">State</option>
                             <option v-for="option in states" v-bind:value="option.abbreviation" v-bind:key="option.abbreviation">
                                 {{ option.name }}
@@ -36,7 +36,7 @@
                         </select>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Zip" v-model="order.shippingInfo.zip"/>
+                        <input type="text" placeholder="Zip" v-model="orderInputs.shippingInfo.zip"/>
                     </div>
                 </div>
             </div>
@@ -51,25 +51,25 @@
                 </div>
                 <div v-if="!isSameAsShipping" class="row">
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="First name" v-model="order.billingInfo.firstName"/>
+                        <input type="text" placeholder="First name" v-model="orderInputs.billingInfo.firstName"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Last name" v-model="order.billingInfo.lastName"/>
+                        <input type="text" placeholder="Last name" v-model="orderInputs.billingInfo.lastName"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Company (optional)" v-model="order.billingInfo.company"/>
+                        <input type="text" placeholder="Company (optional)" v-model="orderInputs.billingInfo.company"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Address 1" v-model="order.billingInfo.address1"/>
+                        <input type="text" placeholder="Address 1" v-model="orderInputs.billingInfo.address1"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Address 2" v-model="order.billingInfo.address2"/>
+                        <input type="text" placeholder="Address 2" v-model="orderInputs.billingInfo.address2"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="City" v-model="order.billingInfo.city"/>
+                        <input type="text" placeholder="City" v-model="orderInputs.billingInfo.city"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <select placeholder="State" v-model="order.billingInfo.state">
+                        <select placeholder="State" v-model="orderInputs.billingInfo.state">
                             <option value="">State</option>
                             <option v-for="option in states" v-bind:value="option.abbreviation" v-bind:key="option.abbreviation">
                                 {{ option.name }}
@@ -77,7 +77,7 @@
                         </select>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Zip" v-model="order.billingInfo.zip"/>
+                        <input type="text" placeholder="Zip" v-model="orderInputs.billingInfo.zip"/>
                     </div>
                 </div>
             </div>
@@ -180,7 +180,7 @@
                         </li>
                     </ul>
                 </div>
-                <input type="submit" value="Place Order" class="gold-background text-white border p-3 text-uppercase"/>
+                <input type="submit" value="Place Order" v-on:click="submitOrder()" class="gold-background text-white border p-3 text-uppercase"/>
             </div>
         </div>
       </div>
@@ -192,14 +192,14 @@
   import '~/utils/filters';
   import { pad, convertObjectToQueryUrl } from '~/utils/functions';
   import { v4 as uuidv4 } from 'uuid';
-  import PayWithNmi from '~/utils/payments/nmi';
+  import PayWithAuthorizeNet from '~/utils/payments/authorize-net';
   import { states } from "@/data";
 
   export default {
     layout: "club",
     data() {
       return {
-          order: {
+          orderInputs: {
               billingInfo: {
                   'firstName': '',
                   'lastName': '',
@@ -229,11 +229,7 @@
                   'ccExpiryMonth': 0,
                   'ccExpiryYear': new Date().getFullYear(),
                   'cvv': ''
-              },
-              orderNo: null,
-              orderDate: null,
-              items: [],
-              total: 0.0
+              }
           },
           loading: false,
           isSameAsShipping: true,
@@ -256,11 +252,12 @@
               {text: 'Dec', value: 12}
           ],
           ccYears: [],
-          paymentApiNmi: null
+          paymentApiAuthorizeNet: null
       }
     },
     computed: {
       ...mapGetters({
+          cart: 'order/order',
           orderItems: 'order/orderItems',
           orderBundles: 'order/orderBundles',
           orderTotal: 'order/orderTotal',
@@ -271,64 +268,50 @@
     methods: {
       sameAsShipping() {
         if (this.isSameAsShipping) {
-            this.order.billingInfo.firstName = this.order.shippingInfo.firstName;
-            this.order.billingInfo.lastName = this.order.shippingInfo.lastName;
-            this.order.billingInfo.company = this.order.shippingInfo.company;
-            this.order.billingInfo.address1 = this.order.shippingInfo.address1;
-            this.order.billingInfo.address2 = this.order.shippingInfo.address2;
-            this.order.billingInfo.city = this.order.shippingInfo.city;
-            this.order.billingInfo.state = this.order.shippingInfo.state;
-            this.order.billingInfo.zip = this.order.shippingInfo.zip;
-            this.order.billingInfo.contactNo = this.order.shippingInfo.contactNo;
-            this.order.billingInfo.email = this.order.shippingInfo.email;
+            this.orderInputs.billingInfo.firstName = this.orderInputs.shippingInfo.firstName;
+            this.orderInputs.billingInfo.lastName = this.orderInputs.shippingInfo.lastName;
+            this.orderInputs.billingInfo.company = this.orderInputs.shippingInfo.company;
+            this.orderInputs.billingInfo.address1 = this.orderInputs.shippingInfo.address1;
+            this.orderInputs.billingInfo.address2 = this.orderInputs.shippingInfo.address2;
+            this.orderInputs.billingInfo.city = this.orderInputs.shippingInfo.city;
+            this.orderInputs.billingInfo.state = this.orderInputs.shippingInfo.state;
+            this.orderInputs.billingInfo.zip = this.orderInputs.shippingInfo.zip;
+            this.orderInputs.billingInfo.contactNo = this.orderInputs.shippingInfo.contactNo;
+            this.orderInputs.billingInfo.email = this.orderInputs.shippingInfo.email;
         } else {
-            this.order.billingInfo.firstName = '';
-            this.order.billingInfo.lastName = '';
-            this.order.billingInfo.company = '';
-            this.order.billingInfo.address1 = '';
-            this.order.billingInfo.address2 = '';
-            this.order.billingInfo.city = '';
-            this.order.billingInfo.state = '';
-            this.order.billingInfo.zip = '';
-            this.order.billingInfo.contactNo = '';
-            this.order.billingInfo.email = '';
+            this.orderInputs.billingInfo.firstName = '';
+            this.orderInputs.billingInfo.lastName = '';
+            this.orderInputs.billingInfo.company = '';
+            this.orderInputs.billingInfo.address1 = '';
+            this.orderInputs.billingInfo.address2 = '';
+            this.orderInputs.billingInfo.city = '';
+            this.orderInputs.billingInfo.state = '';
+            this.orderInputs.billingInfo.zip = '';
+            this.orderInputs.billingInfo.contactNo = '';
+            this.orderInputs.billingInfo.email = '';
         }
       },
-      async placeOrder() {
+      async submitOrder() {
           this.loading = true;
+
           try {
-              this.order.orderDate = Date.now();
-              this.order.orderNo = await this.$strapi.$http.$post('/incremental-values/get-value', { code: 'order-no' });
-              this.order.items = this.cart.items;
-              this.order.total = this.cart.total;
+              let orderNo = await this.$strapi.$http.$post('/references/generate', { code: 'order-no' });
+              let orderDate = Date.now();
+
+              this.cart.order_no = orderNo;
+              this.cart.order_date = orderDate;
 
               let paymentResult = false;
               if (this.paymentType == 1) {
-                  this.paymentApiNmi = new PayWithNmi(this.order, this.$axios);
-                  paymentResult = this.paymentApiNmi.pay();
+                  this.paymentApiAuthorizeNet = new PayWithAuthorizeNet(this.cart, this.$axios);
+                  paymentResult = this.paymentApiAuthorizeNet.pay();
               }
+
+              console.log(paymentResult);
+
               if (paymentResult) {
                   alert('Your order have been successfully submitted.');
-                  this.placeOrder({
-                      orderNo: this.orderNo,
-                      orderDate: this.orderDate,
-                      billingFirstName: this.order.billingInfo.firstName,
-                      billingLastName: this.order.billingInfo.lastName,
-                      billingCompany: this.order.billingInfo.company,
-                      billingAddress1: this.order.billingInfo.address1,
-                      billingCity: this.order.billingInfo.city,
-                      billingState: this.order.billingInfo.state,
-                      billingZipCode: this.order.billingInfo.zip,
-                      billingContactNo: this.order.billingInfo.contactNo,
-                      shippingFirstName: this.order.shippingInfo.firstName,
-                      shippingLastName: this.order.shippingInfo.lastName,
-                      shippingCompany: this.order.shippingInfo.company,
-                      shippingAddress1: this.order.shippingInfo.address1,
-                      shippingCity: this.order.shippingInfo.city,
-                      shippingState: this.order.shippingInfo.state,
-                      shippingZipCode: this.order.shippingInfo.zip,
-                      shippingContactNo: this.order.shippingInfo.contactNo
-                  });
+                  this.placeOrder(this.cart);
                   this.$router.push('/');
               } else {
                   alert('Your order submittion was not successfull.');
@@ -361,11 +344,11 @@
     },
     async mounted () {
       if (this.loggedUser) {
-          this.order.shippingInfo.firstName = this.loggedUser.first_name;
-          this.order.shippingInfo.lastName = this.loggedUser.last_name;
-          this.order.shippingInfo.email = this.loggedUser.email;
-          this.order.billingInfo.firstName = this.loggedUser.first_name;
-          this.order.billingInfo.lastName = this.loggedUser.last_name;
+          this.orderInputs.shippingInfo.firstName = this.loggedUser.first_name;
+          this.orderInputs.shippingInfo.lastName = this.loggedUser.last_name;
+          this.orderInputs.shippingInfo.email = this.loggedUser.email;
+          this.orderInputs.billingInfo.firstName = this.loggedUser.first_name;
+          this.orderInputs.billingInfo.lastName = this.loggedUser.last_name;
       }
 
       for (let i = 1940; i < 2099; i++) {
