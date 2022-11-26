@@ -23,7 +23,7 @@
       id="snipcart"
       data-api-key="ODhhNWUxOGEtNTk0OC00OTQwLWJkOWMtM2M1ZmNjODU1ZDJhNjM3MzMyNzM0NjM1OTMyNjcz"
     ></div>
-    <notifications group="all" position="bottom right"/>
+    <notifications group="all" position="bottom right" />
   </div>
 </template>
 
@@ -39,7 +39,15 @@ export default {
     Loader,
   },
   data: () => ({ loading: true }),
-  mounted() {
+  async mounted() {
+    try {
+      const finger_print = this.fingerprint();
+      this.socket = this.$nuxtSocket({ channel: "/" });
+      this.socket.emit("addVisitor", { finger_print });
+    } catch (e) {
+      console.warn(e);
+    }
+    
     this.loading = false;
   },
 };

@@ -1,55 +1,61 @@
 <template>
-  <div>
-    <main v-if="error">
-      {{ error }}
-    </main>
-    <main
-      v-else-if="!products.length"
-      class="main d-flex justify-content-center h-100vh"
+  <main v-if="error">
+    {{ error }}
+  </main>
+  <main
+    v-else-if="!products.length"
+    class="main d-flex justify-content-center h-100vh"
+  >
+    <h6 class="no-items text-center my-auto">There aren't any products</h6>
+  </main>
+  <main
+    v-else
+    class="
+      content
+      row
+      h-100
+      justify-content-center
+      px-md-1 px-0
+      py-5
+      mx-md-5
+      m-0
+    "
+  >
+    <div
+      v-for="product in products"
+      :key="product.id"
+      class="
+        product
+        d-flex
+        flex-column
+        justify-content-between
+        col-10 col-sm-6 col-lg-3
+        mb-3
+        mx-md-2
+        p-4
+        mx-2
+      "
     >
-      <h6 class="no-items text-center my-auto">There aren't any products</h6>
-    </main>
-    <main
-      v-else
-      class="content row justify-content-center px-md-1 px-0 py-5 mx-md-5 m-0"
-    >
-      <div
-        v-for="product in products"
-        :key="product.id"
+      <ProductCard :product="product" />
+      <button
         class="
-          product
+          py-2
+          px-4
+          rounded
+          btn
           d-flex
-          flex-column
-          justify-content-between
-          col-10 col-sm-6 col-lg-3
-          mb-3
-          mx-md-2
-          p-4
-          mx-2
+          justify-content-center
+          align-items-center
+          text-uppercase text-nowrap
+          w-100
         "
+        v-on:click="addToCart(product)"
       >
-        <ProductCard :product="product" />
-        <button
-          v-if="product.status === 'published'"
-          class="
-            py-2
-            px-4
-            rounded
-            btn
-            d-flex
-            justify-content-center
-            align-items-center
-            text-uppercase text-nowrap
-            w-100
-          "
-          v-on:click="addToCart(product)"
-        >
-          <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
-          Add to cart
-        </button>
-      </div>
-    </main>
-  </div>
+        <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
+        Add to cart
+      </button>
+    </div>
+  </main>
 </template>
 
 <script>
