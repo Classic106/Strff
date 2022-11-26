@@ -73,12 +73,22 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
+    "nuxt-socket-io",
     "bootstrap-vue/nuxt",
     "@nuxtjs/strapi",
     "nuxt-session",
     "@nuxtjs/axios",
     "@nuxtjs/proxy",
   ],
+  io: {
+    // module options
+    sockets: [
+      {
+        name: "main",
+        url: process.env.API_URL || "http://localhost:1338",
+      },
+    ],
+  },
   bootstrapVue: {
     // Add the desired icon components to the `components` array
     components: [

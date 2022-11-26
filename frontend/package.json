@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "develop": "cross-env HOST=localhost PORT=3001 API_URL=https://strff.com/api nuxt",
+    "develop": "cross-env HOST=localhost PORT=3001 nuxt",
     "start": "HOST=localhost PORT=3001 API_URL=https://strff.com/api nuxt start",
     "serve": "nuxt serve",
     "build": "nuxt build"
@@ -26,6 +26,7 @@
     "nuxt": "^2.13.3",
     "nuxt-dropzone": "^1.0.4",
     "nuxt-session": "^1.0.3",
+    "nuxt-socket-io": "^2.0.3",
     "qs": "^6.11.0",
     "square-web-sdk": "^0.2.2",
     "uuid": "^8.3.2",
