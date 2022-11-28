@@ -9,7 +9,8 @@
   >
     <div class="d-flex justify-content-center">
       <VueApexCharts
-        width="500"
+        class="w-100"
+        height="400"
         :options="chartOptions"
         :series="series"
       ></VueApexCharts>
@@ -18,7 +19,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "VisitorsApexChartsModal",
@@ -30,21 +31,38 @@ export default {
         type: "area",
       },
       xaxis: {
-        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
+        type: "datetime",
       },
     },
-    series: [
-      {
-        name: "series-1",
-        data: [30, 40, 35, 50, 49, 60, 70, 91],
-      },
-    ],
+    series: [],
   }),
   computed: {
-    ...mapGetters({}),
+    ...mapGetters({ visitors: "admin_visitors/visitors" }),
   },
-  mounted() {
-    console.log(this.$refs);
+  methods: {
+    ...mapActions({ getVisitors: "admin_visitors/getVisitors" }),
+  },
+  async mounted() {
+    await this.getVisitors();
+    const data = this.visitors.reduce((acc, item) => {
+      const date = new Date(item.created_at).toDateString();
+
+      if (!acc.length) {
+        acc.push({ x: date, y: item.visits });
+        return acc;
+      }
+
+      const index = acc.findIndex((item) => item.x === date);
+
+      if (index !== -1) {
+        acc[index].y = acc[index].y + item.visits;
+      } else {
+        acc.push({ x: date, y: item.visits });
+      }
+      return acc;
+    }, []);
+
+    this.series.push({ name: "visitors", data });
   },
 };
 </script>

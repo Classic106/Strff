@@ -14,6 +14,9 @@
             "
           >
             <h6>{{ count_visitors }}</h6>
+            <a href="#" v-on:click.prevent="openModal('visitors-apex-charts')"
+              >See Visitors View</a
+            >
           </div>
           <div class="d-flex justify-content-between align-items-center mt-2">
             <div class="d-flex align-items-center">
@@ -22,9 +25,6 @@
               >
               <span>{{ count_connected_visitors }} visitor</span>
             </div>
-            <a href="#" v-on:click.prevent="openModal('visitors-apex-charts')"
-              >See Live View</a
-            >
           </div>
         </div>
         <div class="block bg-white col-md-6 col-12 p-3 mt-md-0 mt-2">
