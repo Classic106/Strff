@@ -8,8 +8,6 @@ module.exports = (strapi) => {
       });
 
       ioServer.on("connection", async function (socket) {
-        //count connections
-        //const sockets = await ioServer.engine.clientsCount;
         socket.on("addVisitor", async function (visitor) {
           const queryData = {
             ...visitor,

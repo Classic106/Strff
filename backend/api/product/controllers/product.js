@@ -8,7 +8,6 @@ module.exports = {
    */
 
   async find(ctx) {
-    console.log(ctx.query, 852585258)
     const entity = await strapi.services.product.find(ctx.query);
     return sanitizeEntity(entity, { model: strapi.models.product });
   },

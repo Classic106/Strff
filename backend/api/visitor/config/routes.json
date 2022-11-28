@@ -2,10 +2,18 @@
   "routes": [
     {
       "method": "GET",
+      "path": "/connected_visitors/count",
+      "handler": "visitor.connected_visitors",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    },
+    {
+      "method": "GET",
       "path": "/visitors",
       "handler": "visitor.find",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -13,7 +21,7 @@
       "path": "/visitors/count",
       "handler": "visitor.count",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -21,7 +29,7 @@
       "path": "/visitors/:id",
       "handler": "visitor.findOne",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -45,7 +53,7 @@
       "path": "/visitors/:id",
       "handler": "visitor.delete",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     }
   ]
