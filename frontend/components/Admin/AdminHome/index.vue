@@ -13,14 +13,14 @@
               align-items-center
             "
           >
-            <h6>18</h6>
+            <h6>{{ count_visitors }}</h6>
           </div>
           <div class="d-flex justify-content-between align-items-center mt-2">
             <div class="d-flex align-items-center">
               <span class="live d-flex align-items-center p-2 mr-2"
                 ><BIconDot />LIVE</span
               >
-              <span>1 visitor</span>
+              <span>{{ count_connected_visitors }} visitor</span>
             </div>
             <nuxt-link to="/#">See Live View</nuxt-link>
           </div>
@@ -42,11 +42,40 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+
 import AdminHomeRightSide from "./AdminHomeRightSide.vue";
 
 export default {
   name: "AdminHome",
   components: { AdminHomeRightSide },
+  data: () => ({ timer: null }),
+  computed: {
+    ...mapGetters({
+      count_visitors: "admin_visitors/count_visitors",
+      count_connected_visitors: "admin_visitors/count_connected_visitors",
+    }),
+  },
+  methods: {
+    ...mapActions({
+      getCountVisitors: "admin_visitors/getCountVisitors",
+      getCountConnectedCountVisitors:
+        "admin_visitors/getCountConnectedCountVisitors",
+    }),
+  },
+  async mounted() {
+    await this.getCountConnectedCountVisitors();
+    await this.getCountVisitors();
+
+    this.timer = setInterval(async () => {
+      await this.getCountConnectedCountVisitors();
+      await this.getCountVisitors();
+    }, 5000);
+  },
+  destroyed() {
+    clearInterval(this.timer);
+    this.timer = null;
+  },
 };
 </script>
 
