@@ -22,7 +22,9 @@
               >
               <span>{{ count_connected_visitors }} visitor</span>
             </div>
-            <nuxt-link to="/#">See Live View</nuxt-link>
+            <a href="#" v-on:click.prevent="openModal('visitors-apex-charts')"
+              >See Live View</a
+            >
           </div>
         </div>
         <div class="block bg-white col-md-6 col-12 p-3 mt-md-0 mt-2">
@@ -30,7 +32,7 @@
           <span class="border-bottom d-flex w-100">No sales yet</span>
           <div class="d-flex justify-content-between mt-2">
             <span>No orders yet</span>
-            <nuxt-link to="/#">View report</nuxt-link>
+            <nuxt-link to="/#" v-on:click.prevent="">View report</nuxt-link>
           </div>
         </div>
       </div>
@@ -38,6 +40,7 @@
     <div class="right-side col-4 p-0">
       <AdminHomeRightSide class="bg-white h-100" />
     </div>
+    <VisitorsApexChartsModal />
   </div>
 </template>
 
@@ -45,10 +48,11 @@
 import { mapActions, mapGetters } from "vuex";
 
 import AdminHomeRightSide from "./AdminHomeRightSide.vue";
+import VisitorsApexChartsModal from "./VisitorsApexChartsModal.vue";
 
 export default {
   name: "AdminHome",
-  components: { AdminHomeRightSide },
+  components: { AdminHomeRightSide, VisitorsApexChartsModal },
   data: () => ({ timer: null }),
   computed: {
     ...mapGetters({
@@ -62,6 +66,9 @@ export default {
       getCountConnectedCountVisitors:
         "admin_visitors/getCountConnectedCountVisitors",
     }),
+    openModal: function (modal) {
+      this.$root.$emit("bv::show::modal", modal);
+    },
   },
   async mounted() {
     await this.getCountConnectedCountVisitors();
