@@ -1,4 +1,5 @@
 import Vue from "vue";
+import qs from "qs";
 
 export const state = () => ({
   visitors: [],
@@ -26,7 +27,10 @@ export const actions = {
       console.warn(e);
     }
   },
-  async getVisitors({ commit }) {
+  async getVisitors(
+    { commit },
+    { fromDate = new Date(), toDate = new Date() }
+  ) {
     try {
       const token = this.$cookies.get("token");
 
@@ -36,9 +40,16 @@ export const actions = {
         },
       };
 
-      const { data } = await this.$axios.get(`/visitors`, headers);
+      const queryData = {
+        created_at_gte: fromDate.toISOString().slice(0, 10),
+        created_at_lte: toDate.toISOString().slice(0, 10),
+      };
 
-      commit("setVisitors", data);
+      const query = qs.stringify(queryData);
+
+      const { data } = await this.$axios.get(`/visitors?${query}`, headers);
+
+      commit("addVisitors", data);
     } catch (e) {
       const { data } = e.response;
       const messge = data.message[0].messages[0].id;
@@ -75,8 +86,8 @@ export const actions = {
 };
 
 export const mutations = {
-  setVisitors(state, visitors) {
-    state.visitors = visitors;
+  addVisitors(state, visitors) {
+    state.visitors = [...visitors, ...state.visitors];
   },
   setCountVisitors(state, count) {
     state.count_visitors = count;
