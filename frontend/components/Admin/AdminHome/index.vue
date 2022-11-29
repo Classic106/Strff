@@ -14,8 +14,8 @@
             "
           >
             <h6>{{ count_visitors }}</h6>
-            <a href="#" v-on:click.prevent="openModal('visitors-apex-charts')"
-              >See Visitors View</a
+            <a href="/#" v-on:click.prevent="openModal('visitors-apex-charts')"
+              >View report</a
             >
           </div>
           <div class="d-flex justify-content-between align-items-center mt-2">
@@ -28,11 +28,12 @@
           </div>
         </div>
         <div class="block bg-white col-md-6 col-12 p-3 mt-md-0 mt-2">
-          <p class="text-uppercase m-0">total sales</p>
-          <span class="border-bottom d-flex w-100">No sales yet</span>
-          <div class="d-flex justify-content-between mt-2">
-            <span>No orders yet</span>
-            <nuxt-link to="/#" v-on:click.prevent="">View report</nuxt-link>
+          <p class="border-bottom text-uppercase m-0 pb-2">total orders</p>
+          <div class="d-flex justify-content-between mt-3">
+            <span>{{ countOrders }}</span>
+            <a href="/#" v-on:click.prevent="openModal('orders-apex-charts')"
+              >View report</a
+            >
           </div>
         </div>
       </div>
@@ -41,6 +42,7 @@
       <AdminHomeRightSide class="bg-white h-100" />
     </div>
     <VisitorsApexChartsModal />
+    <OrdersApexChartsModal />
   </div>
 </template>
 
@@ -49,11 +51,19 @@ import { mapActions, mapGetters } from "vuex";
 
 import AdminHomeRightSide from "./AdminHomeRightSide.vue";
 import VisitorsApexChartsModal from "./VisitorsApexChartsModal.vue";
+import OrdersApexChartsModal from "./OrdersApexChartsModal.vue";
 
 export default {
   name: "AdminHome",
-  components: { AdminHomeRightSide, VisitorsApexChartsModal },
-  data: () => ({ timer: null }),
+  components: {
+    AdminHomeRightSide,
+    VisitorsApexChartsModal,
+    OrdersApexChartsModal,
+  },
+  data: () => ({
+    timer: null,
+    countOrders: 0,
+  }),
   computed: {
     ...mapGetters({
       count_visitors: "admin_visitors/count_visitors",
@@ -65,6 +75,8 @@ export default {
       getCountVisitors: "admin_visitors/getCountVisitors",
       getCountConnectedCountVisitors:
         "admin_visitors/getCountConnectedCountVisitors",
+      getCountOrders: "admin_orders/getCountOrders",
+      getTodayOrders: "admin_orders/getTodayOrders",
     }),
     openModal: function (modal) {
       this.$root.$emit("bv::show::modal", modal);
@@ -73,10 +85,14 @@ export default {
   async mounted() {
     await this.getCountConnectedCountVisitors();
     await this.getCountVisitors();
+    await this.getTodayOrders();
+    this.countOrders = await this.getCountOrders();
 
     this.timer = setInterval(async () => {
       await this.getCountConnectedCountVisitors();
       await this.getCountVisitors();
+      await this.getTodayOrders();
+      this.countOrders = await this.getCountOrders();
     }, 5000);
   },
   destroyed() {
