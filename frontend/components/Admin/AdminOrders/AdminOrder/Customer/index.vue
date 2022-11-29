@@ -1,7 +1,7 @@
 <template>
   <AddOrder v-if="isAddOrder" v-on:closeCreateOrder="isAddOrder = false" />
   <div v-else class="row w-100 justify-content-center">
-    <div class="d-flex flex-column col-md-8 col-12">
+    <div class="d-flex flex-column col-md-10 col-12">
       <div class="d-flex align-items-start mt-3">
         <button v-on:click="$emit('setCustomer')" class="button">
           <BIconArrowLeft />
@@ -22,7 +22,7 @@
           <div class="block w-100 d-flex justify-content-between mb-3 p-3">
             <div>
               <h6 class="text-center font-weight-bold">
-                {{ `$ ${ordersSpent}` }}
+                $ {{ ordersSpent | formatNumber }}
               </h6>
               <p>Amount spent</p>
             </div>
@@ -34,7 +34,7 @@
             </div>
             <div>
               <h6 class="text-center font-weight-bold">
-                {{ `$ ${ordersSpent / customerOrders.length}` }}
+                $ {{ (ordersSpent / customerOrders.length) | formatNumber }}
               </h6>
               <p>Average order value</p>
             </div>
@@ -74,10 +74,11 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 
 import { prevCurrNextItems } from "~/helpers";
 import { states_hashes } from "@/data";
+import "~/utils/filters";
 
 import Loader from "~/components/common/Loader.vue";
 import CustomerOrder from "./CustomerOrder.vue";
@@ -112,6 +113,9 @@ export default {
       clearOrders: "admin_orders/clearOrders",
       setSelectedOrders: "admin_orders/setSelectedOrders",
     }),
+    ...mapActions({
+      getCustomer: "admin_customers/getCustomer",
+    }),
     openModal: function (modal) {
       this.$root.$emit("bv::show::modal", modal);
     },
@@ -143,11 +147,9 @@ export default {
   async mounted() {
     this.loading = true;
     const { customer } = this.selected;
+    const { id } = customer;
 
-    const currentCustomer = await this.$strapi.findOne(
-      "customers",
-      customer.id
-    );
+    const currentCustomer = await this.getCustomer(id);
 
     const { orders } = currentCustomer;
 
