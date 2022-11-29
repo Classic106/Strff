@@ -22,6 +22,16 @@ export default class PayWithAuthorizeNet {
                     }
                 });
             }
+            for (let i = 0; i < this.order.order_bundles.length; i++) {
+                lineItems.push({
+                    'lineItem': {
+                        'itemId': i + 1,
+                        'name': this.order.order_bundles[i].bundle.title,
+                        'quantity': 1,
+                        'unitPrice': this.order.order_bundles[i].price
+                    }
+                });
+            }
 
             var requestData = {
                 'createTransactionRequest': {
