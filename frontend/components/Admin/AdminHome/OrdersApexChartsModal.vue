@@ -1,8 +1,8 @@
 <template>
   <BModal
     v-model="show"
-    id="visitors-apex-charts"
-    title="Visitors"
+    id="orders-apex-charts"
+    title="Orders"
     size="lg"
     centered
     hide-footer
@@ -44,7 +44,7 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: "VisitorsApexChartsModal",
+  name: "OrdersApexChartsModal",
   data: () => ({
     show: false,
     active: "month",
@@ -57,27 +57,22 @@ export default {
         type: "datetime",
       },
     },
-    series: [{ name: "visitors", data: [] }],
+    series: [{ name: "orders", data: [] }],
   }),
-  computed: {
-    ...mapGetters({
-      visitors: "admin_visitors/visitors",
-    }),
-  },
   methods: {
     ...mapActions({
-      getVisitors: "admin_visitors/getVisitors",
+      getOrdersByTime: "admin_orders/getOrdersByTime",
     }),
     byMonth: function () {
       const fromDate = new Date(new Date().setMonth(new Date().getMonth() - 1));
 
-      this.setVisitors(fromDate);
+      this.setOrdersByTime(fromDate);
       this.active = "month";
     },
     byHalfYear: function () {
       const fromDate = new Date(new Date().setMonth(new Date().getMonth() - 6));
 
-      this.setVisitors(fromDate);
+      this.setOrdersByTime(fromDate);
       this.active = "half year";
     },
     byYear: function () {
@@ -85,26 +80,26 @@ export default {
         new Date().setFullYear(new Date().getFullYear() - 1)
       );
 
-      this.setVisitors(fromDate);
+      this.setOrdersByTime(fromDate);
       this.active = "year";
     },
-    setVisitors: async function (fromDate) {
-      await this.getVisitors(fromDate);
+    setOrdersByTime: async function (fromDate) {
+      const result = await this.getOrdersByTime(fromDate);
 
-      const data = this.visitors.reduce((acc, item) => {
+      const data = result.reduce((acc, item) => {
         const date = new Date(item.created_at).toDateString();
 
         if (!acc.length) {
-          acc.push({ x: date, y: item.visits });
+          acc.push({ x: date, y: 1 });
           return acc;
         }
 
         const index = acc.findIndex((item) => item.x === date);
 
         if (index !== -1) {
-          acc[index].y = acc[index].y + item.visits;
+          acc[index].y = acc[index].y + 1;
         } else {
-          acc.push({ x: date, y: item.visits });
+          acc.push({ x: date, y: 1 });
         }
         return acc;
       }, []);

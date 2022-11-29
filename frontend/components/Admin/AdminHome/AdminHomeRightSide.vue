@@ -5,7 +5,10 @@
         <p class="text-uppercase">total sales</p>
         <p>Today</p>
       </div>
-      <span>There were no sales during this time</span>
+      <span v-if="!todayOrders.length"
+        >There were no sales during this time</span
+      >
+      <span v-else>{{ todayOrders.length }}</span>
     </div>
     <div class="border-bottom p-3">
       <div class="d-flex justify-content-between">
@@ -45,6 +48,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "AdminHomeRightSide",
   data: () => ({
@@ -59,6 +64,11 @@ export default {
       },
     ],
   }),
+  computed: {
+    ...mapGetters({
+      todayOrders: "admin_orders/todayOrders",
+    }),
+  },
   methods: {
     parseDate: function (date) {
       const curDate = new Date(date);

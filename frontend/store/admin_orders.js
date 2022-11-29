@@ -16,6 +16,7 @@ export const state = () => ({
   selected: null,
   next: null,
   previous: null,
+  todayOrders: [],
 });
 
 export const actions = {
@@ -72,6 +73,87 @@ export const actions = {
       });
     }
   },
+  async getOrdersByTime(_, fromDate = new Date()) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const queryData = {
+        created_at_gte: fromDate.toISOString().slice(0, 10),
+      };
+
+      const query = qs.stringify(queryData);
+
+      const { data } = await this.$axios.get(`/orders?${query}`, headers);
+
+      return data;
+    } catch (e) {
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
+    }
+  },
+  async getCountOrders() {
+    try {
+      const token = this.$cookies.get("token");
+
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await this.$axios.get(`/orders/count`, headers);
+
+      return data;
+    } catch (e) {
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
+    }
+  },
+  async getTodayOrders({ commit }) {
+    try {
+      const token = this.$cookies.get("token");
+
+      const queryData = {
+        created_at_gte: new Date(new Date().setDate(new Date().getDate() - 1))
+          .toISOString()
+          .slice(0, 10),
+      };
+
+      const query = qs.stringify(queryData);
+
+      const { data } = await this.$axios.get(`/orders?${query}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      commit("setTodayOrders", data);
+    } catch (e) {
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      Vue.notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
+    }
+  },
   async getCustomers() {
     try {
       const token = this.$cookies.get("token");
@@ -96,11 +178,15 @@ export const actions = {
     try {
       const token = this.$cookies.get("token");
 
-      const { data } = await this.$axios.post(`/orders`, order, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await this.$axios.post(
+        `/orders`,
+        { ...order, order_status: 4 },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       commit("addOrder", data);
       Vue.notify({
@@ -183,6 +269,9 @@ export const mutations = {
   setOrders(state, orders) {
     state.orders = orders;
   },
+  setTodayOrders(state, todayOrders) {
+    state.todayOrders = todayOrders;
+  },
   addOrder(state, order) {
     state.orders.push(order);
   },
@@ -239,6 +328,9 @@ export const getters = {
   },
   orders: (state) => {
     return state.orders;
+  },
+  todayOrders: (state) => {
+    return state.todayOrders;
   },
   selected: (state) => {
     return state.selected;

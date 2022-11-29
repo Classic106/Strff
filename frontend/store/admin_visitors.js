@@ -27,10 +27,7 @@ export const actions = {
       console.warn(e);
     }
   },
-  async getVisitors(
-    { commit },
-    { fromDate = new Date(), toDate = new Date() }
-  ) {
+  async getVisitors({ commit }, fromDate = new Date()) {
     try {
       const token = this.$cookies.get("token");
 
@@ -42,7 +39,6 @@ export const actions = {
 
       const queryData = {
         created_at_gte: fromDate.toISOString().slice(0, 10),
-        created_at_lte: toDate.toISOString().slice(0, 10),
       };
 
       const query = qs.stringify(queryData);
