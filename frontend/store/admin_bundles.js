@@ -66,13 +66,8 @@ export const actions = {
   },
   async createBundle({ commit }, bundle) {
     try {
-      const token = this.$cookies.get("token");
+      const { data } = await this.$axios.post(`/bundles`, bundle);
 
-      const { data } = await this.$axios.post(`/bundles`, bundle, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
       commit("addBundle", data);
       success("Bundle successfully created");
     } catch (e) {
@@ -81,14 +76,9 @@ export const actions = {
   },
   async updateBundle({ commit }, bundle) {
     try {
-      const token = this.$cookies.get("token");
-
       const { id } = bundle;
-      const { data } = await this.$axios.put(`/bundles/${id}`, bundle, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await this.$axios.put(`/bundles/${id}`, bundle);
+
       commit("updateBundle", data);
       success("Bundle successfully updated");
     } catch (e) {
@@ -97,13 +87,8 @@ export const actions = {
   },
   async deleteBundles({ commit }, bundlesIds) {
     try {
-      const token = this.$cookies.get("token");
+      const { data } = await this.$axios.delete(`/bundles/${bundlesIds}`);
 
-      const { data } = await this.$axios.delete(`/bundles/${bundlesIds}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
       commit("deleteBundles", bundlesIds);
       success("Bundle(s) successfully deleted");
     } catch (e) {
@@ -112,19 +97,13 @@ export const actions = {
   },
   async statusBundles({ dispatch }, { bundles, status }) {
     try {
-      const token = this.$cookies.get("token");
-
       const result = await Promise.all(
         bundles.map(async ({ id }) => {
           const article = {
             id,
             published_at: status === "publish" ? new Date() : null,
           };
-          return await this.$axios.put(`/bundles/${id}`, article, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          return await this.$axios.put(`/bundles/${id}`, article);
         })
       );
       dispatch("getBundles");

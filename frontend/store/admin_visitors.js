@@ -10,17 +10,7 @@ export const state = () => ({
 export const actions = {
   async getCountConnectedCountVisitors({ commit }) {
     try {
-      const token = this.$cookies.get("token");
-
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const { data } = await this.$axios.get(
-        `/connected_visitors/count`,
-        headers
-      );
+      const { data } = await this.$axios.get(`/connected_visitors/count`);
 
       commit("setCount_connected_visitors", data);
     } catch (e) {
@@ -29,21 +19,13 @@ export const actions = {
   },
   async getVisitors({ commit }, fromDate = new Date()) {
     try {
-      const token = this.$cookies.get("token");
-
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
       const queryData = {
         created_at_gte: fromDate.toISOString().slice(0, 10),
       };
 
       const query = qs.stringify(queryData);
 
-      const { data } = await this.$axios.get(`/visitors?${query}`, headers);
+      const { data } = await this.$axios.get(`/visitors?${query}`);
 
       commit("addVisitors", data);
     } catch (e) {
@@ -52,15 +34,7 @@ export const actions = {
   },
   async getCountVisitors({ commit }) {
     try {
-      const token = this.$cookies.get("token");
-
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const { data } = await this.$axios.get(`/visitors/count`, headers);
+      const { data } = await this.$axios.get(`/visitors/count`);
 
       commit("setCountVisitors", data);
     } catch (e) {

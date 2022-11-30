@@ -46,6 +46,7 @@ export default {
    ** https://nuxtjs.org/guide/plugins
    */
   plugins: [
+    "~/plugins/axios.js",
     "~/plugins/text-mask.js",
     "~/plugins/country-region-select.js",
     "~/plugins/vue-custom-scrollbar.js",

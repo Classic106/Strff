@@ -1,6 +1,6 @@
 <template>
   <div class="row w-100 h-100 justify-content-center m-0">
-    <div class="d-flex flex-column col-md-8 col-12">
+    <div class="d-flex flex-column col-md-10 col-12">
       <div class="d-flex align-items-start mt-3">
         <button v-on:click="clearSelectedCustomers" class="button">
           <BIconArrowLeft />
@@ -96,7 +96,7 @@ import CustomerOrder from "./CustomerOrder.vue";
 import CustomerRightSide from "./CustomerRightSide.vue";
 
 export default {
-  name: "OrderMain",
+  name: "CustomerMain",
   components: {
     Loader,
     CustomerOrder,

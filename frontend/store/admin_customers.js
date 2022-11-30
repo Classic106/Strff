@@ -22,8 +22,6 @@ export const state = () => ({
 export const actions = {
   async getCustomers({ commit, state }) {
     try {
-      const token = this.$cookies.get("token");
-
       const { sort, search, page, currentPerPage } = state.params;
       const { field, type } = sort;
 
@@ -49,16 +47,8 @@ export const actions = {
 
       const query = qs.stringify(queryData);
 
-      const total = await this.$axios.get(`/customers/count?${query}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const result = await this.$axios.get(`/customers?${query}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const total = await this.$axios.get(`/customers/count?${query}`);
+      const result = await this.$axios.get(`/customers?${query}`);
 
       commit("setTotal", total.data);
       commit("setCustomers", result.data);
@@ -68,13 +58,7 @@ export const actions = {
   },
   async getCustomer(_, id) {
     try {
-      const token = this.$cookies.get("token");
-
-      const { data } = await this.$axios.get(`/customers/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await this.$axios.get(`/customers/${id}`);
       return data;
     } catch (e) {
       error(e);
@@ -82,13 +66,7 @@ export const actions = {
   },
   async createCustomer({ commit }, customer) {
     try {
-      const token = this.$cookies.get("token");
-
-      const { data } = await this.$axios.post(`/customers`, customer, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await this.$axios.post(`/customers`, customer);
 
       commit("addCustomer", data);
       success("Customer successfully created");
@@ -98,13 +76,7 @@ export const actions = {
   },
   async deleteCustomers({ commit }, customersIds) {
     try {
-      const token = this.$cookies.get("token");
-
-      const { data } = await this.$axios.delete(`/customers/${customersIds}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await this.$axios.delete(`/customers/${customersIds}`);
 
       commit("deleteCustomers", customersIds);
       success("Customer(s) successfully deleted");

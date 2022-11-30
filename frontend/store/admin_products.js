@@ -47,17 +47,8 @@ export const actions = {
 
       const query = qs.stringify(queryData);
 
-      const total = await this.$axios.get(`/products/count?${query}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const products = await this.$axios.get(`/products?${query}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const total = await this.$axios.get(`/products/count?${query}`);
+      const products = await this.$axios.get(`/products?${query}`);
 
       commit("setTotal", total.data);
       commit("setProducts", products.data);
@@ -67,14 +58,6 @@ export const actions = {
   },
   async createProduct({ commit }, product) {
     try {
-      const token = this.$cookies.get("token");
-
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
       const { image } = product;
 
       const formData = new FormData();
@@ -84,7 +67,7 @@ export const actions = {
       }
 
       const { data } = await this.$axios
-        .post("/upload", formData, headers)
+        .post("/upload", formData``)
         .then(({ data }) => {
           const ids = data.map((item) => item.id);
           return ids;
@@ -92,7 +75,7 @@ export const actions = {
         .then((ids) => {
           product.image = ids;
 
-          return this.$axios.post(`/products`, product, headers);
+          return this.$axios.post(`/products`, product);
         });
 
       commit("addProduct", data);
@@ -103,21 +86,13 @@ export const actions = {
   },
   async updateProduct({ commit }, product) {
     try {
-      const token = this.$cookies.get("token");
-
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
       const { id, image, files } = product;
 
       let newImages = [];
 
       if (files && Array.from(files.keys()).length) {
         newImages = await this.$axios
-          .post("/upload", files, headers)
+          .post("/upload", files)
           .then(({ data }) => {
             const ids = data.map((item) => item.id);
             return ids;
@@ -128,11 +103,8 @@ export const actions = {
 
       const updatedProduct = { ...product, image: curentIMages, newImages };
 
-      const { data } = await this.$axios.put(
-        `/products/${id}`,
-        updatedProduct,
-        headers
-      );
+      const { data } = await this.$axios.put(`/products/${id}`, updatedProduct);
+
       commit("updateProduct", data);
       success("Product successfully updated");
     } catch (e) {
@@ -141,13 +113,7 @@ export const actions = {
   },
   async deleteProducts({ commit }, ids) {
     try {
-      const token = this.$cookies.get("token");
-
-      const { data } = await this.$axios.delete(`/products/${ids}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await this.$axios.delete(`/products/${ids}`);
 
       commit("deleteProducts", ids);
       commit("clearSelectedProducts");
@@ -158,19 +124,13 @@ export const actions = {
   },
   async statusArticles({ dispatch }, { products, status }) {
     try {
-      const token = this.$cookies.get("token");
-
       const result = await Promise.all(
         products.map(async ({ id }) => {
           const product = {
             id,
             published_at: status === "publish" ? new Date() : null,
           };
-          return await this.$axios.put(`/products/${id}`, product, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          return await this.$axios.put(`/products/${id}`, product);
         })
       );
       dispatch("getProducts");

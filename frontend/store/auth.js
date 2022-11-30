@@ -19,14 +19,9 @@ export const actions = {
       error(e);
     }
   },
-  async loginByToken({ commit }, token) {
+  async loginByToken({ commit }) {
     try {
-      const { data } = await this.$axios.get(`users/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const { data } = await this.$axios.get(`users/me`);
       commit("setUser", data);
     } catch (e) {
       error(e);

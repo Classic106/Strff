@@ -17,13 +17,8 @@ export const actions = {
   },
   async createCategory({ commit }, body) {
     try {
-      const token = this.$cookies.get("token");
+      const { data } = await this.$axios.post(`/categories`, body);
 
-      const { data } = await this.$axios.post(`/categories`, body, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
       commit("addCategory", data);
       success("Category successfully created");
     } catch (e) {
@@ -32,13 +27,8 @@ export const actions = {
   },
   async updateCategory({ commit }, { id, body }) {
     try {
-      const token = this.$cookies.get("token");
+      const { data } = await this.$axios.put(`/categories/${id}`, body);
 
-      const { data } = await this.$axios.put(`/categories/${id}`, body, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
       commit("updateCategory", data);
       success("Category successfully updated");
     } catch (e) {
@@ -47,13 +37,8 @@ export const actions = {
   },
   async deleteCategory({ commit }, id) {
     try {
-      const token = this.$cookies.get("token");
+      const { data } = await this.$axios.delete(`/categories/${id}`);
 
-      const { data } = await this.$axios.delete(`/categories/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
       commit("deleteCategory", id);
       success("Category successfully deleted");
     } catch (e) {

@@ -57,14 +57,6 @@ export const actions = {
   },
   async createArticle({ commit }, article) {
     try {
-      const token = this.$cookies.get("token");
-
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
       const { image } = article;
 
       const formData = new FormData();
@@ -80,7 +72,7 @@ export const actions = {
           article.image = id;
           article.date = new Date();
 
-          return this.$axios.post(`/articles`, article, headers);
+          return this.$axios.post(`/articles`, article);
         });
 
       commit("addArticle", data);
@@ -91,14 +83,6 @@ export const actions = {
   },
   async updateArticle({ commit }, article) {
     try {
-      const token = this.$cookies.get("token");
-
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
       const { id, image } = article;
 
       let newImage;
@@ -113,11 +97,7 @@ export const actions = {
       }
       const updatedArticle = { ...article, image: newImage || image };
 
-      const { data } = await this.$axios.put(
-        `/articles/${id}`,
-        updatedArticle,
-        headers
-      );
+      const { data } = await this.$axios.put(`/articles/${id}`, updatedArticle);
 
       commit("updateArticle", data);
       success("Article successfully updated");
@@ -127,13 +107,7 @@ export const actions = {
   },
   async deleteArticles({ commit }, ids) {
     try {
-      const token = this.$cookies.get("token");
-
-      const { data } = await this.$axios.delete(`/article/${ids}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await this.$axios.delete(`/article/${ids}`);
 
       commit("deleteArticle", ids);
       commit("clearSelectedArticles");
@@ -144,19 +118,13 @@ export const actions = {
   },
   async statusArticles({ dispatch }, { articles, status }) {
     try {
-      const token = this.$cookies.get("token");
-
       const result = await Promise.all(
         articles.map(async ({ id }) => {
           const article = {
             id,
             published_at: status === "publish" ? new Date() : null,
           };
-          return await this.$axios.put(`/articles/${id}`, article, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          return await this.$axios.put(`/articles/${id}`, article);
         })
       );
       dispatch("getArticles");
