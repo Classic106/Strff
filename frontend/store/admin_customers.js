@@ -1,5 +1,6 @@
-import Vue from "vue";
 import qs from "qs";
+import { error } from "../utils/error";
+import { success } from "../utils/success";
 
 export const state = () => ({
   customers: [],
@@ -62,13 +63,7 @@ export const actions = {
       commit("setTotal", total.data);
       commit("setCustomers", result.data);
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async getCustomer(_, id) {
@@ -82,13 +77,7 @@ export const actions = {
       });
       return data;
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async createCustomer({ commit }, customer) {
@@ -102,19 +91,9 @@ export const actions = {
       });
 
       commit("addCustomer", data);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Customer successfully created",
-      });
+      success("Customer successfully created");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async deleteCustomers({ commit }, customersIds) {
@@ -128,19 +107,9 @@ export const actions = {
       });
 
       commit("deleteCustomers", customersIds);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Customer(s) successfully deleted",
-      });
+      success("Customer(s) successfully deleted");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
 };

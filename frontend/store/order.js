@@ -1,3 +1,5 @@
+import { error } from "../utils/error";
+
 export const state = () => ({
   order_items: [],
   order_bundles: [],
@@ -18,13 +20,7 @@ export const actions = {
       commit("setOrder", result);
       commit("setOrderCookie");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async confirmOrder({ state, commit }, userInfo = {}) {
@@ -49,13 +45,7 @@ export const actions = {
 
       commit("clearOrder");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async addProduct({ commit, state }, order_item) {

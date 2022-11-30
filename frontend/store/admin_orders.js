@@ -1,5 +1,6 @@
-import Vue from "vue";
 import qs from "qs";
+import { error } from "../utils/error";
+import { success } from "../utils/success";
 
 export const state = () => ({
   total: 0,
@@ -64,13 +65,7 @@ export const actions = {
       commit("setTotal", total.data);
       commit("setOrders", orders.data);
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async getOrdersByTime(_, fromDate = new Date()) {
@@ -93,13 +88,7 @@ export const actions = {
 
       return data;
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async getCountOrders() {
@@ -116,13 +105,7 @@ export const actions = {
 
       return data;
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async getTodayOrders({ commit }) {
@@ -130,9 +113,7 @@ export const actions = {
       const token = this.$cookies.get("token");
 
       const queryData = {
-        created_at_gte: new Date(new Date().setDate(new Date().getDate() - 1))
-          .toISOString()
-          .slice(0, 10),
+        created_at_gte: new Date(new Date().setHours(0, 0, 0)).toISOString(),
       };
 
       const query = qs.stringify(queryData);
@@ -145,13 +126,7 @@ export const actions = {
 
       commit("setTodayOrders", data);
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async getCustomers() {
@@ -165,13 +140,7 @@ export const actions = {
       });
       return data;
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async createOrder({ commit }, order) {
@@ -189,19 +158,9 @@ export const actions = {
       );
 
       commit("addOrder", data);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Order successfully created",
-      });
+      success("Order successfully created");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async updateOrder({ commit }, order) {
@@ -216,19 +175,9 @@ export const actions = {
       });
 
       commit("updateOrder", data);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Order successfully updated",
-      });
+      success("Order successfully updated");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async deleteOrders({ commit }, ordersIds) {
@@ -242,19 +191,9 @@ export const actions = {
       });
 
       commit("deleteOrders", ordersIds);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Order(s) successfully deleted",
-      });
+      success("Order(s) successfully deleted");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
 };

@@ -1,5 +1,6 @@
-import Vue from "vue";
 import qs from "qs";
+import { error } from "../utils/error";
+import { success } from "../utils/success";
 
 export const state = () => ({
   total: 0,
@@ -51,13 +52,7 @@ export const actions = {
       commit("setTotal", total.data);
       commit("setArticles", articles.data);
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async createArticle({ commit }, article) {
@@ -89,19 +84,9 @@ export const actions = {
         });
 
       commit("addArticle", data);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Article successfully created",
-      });
+      success("Article successfully created");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async updateArticle({ commit }, article) {
@@ -135,20 +120,9 @@ export const actions = {
       );
 
       commit("updateArticle", data);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Article successfully updated",
-      });
+      success("Article successfully updated");
     } catch (e) {
-      console.log(e);
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async deleteArticles({ commit }, ids) {
@@ -163,19 +137,9 @@ export const actions = {
 
       commit("deleteArticle", ids);
       commit("clearSelectedArticles");
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Article(s) successfully deleted",
-      });
+      success("Article(s) successfully deleted");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async statusArticles({ dispatch }, { articles, status }) {
@@ -197,13 +161,7 @@ export const actions = {
       );
       dispatch("getArticles");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
 };
