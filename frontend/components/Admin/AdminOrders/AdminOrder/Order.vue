@@ -1,6 +1,6 @@
 <template>
   <div class="row w-100 m-0 justify-content-center">
-    <div class="d-flex flex-column col-md-8 col-12">
+    <div class="d-flex flex-column col-md-10 col-12">
       <div class="d-flex align-items-start mt-3">
         <button v-on:click="clearSelectedOrders()" class="button">
           <BIconArrowLeft />
@@ -134,7 +134,7 @@
               <a href="#" v-on:click.prevent="$emit('setCustomer')">
                 <p class="text-ellipsis m-0">{{ getCustomerName() }}</p>
               </a>
-              <p>1 order</p>
+              <p>{{ selected.customer.orders_count }} order</p>
             </div>
             <div class="block-main p-3">
               <div class="d-flex justify-content-between align-items-center">
