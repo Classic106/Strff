@@ -1,4 +1,5 @@
-import Vue from "vue";
+import { error } from "../utils/error";
+import { success } from "../utils/success";
 
 export const state = () => ({
   categories: [],
@@ -11,13 +12,7 @@ export const actions = {
 
       commit("setCategories", data);
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async createCategory({ commit }, body) {
@@ -30,19 +25,9 @@ export const actions = {
         },
       });
       commit("addCategory", data);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Category successfully created",
-      });
+      success("Category successfully created");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async updateCategory({ commit }, { id, body }) {
@@ -55,19 +40,9 @@ export const actions = {
         },
       });
       commit("updateCategory", data);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Category successfully updated",
-      });
+      success("Category successfully updated");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async deleteCategory({ commit }, id) {
@@ -80,19 +55,9 @@ export const actions = {
         },
       });
       commit("deleteCategory", id);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Category successfully deleted",
-      });
+      success("Category successfully deleted");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
 };

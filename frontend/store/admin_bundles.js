@@ -1,5 +1,6 @@
-import Vue from "vue";
 import qs from "qs";
+import { error } from "../utils/error";
+import { success } from "../utils/success";
 
 export const state = () => ({
   total: 0,
@@ -60,13 +61,7 @@ export const actions = {
       commit("setTotal", total.data);
       commit("setBundles", result.data);
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async createBundle({ commit }, bundle) {
@@ -79,19 +74,9 @@ export const actions = {
         },
       });
       commit("addBundle", data);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Bundle successfully created",
-      });
+      success("Bundle successfully created");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async updateBundle({ commit }, bundle) {
@@ -105,19 +90,9 @@ export const actions = {
         },
       });
       commit("updateBundle", data);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Bundle successfully updated",
-      });
+      success("Bundle successfully updated");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async deleteBundles({ commit }, bundlesIds) {
@@ -130,19 +105,9 @@ export const actions = {
         },
       });
       commit("deleteBundles", bundlesIds);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Bundle(s) successfully deleted",
-      });
+      success("Bundle(s) successfully deleted");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async statusBundles({ dispatch }, { bundles, status }) {
@@ -164,13 +129,7 @@ export const actions = {
       );
       dispatch("getBundles");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
 };

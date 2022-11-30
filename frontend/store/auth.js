@@ -1,4 +1,4 @@
-import Vue from "vue";
+import { error } from "../utils/error";
 
 export const state = () => ({
   user: null,
@@ -16,14 +16,7 @@ export const actions = {
       this.$cookies.set("token", jwt);
       commit("setUser", user);
     } catch (e) {
-      const { data } = e.response;
-      const { message } = data.message[0].messages[0];
-
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: message,
-      });
+      error(e);
     }
   },
   async loginByToken({ commit }, token) {
@@ -36,13 +29,7 @@ export const actions = {
 
       commit("setUser", data);
     } catch (e) {
-      const { data } = e.response;
-      const message = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: message,
-      });
+      error(e);
     }
   },
 };

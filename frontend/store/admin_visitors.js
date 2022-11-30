@@ -1,5 +1,5 @@
-import Vue from "vue";
 import qs from "qs";
+import { error } from "../utils/error";
 
 export const state = () => ({
   visitors: [],
@@ -47,13 +47,7 @@ export const actions = {
 
       commit("addVisitors", data);
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async getCountVisitors({ commit }) {
@@ -70,13 +64,7 @@ export const actions = {
 
       commit("setCountVisitors", data);
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
 };

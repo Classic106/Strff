@@ -1,4 +1,5 @@
-import Vue from "vue";
+import { error } from "../utils/error";
+import { success } from "../utils/success";
 
 export const state = () => ({
   types: [],
@@ -12,13 +13,7 @@ export const actions = {
 
       commit("setTypes", data);
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async createPurchaseType({ commit }, purchaseType) {
@@ -32,19 +27,9 @@ export const actions = {
       });
 
       commit("addPurchaseType", data);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Purchase type successfully created",
-      });
+      success("Purchase type successfully created");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async updatePurchaseType({ commit }, purchaseType) {
@@ -63,19 +48,9 @@ export const actions = {
       );
 
       commit("updatePurchaseType", data);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Purchase type successfully updated",
-      });
+      success("Purchase type successfully updated");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async deletePurchaseType({ commit }, id) {
@@ -89,19 +64,9 @@ export const actions = {
       });
 
       commit("deletePurchaseType", id);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "urchase type successfully deleted",
-      });
+      success("urchase type successfully deleted");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async getSubscriptionTypes({ commit }) {
@@ -118,13 +83,7 @@ export const actions = {
 
       commit("setSubscriptionTypes", data);
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async createSubscriptionType({ commit }, body) {
@@ -137,19 +96,9 @@ export const actions = {
         },
       });
       commit("addSubscriptionType", data);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Subscription type successfully created",
-      });
+      success("Subscription type successfully created");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async updateSubscriptionType({ commit }, { id, body }) {
@@ -166,19 +115,9 @@ export const actions = {
         }
       );
       commit("updateSubscriptionType", data);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Subscription type successfully updated",
-      });
+      success("Subscription type successfully updated");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async deleteSubscriptionType({ commit }, id) {
@@ -191,19 +130,9 @@ export const actions = {
         },
       });
       commit("deleteSubscriptionType", id);
-      Vue.notify({
-        group: "all",
-        type: "success",
-        text: "Subscription type successfully deleted",
-      });
+      success("Subscription type successfully deleted");
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
 };

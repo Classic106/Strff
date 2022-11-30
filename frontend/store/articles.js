@@ -1,4 +1,4 @@
-import Vue from "vue";
+import { error } from "../utils/error";
 
 export const state = () => ({
   articles: [],
@@ -12,13 +12,7 @@ export const actions = {
 
       commit("setArticles", data);
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   async getArticle({ commit }, id) {
@@ -28,13 +22,7 @@ export const actions = {
       data.date = new Date(data.date);
       commit("setArticle", data);
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      Vue.notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
 };
