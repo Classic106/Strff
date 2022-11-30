@@ -33,7 +33,7 @@ export const actions = {
     }
 
     if (token) {
-      await dispatch("auth/loginByToken", token);
+      await dispatch("auth/loginByToken");
     }
     await dispatch("categories/getCategories");
     await dispatch("articles/getArticles");

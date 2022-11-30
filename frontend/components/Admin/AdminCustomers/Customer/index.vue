@@ -1,17 +1,17 @@
 <template>
   <AddOrder v-if="isAddOrder" v-on:closeCreateOrder="isAddOrder = false" />
-  <OrderMain v-else v-on:openAddOrder="isAddOrder = true" />
+  <CustomerMain v-else v-on:openAddOrder="isAddOrder = true" />
 </template>
 
 <script>
 import AddOrder from "./AddOrder";
-import OrderMain from "./OrderMain.vue";
+import CustomerMain from "./CustomerMain.vue";
 
 export default {
   name: "Customer",
   components: {
     AddOrder,
-    OrderMain,
+    CustomerMain,
   },
   data: () => ({
     isAddOrder: false,

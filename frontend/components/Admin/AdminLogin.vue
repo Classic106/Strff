@@ -42,6 +42,11 @@ export default {
       }
     },
   },
+  mounted() {
+    if (this.user) {
+      this.$router.push("/admin");
+    }
+  },
 };
 </script>
 

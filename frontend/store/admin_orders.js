@@ -23,8 +23,6 @@ export const state = () => ({
 export const actions = {
   async getOrders({ commit, state }) {
     try {
-      const token = this.$cookies.get("token");
-
       const { sort, search, page, currentPerPage } = state.params;
       const { field, type } = sort;
 
@@ -50,17 +48,8 @@ export const actions = {
 
       const query = qs.stringify(queryData);
 
-      const total = await this.$axios.get(`/orders/count?${query}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const orders = await this.$axios.get(`/orders?${query}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const total = await this.$axios.get(`/orders/count?${query}`);
+      const orders = await this.$axios.get(`/orders?${query}`);
 
       commit("setTotal", total.data);
       commit("setOrders", orders.data);
@@ -70,22 +59,13 @@ export const actions = {
   },
   async getOrdersByTime(_, fromDate = new Date()) {
     try {
-      const token = this.$cookies.get("token");
-
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
       const queryData = {
         created_at_gte: fromDate.toISOString().slice(0, 10),
       };
 
       const query = qs.stringify(queryData);
 
-      const { data } = await this.$axios.get(`/orders?${query}`, headers);
-
+      const { data } = await this.$axios.get(`/orders?${query}`);
       return data;
     } catch (e) {
       error(e);
@@ -93,16 +73,7 @@ export const actions = {
   },
   async getCountOrders() {
     try {
-      const token = this.$cookies.get("token");
-
-      const headers = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const { data } = await this.$axios.get(`/orders/count`, headers);
-
+      const { data } = await this.$axios.get(`/orders/count`);
       return data;
     } catch (e) {
       error(e);
@@ -110,19 +81,13 @@ export const actions = {
   },
   async getTodayOrders({ commit }) {
     try {
-      const token = this.$cookies.get("token");
-
       const queryData = {
         created_at_gte: new Date(new Date().setHours(0, 0, 0)).toISOString(),
       };
 
       const query = qs.stringify(queryData);
 
-      const { data } = await this.$axios.get(`/orders?${query}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await this.$axios.get(`/orders?${query}`);
 
       commit("setTodayOrders", data);
     } catch (e) {
@@ -131,13 +96,7 @@ export const actions = {
   },
   async getCustomers() {
     try {
-      const token = this.$cookies.get("token");
-
-      const { data } = await this.$axios.get(`/customers`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await this.$axios.get(`/customers`);
       return data;
     } catch (e) {
       error(e);
@@ -145,17 +104,10 @@ export const actions = {
   },
   async createOrder({ commit }, order) {
     try {
-      const token = this.$cookies.get("token");
-
-      const { data } = await this.$axios.post(
-        `/orders`,
-        { ...order, order_status: 4 },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const { data } = await this.$axios.post(`/orders`, {
+        ...order,
+        order_status: 4,
+      });
 
       commit("addOrder", data);
       success("Order successfully created");
@@ -165,14 +117,8 @@ export const actions = {
   },
   async updateOrder({ commit }, order) {
     try {
-      const token = this.$cookies.get("token");
-
       const { id } = bundle;
-      const { data } = await this.$axios.put(`/orders/${id}`, order, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await this.$axios.put(`/orders/${id}`, order);
 
       commit("updateOrder", data);
       success("Order successfully updated");
@@ -182,13 +128,7 @@ export const actions = {
   },
   async deleteOrders({ commit }, ordersIds) {
     try {
-      const token = this.$cookies.get("token");
-
-      const { data } = await this.$axios.delete(`/orders/${ordersIds}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await this.$axios.delete(`/orders/${ordersIds}`);
 
       commit("deleteOrders", ordersIds);
       success("Order(s) successfully deleted");
