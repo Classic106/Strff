@@ -16,24 +16,8 @@
     />
     <TopBundles class="border-bottom p-3" :topTodayBundles="topTodayBundles" />
     <div class="d-flex flex-column p-3">
-      <p class="text-uppercase">payout shedule</p>
-      <div class="d-flex flex-column justify-content-between">
-        <div
-          class="d-flex flex-lg-row flex-column justify-content-between mb-2"
-          v-for="payout_shedule in payout_shedules"
-          :key="payout_shedule.summ"
-        >
-          <div class="d-flex justify-content-center">
-            <span class="text-nowrap mr-2">{{
-              parseDate(payout_shedule.date)
-            }}</span>
-            <span class="paid p-2">Paid</span>
-          </div>
-          <span class="text-nowrap text-center"
-            >$ {{ parseSumm(payout_shedule.summ) }}</span
-          >
-        </div>
-      </div>
+      <p class="text-uppercase">orders amount</p>
+      <OrderAmount />
     </div>
   </div>
 </template>
@@ -43,23 +27,18 @@ import { mapGetters } from "vuex";
 
 import TopProducts from "./TopProducts.vue";
 import TopBundles from "./TopBundles.vue";
+import OrderAmount from "./OrderAmount.vue";
 
 export default {
   name: "AdminHomeRightSide",
-  components: { TopProducts, TopBundles },
+  components: {
+    TopProducts,
+    TopBundles,
+    OrderAmount,
+  },
   data: () => ({
     topTodayProducts: [],
     topTodayBundles: [],
-    payout_shedules: [
-      {
-        date: new Date(),
-        summ: 65464,
-      },
-      {
-        date: new Date(),
-        summ: 658464,
-      },
-    ],
   }),
   computed: {
     ...mapGetters({
