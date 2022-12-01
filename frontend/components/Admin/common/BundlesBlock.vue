@@ -13,7 +13,7 @@
       </template>
     </SelectWithSearch>
     <div class="w-100" v-if="selectedBundles.length">
-      <ul class="d-flex flex-column p-0 w-100">
+      <ul class="d-flex flex-column p-0 w-100 m-0">
         <li
           v-for="(item, index) in selectedBundles"
           :key="item.bundle.id"
