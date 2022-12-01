@@ -53,32 +53,18 @@
         class="mb-3"
       >
         <template v-slot:item="products">
-          <BundleItem :item="products.item" />
+          <ProductCard class="w-100 m-0 mb-2" :product="products.item" />
         </template>
       </SelectWithSearch>
       <div v-if="currentBundle.products.length">
-        <ul class="d-flex flex-column p-0">
+        <ul class="p-0">
           <li
             v-for="product in currentBundle.products"
             :key="product.id"
-            class="row w-100 mb-2 mx-auto"
+            class="row w-100 mb-2 m-0 justify-content-between"
           >
-            <div class="wrap-img col-2">
-              <PreloaderImage :image="product.image[0].url" />
-            </div>
-            <div class="col-7 d-flex align-items-center">
-              <p class="text-ellipsis m-0">{{ product.title }}</p>
-            </div>
-            <div
-              class="
-                col-2
-                d-flex
-                align-items-center
-                justify-content-end
-                text-nowrap
-              "
-            >
-              <p class="m-0">$ {{ product.price }}</p>
+            <div class="col-11 p-0">
+              <ProductCard class="w-100 m-0" :product="product" />
             </div>
             <div
               class="col-1 d-flex justify-content-center align-items-start p-0"
@@ -95,12 +81,15 @@
 
 <script>
 import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
-import PreloaderImage from "~/components/common/PreloaderImage.vue";
-import BundleItem from "./BundleItem.vue";
+import ProductCard from "~/components/Admin/common/ProductCard.vue";
 
 export default {
   name: "BundleForm",
-  components: { PreloaderImage, SelectWithSearch, BundleItem },
+  components: {
+    SelectWithSearch,
+    ProductCard,
+    ProductCard,
+  },
   props: {
     bundle: Object,
   },

@@ -23,65 +23,19 @@
     <div v-if="order.order_items.length">
       <h6 class="mb-3">Products</h6>
       <ul class="d-flex flex-column p-0">
-        <li
-          v-for="order_item in order.order_items"
-          :key="order_item.id"
-          class="row"
-        >
-          <div class="wrap-img col-3 position-relative">
-            <span
-              class="
-                position-absolute
-                d-flex
-                justify-content-center
-                align-items-center
-                p-2
-              "
-              >{{ order_item.quantity }}</span
-            >
-            <PreloaderImage :image="order_item.product.image[0].url" />
-          </div>
-          <div class="col-5 d-flex align-items-center">
-            <p class="text-ellipsis m-0">{{ order_item.product.title }}</p>
-          </div>
-          <div class="col-4 d-flex justify-content-end align-items-center">
-            <p class="m-0 text-nowrap">
-              $ {{ order_item.total | formatNumber }}
-            </p>
-          </div>
+        <li v-for="order_item in order.order_items" :key="order_item.id">
+          <ProductCard
+            :product="order_item.product"
+            :quantity="order_item.quantity"
+          />
         </li>
       </ul>
     </div>
     <div v-if="order.order_bundles.length">
       <h6>Bundles</h6>
       <ul class="d-flex flex-column p-0">
-        <li
-          v-for="order_bundle in order.order_bundles"
-          :key="order_bundle.id"
-          class="row align-item-center"
-        >
-          <div class="col-3 d-flex align-items-center">
-            <div class="wrap-img">
-              <PreloaderImage
-                :image="order_bundle.bundle.products[0].image[0].url"
-                class="p-0"
-              />
-            </div>
-            +
-            <div class="wrap-img">
-              <PreloaderImage
-                :image="order_bundle.bundle.products[1].image[0].url"
-              />
-            </div>
-          </div>
-          <div class="col-5 d-flex">
-            <p class="text-ellipsis m-0">{{ order_bundle.bundle.title }}</p>
-          </div>
-          <div class="col-4 d-flex justify-content-end">
-            <p class="m-0 text-nowrap">
-              $ {{ order_bundle.bundle.price | formatNumber }}
-            </p>
-          </div>
+        <li v-for="order_bundle in order.order_bundles" :key="order_bundle.id">
+          <BundleCard :bundle="order_bundle.bundle" />
         </li>
       </ul>
     </div>
@@ -90,14 +44,18 @@
 
 <script>
 import "~/utils/filters";
-import PreloaderImage from "~/components/common/PreloaderImage.vue";
+import BundleCard from "~/components/Admin/common/BundleCard.vue";
+import ProductCard from "~/components/Admin/common/ProductCard.vue";
 
 export default {
   name: "CustomerOrder",
   props: {
     order: [Object, null],
   },
-  components: { PreloaderImage },
+  components: {
+    BundleCard,
+    ProductCard,
+  },
 };
 </script>
 
@@ -115,14 +73,5 @@ export default {
 
 .paid.active {
   background: green;
-}
-
-.wrap-img > span {
-  top: -0.8rem;
-  right: -0.5rem;
-  width: 2rem;
-  height: 2rem;
-  background-color: #e4e5e7;
-  border-radius: 50%;
 }
 </style>

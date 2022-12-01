@@ -9,15 +9,7 @@
       class="mb-3"
     >
       <template v-slot:item="bundles">
-        <div class="row p-3">
-          <BundleItem :bundle="bundles.item" class="col-6" />
-          <div class="col-3 d-flex justify-content-center align-items-center">
-            {{ bundles.item.title }}
-          </div>
-          <div class="col-3 d-flex justify-content-center align-items-center">
-            $ {{ bundles.item.price | formatNumber }}
-          </div>
-        </div>
+        <BundleCard :bundle="bundles.item" class="w-100 m-0 p-0" />
       </template>
     </SelectWithSearch>
     <div class="w-100" v-if="selectedBundles.length">
@@ -27,13 +19,7 @@
           :key="item.bundle.id"
           class="row w-100 mb-2 mx-auto justify-content-center"
         >
-          <BundleItem class="col-2" :bundle="item.bundle" />
-          <div class="text-ellipsis col-7 d-flex align-items-center">
-            {{ item.bundle.title }}
-          </div>
-          <div class="col-2 d-flex align-items-center text-nowrap">
-            $ {{ item.bundle.price | formatNumber}}
-          </div>
+          <BundleCard :bundle="item.bundle" class="col-11 m-0 p-0" />
           <div
             class="col-1 d-flex justify-content-center align-items-start p-0"
             v-on:click="deleteProduct(index)"
@@ -50,11 +36,11 @@
 import "~/utils/filters";
 
 import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
-import BundleItem from "./BundleItem.vue";
+import BundleCard from "~/components/Admin/common/BundleCard.vue";
 
 export default {
   name: "BundlesBlock",
-  components: { SelectWithSearch, BundleItem },
+  components: { SelectWithSearch, BundleCard },
   data: () => ({
     bundles: [],
     selectedBundles: [],
