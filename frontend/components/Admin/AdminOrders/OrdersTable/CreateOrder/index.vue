@@ -69,15 +69,13 @@ import { mapActions } from "vuex";
 
 import "~/utils/filters";
 
-import PreloaderImage from "~/components/common/PreloaderImage.vue";
-import BundlesBlock from "./BundlesBlock.vue";
-import ProductsBlock from "./ProductsBlock.vue";
+import BundlesBlock from "~/components/Admin/common/BundlesBlock.vue";
+import ProductsBlock from "~/components/Admin/common/ProductsBlock.vue";
 import CustomersBlock from "./CustomersBlock.vue";
 
 export default {
   name: "CreateOrder",
   components: {
-    PreloaderImage,
     BundlesBlock,
     ProductsBlock,
     CustomersBlock,

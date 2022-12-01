@@ -9,7 +9,7 @@
       class="mb-3"
     >
       <template v-slot:item="products">
-        <ProductSearchItem :item="products.item" />
+        <ProductCard class="w-100 m-0 p-0" :product="products.item" />
       </template>
     </SelectWithSearch>
     <div class="w-100" v-if="selectedProducts.length">
@@ -19,18 +19,10 @@
           :key="item.product.id"
           class="row w-100 mb-2 mx-auto"
         >
-          <div class="wrap-img col-2">
-            <PreloaderImage :image="item.product.image[0].url" />
-          </div>
-          <div class="text-ellipsis col-5 d-flex align-items-center">
-            {{ item.product.title }}
-          </div>
-          <div class="col-2 d-flex align-items-center text-nowrap">
-            $ {{ item.product.price }}
-          </div>
+          <ProductCard class="col-7 mx-0 p-0" :product="item.product" />
           <div
             class="
-              col-2
+              col-4
               d-flex
               flex-column
               justify-content-center
@@ -64,12 +56,16 @@
 
 <script>
 import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
-import PreloaderImage from "~/components/common/PreloaderImage.vue";
 import ProductSearchItem from "./ProductSearchItem.vue";
+import ProductCard from "./ProductCard.vue";
 
 export default {
   name: "ProductsBlock",
-  components: { PreloaderImage, SelectWithSearch, ProductSearchItem },
+  components: {
+    ProductCard,
+    SelectWithSearch,
+    ProductSearchItem,
+  },
   data: () => ({
     products: [],
     selectedProducts: [],

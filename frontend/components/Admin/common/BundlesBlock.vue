@@ -36,7 +36,7 @@
 import "~/utils/filters";
 
 import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
-import BundleCard from "~/components/Admin/common/BundleCard.vue";
+import BundleCard from "./BundleCard.vue";
 
 export default {
   name: "BundlesBlock",

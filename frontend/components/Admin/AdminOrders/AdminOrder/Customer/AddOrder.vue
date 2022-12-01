@@ -50,13 +50,12 @@ import { mapGetters } from "vuex";
 
 import "~/utils/filters";
 
-import PreloaderImage from "~/components/common/PreloaderImage.vue";
-import ProductsBlock from "./ProductsBlock.vue";
-import BundlesBlock from "./BundlesBlock.vue";
+import ProductsBlock from "~/components/Admin/common/ProductsBlock.vue";
+import BundlesBlock from "~/components/Admin/common/BundlesBlock.vue";
 
 export default {
   name: "AddOrder",
-  components: { PreloaderImage, ProductsBlock, BundlesBlock },
+  components: { ProductsBlock, BundlesBlock },
   data: () => ({
     total: 0,
     order_status: "1",

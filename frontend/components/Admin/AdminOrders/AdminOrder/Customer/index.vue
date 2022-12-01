@@ -83,7 +83,7 @@ import "~/utils/filters";
 import Loader from "~/components/common/Loader.vue";
 import CustomerOrder from "./CustomerOrder.vue";
 import CustomerRightSide from "./CustomerRightSide.vue";
-import AddOrder from "./AddOrder";
+import AddOrder from "./AddOrder.vue";
 
 export default {
   name: "Customer",
