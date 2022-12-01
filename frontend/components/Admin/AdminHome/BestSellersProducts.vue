@@ -1,9 +1,9 @@
 <template>
   <div class="p-3">
     <p class="text-uppercase">best sellers products</p>
-    <div class="row">
+    <div class="row justify-content-center w-100 m-0">
       <ProductCard
-        class="col-6"
+        class="col-6 p-0 m-1"
         v-for="product in products"
         :key="product.id"
         :product="product"
@@ -45,4 +45,8 @@ export default {
 </script>
 
 <style scoped>
+.col-6 {
+  flex: 0 0 48%;
+  max-width: 48%;
+}
 </style>

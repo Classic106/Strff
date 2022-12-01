@@ -13,23 +13,22 @@
       </template>
     </SelectWithSearch>
     <div class="w-100" v-if="selectedProducts.length">
-      <ul class="d-flex flex-column p-0">
+      <ul class="d-flex flex-column p-0 m-0">
         <li
           v-for="(item, index) in selectedProducts"
           :key="item.product.id"
           class="row w-100 mb-2 mx-auto"
         >
-          <ProductCard class="col-7 mx-0 p-0" :product="item.product" />
+          <ProductCard class="col-8 mx-0 p-0" :product="item.product" />
           <div
             class="
-              col-4
+              col-3
               d-flex
               flex-column
               justify-content-center
               align-items-center
             "
           >
-            quantity
             <div class="number-input">
               <button v-on:click="minus(index)"></button>
               <input
@@ -150,8 +149,8 @@ input[type="number"]::-webkit-outer-spin-button {
   border: none;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
+  width: 1rem;
+  height: 100%;
   cursor: pointer;
   margin: 0;
   position: relative;
@@ -162,7 +161,7 @@ input[type="number"]::-webkit-outer-spin-button {
   display: inline-block;
   position: absolute;
   content: "";
-  width: 1rem;
+  width: .5rem;
   height: 2px;
   background-color: #212121;
   transform: translate(-50%, -50%);
@@ -173,12 +172,12 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .number-input input[type="number"] {
   font-family: sans-serif;
-  max-width: 5rem;
+  max-width: 2rem;
   padding: 0.5rem;
   border: solid #ddd;
   border-width: 0 2px;
-  font-size: 2rem;
-  height: 3rem;
+  font-size: 1rem;
+  height: 1.5rem;
   font-weight: bold;
   text-align: center;
 }
