@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import qs from "qs";
+
 import { shuffleArray } from "~/helpers";
 import { error } from "~/utils/error.js";
 
@@ -27,9 +29,14 @@ export default {
   methods: { shuffleArray },
   async mounted() {
     try {
-      const result = await this.$strapi.$bestsellers.find();
-      this.products = this.shuffleArray(result[0].products);
-      this.products.length = 4;
+      const queryData = {
+        _sort: `sales:DESC`,
+        _limit: 4,
+      };
+      const query = qs.stringify(queryData);
+
+      const { data } = await this.$axios.get(`/products?${query}`);
+      this.products = this.shuffleArray(data);
     } catch (e) {
       error(e);
     }

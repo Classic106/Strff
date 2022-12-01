@@ -26,11 +26,7 @@
     "image": {
       "collection": "file",
       "via": "related",
-      "allowedTypes": [
-        "files",
-        "images",
-        "videos"
-      ],
+      "allowedTypes": ["files", "images", "videos"],
       "plugin": "upload",
       "required": true,
       "pluginOptions": {}
@@ -44,10 +40,6 @@
       "repeatable": true,
       "component": "custom.custom-field"
     },
-    "bestseller": {
-      "via": "products",
-      "model": "bestseller"
-    },
     "bundle": {
       "via": "products",
       "model": "bundle"
@@ -59,6 +51,9 @@
     },
     "included": {
       "type": "json"
+    },
+    "sales": {
+      "type": "biginteger"
     }
   }
 }
