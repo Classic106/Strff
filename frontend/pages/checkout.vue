@@ -4,31 +4,31 @@
         <div class="col-12 col-md-4">
             <div class="block">
                 <h2>Contact Information</h2>
-                <input type="text" placeholder="Email" v-model="cart.shipping_email"/>
+                <input type="text" placeholder="Email" v-model="order.shipping_email"/>
             </div>
             <div class="block">
                 <h2>Shipping Address</h2>
                 <div class="row">
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="First name" v-model="cart.shipping_first_name"/>
+                        <input type="text" placeholder="First name" v-model="order.shipping_first_name"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Last name" v-model="cart.shipping_last_name"/>
+                        <input type="text" placeholder="Last name" v-model="order.shipping_last_name"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Company (optional)" v-model="cart.shipping_company"/>
+                        <input type="text" placeholder="Company (optional)" v-model="order.shipping_company"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Address 1" v-model="cart.shipping_address_1"/>
+                        <input type="text" placeholder="Address 1" v-model="order.shipping_address_1"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Address 2" v-model="cart.shipping_address_2"/>
+                        <input type="text" placeholder="Address 2" v-model="order.shipping_address_2"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="City" v-model="cart.shipping_city"/>
+                        <input type="text" placeholder="City" v-model="order.shipping_city"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <select placeholder="State" v-model="cart.shipping_state">
+                        <select placeholder="State" v-model="order.shipping_state">
                             <option value="">State</option>
                             <option v-for="option in states" v-bind:value="option.abbreviation" v-bind:key="option.abbreviation">
                                 {{ option.name }}
@@ -36,7 +36,7 @@
                         </select>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Zip" v-model="cart.shipping_zip_code"/>
+                        <input type="text" placeholder="Zip" v-model="order.shipping_zip_code"/>
                     </div>
                 </div>
             </div>
@@ -51,25 +51,25 @@
                 </div>
                 <div v-if="!isSameAsShipping" class="row">
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="First name" v-model="cart.billing_first_name"/>
+                        <input type="text" placeholder="First name" v-model="order.billing_first_name"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Last name" v-model="cart.billing_last_name"/>
+                        <input type="text" placeholder="Last name" v-model="order.billing_last_name"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Company (optional)" v-model="cart.billing_company"/>
+                        <input type="text" placeholder="Company (optional)" v-model="order.billing_company"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Address 1" v-model="cart.billing_address_1"/>
+                        <input type="text" placeholder="Address 1" v-model="order.billing_address_1"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Address 2" v-model="cart.billing_address_2"/>
+                        <input type="text" placeholder="Address 2" v-model="order.billing_address_2"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="City" v-model="cart.billing_city"/>
+                        <input type="text" placeholder="City" v-model="order.billing_city"/>
                     </div>
                     <div class="col-12 col-md-6">
-                        <select placeholder="State" v-model="cart.billing_state">
+                        <select placeholder="State" v-model="order.billing_state">
                             <option value="">State</option>
                             <option v-for="option in states" v-bind:value="option.abbreviation" v-bind:key="option.abbreviation">
                                 {{ option.name }}
@@ -77,7 +77,7 @@
                         </select>
                     </div>
                     <div class="col-12 col-md-6">
-                        <input type="text" placeholder="Zip" v-model="cart.billing_zip_code"/>
+                        <input type="text" placeholder="Zip" v-model="order.billing_zip_code"/>
                     </div>
                 </div>
             </div>
@@ -85,6 +85,30 @@
         <div class="col-12 col-md-4">
             <div class="block">
                 <h2>Payment Method</h2>
+                <ul class="payment-options">
+                    <li v-on:click="paymentType = 1">Creditcard</li>
+                        <div v-if="paymentType == 1" class="creditcard-payment">
+                            <div class="row">
+                                <div class="col-12 col-md-5">Card Number</div>
+                                <div class="col-12 col-md-7">
+                                    <input type="text" placeholder="Card Number" v-model="order.card_number"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-5">Card Expiry</div>
+                                <div class="col-12 col-md-7">
+                                    <input type="text" placeholder="Card Expiry" v-model="order.card_expiry"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-5">Card Security Code</div>
+                                <div class="col-12 col-md-7">
+                                    <input type="text" placeholder="Card Security Code" v-model="order.card_security_code"/>
+                                </div>
+                            </div>
+                        </div>
+                    <li v-on:click="paymentType = 2">Paypal</li>
+                </ul>
             </div>
             <div class="block">
                 <h2>Shipping Method</h2>
@@ -199,9 +223,10 @@
     layout: "club",
     data() {
       return {
+          order: {},
           loading: false,
           isSameAsShipping: true,
-          paymentType: 1,
+          paymentType: 0,
           purchaseTypes: [],
           states,
           selectedPaymentMethod: null,
@@ -236,27 +261,27 @@
     methods: {
       sameAsShipping() {
         if (this.isSameAsShipping) {
-            this.cart.billing_first_name = this.cart.shipping_first_name;
-            this.cart.billing_last_name = this.cart.shipping_last_name;
-            this.cart.billing_company = this.cart.shipping_company;
-            this.cart.billing_address_1 = this.cart.shipping_address_1;
-            this.cart.billing_address_2 = this.cart.shipping_address_2;
-            this.cart.billing_city = this.cart.shipping_city;
-            this.cart.billing_state = this.cart.shipping_state;
-            this.cart.billing_zip_code = this.cart.shipping_zip_code;
-            this.cart.billing_contact_no = this.cart.shipping_contact_no;
-            this.cart.billing_email = this.cart.shipping_email;
+            this.order.billing_first_name = this.order.shipping_first_name;
+            this.order.billing_last_name = this.order.shipping_last_name;
+            this.order.billing_company = this.order.shipping_company;
+            this.order.billing_address_1 = this.order.shipping_address_1;
+            this.order.billing_address_2 = this.order.shipping_address_2;
+            this.order.billing_city = this.order.shipping_city;
+            this.order.billing_state = this.order.shipping_state;
+            this.order.billing_zip_code = this.order.shipping_zip_code;
+            this.order.billing_contact_no = this.order.shipping_contact_no;
+            this.order.billing_email = this.order.shipping_email;
         } else {
-            this.cart.billing_first_name = '';
-            this.cart.billing_last_name = '';
-            this.cart.billing_company = '';
-            this.cart.billing_address_1 = '';
-            this.cart.billing_address_2 = '';
-            this.cart.billing_city = '';
-            this.cart.billing_state = '';
-            this.cart.billing_zip_code = '';
-            this.cart.billing_contact_no = '';
-            this.cart.billing_email = '';
+            this.order.billing_first_name = '';
+            this.order.billing_last_name = '';
+            this.order.billing_company = '';
+            this.order.billing_address_1 = '';
+            this.order.billing_address_2 = '';
+            this.order.billing_city = '';
+            this.order.billing_state = '';
+            this.order.billing_zip_code = '';
+            this.order.billing_contact_no = '';
+            this.order.billing_email = '';
         }
       },
       async submitOrder() {
@@ -265,18 +290,18 @@
           try {
               let orderNo = await this.$strapi.$http.$post('/references/generate', { code: 'order-no' });
               let orderDate = Date.now();
-              this.cart.order_no = orderNo;
-              this.cart.order_date = orderDate;
+              this.order.order_no = orderNo;
+              this.order.order_date = orderDate;
 
               let paymentResult = false;
               if (this.paymentType == 1) {
-                  this.paymentApiAuthorizeNet = new PayWithAuthorizeNet(this.cart, this.$axios);
+                  this.paymentApiAuthorizeNet = new PayWithAuthorizeNet(this.order, this.$axios);
                   paymentResult = this.paymentApiAuthorizeNet.pay();
                   console.log(paymentResult);
               }
               if (paymentResult) {
                   alert('Your order have been successfully submitted.');
-                  this.placeOrder(this.cart);
+                  this.placeOrder(this.order);
                   this.$router.push('/');
               } else {
                   alert('Your order submittion was not successfull.');
@@ -308,10 +333,11 @@
       }
     },
     async mounted () {
+      this.order = Object.assign({}, this.cart);
       if (this.loggedUser) {
-          this.cart.shipping_first_name = this.loggedUser.first_name;
-          this.cart.shipping_last_name = this.loggedUser.last_name;
-          this.cart.shipping_email = this.loggedUser.email;
+          this.order.shipping_first_name = this.loggedUser.first_name;
+          this.order.shipping_last_name = this.loggedUser.last_name;
+          this.order.shipping_email = this.loggedUser.email;
       }
 
       for (let i = 1940; i < 2099; i++) {
@@ -319,7 +345,7 @@
       }
       this.purchaseTypes = await this.$strapi.find('purchase-types');
 
-      // new Date().getFullYear()
+      this.order.card_expiry = '11/22'; //new Date().getFullYear();
     }
   }
   </script>
@@ -347,6 +373,22 @@
     input[type="checkbox"] {
         width: auto;
         margin-right: 15px;
+    }
+
+    ul.payment-options {
+        li {
+            padding: 15px 15px;
+            border: 1px solid gray;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+    }
+
+    .creditcard-payment {
+        padding: 15px 15px;
+        border: 1px solid gray;
+        margin-top: 5px;
     }
   }
 
