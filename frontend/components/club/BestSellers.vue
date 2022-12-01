@@ -28,7 +28,11 @@
 </template>
 
 <script>
+import qs from "qs";
+
 import { shuffleArray } from "~/helpers";
+import { error } from "~/utils/error.js";
+
 import ProductCard from "~/components/products/ProductCard";
 
 export default {
@@ -39,17 +43,17 @@ export default {
   }),
   async mounted() {
     try {
-      const result = await this.$strapi.$bestsellers.find();
-      this.products = this.shuffleArray(result[0].products);
-      this.products.length = 4;
+      const queryData = {
+        _sort: `sales:DESC`,
+        _limit: 4,
+      };
+
+      const query = qs.stringify(queryData);
+
+      const { data } = await this.$axios.get(`/products?${query}`);
+      this.products = this.shuffleArray(data);
     } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      this.$notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
+      error(e);
     }
   },
   methods: { shuffleArray },

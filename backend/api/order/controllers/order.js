@@ -46,6 +46,15 @@ module.exports = {
     if (order_items.length) {
       for (let k = 0; k < order_items.length; k++) {
         const item = await strapi.services["order-item"].create(order_items[k]);
+
+        const { id } = order_items[k].product;
+        const product = await strapi.services.product.findOne({ id });
+        const { sales } = product;
+
+        await strapi.services.product.update(
+          { id },
+          { sales: sales === null ? 1 : +sales + 1 }
+        );
         newOrderItems.push(item.id);
         additonal_total_price += item.total;
       }
