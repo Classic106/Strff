@@ -18,7 +18,7 @@
         <AdminMenu v-on:isOpen="isOpen" />
       </section>
       <vueCustomScrollbar
-        class="content overflow-auto p-0 col-md-10 col-12 ml-auto"
+        class="admin-content overflow-auto p-0 col-md-10 col-12 ml-auto"
         :settings="scrollSettings"
       >
         <Nuxt class="p-0 m-0 h-100" />
@@ -91,7 +91,7 @@ export default {
   height: 100%;
 }
 
-.content {
+.admin-content {
   height: calc(100vh - 5.5rem);
 }
 
