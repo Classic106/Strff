@@ -48,13 +48,12 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 
-import PreloaderImage from "~/components/common/PreloaderImage.vue";
-import ProductsBlock from "./ProductsBlock.vue";
-import BundlesBlock from "./BundlesBlock.vue";
+import ProductsBlock from "~/components/Admin/common/ProductsBlock.vue";
+import BundlesBlock from "~/components/Admin/common/BundlesBlock.vue";
 
 export default {
   name: "AddOrder",
-  components: { PreloaderImage, ProductsBlock, BundlesBlock },
+  components: { ProductsBlock, BundlesBlock },
   data: () => ({
     order: {
       total: 0,

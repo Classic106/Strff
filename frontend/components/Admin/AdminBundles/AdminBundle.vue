@@ -41,7 +41,7 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
 import { prevCurrNextItems } from "~/helpers";
 
-import BundleForm from "./BundleForm";
+import BundleForm from "./BundleForm.vue";
 
 export default {
   name: "AdminBundle",

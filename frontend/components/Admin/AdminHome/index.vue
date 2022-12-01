@@ -1,8 +1,8 @@
 <template>
   <div class="row w-100 h-100 m-0">
     <div class="d-flex col-8 flex-column w-100 text-left p-3">
-      <p>Here`s what`s heppenning with your store today.</p>
-      <div class="row justify-content-between m-0">
+      <h6>Here`s what`s heppenning with your store.</h6>
+      <div class="row justify-content-between m-0 mb-3">
         <div class="block bg-white p-3 col-md-6 col-12 d-flex flex-column">
           <p class="text-uppercase m-0">total sessions</p>
           <div
@@ -37,6 +37,7 @@
           </div>
         </div>
       </div>
+      <BestSellersProducts class="block mb-3" />
     </div>
     <div class="right-side col-4 p-0">
       <AdminHomeRightSide class="bg-white h-100" />
@@ -50,6 +51,7 @@
 import { mapActions, mapGetters } from "vuex";
 
 import AdminHomeRightSide from "./AdminHomeRightSide.vue";
+import BestSellersProducts from "./BestSellersProducts.vue";
 import VisitorsApexChartsModal from "./VisitorsApexChartsModal.vue";
 import OrdersApexChartsModal from "./OrdersApexChartsModal.vue";
 
@@ -57,6 +59,7 @@ export default {
   name: "AdminHome",
   components: {
     AdminHomeRightSide,
+    BestSellersProducts,
     VisitorsApexChartsModal,
     OrdersApexChartsModal,
   },

@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import AddOrder from "./AddOrder";
+import AddOrder from "./AddOrder.vue";
 import CustomerMain from "./CustomerMain.vue";
 
 export default {
