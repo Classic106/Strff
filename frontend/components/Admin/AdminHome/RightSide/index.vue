@@ -74,13 +74,16 @@ export default {
 
         order_items.map((item) => {
           const { product } = item;
+
           const index = allProducts.findIndex((item) => (item.id = product.id));
+
           if (index !== -1) {
             allProducts[index].count = allProducts[index].count + 1;
           } else {
             allProducts.push({ ...product, count: 1 });
           }
         });
+
         order_bundles.map((item) => {
           const { bundle } = item;
           const index = allBundles.findIndex((item) => (item.id = bundle.id));

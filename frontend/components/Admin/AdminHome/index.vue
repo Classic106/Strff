@@ -40,7 +40,7 @@
       <BestSellersProducts class="block mb-3" />
     </div>
     <div class="right-side col-4 p-0">
-      <AdminHomeRightSide class="bg-white h-100" />
+      <RightSide class="bg-white h-100" />
     </div>
     <VisitorsApexChartsModal />
     <OrdersApexChartsModal />
@@ -50,7 +50,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 
-import AdminHomeRightSide from "./AdminHomeRightSide.vue";
+import RightSide from "./RightSide";
 import BestSellersProducts from "./BestSellersProducts.vue";
 import VisitorsApexChartsModal from "./VisitorsApexChartsModal.vue";
 import OrdersApexChartsModal from "./OrdersApexChartsModal.vue";
@@ -58,7 +58,7 @@ import OrdersApexChartsModal from "./OrdersApexChartsModal.vue";
 export default {
   name: "AdminHome",
   components: {
-    AdminHomeRightSide,
+    RightSide,
     BestSellersProducts,
     VisitorsApexChartsModal,
     OrdersApexChartsModal,
