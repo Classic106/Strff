@@ -1,6 +1,6 @@
 <template>
   <AddOrder v-if="isAddOrder" v-on:closeCreateOrder="isAddOrder = false" />
-  <div v-else class="row w-100 justify-content-center">
+  <div v-else class="row w-100 justify-content-center m-0">
     <div class="d-flex flex-column col-md-10 col-12">
       <div class="d-flex align-items-start mt-3">
         <button v-on:click="$emit('setCustomer')" class="button">
@@ -9,7 +9,8 @@
         <div class="w-100 px-3">
           <div class="d-flex flex-column">
             <h6 class="m-0 px-2 font-weight-bold">{{ getCustomerName() }}</h6>
-            <span>{{ selected.state }} {{ customerDuration() }}</span>
+            <span>{{ selected.customer.state }}</span>
+            <span>registered: {{ customerDuration() }}</span>
           </div>
         </div>
       </div>
@@ -19,24 +20,32 @@
       />
       <div v-else class="row mb-3">
         <div class="col-7">
-          <div class="block w-100 d-flex justify-content-between mb-3 p-3">
-            <div>
+          <div
+            class="block row w-100 d-flex justify-content-between m-0 mb-3 p-3"
+          >
+            <div
+              class="col-md-4 col-12 d-flex flex-column justify-content-center"
+            >
               <h6 class="text-center font-weight-bold">
                 $ {{ ordersSpent | formatNumber }}
               </h6>
-              <p>Amount spent</p>
+              <p class="text-center">Amount spent</p>
             </div>
-            <div>
+            <div
+              class="col-md-4 col-12 d-flex flex-column justify-content-center"
+            >
               <h6 class="text-center font-weight-bold">
                 {{ customerOrders.length }}
               </h6>
-              <p>Orders</p>
+              <p class="text-center">Orders</p>
             </div>
-            <div>
+            <div
+              class="col-md-4 col-12 d-flex flex-column justify-content-center"
+            >
               <h6 class="text-center font-weight-bold">
                 $ {{ (ordersSpent / customerOrders.length) | formatNumber }}
               </h6>
-              <p>Average order value</p>
+              <p class="text-center">Average order value</p>
             </div>
           </div>
           <div class="block w-100">
@@ -59,7 +68,7 @@
                 href="#"
                 v-on:click.prevent="viewAll = !viewAll"
                 class="mr-2"
-                >{{ viewAll ? "Hide all orders" : "View all orders" }}</a
+                >{{ viewAll ? "Hide orders" : "View all orders" }}</a
               >
               <button class="btn btn-success" v-on:click="isAddOrder = true">
                 Add order
