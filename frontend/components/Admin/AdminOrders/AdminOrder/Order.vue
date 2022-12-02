@@ -15,7 +15,7 @@
               <BIconDot scale="2" /> Paid
             </div>
             <div class="status p-1 pl-2 pr-3 mr-2">
-              <BIconDot scale="2" /> {{ selected.status }}
+              <BIconDot scale="2" /> {{ selected.order_status.title }}
             </div>
           </div>
           <p>{{ selected.order_date | formatDate }}</p>

@@ -11,10 +11,10 @@
           {{ order.status }}
         </div>
       </div>
-      <span class="font-weight-bold">$ {{ order.total }}</span>
+      <span class="font-weight-bold">$ {{ order.total | formatNumber }}</span>
     </div>
     <p>
-      {{ order.order_date || formatDate }}
+      {{ order.order_date | formatDate }}
     </p>
     <div v-if="order.order_items.length">
       <h6 class="mb-3">Products</h6>
