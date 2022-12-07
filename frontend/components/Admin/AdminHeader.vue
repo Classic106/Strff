@@ -27,7 +27,7 @@
           colorBlack
         />
       </div>
-      <h5 class="px-3 m-0">strf</h5>
+      <h5 class="px-3 m-0" v-on:click="$router.push(`/admin`)">strff</h5>
       <span class="p-1">{{ getDate() }}</span>
     </div>
     <div
