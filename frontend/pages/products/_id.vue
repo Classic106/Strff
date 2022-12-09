@@ -112,7 +112,6 @@
                   </div>
                 </div>
                 <button
-                  v-if="product.status === 'published'"
                   class="
                     py-2
                     px-4
@@ -129,17 +128,6 @@
                   <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
                   Add to cart
                 </button>
-
-                <div class="text-center mr-5 mb-1" v-else>
-                  <div class="p-2" role="alert">
-                    <span class="d-flex uppercase px-2 py-1 mr-3"
-                      >Coming soon...</span
-                    >
-                    <span class="mr-2 text-left d-flex"
-                      >This article is not available yet.</span
-                    >
-                  </div>
-                </div>
               </div>
             </div>
             <PurchaseTypes
@@ -307,7 +295,7 @@ export default {
       return price;
     },
     addToCart: async function () {
-      this.$store.dispatch("order/addProduct", this.selected);
+      await this.$store.dispatch("order/addProduct", this.selected);
     },
   },
 };
