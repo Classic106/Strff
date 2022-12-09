@@ -3,7 +3,7 @@
     <ul class="d-flex flex-column h-100 pt-3 p-0 pr-2">
       <li
         v-on:click="setPage()"
-        class="menu-item d-flex align-items-center"
+        class="menu-item cursor-pointer d-flex align-items-center"
         :class="currentPage === '' && 'active'"
       >
         <span class="d-flex align-items-center w-100 p-1"
@@ -12,7 +12,7 @@
       </li>
       <li
         v-on:click="setPage('orders')"
-        class="menu-item d-flex align-items-center"
+        class="menu-item cursor-pointer d-flex align-items-center"
         :class="currentPage === 'orders' && 'active'"
       >
         <span class="d-flex align-items-center w-100 p-1"
@@ -21,16 +21,16 @@
       </li>
       <li
         v-on:click="setPage('products')"
-        class="menu-item d-flex align-items-center"
+        class="menu-item cursor-pointer d-flex align-items-center"
         :class="currentPage === 'products' && 'active'"
       >
-        <span class="d-flex align-items-center w-100 p-1"
+        <span class="d-flex cursor-pointer align-items-center w-100 p-1"
           ><BIconTagFill class="mr-2" />Products</span
         >
       </li>
       <li
         v-on:click="setPage('bundles')"
-        class="menu-item d-flex align-items-center"
+        class="menu-item cursor-pointer d-flex align-items-center"
         :class="currentPage === 'bundles' && 'active'"
       >
         <span class="d-flex align-items-center w-100 p-1"
@@ -39,7 +39,7 @@
       </li>
       <li
         v-on:click="setPage('customers')"
-        class="menu-item d-flex align-items-center"
+        class="menu-item cursor-pointer d-flex align-items-center"
         :class="currentPage === 'customers' && 'active'"
       >
         <span class="d-flex align-items-center w-100 p-1"
@@ -48,7 +48,7 @@
       </li>
       <li
         v-on:click="setPage('categories')"
-        class="menu-item d-flex align-items-center"
+        class="menu-item cursor-pointer d-flex align-items-center"
         :class="currentPage === 'categories' && 'active'"
       >
         <span class="d-flex align-items-center w-100 p-1"
@@ -57,7 +57,7 @@
       </li>
       <li
         v-on:click="setPage('types')"
-        class="menu-item d-flex align-items-center"
+        class="menu-item cursor-pointer d-flex align-items-center"
         :class="currentPage === 'types' && 'active'"
       >
         <span class="d-flex align-items-center w-100 p-1"
@@ -66,7 +66,7 @@
       </li>
       <li
         v-on:click="setPage('articles')"
-        class="menu-item d-flex align-items-center"
+        class="menu-item cursor-pointer d-flex align-items-center"
         :class="currentPage === 'articles' && 'active'"
       >
         <span class="d-flex align-items-center w-100 p-1"

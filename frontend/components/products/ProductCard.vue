@@ -75,7 +75,7 @@ button {
 }
 
 button:hover {
-  color: inherit;
+  color: #9e7d24;
 }
 
 .content {
