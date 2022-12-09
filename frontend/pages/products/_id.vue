@@ -302,6 +302,10 @@ export default {
 </script>
 
 <style scoped>
+button:hover {
+  color: #9e7d24;
+}
+
 .icon-tag {
   display: inline-block;
   min-width: 44px;
