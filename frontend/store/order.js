@@ -1,4 +1,5 @@
 import { error } from "../utils/error";
+import { success } from "../utils/success";
 
 export const state = () => ({
   order_items: [],
@@ -59,11 +60,17 @@ export const actions = {
         order_item.order = state.id;
         const result = await this.$strapi.create("order-items", order_item);
         commit("addProduct", result);
+        success("Product successfully added");
       } else {
         order_item.order = state.id;
         const result = await this.$strapi.create("order-items", order_item);
         commit("addProduct", result);
+        success("Product successfully added");
       }
+    } else {
+      const message = "Proudct was added";
+      const err = { response: { data: { message } } };
+      error(err);
     }
   },
   async updateProduct({ commit }, order_item) {

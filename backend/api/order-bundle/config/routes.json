@@ -29,7 +29,7 @@
       "path": "/order-bundles",
       "handler": "order-bundle.create",
       "config": {
-        "policies": ["global::isAuthenticated"]
+        "policies": []
       }
     },
     {
@@ -37,7 +37,7 @@
       "path": "/order-bundles/:id",
       "handler": "order-bundle.update",
       "config": {
-        "policies": ["global::isAuthenticated"]
+        "policies": []
       }
     },
     {
@@ -45,7 +45,7 @@
       "path": "/order-bundles/:id",
       "handler": "order-bundle.delete",
       "config": {
-        "policies": ["global::isAuthenticated"]
+        "policies": []
       }
     }
   ]
