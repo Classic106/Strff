@@ -49,6 +49,10 @@ export const actions = {
       error(e);
     }
   },
+  async removeOrder({ commit }, id) {
+    await this.$strapi.$http.$delete(`/orders/${id}`);
+    commit("clearOrder");
+  },
   async addProduct({ commit, state }, order_item) {
     const item = state.order_items.filter(
       (item) => item.product.id === order_item.product.id

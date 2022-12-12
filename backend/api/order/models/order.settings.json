@@ -21,17 +21,13 @@
     "order_status": {
       "model": "order-statuses"
     },
-    "user": {
-      "plugin": "users-permissions",
-      "model": "user"
-    },
     "order_bundles": {
       "collection": "order-bundle",
       "via": "order"
     },
     "order_items": {
-      "collection": "order-item",
-      "via": "order"
+      "via": "order",
+      "collection": "order-item"
     },
     "paid": {
       "type": "boolean"

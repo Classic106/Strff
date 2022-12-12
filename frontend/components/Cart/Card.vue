@@ -3,7 +3,7 @@
     <v-credit-card-form
       v-on:change="creditInfoChanged"
       :trans="translations"
-      :noCard="true"
+      noCard
     />
     <button
       class="text-uppercase w-100 mt-4 p-2 save gold-background"
@@ -63,9 +63,17 @@ export default {
 </script>
 
 <style>
+.ccicon {
+  display: none;
+}
+
 .credit-card-form > .field:first-child,
 label {
   display: none;
+}
+
+#card-number {
+  margin-bottom: 0.5rem;
 }
 
 #card-number,
