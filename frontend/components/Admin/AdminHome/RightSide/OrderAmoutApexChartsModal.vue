@@ -103,7 +103,7 @@ export default {
         }
         return acc;
       }, []);
-      debugger;
+
       this.series[0].data = data;
     },
   },
