@@ -28,7 +28,7 @@
       "model": "size"
     },
     "purchase_type": {
-      "model": "article"
+      "model": "purchase-type"
     },
     "subscription_type": {
       "model": "subscription-type"

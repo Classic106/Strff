@@ -23,24 +23,24 @@
           {{ product.price }} $
         </h5>
       </div>
-      <button
-        class="
-          py-2
-          px-4
-          rounded
-          btn
-          d-flex
-          justify-content-center
-          align-items-center
-          text-uppercase text-nowrap
-          w-100
-        "
-        v-on:click="addToCart"
-      >
-        <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
-        Add to cart
-      </button>
     </nuxt-link>
+    <button
+      class="
+        py-2
+        px-4
+        rounded
+        btn
+        d-flex
+        justify-content-center
+        align-items-center
+        text-uppercase text-nowrap
+        w-100
+      "
+      v-on:click="addToCart"
+    >
+      <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
+      Add to cart
+    </button>
   </div>
 </template>
 
@@ -55,6 +55,8 @@ export default {
   components: { PreloaderImage },
   methods: {
     addToCart() {
+      const { product } = this;
+
       const selected = {
         product,
         quantity: 1,

@@ -1,4 +1,5 @@
 import cookieparser from "cookieparser";
+import { error } from "../utils/error";
 
 export const actions = {
   async nuxtServerInit({ commit, dispatch }, { req }) {
@@ -15,17 +16,11 @@ export const actions = {
 
     if (order !== null) {
       try {
-        const data = await this.$strapi.findOne("orders", JSON.parse(order));
+        const data = await this.$strapi.findOne("ordes", order);
         commit("order/setOrder", data);
       } catch (e) {
-        this.$cookies.remove("order");
-        const { data } = e.response;
-        const messge = data.message[0].messages[0].id;
-        Vue.notify({
-          group: "all",
-          type: "error",
-          text: messge,
-        });
+        await dispatch("order/removeOrder", order);
+        error(e);
       }
     }
     if (Object.keys(userInfo).length) {

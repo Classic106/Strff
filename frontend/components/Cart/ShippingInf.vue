@@ -113,7 +113,7 @@ export default {
     },
   },
   mounted() {
-    this.userInfo = this.userInf;
+    this.userInfo = { ...this.userInf };
   },
 };
 </script>
