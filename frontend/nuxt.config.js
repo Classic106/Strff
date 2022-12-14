@@ -74,7 +74,9 @@ export default {
   },
   proxy: {
     '/payment-authorize-net/': { target: 'https://api.authorize.net/xml/v1/request.api', pathRewrite: {'^/payment-authorize-net/': ''}, changeOrigin: true },
-    '/payment-authorize-net-test/': { target: 'https://apitest.authorize.net/xml/v1/request.api', pathRewrite: {'^/payment-authorize-net-test/': ''}, changeOrigin: true }
+    '/payment-authorize-net-test/': { target: 'https://apitest.authorize.net/xml/v1/request.api', pathRewrite: {'^/payment-authorize-net-test/': ''}, changeOrigin: true },
+    '/shipping-usps/': { target: 'https://secure.shippingapis.com/ShippingApi.dll', pathRewrite: {'^/shipping-usps/': ''}, changeOrigin: true },
+    '/shipping-usps-test/': { target: 'https://stg-secure.shippingapis.com/ShippingApi.dll', pathRewrite: {'^/shipping-usps-test/': ''}, changeOrigin: true },
   },
   strapi: {
     url: process.env.API_URL || "http://localhost:1338",

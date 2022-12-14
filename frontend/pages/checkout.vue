@@ -88,30 +88,17 @@
                 <ul class="payment-options">
                     <li v-on:click="paymentType = 1">Creditcard</li>
                         <div v-if="paymentType == 1" class="creditcard-payment">
-                            <div class="row">
-                                <div class="col-12 col-md-5">Card Number</div>
-                                <div class="col-12 col-md-7">
-                                    <input type="text" placeholder="Card Number" v-model="order.card_number"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-md-5">Card Expiry</div>
-                                <div class="col-12 col-md-7">
-                                    <input type="text" placeholder="Card Expiry" v-model="order.card_expiry"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-md-5">Card Security Code</div>
-                                <div class="col-12 col-md-7">
-                                    <input type="text" placeholder="Card Security Code" v-model="order.card_security_code"/>
-                                </div>
-                            </div>
+                            <Creditcard v-on:setCreditcard="setCreditcard"/>
                         </div>
                     <li v-on:click="paymentType = 2">Paypal</li>
                 </ul>
             </div>
             <div class="block">
                 <h2>Shipping Method</h2>
+                <ul class="shipping-options">
+                    <li v-on:click="shippingType = 1">USPS</li>
+                    <li v-on:click="shippingType = 2">UPS</li>
+                </ul>
             </div>
         </div>
         <div class="col-12 col-md-4">
@@ -217,7 +204,9 @@
   import { pad, convertObjectToQueryUrl } from '~/utils/functions';
   import { v4 as uuidv4 } from 'uuid';
   import PayWithAuthorizeNet from '~/utils/payments/authorize-net';
+  import ShipWithUsps from '~/utils/shippings/usps';
   import { states } from "@/data";
+  import Creditcard from '~/components/Creditcard';
 
   export default {
     layout: "club",
@@ -227,8 +216,10 @@
           loading: false,
           isSameAsShipping: true,
           paymentType: 0,
+          shippingType: 0,
           purchaseTypes: [],
           states,
+          card: {},
           selectedPaymentMethod: null,
           ccMonths: [
               {text: 'Jan', value: 1},
@@ -245,7 +236,8 @@
               {text: 'Dec', value: 12}
           ],
           ccYears: [],
-          paymentApiAuthorizeNet: null
+          paymentApiAuthorizeNet: null,
+          shippingApiUsps: null
       }
     },
     computed: {
@@ -299,7 +291,13 @@
                   paymentResult = this.paymentApiAuthorizeNet.pay();
                   console.log(paymentResult);
               }
-              if (paymentResult) {
+              let shippingResult = false;
+              if (this.shippingType == 1) {
+                  this.shippingApiUsps = new ShipWithUsps();
+                  shippingResult = this.shippingApiUsps.ship();
+                  console.log(shippingResult);
+              }
+              if (paymentResult && shippingResult) {
                   alert('Your order have been successfully submitted.');
                   this.placeOrder(this.order);
                   this.$router.push('/');
@@ -330,7 +328,10 @@
       },
       placeOrder(data) {
           this.$store.dispatch('order/placeOrder', data);
-      }
+      },
+      setCreditcard: function (card) {
+        this.card = card;
+      },
     },
     async mounted () {
       this.order = Object.assign({}, this.cart);
@@ -386,9 +387,19 @@
     }
 
     .creditcard-payment {
-        padding: 15px 15px;
+        padding: 15px 15px 0 15px;
         border: 1px solid gray;
         margin-top: 5px;
+    }
+
+    ul.shipping-options {
+        li {
+            padding: 15px 15px;
+            border: 1px solid gray;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
     }
   }
 
