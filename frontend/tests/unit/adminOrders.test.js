@@ -8,24 +8,8 @@ import OrderTable from "@/components/Admin/AdminOrders/OrdersTable/OrderTable.vu
 
 Vue.use(Vuex);
 
-describe("Admin", () => {
-  test("AdminOrders", async () => {
-    const getters = {
-      "admin_orders/selected": () => null,
-      "admin_orders/orders": () => null,
-      "admin_orders/total": () => null,
-    };
-    const actions = { "admin_orders/getOrders": jest.fn() };
-    const store = new Vuex.Store({ getters, actions });
-
-    const wrapper = mount(AdminOrders, { store });
-    await flushPromises();
-
-    const orderTable = wrapper.findComponent(OrderTable);
-    expect(orderTable.exists()).toBe(true);
-  });
-
-  test("AdminOrders", async () => {
+describe("AdminOrders", () => {
+  test("AdminOrders contains OrderTable if orders data is loaded", async () => {
     const getters = {
       "admin_orders/selected": () => null,
       "admin_orders/orders": () => null,
