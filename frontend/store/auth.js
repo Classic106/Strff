@@ -24,6 +24,7 @@ export const actions = {
       const { data } = await this.$axios.get(`users/me`);
       commit("setUser", data);
     } catch (e) {
+      this.$cookies.remove("token");
       error(e);
     }
   },

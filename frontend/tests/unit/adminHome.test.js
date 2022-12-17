@@ -5,12 +5,11 @@ import Vuex from "vuex";
 
 import AdminHome from "@/components/Admin/AdminHome";
 import RightSide from "@/components/Admin/AdminHome/RightSide";
-import TopProducts from "@/components/Admin/AdminHome/RightSide/TopProducts.vue";
 
 Vue.use(Vuex);
 
 describe("AdminHome", () => {
-  test("AdminHome has te same data after data is loaded", async () => {
+  test("AdminHome has exist RightSide and contains 'There were no products sold during this time' in TopProducts if topproducts data is empty", async () => {
     const mockGetList = [
       {
         id: 62,
