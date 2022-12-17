@@ -16,6 +16,7 @@ module.exports = {
     ".*\\.(vue)$": "vue-jest",
   },
   setupFiles: ["./jest/jest-setup.js"],
+  transformIgnorePatterns: ["/node_modules/(?!vue-upload-drop-images/)"],
   collectCoverage: true,
   collectCoverageFrom: [
     "<rootDir>/components/**/*.vue",

@@ -21,7 +21,7 @@ describe("AdminBundles", () => {
     const wrapper = mount(AdminBundles, { store });
     await flushPromises();
 
-    const orderTable = wrapper.findComponent(BundleTable);
-    expect(orderTable.exists()).toBe(true);
+    const bundleTable = wrapper.findComponent(BundleTable);
+    expect(bundleTable.exists()).toBe(true);
   });
 });
