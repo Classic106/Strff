@@ -1,6 +1,6 @@
 import Vue from "vue";
-import GlobalComponents from "./globalComponents";
 import BootstrapVue from "bootstrap-vue";
+import GlobalComponents from "./globalComponents";
 import VueGoodTablePlugin from "vue-good-table";
 import vSelect from "vue-select";
 

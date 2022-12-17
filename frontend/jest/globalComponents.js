@@ -24,27 +24,27 @@ import {
 
 const GlobalComponents = {
   install(Vue) {
-    Vue.component(BIconArrowLeft);
-    Vue.component(BIconChevronLeft);
-    Vue.component(BIconChevronRight);
-    Vue.component(BIconHouseDoorFill);
-    Vue.component(BIconInboxFill);
-    Vue.component(BIconTagFill);
-    Vue.component(BIconTagsFill);
-    Vue.component(BIconPersonFill);
-    Vue.component(BIconSearch);
-    Vue.component(BIconDot);
-    Vue.component(BIconJournalText);
-    Vue.component(BIconX);
-    Vue.component(BIconClipboard);
-    Vue.component(BIconStack);
-    Vue.component(BIconCheckCircle);
-    Vue.component(BAvatar);
-    Vue.component(BProgress);
-    Vue.component(BProgressBar);
-    Vue.component(BModal);
-    Vue.component(BDropdown);
-    Vue.component(BDropdownItem);
+    Vue.component("BIconArrowLeft", BIconArrowLeft);
+    Vue.component("BIconChevronLeft", BIconChevronLeft);
+    Vue.component("BIconChevronRight", BIconChevronRight);
+    Vue.component("BIconHouseDoorFill", BIconHouseDoorFill);
+    Vue.component("BIconInboxFill", BIconInboxFill);
+    Vue.component("BIconTagFill", BIconTagFill);
+    Vue.component("BIconTagsFill", BIconTagsFill);
+    Vue.component("BIconPersonFill", BIconPersonFill);
+    Vue.component("BIconSearch", BIconSearch);
+    Vue.component("BIconDot", BIconDot);
+    Vue.component("BIconJournalText", BIconJournalText);
+    Vue.component("BIconX", BIconX);
+    Vue.component("BIconClipboard", BIconClipboard);
+    Vue.component("BIconStack", BIconStack);
+    Vue.component("BIconCheckCircle", BIconCheckCircle);
+    Vue.component("BAvatar", BAvatar);
+    Vue.component("BProgress", BProgress);
+    Vue.component("BProgressBar", BProgressBar);
+    Vue.component("BModal", BModal);
+    Vue.component("BDropdown", BDropdown);
+    Vue.component("BDropdownItem", BDropdownItem);
   },
 };
 
