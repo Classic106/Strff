@@ -1,17 +1,18 @@
 import { mount } from "@vue/test-utils";
+import flushPromises from "flush-promises";
 import Vue from "vue";
 import Vuex from "vuex";
 
 import Admin from "@/components/Admin";
-import Loader from "@/components/common/Loader.vue";
 
 Vue.use(Vuex);
 
 describe("Admin", () => {
   let getters;
   let store;
+  let wrapper;
 
-  const mockRoute = { path: "/orders" };
+  const mockRoute = { path: "/bundles" };
   const mockRouter = { push: jest.fn() };
 
   beforeEach(() => {
@@ -24,18 +25,23 @@ describe("Admin", () => {
     };
 
     store = new Vuex.Store({ getters });
-  });
-
-  test("Admin returns Loader", () => {
-    const wrapperAdmin = mount(Admin, {
+    wrapper = mount(Admin, {
       store,
       mocks: {
         $route: mockRoute,
         $router: mockRouter,
       },
+      slots: {
+        page: "Main Content",
+      },
     });
-    const wrapperLoader = mount(Loader);
-    expect(wrapperAdmin.html()).toContain(wrapperLoader.html());
+  });
+
+  test("Admin after authenticated user with current slot", async () => {
+    await flushPromises();
+    expect(wrapper.html()).toContain(
+      `<div class="w-100 h-100">Main Content</div>`
+    );
   });
 
   test("Admin without authenticated user", () => {
