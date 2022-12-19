@@ -22,6 +22,10 @@ import {
   BDropdownItem,
 } from "bootstrap-vue";
 
+import vueCustomScrollbar from "vue-custom-scrollbar";
+import CoolLightBox from "vue-cool-lightbox";
+import vSelect from "vue-select";
+
 const GlobalComponents = {
   install(Vue) {
     Vue.component("BIconArrowLeft", BIconArrowLeft);
@@ -45,6 +49,10 @@ const GlobalComponents = {
     Vue.component("BModal", BModal);
     Vue.component("BDropdown", BDropdown);
     Vue.component("BDropdownItem", BDropdownItem);
+
+    Vue.component("vueCustomScrollbar", vueCustomScrollbar);
+    Vue.component("CoolLightBox", CoolLightBox);
+    Vue.component("v-select", vSelect);
   },
 };
 
