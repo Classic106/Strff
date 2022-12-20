@@ -16,7 +16,7 @@ export const actions = {
 
     if (order !== null) {
       try {
-        const data = await this.$strapi.findOne("ordes", order);
+        const data = await this.$strapi.findOne("orders", order);
         commit("order/setOrder", data);
       } catch (e) {
         await dispatch("order/removeOrder", order);

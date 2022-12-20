@@ -187,11 +187,6 @@ export default {
       const ids = this.selectedRows.map((item) => item.id);
       this.deleteOrders(ids);
     },
-    getCustomerName: function (order) {
-      const { first_name, last_name } = order;
-
-      return `${first_name} ${last_name}`;
-    },
   },
 };
 </script>

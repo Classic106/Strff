@@ -114,9 +114,15 @@ export default {
 
       return totalProducts + totalBundles;
     },
-    getCustomerName: function (customer) {
-      const { firstName, lastName } = orer.customer;
-      return `${firstName} ${lastName}`;
+    getCustomerName: function () {
+      const { customer } = this.order;
+
+      if (customer) {
+        const { firstName, lastName } = customer;
+        return `${firstName} ${lastName}`;
+      }
+
+      return "undefined undefined";
     },
     addCustomer: function (customer) {
       this.order.customer = customer;
