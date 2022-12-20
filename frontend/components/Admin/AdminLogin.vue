@@ -33,19 +33,25 @@ export default {
   methods: {
     ...mapActions({ login: "auth/login" }),
     send: async function () {
-      //const data = { identifier: "test@test.test", password: "test123456" };
-      const { identifier, password } = this;
-      await this.login({ identifier, password });
+      const data = { identifier: "test@test.test", password: "test123456" };
+      //const { identifier, password } = this;
+      await this.login(data);
 
+      this.isAuthenticated();
+    },
+    isAuthenticated() {
       if (this.user) {
-        this.$router.push("/admin");
+        const { role } = this.user;
+        const { type } = role;
+
+        if (type === "authenticated") {
+          this.$router.push("/admin");
+        }
       }
     },
   },
   mounted() {
-    if (this.user) {
-      this.$router.push("/admin");
-    }
+    this.isAuthenticated();
   },
 };
 </script>

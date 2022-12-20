@@ -15,7 +15,6 @@
 <script>
 import qs from "qs";
 
-import { shuffleArray } from "~/helpers";
 import { error } from "~/utils/error.js";
 
 import ProductCard from "~/components/Admin/common/ProductCard.vue";
@@ -26,7 +25,6 @@ export default {
     products: [],
   }),
   components: { ProductCard },
-  methods: { shuffleArray },
   async mounted() {
     try {
       const queryData = {
@@ -36,7 +34,7 @@ export default {
       const query = qs.stringify(queryData);
 
       const { data } = await this.$axios.get(`/products?${query}`);
-      this.products = this.shuffleArray(data);
+      this.products = data;
     } catch (e) {
       error(e);
     }

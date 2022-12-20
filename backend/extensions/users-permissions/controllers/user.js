@@ -7,46 +7,52 @@
 
 module.exports = {
   async me(ctx) {
-    if (ctx.request && ctx.request.header && ctx.request.header.authorization) {
-      const decoded = await strapi.plugins[
-        "users-permissions"
-      ].services.jwt.getToken(ctx);
+    try {
+      if (
+        ctx.request &&
+        ctx.request.header &&
+        ctx.request.header.authorization
+      ) {
+        const decoded = await strapi.plugins[
+          "users-permissions"
+        ].services.jwt.getToken(ctx);
 
-      const { id } = decoded;
+        const { id } = decoded;
 
-      const user = await strapi
-        .query("user", "users-permissions")
-        .findOne({ id });
-      if (user.role.name === "Authenticated") {
-        const {
-          blocked,
-          confirmed,
-          created_at,
-          email,
-          first_name,
-          id,
-          last_name,
-          provider,
-          role,
-          updated_at,
-          username,
-        } = user;
-        return {
-          blocked,
-          confirmed,
-          created_at,
-          email,
-          first_name,
-          id,
-          last_name,
-          provider,
-          role,
-          updated_at,
-          username,
-        };
+        const user = await strapi
+          .query("user", "users-permissions")
+          .findOne({ id });
+        if (user.role.name === "Authenticated") {
+          const {
+            blocked,
+            confirmed,
+            created_at,
+            email,
+            first_name,
+            id,
+            last_name,
+            provider,
+            role,
+            updated_at,
+            username,
+          } = user;
+          return {
+            blocked,
+            confirmed,
+            created_at,
+            email,
+            first_name,
+            id,
+            last_name,
+            provider,
+            role,
+            updated_at,
+            username,
+          };
+        }
       }
+    } catch (e) {
+      return ctx.badRequest("Unauthenticated user");
     }
-
-    return ctx.badRequest("Unauthenticated user");
   },
 };

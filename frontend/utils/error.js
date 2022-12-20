@@ -3,27 +3,26 @@ import Vue from "vue";
 export function error(e) {
   const { data } = e.response;
   const { message } = data;
-  console.log(message);
 
-  if (!message.length) {
-    Vue.notify({
-      group: "all",
-      type: "error",
-      text: message,
-    });
+  if (typeof message === "string" || !message.length) {
+    showError(message);
     return;
   }
 
-  if (message.length) {
-    const { id } = message[0].messages[0];
+  if (message[0]) {
+    const { messages } = message[0];
+    const { message: msg } = messages[0];
 
-    Vue.notify({
-      group: "all",
-      type: "error",
-      text: id,
-    });
+    showError(msg);
     return;
   }
 
+  function showError(text) {
+    Vue.notify({
+      group: "all",
+      type: "error",
+      text: text,
+    });
+  }
   console.error(data);
 }
