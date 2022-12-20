@@ -9,7 +9,7 @@ import LightBox from "@/components/common/LightBox.vue";
 
 Vue.use(Vuex);
 
-describe("Admin", () => {
+describe("Adminlayout", () => {
   test("Adminlayout has header, menu, lightbox", () => {
     const getters = {
       "auth/user": jest.fn(),
