@@ -19,7 +19,7 @@ export const actions = {
         const data = await this.$strapi.findOne("orders", order);
         commit("order/setOrder", data);
       } catch (e) {
-        await dispatch("order/removeOrder", order);
+        //await dispatch("order/removeOrder", order);
         error(e);
       }
     }
