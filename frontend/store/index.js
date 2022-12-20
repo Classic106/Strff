@@ -19,7 +19,6 @@ export const actions = {
         const data = await this.$strapi.findOne("orders", order);
         commit("order/setOrder", data);
       } catch (e) {
-        //await dispatch("order/removeOrder", order);
         error(e);
       }
     }
@@ -30,6 +29,7 @@ export const actions = {
     if (token) {
       await dispatch("auth/loginByToken");
     }
+    await dispatch("best_sellers/getBestSellers");
     await dispatch("categories/getCategories");
     await dispatch("articles/getArticles");
     await dispatch("purchase-types/getPurchaseTypes");

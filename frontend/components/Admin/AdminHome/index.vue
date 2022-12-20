@@ -80,6 +80,7 @@ export default {
         "admin_visitors/getCountConnectedCountVisitors",
       getCountOrders: "admin_orders/getCountOrders",
       getTodayOrders: "admin_orders/getTodayOrders",
+      getBestSellers: "best_sellers/getBestSellers",
     }),
     openModal: function (modal) {
       this.$root.$emit("bv::show::modal", modal);
@@ -89,12 +90,14 @@ export default {
     await this.getCountConnectedCountVisitors();
     await this.getCountVisitors();
     await this.getTodayOrders();
+    await this.getBestSellers();
     this.countOrders = await this.getCountOrders();
 
     this.timer = setInterval(async () => {
       await this.getCountConnectedCountVisitors();
       await this.getCountVisitors();
       await this.getTodayOrders();
+      await this.getBestSellers();
       this.countOrders = await this.getCountOrders();
     }, 5000);
   },
