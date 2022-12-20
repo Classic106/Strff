@@ -71,8 +71,10 @@ export default {
     ...mapMutations({ setArticle: "articles/setArticle" }),
   },
   async mounted() {
+    this.loading = true;
     const { id } = this.$route.params;
     await this.getArticle(id);
+    this.loading = false;
   },
   destroyed() {
     this.setArticle(null);
