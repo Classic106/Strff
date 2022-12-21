@@ -78,7 +78,7 @@ export const actions = {
         success("Product successfully added");
       }
     } else {
-      const message = "Proudct was added";
+      const message = "Product wasn`t added";
       const err = { response: { data: { message } } };
       error(err);
     }
