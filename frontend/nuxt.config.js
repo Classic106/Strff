@@ -118,7 +118,6 @@ export default {
     ],
   },
   axios: {
-    proxy: true,
     baseURL: process.env.API_URL || "http://localhost:1338",
     browserBaseURL: process.env.API_URL || "http://localhost:1338",
   },
