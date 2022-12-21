@@ -1,5 +1,5 @@
-import { error } from "../utils/error";
-import { success } from "../utils/success";
+import { error } from "~/utils/error";
+import { success } from "~/utils/success";
 
 export const state = () => ({
   order_items: [],
@@ -27,11 +27,17 @@ export const actions = {
   async confirmOrder({ state, commit }, userInfo = {}) {
     const { cellphone, email } = userInfo;
 
-    const customer = await this.$strapi.$http.$get(
-      `/customers?cellphone=${cellphone}&email=${email}`
-    );
+    const isUserInfo = Object.keys(userInfo).length !== 0;
+
+    if (!isUserInfo) {
+      return;
+    }
 
     try {
+      const customer = await this.$strapi.$http.$get(
+        `/customers?cellphone=${cellphone}&email=${email}`
+      );
+
       if (customer.length) {
         const result = await this.$strapi.update("orders", state.id, {
           customer: customer[0].id,

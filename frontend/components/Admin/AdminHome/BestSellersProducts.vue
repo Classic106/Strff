@@ -4,7 +4,7 @@
     <div class="row justify-content-center w-100 m-0">
       <ProductCard
         class="col-6 p-0 m-1"
-        v-for="product in products"
+        v-for="product in best_sellers"
         :key="product.id"
         :product="product"
       />
@@ -13,33 +13,17 @@
 </template>
 
 <script>
-import qs from "qs";
-
-import { shuffleArray } from "~/helpers";
-import { error } from "~/utils/error.js";
+import { mapGetters } from "vuex";
 
 import ProductCard from "~/components/Admin/common/ProductCard.vue";
 
 export default {
   name: "BestSellersProducts",
-  data: () => ({
-    products: [],
-  }),
   components: { ProductCard },
-  methods: { shuffleArray },
-  async mounted() {
-    try {
-      const queryData = {
-        _sort: `sales:DESC`,
-        _limit: 4,
-      };
-      const query = qs.stringify(queryData);
-
-      const { data } = await this.$axios.get(`/products?${query}`);
-      this.products = this.shuffleArray(data);
-    } catch (e) {
-      error(e);
-    }
+  computed: {
+    ...mapGetters({
+      best_sellers: "best_sellers/best_sellers",
+    }),
   },
 };
 </script>

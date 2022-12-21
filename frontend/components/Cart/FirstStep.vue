@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 import CartOrderItems from "./CartOrderItems.vue";
 import OrderBundles from "./OrderBundles.vue";

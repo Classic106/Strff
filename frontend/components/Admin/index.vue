@@ -36,6 +36,8 @@ export default {
       if (type === "authenticated") {
         const { path } = this.$route;
         this.$router.push(path);
+      } else {
+        this.$router.push("/admin/login");
       }
     }
     this.loading = false;

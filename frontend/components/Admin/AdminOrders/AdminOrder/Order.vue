@@ -316,8 +316,13 @@ export default {
     },
     getCustomerName: function () {
       const { customer } = this.selected;
-      const { firstName, lastName } = customer;
-      return `${firstName} ${lastName}`;
+
+      if (customer) {
+        const { firstName, lastName } = customer;
+        return `${firstName} ${lastName}`;
+      }
+
+      return "undefined undefined";
     },
   },
   async destroyed() {

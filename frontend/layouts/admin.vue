@@ -35,7 +35,7 @@ import AdminMenu from "~/components/Admin/AdminMenu.vue";
 import LightBox from "@/components/common/LightBox.vue";
 
 export default {
-  name: "AdminPage",
+  name: "AdminLayout",
   components: { AdminHeader, AdminMenu, LightBox },
   data: () => ({
     isOpenMenu: false,

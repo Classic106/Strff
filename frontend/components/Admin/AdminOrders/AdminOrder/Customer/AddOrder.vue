@@ -79,9 +79,14 @@ export default {
       this.total = this.calcTotal();
     },
     getCustomerName: function () {
-      const { firstName, lastName } = this.selected;
+      const { customer } = this.selected;
 
-      return `${firstName} ${lastName}`;
+      if (customer) {
+        const { firstName, lastName } = customer;
+        return `${firstName} ${lastName}`;
+      }
+
+      return "undefined undefined";
     },
     calcTotal: function () {
       const totalProducts = this.order_items.reduce(

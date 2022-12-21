@@ -62,6 +62,8 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import { warn } from "@/utils/warn";
+
 import Sign from "@/components/Sign";
 import UserForm from "@/components/UserForm";
 import Card from "./Card.vue";
@@ -87,6 +89,7 @@ export default {
     }),
   },
   methods: {
+    warn,
     ...mapActions({
       confirmOrder: "order/confirmOrder",
     }),
@@ -109,7 +112,10 @@ export default {
 
         this.confirmOrder(data);
         this.$emit("nextStep");
+        return;
       }
+
+      this.warn("Fill customer information");
     },
   },
   mounted() {
