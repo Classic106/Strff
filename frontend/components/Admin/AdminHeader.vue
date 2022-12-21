@@ -82,8 +82,8 @@ export default {
     getSeason,
     ...mapActions({ logout: "auth/logout" }),
     exit: function () {
-      this.$router.push("/admin/login");
       this.logout();
+      this.$router.push("/admin/login");
     },
     shortUserName: function () {
       if (this.user) {
