@@ -31,7 +31,7 @@ module.exports = {
 
     const difference = productImage.filter((x) => !image.includes(x));
 
-    if (difference.length) {
+    if (difference.length && image >= 1 && newImages) {
       for (let k = 0; k < difference.length; k++) {
         const id = difference[k];
         await strapi.plugins["upload"].services.upload.remove({ id });

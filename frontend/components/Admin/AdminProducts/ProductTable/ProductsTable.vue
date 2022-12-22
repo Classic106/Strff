@@ -64,7 +64,9 @@
       </template>
       <div slot="selected-row-actions">
         <button class="btn btn-danger" v-on:click="deleteItems">Delete</button>
-        <button class="btn btn-success" v-on:click="publish">Publish</button>
+        <button class="btn btn-success mx-1" v-on:click="publish">
+          Publish
+        </button>
         <button class="btn btn-warning" v-on:click="unPublish">
           Unpublish
         </button>
@@ -117,6 +119,7 @@ export default {
     ...mapActions({
       deleteProducts: "admin_products/deleteProducts",
       getProducts: "admin_products/getProducts",
+      statusProducts: "admin_products/statusProducts",
     }),
     ...mapMutations({
       setParams: "admin_products/setParams",
@@ -165,13 +168,13 @@ export default {
       this.deleteProducts(ids);
     },
     async publish() {
-      await this.statusArticles({
+      await this.statusProducts({
         products: this.selectedRows,
         status: "publish",
       });
     },
     async unPublish() {
-      await this.statusArticles({ products: this.selectedRows });
+      await this.statusProducts({ products: this.selectedRows });
     },
   },
 };

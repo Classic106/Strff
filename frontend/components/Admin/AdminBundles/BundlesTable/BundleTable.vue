@@ -69,9 +69,11 @@
         </div>
       </template>
       <div slot="selected-row-actions">
-        <button class="btn btn-danger" v-on:click="deleteItems">Delete</button>
-        <button class="btn btn-success" v-on:click="publish">Publish</button>
-        <button class="btn btn-danger" v-on:click="deleteItems">Delete</button>
+        <button class="btn btn-danger" v-on:click="deleteItems">Delete</button
+        ><button class="btn btn-success mx-1" v-on:click="publish">Publish</button>
+        <button class="btn btn-warning" v-on:click="unPublish">
+          Unpublish
+        </button>
       </div>
     </vue-good-table>
   </div>

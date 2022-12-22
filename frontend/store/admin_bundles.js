@@ -106,6 +106,7 @@ export const actions = {
           return await this.$axios.put(`/bundles/${id}`, article);
         })
       );
+
       dispatch("getBundles");
     } catch (e) {
       error(e);

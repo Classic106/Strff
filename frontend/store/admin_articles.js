@@ -118,20 +118,6 @@ export const actions = {
         updatedArticle = data;
       }
 
-      // let newImage;
-
-      // if (image && typeof image !== "string" && image[0]) {
-      //   const formData = new FormData();
-      //   formData.append("files", image[0], image[0].name);
-
-      //   newImage = await this.$axios
-      //     .post("/upload", formData)
-      //     .then(({ data }) => data[0].id);
-      // }
-      // const updatedArticle = { ...article, image: newImage || image };
-
-      // const { data } = await this.$axios.put(`/articles/${id}`, updatedArticle);
-
       commit("updateArticle", updatedArticle);
       success("Article successfully updated");
     } catch (e) {

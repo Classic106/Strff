@@ -120,7 +120,7 @@ export const actions = {
           });
       } else {
         const curentIMages = image.map((image) => image.id);
-       
+
         const { data } = await this.$axios.put(`/products/${id}`, {
           ...product,
           image: curentIMages,
@@ -131,7 +131,6 @@ export const actions = {
       commit("updateProduct", updatedProduct);
       success("Product successfully updated");
     } catch (e) {
-      console.log(e);
       error(e);
     }
   },
@@ -146,17 +145,19 @@ export const actions = {
       error(e);
     }
   },
-  async statusArticles({ dispatch }, { products, status }) {
+  async statusProducts({ dispatch }, { products, status }) {
     try {
       const result = await Promise.all(
-        products.map(async ({ id }) => {
+        products.map(async ({ id, image }) => {
           const product = {
             id,
+            image: image.map(({ id }) => id),
             published_at: status === "publish" ? new Date() : null,
           };
           return await this.$axios.put(`/products/${id}`, product);
         })
       );
+
       dispatch("getProducts");
     } catch (e) {
       error(e);
