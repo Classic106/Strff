@@ -34,6 +34,7 @@
 
 <script>
 import "~/utils/filters";
+import { warn } from "~/utils/warn";
 
 import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
 import BundleCard from "./BundleCard.vue";
@@ -52,13 +53,19 @@ export default {
       );
     },
     addBundle: function (item) {
-      const index = this.selectedBundles.findIndex((p) => p.id === item.id);
+      const index = this.selectedBundles.findIndex(
+        (p) => p.bundle.id === item.id
+      );
 
       if (index === -1) {
         const obj = { bundle: item };
         this.selectedBundles.push(obj);
+
+        this.$emit("setBundles", this.selectedBundles);
+        return;
       }
-      this.$emit("setBundles", this.selectedBundles);
+
+      warn("Bundle is selected already");
     },
     deleteProduct: function (index) {
       this.selectedBundles.splice(index, 1);

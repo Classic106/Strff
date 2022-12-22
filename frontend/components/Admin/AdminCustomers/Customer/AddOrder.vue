@@ -74,12 +74,13 @@ export default {
       createOrder: "admin_orders/createOrder",
     }),
     setProducts: function (data) {
+      console.log(data);
       this.order.order_items = data;
-      this.total = this.calcTotal();
+      this.order.total = this.calcTotal();
     },
     setBundles: function (data) {
       this.order.order_bundles = data;
-      this.total = this.calcTotal();
+      this.order.total = this.calcTotal();
     },
     getCustomerName: function () {
       const { firstName, lastName } = this.selected;

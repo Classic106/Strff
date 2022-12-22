@@ -126,11 +126,6 @@ export default {
       browserBaseURL: process.env.API_URL,
     },
   },
-  privateRuntimeConfig: {
-    axios: {
-      baseURL: process.env.API_URL,
-    },
-  },
 
   proxy: {
     "/payment-nmi/": {

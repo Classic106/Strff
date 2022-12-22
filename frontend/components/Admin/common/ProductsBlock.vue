@@ -54,6 +54,8 @@
 </template>
 
 <script>
+import { warn } from "~/utils/warn";
+
 import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
 import ProductSearchItem from "./ProductSearchItem.vue";
 import ProductCard from "./ProductCard.vue";
@@ -76,7 +78,9 @@ export default {
       );
     },
     addProduct: function (item) {
-      const index = this.selectedProducts.findIndex((p) => p.id === item.id);
+      const index = this.selectedProducts.findIndex(
+        (p) => p.product.id === item.id
+      );
 
       if (index === -1) {
         const obj = {
@@ -86,8 +90,11 @@ export default {
           quantity: 1,
         };
         this.selectedProducts.push(obj);
+        this.$emit("setProducts", this.selectedProducts);
+        return;
       }
-      this.$emit("setProducts", this.selectedProducts);
+
+      warn("Product is selected already");
     },
     deleteProduct: function (index) {
       this.selectedProducts.splice(index, 1);
@@ -161,7 +168,7 @@ input[type="number"]::-webkit-outer-spin-button {
   display: inline-block;
   position: absolute;
   content: "";
-  width: .5rem;
+  width: 0.5rem;
   height: 2px;
   background-color: #212121;
   transform: translate(-50%, -50%);

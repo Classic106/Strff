@@ -161,9 +161,9 @@ export default {
 
     if (orders && orders.length) {
       this.customerOrders = orders.sort(
-        (a, b) => new Date(a.order_date) < new Date(b.order_date)
+        (a, b) => new Date(b.order_date) - new Date(a.order_date)
       );
-
+      console.log(this.customerOrders);
       this.ordersSpent = this.customerOrders.reduce(
         (acc, order) => (acc += order.total),
         0
