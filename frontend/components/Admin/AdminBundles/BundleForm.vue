@@ -80,6 +80,8 @@
 </template>
 
 <script>
+import { warn } from "~/utils/warn";
+
 import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
 import ProductCard from "~/components/Admin/common/ProductCard.vue";
 
@@ -145,7 +147,10 @@ export default {
       );
       if (index === -1) {
         this.currentBundle.products.push(item);
+        return;
       }
+
+      warn("Product is selected already");
     },
     deleteProduct: function (id) {
       this.currentBundle.products = this.currentBundle.products.filter(

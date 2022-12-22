@@ -74,7 +74,6 @@ export default {
       createOrder: "admin_orders/createOrder",
     }),
     setProducts: function (data) {
-      console.log(data);
       this.order.order_items = data;
       this.order.total = this.calcTotal();
     },
