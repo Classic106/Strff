@@ -1,21 +1,15 @@
 <template>
-  <Admin>
-    <template v-slot:page>
-      <Categories />
-    </template>
-  </Admin>
+  <Categories />
 </template>
 
 <script>
-import authLayout from "~/middleware/authLayout";
-
 import Categories from "~/components/Admin/Categories";
-import Admin from "~/components/Admin";
 
 export default {
   name: "AdminPage",
-  layout: authLayout,
-  components: { Admin, Categories },
+  layout: "admin",
+  middleware: "isAdminAuthenticated",
+  components: { Categories },
 };
 </script>
 

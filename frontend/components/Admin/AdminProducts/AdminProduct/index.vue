@@ -1,32 +1,34 @@
 <template>
   <div class="row w-100 justify-content-center m-0 mt-3">
-    <div class="d-flex flex-column col-md-6 col-12">
-      <div class="d-flex align-items-center">
+    <div class="d-flex flex-column align-items-center col-10 p-0">
+      <div class="d-flex align-items-center justify-content-between w-100">
         <button v-on:click="clearSelectedProducts()" class="button">
           <BIconArrowLeft />
         </button>
         <p class="text-ellipsis m-0 ml-2">{{ currentProduct.title }}</p>
-        <button
-          class="border-left"
-          v-on:click="setPreviousProduct"
-          :disabled="!previous"
-        >
-          <BIconChevronLeft />
-        </button>
-        <button
-          class="border-right"
-          v-on:click="setNextProduct"
-          :disabled="!next"
-        >
-          <BIconChevronRight />
-        </button>
+        <div class="d-flex">
+          <button
+            class="border-left"
+            v-on:click="setPreviousProduct"
+            :disabled="!previous"
+          >
+            <BIconChevronLeft />
+          </button>
+          <button
+            class="border-right"
+            v-on:click="setNextProduct"
+            :disabled="!next"
+          >
+            <BIconChevronRight />
+          </button>
+        </div>
       </div>
       <form
-        class="d-flex"
+        class="row w-100"
         id="admin-product-form"
         v-on:submit.stop.prevent="update"
       >
-        <div class="w-75">
+        <div class="col-9 p-0">
           <div class="d-flex flex-column">
             <div class="block d-flex flex-column p-2 mt-2">
               <label class="d-flex font-weight-bold" for="title">Title</label>
@@ -37,10 +39,21 @@
                 v-model.trim="currentProduct.title"
               />
             </div>
-            <ProductMedia />
+            <div class="block d-flex flex-column p-2 mt-2">
+              <label class="d-flex font-weight-bold" for="title"
+                >Description</label
+              >
+              <textarea
+                id="title"
+                type="text"
+                required
+                v-model.trim="currentProduct.description"
+              />
+            </div>
+            <ProductMedia class="mt-2" />
           </div>
         </div>
-        <div class="d-flex flex-column ml-2">
+        <div class="col-3 d-flex flex-column p-0 pl-3">
           <div class="block d-flex flex-column p-2 mt-2">
             <label class="d-flex font-weight-bold" for="status"
               >Product status</label
@@ -70,16 +83,16 @@
           </div>
         </div>
       </form>
-      <div class="row">
+      <div class="row justify-content-between w-100">
         <button
-          class="col-8 m-1 btn btn-success text-uppercase my-2"
+          class="col-8 btn btn-success text-uppercase my-2"
           type="submit"
           form="admin-product-form"
         >
           update
         </button>
         <button
-          class="col-3 m-1 btn btn-danger text-uppercase my-2"
+          class="col-3 btn btn-danger text-uppercase my-2"
           v-on:click="deleteProduct"
         >
           delete
@@ -92,6 +105,7 @@
 
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
+
 import { prevCurrNextItems } from "~/helpers";
 
 import ProductMedia from "./ProductMedia.vue";

@@ -68,6 +68,7 @@
 import { mapActions } from "vuex";
 
 import "~/utils/filters";
+import { warn } from "~/utils/warn";
 
 import BundlesBlock from "~/components/Admin/common/BundlesBlock.vue";
 import ProductsBlock from "~/components/Admin/common/ProductsBlock.vue";
@@ -130,7 +131,13 @@ export default {
     submit: async function () {
       const { order_items, order_bundles, customer, total } = this.order;
 
+      if (!order_items.length && order_bundles.length) {
+        warn("Chooose product or bundle");
+        return;
+      }
+
       if (!customer) {
+        warn("Add or create customer");
         return;
       }
 

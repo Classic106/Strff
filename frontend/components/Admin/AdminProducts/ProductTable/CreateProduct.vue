@@ -84,6 +84,8 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 
+import { warn } from "~/utils/warn";
+
 import UploadImages from "vue-upload-drop-images";
 
 export default {
@@ -108,6 +110,11 @@ export default {
       this.form.image = files;
     },
     submit: async function () {
+      if (!this.form.image.length) {
+        warn("Choose at least one image");
+        return;
+      }
+
       if (this.status === "null") {
         this.form.published_at = null;
       } else {

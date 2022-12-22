@@ -1,8 +1,8 @@
 <template>
   <AddOrder v-if="isAddOrder" v-on:closeCreateOrder="isAddOrder = false" />
-  <div v-else class="row w-100 justify-content-center m-0">
-    <div class="d-flex flex-column col-md-10 col-12">
-      <div class="d-flex align-items-start mt-3">
+  <div v-else class="row justify-content-center align-items-center m-0">
+    <div class="d-flex flex-column col-10 p-0">
+      <div class="d-flex align-items-start mt-3 w-100">
         <button v-on:click="$emit('setCustomer')" class="button">
           <BIconArrowLeft />
         </button>
@@ -19,7 +19,7 @@
         class="w-100 h-100 d-flex align-items-center justify-content-center"
       />
       <div v-else class="row mb-3">
-        <div class="col-7">
+        <div class="col-9 p-0">
           <div
             class="block row w-100 d-flex justify-content-between m-0 mb-3 p-3"
           >
@@ -76,7 +76,10 @@
             </div>
           </div>
         </div>
-        <CustomerRightSide class="col-5" :customer="selected.customer" />
+        <CustomerRightSide
+          class="col-3 p-0 pl-2"
+          :customer="selected.customer"
+        />
       </div>
     </div>
   </div>
@@ -165,10 +168,11 @@ export default {
     const currentCustomer = await this.getCustomer(id);
 
     const { orders } = currentCustomer;
+    this.customerOrders = orders;
 
     if (orders && orders.length) {
       this.customerOrders = orders.sort(
-        (a, b) => new Date(a.order_date) < new Date(b.order_date)
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
       );
 
       this.ordersSpent = this.customerOrders.reduce(

@@ -35,7 +35,7 @@ export default {
     script: [],
   },
   router: {
-    middleware: ["authLayout"],
+    middleware: ["isAdminAuthenticated"],
   },
   /*
    ** Global CSS
@@ -86,7 +86,7 @@ export default {
     // module options
     sockets: [
       {
-        name: "main",
+        name: "strff.com",
         url: process.env.API_URL || "http://localhost:1338",
       },
     ],
@@ -118,10 +118,15 @@ export default {
     ],
   },
   axios: {
-    proxy: true,
-    baseURL: process.env.API_URL || "http://localhost:1338",
-    browserBaseURL: process.env.API_URL || "http://localhost:1338",
+    baseURL: "http://localhost:1338",
+    browserBaseURL: "http://localhost:1338",
   },
+  publicRuntimeConfig: {
+    axios: {
+      browserBaseURL: process.env.API_URL,
+    },
+  },
+
   proxy: {
     "/payment-nmi/": {
       target: "https://secure.networkmerchants.com/api/transact.php",

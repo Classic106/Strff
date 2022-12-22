@@ -42,7 +42,7 @@
     },
     {
       "method": "DELETE",
-      "path": "/articles/:id",
+      "path": "/articles/:ids",
       "handler": "article.delete",
       "config": {
         "policies": ["global::isAuthenticated"]

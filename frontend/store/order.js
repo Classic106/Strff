@@ -13,7 +13,6 @@ export const actions = {
     const order = {
       ...data,
       ...state,
-      order_date: new Date(),
     };
 
     try {
@@ -41,12 +40,14 @@ export const actions = {
       if (customer.length) {
         const result = await this.$strapi.update("orders", state.id, {
           customer: customer[0].id,
+          order_date: new Date(),
         });
       } else {
         const result = await this.$strapi.create("customers", {
           ...userInfo,
           state: userInfo.state.name,
           orders: [state.id],
+          order_date: new Date(),
         });
       }
 
@@ -78,7 +79,7 @@ export const actions = {
         success("Product successfully added");
       }
     } else {
-      const message = "Proudct was added";
+      const message = "Product wasn`t added";
       const err = { response: { data: { message } } };
       error(err);
     }

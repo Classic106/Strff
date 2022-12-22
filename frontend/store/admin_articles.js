@@ -59,23 +59,32 @@ export const actions = {
     try {
       const { image } = article;
 
-      const formData = new FormData();
+      let newArticle;
 
-      if (image) {
+      if (image && typeof image !== "string" && image[0]) {
+        const formData = new FormData();
         formData.append("files", image[0], image[0].name);
+
+        newArticle = await this.$axios
+          .post("/upload", formData)
+          .then(({ data }) => data[0].id)
+          .then(async (image) => {
+            const { data } = await this.$axios.post(`/articles`, {
+              ...article,
+              date: new Date(),
+              image,
+            });
+            return data;
+          });
+      } else {
+        const { data } = await this.$axios.post(`/articles`, {
+          ...article,
+          date: new Date(),
+        });
+        newArticle = data;
       }
 
-      const { data } = await this.$axios
-        .post("/upload", formData, headers)
-        .then(({ data }) => data[0].id)
-        .then((id) => {
-          article.image = id;
-          article.date = new Date();
-
-          return this.$axios.post(`/articles`, article);
-        });
-
-      commit("addArticle", data);
+      commit("addArticle", newArticle);
       success("Article successfully created");
     } catch (e) {
       error(e);
@@ -85,21 +94,31 @@ export const actions = {
     try {
       const { id, image } = article;
 
-      let newImage;
+      let updatedArticle;
 
       if (image && typeof image !== "string" && image[0]) {
         const formData = new FormData();
         formData.append("files", image[0], image[0].name);
 
-        newImage = await this.$axios
-          .post("/upload", formData, headers)
-          .then(({ data }) => data[0].id);
+        updatedArticle = await this.$axios
+          .post("/upload", formData)
+          .then(({ data }) => data[0].id)
+          .then(async (image) => {
+            const { data } = await this.$axios.put(`/articles/${id}`, {
+              ...article,
+              image,
+            });
+            return data;
+          });
+      } else {
+        const { data } = await this.$axios.put(`/articles/${id}`, {
+          ...article,
+          image: (image && image.id) || null,
+        });
+        updatedArticle = data;
       }
-      const updatedArticle = { ...article, image: newImage || image };
 
-      const { data } = await this.$axios.put(`/articles/${id}`, updatedArticle);
-
-      commit("updateArticle", data);
+      commit("updateArticle", updatedArticle);
       success("Article successfully updated");
     } catch (e) {
       error(e);
@@ -107,9 +126,9 @@ export const actions = {
   },
   async deleteArticles({ commit }, ids) {
     try {
-      const { data } = await this.$axios.delete(`/article/${ids}`);
+      const { data } = await this.$axios.delete(`/articles/${ids}`);
 
-      commit("deleteArticle", ids);
+      commit("deleteArticles", ids);
       commit("clearSelectedArticles");
       success("Article(s) successfully deleted");
     } catch (e) {

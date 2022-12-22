@@ -15,9 +15,16 @@ module.exports = {
     const { id } = ctx.params;
     const { body } = ctx.request;
 
-    const article = await strapi.services.article.findOne({ id });
+    const article = await strapi.services.article.findOne({
+      id,
+      _publicationState: "preview",
+    });
 
-    if (body.image && article.image) {
+    const isArticleImageId = article.image && article.image.id;
+    const isDeleteImage =
+      isArticleImageId !== body.image || (!body.image && isArticleImageId);
+
+    if (isArticleImageId && isDeleteImage) {
       await strapi.plugins["upload"].services.upload.remove({
         id: article.image.id,
       });
@@ -28,18 +35,27 @@ module.exports = {
     return updatedArticle;
   },
   async delete(ctx) {
-    const { id } = ctx.params;
+    const { ids } = ctx.params;
 
-    const article = await strapi.services.article.findOne({ id });
+    const deleteItems = ids.split(",");
 
-    if (!image) {
-      await strapi.plugins["upload"].services.upload.remove({
-        id: article.image.id,
-      });
-    }
+    const result = await Promise.all(
+      deleteItems.map(async (id) => {
+        const article = await strapi.services.article.findOne({
+          id,
+          _publicationState: "preview",
+        });
 
-    const deletedArticle = await strapi.services.article.delete({ id });
+        const { image } = article;
 
-    return deletedArticle;
+        if (image) {
+          const { id } = image;
+          await strapi.plugins["upload"].services.upload.remove({ id });
+        }
+        await strapi.services.article.delete({ id });
+      })
+    );
+
+    return result.length;
   },
 };
