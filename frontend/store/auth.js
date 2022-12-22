@@ -13,6 +13,7 @@ export const actions = {
   },
   async login({ commit }, login) {
     try {
+      //console.log(this.$axios.defaults.baseURL)
       const { jwt, user } = await this.$axios.$post("auth/local", login);
 
       this.$axios.setHeader("Authorization", `Bearer ${jwt}`);
