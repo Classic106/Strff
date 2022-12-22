@@ -42,6 +42,10 @@
           :date="props.row.order_date"
           v-if="props.column.field == 'order_date'"
         />
+        <OrderDate
+          :date="props.row.created_at"
+          v-else-if="props.column.field == 'created_at'"
+        />
         <OrderItems
           :items="props.row.order_items"
           v-else-if="props.column.field == 'order_items'"
@@ -104,8 +108,12 @@ export default {
         field: "id",
       },
       {
-        label: "Date",
+        label: "Order date",
         field: "order_date",
+      },
+      {
+        label: "Created at",
+        field: "created_at",
       },
       {
         label: "Customer",

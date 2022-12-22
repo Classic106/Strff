@@ -17,9 +17,10 @@
         </span>
       </div>
     </div>
-    <p>
+    <p v-if="order.order_date">
       {{ order.order_date | formatDate }}
     </p>
+    <p v-else>DRAFT created at{{ order.created_at | formatDate }}</p>
     <div v-if="order.order_items.length">
       <h6 class="mb-3">Products</h6>
       <ul class="d-flex flex-column p-0">

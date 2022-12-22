@@ -13,7 +13,6 @@ export const actions = {
     const order = {
       ...data,
       ...state,
-      order_date: new Date(),
     };
 
     try {
