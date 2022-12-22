@@ -1,6 +1,6 @@
 <template>
-  <div class="d-flex flex-column">
-    <label class="d-flex font-weight-bold" for="media">Media</label>
+  <div class="block d-flex flex-column">
+    <label class="d-flex font-weight-bold p-2" for="media">Media</label>
     <div class="row w-100 m-0 justify-content-center" id="media">
       <div class="col-12 mb-2">
         <label class="btn btn-primary w-100">
@@ -51,7 +51,9 @@
 
 <script>
 import { mapMutations, mapActions, mapGetters } from "vuex";
+
 import { getStrapiMedia } from "~/utils/medias";
+import { warn } from "~/utils/warn";
 
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
 import ConfirmModal from "./ConfirmModal.vue";
@@ -99,7 +101,7 @@ export default {
           "image/svg",
         ].includes(files[i]["type"]);
         if (!isImage) {
-          alert("Only jpg/jpeg/jpg/png files are allowed!");
+          warn("Only jpg/jpeg/jpg/png files are allowed!");
           return;
         }
       }
@@ -119,6 +121,10 @@ export default {
       await this.updateProduct(product);
     },
     deleteFromImages: async function (index) {
+      if (this.images.length <= 1) {
+        warn("There is must be at least one image");
+        return;
+      }
       this.removeImageIndex = index;
       this.$root.$emit("bv::show::modal", "confirm-delete-image");
     },

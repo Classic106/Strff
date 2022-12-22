@@ -60,25 +60,36 @@ export const actions = {
     try {
       const { image } = product;
 
-      const formData = new FormData();
+      let newProduct;
 
-      for (let i = 0; i < image.length; i++) {
-        formData.append("files", image[i], image[i].name);
-      }
+      if (image && typeof image !== "string" && image[0]) {
+        const formData = new FormData();
 
-      const { data } = await this.$axios
-        .post("/upload", formData``)
-        .then(({ data }) => {
-          const ids = data.map((item) => item.id);
-          return ids;
-        })
-        .then((ids) => {
-          product.image = ids;
+        for (let i = 0; i < image.length; i++) {
+          formData.append("files", image[i], image[i].name);
+        }
 
-          return this.$axios.post(`/products`, product);
+        newProduct = await this.$axios
+          .post("/upload", formData)
+          .then(({ data }) => {
+            const ids = data.map((item) => item.id);
+            return ids;
+          })
+          .then(async (image) => {
+            const { data } = await this.$axios.post(`/products`, {
+              ...product,
+              image,
+            });
+            return data;
+          });
+      } else {
+        const { data } = await this.$axios.post(`/products`, {
+          ...product,
+          image: null,
         });
-
-      commit("addProduct", data);
+        newProduct = data;
+      }
+      commit("addProduct", newProduct);
       success("Product successfully created");
     } catch (e) {
       error(e);
@@ -88,26 +99,39 @@ export const actions = {
     try {
       const { id, image, files } = product;
 
-      let newImages = [];
+      let updatedProduct;
 
       if (files && Array.from(files.keys()).length) {
-        newImages = await this.$axios
+        updatedProduct = await this.$axios
           .post("/upload", files)
           .then(({ data }) => {
             const ids = data.map((item) => item.id);
             return ids;
+          })
+          .then(async (newImages) => {
+            const curentIMages = image.map((image) => image.id);
+
+            const { data } = await this.$axios.put(`/products/${id}`, {
+              ...product,
+              image: curentIMages,
+              newImages,
+            });
+            return data;
           });
+      } else {
+        const curentIMages = image.map((image) => image.id);
+       
+        const { data } = await this.$axios.put(`/products/${id}`, {
+          ...product,
+          image: curentIMages,
+        });
+        updatedProduct = data;
       }
 
-      const curentIMages = image.map((image) => image.id);
-
-      const updatedProduct = { ...product, image: curentIMages, newImages };
-
-      const { data } = await this.$axios.put(`/products/${id}`, updatedProduct);
-
-      commit("updateProduct", data);
+      commit("updateProduct", updatedProduct);
       success("Product successfully updated");
     } catch (e) {
+      console.log(e);
       error(e);
     }
   },

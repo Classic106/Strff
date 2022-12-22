@@ -22,7 +22,11 @@ module.exports = {
     const { body } = ctx.request;
     const { image, newImages } = body;
 
-    const product = await strapi.services.product.findOne({ id });
+    const product = await strapi.services.product.findOne({
+      id,
+      _publicationState: "preview",
+    });
+
     const productImage = product.image.map((image) => image.id);
 
     const difference = productImage.filter((x) => !image.includes(x));
@@ -34,7 +38,7 @@ module.exports = {
       }
     }
 
-    const data = { ...body, image: [...image, ...newImages] };
+    const data = { ...body, image: [...image, ...(newImages || [])] };
 
     const updatedProduct = await strapi.services.product.update({ id }, data);
 
