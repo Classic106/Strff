@@ -1,23 +1,19 @@
 <template>
   <div class="row w-100 h-100 justify-content-center m-0">
-    <div class="d-flex flex-column col-md-10 col-12">
+    <div class="d-flex flex-column col-10">
       <div class="d-flex align-items-start mt-3">
-        <button v-on:click="clearSelectedCustomers" class="button">
+        <button v-on:click="back" class="button">
           <BIconArrowLeft />
         </button>
         <div class="w-100 px-3">
           <div class="d-flex flex-column">
             <h6 class="m-0 px-2 font-weight-bold">{{ getCustomerName() }}</h6>
-            <span>{{ selected.state }} {{ customerDuration() }}</span>
+            <span>{{ customer.state }} {{ customerDuration() }}</span>
           </div>
         </div>
       </div>
-      <Loader
-        v-if="loading"
-        class="w-100 h-100 d-flex align-items-center justify-content-center"
-      />
-      <div v-else class="row mb-3">
-        <div class="col-7">
+      <div class="row mb-3">
+        <div class="col-9">
           <div class="block w-100 d-flex justify-content-between mb-3 p-3">
             <div>
               <h6 class="text-center font-weight-bold">
@@ -43,7 +39,7 @@
             v-if="!customerOrders.length"
           >
             <p class="text-center">Customer hasn`t any orders</p>
-            <button class="btn btn-success" v-on:click="isAddOrder = true">
+            <button class="btn btn-success" v-on:click="$emit('openAddOrder')">
               Add order
             </button>
           </div>
@@ -78,57 +74,44 @@
             </div>
           </div>
         </div>
-        <CustomerRightSide class="col-5" :customer="selected" />
+        <CustomerRightSide class="col-3" :customer="customer" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapMutations, mapGetters, mapActions } from "vuex";
-
 import { prevCurrNextItems } from "~/helpers";
 import { states_hashes } from "@/data";
 import "~/utils/filters";
 
-import Loader from "~/components/common/Loader.vue";
 import CustomerOrder from "./CustomerOrder.vue";
 import CustomerRightSide from "./CustomerRightSide.vue";
 
 export default {
   name: "CustomerMain",
   components: {
-    Loader,
     CustomerOrder,
     CustomerRightSide,
+  },
+  props: {
+    customer: Object,
+    back: Function,
   },
   data: () => ({
     viewAll: false,
     customerOrders: [],
     ordersSpent: 0,
     states_hashes,
-    loading: false,
   }),
-
-  computed: {
-    ...mapGetters({
-      selected: "admin_customers/selected",
-    }),
-  },
   methods: {
     prevCurrNextItems,
-    ...mapActions({
-      getCustomer: "admin_customers/getCustomer",
-    }),
-    ...mapMutations({
-      clearSelectedCustomers: "admin_customers/clearSelectedCustomers",
-    }),
     averageValue: function () {
-      const { total_price, orders_count } = this.selected;
+      const { total_price, orders_count } = this.customerOrders;
       return total_price / orders_count;
     },
     customerDuration: function () {
-      const { created_at } = this.selected;
+      const { created_at } = this.customer;
       const regDate = new Date(created_at);
 
       const intervals = [
@@ -146,18 +129,13 @@ export default {
       return `${count} ${interval.label}${count !== 1 ? "s" : ""} ago`;
     },
     getCustomerName: function () {
-      const { firstName, lastName } = this.selected;
+      const { firstName, lastName } = this.customer;
 
       return `${firstName} ${lastName}`;
     },
   },
   async beforeMount() {
-    this.loading = true;
-    const { id } = this.selected;
-
-    const currentCustomer = await this.getCustomer(id);
-
-    const { orders } = currentCustomer;
+    const { orders } = this.customer;
 
     if (orders && orders.length) {
       this.customerOrders = orders.sort(
@@ -169,7 +147,6 @@ export default {
         0
       );
     }
-    this.loading = false;
   },
 };
 </script>

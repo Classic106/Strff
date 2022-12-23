@@ -101,6 +101,7 @@ export default {
     },
     send: async function () {
       await this.createOrder({ ...this.order, customer: this.selected.id });
+      this.$emit("closeCreateOrder");
     },
   },
 };
