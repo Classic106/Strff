@@ -8,7 +8,7 @@
     </div>
     <div v-else class="w-100 h-100">
       <CustomersTable v-if="!selected" />
-      <Customer v-else />
+      <Customer v-else :id="selected.id" :back="clearSelectedCustomers" />
     </div>
   </div>
 </template>
@@ -18,14 +18,16 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 
 import Loader from "~/components/common/Loader";
 import CustomersTable from "./CustomersTable";
-import Customer from "./Customer";
+import Customer from "~/components/Admin/common/Customer";
 
 export default {
   name: "AdminCusmomers",
-  components: { Loader, CustomersTable, Customer },
-  data: () => ({
-    loading: true,
-  }),
+  components: {
+    Loader,
+    CustomersTable,
+    Customer,
+  },
+  data: () => ({ loading: true }),
   computed: {
     ...mapGetters({ selected: "admin_customers/selected" }),
   },
@@ -33,6 +35,7 @@ export default {
     ...mapActions({ getCustomers: "admin_customers/getCustomers" }),
     ...mapMutations({
       clearCustomers: "admin_customers/clearCustomers",
+      clearSelectedCustomers: "admin_customers/clearSelectedCustomers",
     }),
   },
   async mounted() {

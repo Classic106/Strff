@@ -3,7 +3,7 @@
     <p class="text-uppercase">best sellers products</p>
     <div class="row justify-content-center w-100 m-0">
       <ProductCard
-        class="col-6 p-0 m-1"
+        class="col-md-6 col-12"
         v-for="product in best_sellers"
         :key="product.id"
         :product="product"
