@@ -1,42 +1,46 @@
 <template>
-  <div class="bg-grey">
-    <header>
-      <AdminHeader :isOpenMenu="isOpenMenu" v-on:isOpenMenuHeader="isOpen" />
-    </header>
-    <main class="h-100 w-100 m-0 row position-relative">
-      <section
-        ref="menu"
-        class="col-md-2 p-0"
-        :class="
-          isMobile
-            ? isOpenMenu
-              ? 'menu-mobile open'
-              : 'menu-mobile'
-            : 'position-relative justify-content-between'
-        "
-      >
-        <AdminMenu v-on:isOpen="isOpen" />
-      </section>
-      <vueCustomScrollbar
-        class="admin-content overflow-auto p-0 col-md-10 col-12 ml-auto"
-        :settings="scrollSettings"
-      >
-        <Nuxt class="p-0 m-0 h-100" />
-      </vueCustomScrollbar>
-    </main>
-    <LightBox />
-    <notifications group="all" position="top center" />
-  </div>
+  <DefaultLayout>
+    <div class="bg-grey">
+      <header>
+        <AdminHeader :isOpenMenu="isOpenMenu" v-on:isOpenMenuHeader="isOpen" />
+      </header>
+      <main class="h-100 w-100 m-0 row position-relative">
+        <section
+          ref="menu"
+          class="col-md-2 p-0"
+          :class="
+            isMobile
+              ? isOpenMenu
+                ? 'menu-mobile open'
+                : 'menu-mobile'
+              : 'position-relative justify-content-between'
+          "
+        >
+          <AdminMenu v-on:isOpen="isOpen" />
+        </section>
+        <vueCustomScrollbar
+          class="admin-content overflow-auto p-0 col-md-10 col-12 ml-auto"
+          :settings="scrollSettings"
+        >
+          <Nuxt class="p-0 m-0 h-100" />
+        </vueCustomScrollbar>
+      </main>
+      <LightBox />
+      <notifications group="all" position="top center" />
+    </div>
+  </DefaultLayout>
 </template>
 
 <script>
+import DefaultLayout from "~/layouts/default.vue";
+
 import AdminHeader from "~/components/Admin/AdminHeader";
 import AdminMenu from "~/components/Admin/AdminMenu.vue";
 import LightBox from "@/components/common/LightBox.vue";
 
 export default {
   name: "AdminLayout",
-  components: { AdminHeader, AdminMenu, LightBox },
+  components: { DefaultLayout, AdminHeader, AdminMenu, LightBox },
   data: () => ({
     isOpenMenu: false,
     isMobile: true,

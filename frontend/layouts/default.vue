@@ -1,7 +1,8 @@
 <template>
   <div class="flex justify-center">
     <div class="flex flex-col">
-      <Nuxt />
+      <Nuxt v-if="!$slots.default" />
+      <slot />
     </div>
     <notifications group="all" position="top center" />
   </div>
