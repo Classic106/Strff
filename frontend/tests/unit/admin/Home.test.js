@@ -25,12 +25,6 @@ describe("AdminHome", () => {
       },
     ];
 
-    const axios = {
-      get: async () => ({
-        data: mockGetList,
-      }),
-    };
-
     global.fetch = jest.fn(() =>
       Promise.resolve({
         json: () =>
@@ -44,13 +38,16 @@ describe("AdminHome", () => {
           }),
       })
     );
+
     const getters = {
       "admin_visitors/count_visitors": () => 0,
       "admin_visitors/count_connected_visitors": () => 0,
       "admin_visitors/visitors": () => [],
       "admin_orders/todayOrders": () => [],
+      "best_sellers/best_sellers": () => mockGetList,
     };
     const actions = {
+      "best_sellers/getBestSellers": jest.fn(),
       "admin_visitors/getCountVisitors": jest.fn(),
       "admin_visitors/getCountConnectedCountVisitors": jest.fn(),
       "admin_visitors/getVisitors": jest.fn(),
@@ -60,12 +57,9 @@ describe("AdminHome", () => {
     };
     const store = new Vuex.Store({ getters, actions });
 
-    jest.spyOn(axios, "get").mockResolvedValue(mockGetList);
-
     const wrapper = mount(AdminHome, {
       store,
       mocks: {
-        $axios: axios,
         $config: {
           strapi: {
             url: "",
@@ -74,11 +68,6 @@ describe("AdminHome", () => {
       },
     });
     await flushPromises();
-
-    expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(axios.get).toHaveBeenCalledWith(
-      "/products?_sort=sales%3ADESC&_limit=4"
-    );
 
     const rightSide = wrapper.findComponent(RightSide);
     expect(rightSide.exists()).toBe(true);
