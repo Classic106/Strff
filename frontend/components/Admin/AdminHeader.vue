@@ -54,6 +54,7 @@
       </div>
       <BDropdown id="dropdown-1" right :text="shortUserName()" class="m-md-2">
         <BDropdownItem v-on:click="exit">logout</BDropdownItem>
+        <BDropdownItem v-on:click="profile">profile</BDropdownItem>
       </BDropdown>
     </div>
   </div>
@@ -84,6 +85,14 @@ export default {
     exit: function () {
       this.logout();
       this.$router.push("/admin/login");
+    },
+    profile: function () {
+      const { fullPath } = this.$route;
+      this.$router.push({
+        name: "admin-profile",
+        params: { backUrl: fullPath },
+      });
+      //this.$router.push("/admin/profile");
     },
     shortUserName: function () {
       if (this.user) {
