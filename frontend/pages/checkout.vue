@@ -204,7 +204,7 @@
   import { pad, convertObjectToQueryUrl } from '~/utils/functions';
   import { v4 as uuidv4 } from 'uuid';
   import PayWithAuthorizeNet from '~/utils/payments/authorize-net';
-  import ShipWithUsps from '~/utils/shippings/usps';
+  // import ShipWithUsps from '~/utils/shippings/usps';
   import { states } from "@/data";
   import Creditcard from '~/components/Creditcard';
 
@@ -221,21 +221,6 @@
           states,
           card: {},
           selectedPaymentMethod: null,
-          ccMonths: [
-              {text: 'Jan', value: 1},
-              {text: 'Feb', value: 2},
-              {text: 'Mar', value: 3},
-              {text: 'Apr', value: 4},
-              {text: 'May', value: 5},
-              {text: 'Jun', value: 6},
-              {text: 'Jul', value: 7},
-              {text: 'Aug', value: 8},
-              {text: 'Sept', value: 9},
-              {text: 'Oct', value: 10},
-              {text: 'Nov', value: 11},
-              {text: 'Dec', value: 12}
-          ],
-          ccYears: [],
           paymentApiAuthorizeNet: null,
           shippingApiUsps: null
       }
@@ -285,22 +270,22 @@
               this.order.order_no = orderNo;
               this.order.order_date = orderDate;
 
-              let paymentResult = false;
+              let paymentResult = true;
               if (this.paymentType == 1) {
-                  this.paymentApiAuthorizeNet = new PayWithAuthorizeNet(this.order, this.$axios);
+                  /* this.paymentApiAuthorizeNet = new PayWithAuthorizeNet(this.order, this.$axios);
                   paymentResult = this.paymentApiAuthorizeNet.pay();
-                  console.log(paymentResult);
+                  console.log(paymentResult); */
               }
-              let shippingResult = false;
+              let shippingResult = true;
               if (this.shippingType == 1) {
-                  this.shippingApiUsps = new ShipWithUsps();
+                  /* this.shippingApiUsps = new ShipWithUsps();
                   shippingResult = this.shippingApiUsps.ship();
-                  console.log(shippingResult);
+                  console.log(shippingResult); */
               }
               if (paymentResult && shippingResult) {
-                  alert('Your order have been successfully submitted.');
                   this.placeOrder(this.order);
                   this.$router.push('/');
+                  alert('Your order have been successfully submitted.');
               } else {
                   alert('Your order submittion was not successfull.');
               }
@@ -341,9 +326,6 @@
           this.order.shipping_email = this.loggedUser.email;
       }
 
-      for (let i = 1940; i < 2099; i++) {
-          this.ccYears.push({'text': i, 'value': i});
-      }
       this.purchaseTypes = await this.$strapi.find('purchase-types');
 
       this.order.card_expiry = '11/22'; //new Date().getFullYear();

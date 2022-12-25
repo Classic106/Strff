@@ -1,4 +1,5 @@
 import cookieparser from "cookieparser";
+import { convertObjectToQueryUrl } from '~/utils/functions';
 
 export const actions = {
   async nuxtServerInit({ commit }, { req }) {
@@ -24,7 +25,7 @@ export const actions = {
         } else {
             options = { 'order_status.id': orderStatusPending.id, 'order_token': token };
         }
-        order = await this.$strapi.$http.$get('/order/getorder', options);
+        order = await this.$strapi.$http.$get('/order/getorder?' + convertObjectToQueryUrl(options));
     }
 
     console.log('Token: ', token);

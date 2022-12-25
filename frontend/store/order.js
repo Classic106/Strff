@@ -1,3 +1,5 @@
+import { convertObjectToQueryUrl } from '~/utils/functions';
+
 export const state = () => ({
     order: {
         order_items: [],
@@ -27,7 +29,7 @@ export const actions = {
     },
     async updateItem({commit, state}, data) {
         await this.$strapi.$http.$post('/order/updateitem', data);
-        let order = await this.$strapi.$http.$get('/order/getorder', { id: data.orderId});
+        let order = await this.$strapi.$http.$get('/order/getorder', convertObjectToQueryUrl({ id: data.orderId}));
         commit('setOrder', order);
     },
     async removeItem({commit, state}, data) {
@@ -58,13 +60,19 @@ export const actions = {
         commit('setOrder', order);
     },
     async placeOrder({commit, state}, data) {
-        await this.$strapi.$http.$post('/orders/placeorder', data);
+        let newOrderStatus = await this.$strapi.find('order-statuses', { 'code': 5 });
+        newOrderStatus = newOrderStatus[0];
+        data.order_status = newOrderStatus.id;
+        await this.$strapi.$http.$put('/orders/' + data.id, data);
         commit('setOrder', null);
     },
     async syncByUser({commit, state}, userId) {
         let orderStatusPending = await this.$strapi.find('order-statuses', { 'code': 1 });
         orderStatusPending = orderStatusPending[0];
-        let order = await this.$strapi.$http.$get('/order/getorder', { 'order_status.id': orderStatusPending.id, 'user.id': userId });
+        let order = await this.$strapi.$http.$get('/order/getorder', convertObjectToQueryUrl({
+            'order_status.id': orderStatusPending.id,
+            'user.id': userId
+        }));
         commit('setOrder', order);
     }
 }

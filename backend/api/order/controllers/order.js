@@ -10,7 +10,7 @@ module.exports = {
         let params = ctx.request.body;
 
         const product = await strapi.services.product.findOne({ id: params.productId });
-        const orderStatus = await strapi.services['order-statuses'].findOne({ code: 1 });
+        const orderPendingStatus = await strapi.services['order-statuses'].findOne({ code: 1 });
 
         let size = null;
         if (params.sizeId) {
@@ -27,9 +27,9 @@ module.exports = {
 
         let options = null;
         if (params.userId) {
-            options = { 'order_status.id': orderStatus.id, 'user.id': params.userId };
+            options = { 'order_status.id': orderPendingStatus.id, 'user.id': params.userId };
         } else {
-            options = { 'order_status.id': orderStatus.id, 'order_token': params.orderToken };
+            options = { 'order_status.id': orderPendingStatus.id, 'order_token': params.orderToken };
         }
         let order = await strapi.services.order.findOne(options);
         if (!order) {
@@ -38,7 +38,7 @@ module.exports = {
                 order_date: Date.now(),
                 order_items: [],
                 total: product.price,
-                order_status: orderStatus.id,
+                order_status: orderPendingStatus.id,
                 user: params.userId,
                 order_token: params.orderToken
             });
@@ -78,14 +78,14 @@ module.exports = {
             await this.recomputeOrder(order.id);
         }
 
-        order = await this.pullOrder(order.id);
+        order = await this.getOrderWithContains(order.id);
         ctx.send(order);
     },
     async removeProduct(ctx) {
         let params = ctx.request.body;
 
         const product = await strapi.services.product.findOne({ id: params.productId });
-        const orderStatus = await strapi.services['order-statuses'].findOne({ code: 1 });
+        const orderPendingStatus = await strapi.services['order-statuses'].findOne({ code: 1 });
 
         let size = null;
         if (params.sizeId) {
@@ -102,9 +102,9 @@ module.exports = {
 
         let options = null;
         if (params.userId) {
-            options = { 'order_status.id': orderStatus.id, 'user.id': params.userId };
+            options = { 'order_status.id': orderPendingStatus.id, 'user.id': params.userId };
         } else {
-            options = { 'order_status.id': orderStatus.id, 'order_token': params.orderToken };
+            options = { 'order_status.id': orderPendingStatus.id, 'order_token': params.orderToken };
         }
         let order = await strapi.services.order.findOne(options);
         if (order) {
@@ -131,7 +131,7 @@ module.exports = {
                 await this.recomputeOrder(order.id);
             }
 
-            order = await this.pullOrder(order.id);
+            order = await this.getOrderWithContains(order.id);
             ctx.send(order);
         }
     },
@@ -141,7 +141,7 @@ module.exports = {
         await strapi.services['order-item'].delete({ id: params.id });
         await this.recomputeOrder(params.orderId);
 
-        let order = await this.pullOrder(params.orderId);
+        let order = await this.getOrderWithContains(params.orderId);
         ctx.send(order);
     },
     async updateItem(ctx) {
@@ -162,13 +162,13 @@ module.exports = {
         let params = ctx.request.body;
 
         const bundle = await strapi.services.bundle.findOne({ id: params.bundleId });
-        const orderStatus = await strapi.services['order-statuses'].findOne({ code: 1 });
+        const orderPendingStatus = await strapi.services['order-statuses'].findOne({ code: 1 });
 
         let options = null;
         if (params.userId) {
-            options = { 'order_status.id': orderStatus.id, 'user.id': params.userId };
+            options = { 'order_status.id': orderPendingStatus.id, 'user.id': params.userId };
         } else {
-            options = { 'order_status.id': orderStatus.id, 'order_token': params.orderToken };
+            options = { 'order_status.id': orderPendingStatus.id, 'order_token': params.orderToken };
         }
         let order = await strapi.services.order.findOne(options);
         if (!order) {
@@ -177,7 +177,7 @@ module.exports = {
                 order_date: Date.now(),
                 order_items: [],
                 total: bundle.price,
-                order_status: orderStatus.id,
+                order_status: orderPendingStatus.id,
                 user: params.userId,
                 order_token: params.orderToken
             });
@@ -195,7 +195,7 @@ module.exports = {
             await this.recomputeOrder(order.id);
         }
 
-        order = await this.pullOrder(order.id);
+        order = await this.getOrderWithContains(order.id);
         ctx.send(order);
     },
     async removeBundle(ctx) {
@@ -204,7 +204,7 @@ module.exports = {
         await strapi.services['order-bundle'].delete({ id: params.id });
         await this.recomputeOrder(params.orderId);
 
-        let order = await this.pullOrder(params.orderId);
+        let order = await this.getOrderWithContains(params.orderId);
         ctx.send(order);
     },
     async updateOrder(ctx) {
@@ -245,19 +245,19 @@ module.exports = {
             order = await strapi.services.order.update({ id: order.id }, order);
         }
 
-        order = await this.pullOrder(params.id);
+        order = await this.getOrderWithContains(params.id);
         ctx.send(order);
     },
     async emptyOrder(ctx) {
         let params = ctx.request.body;
 
-        const orderStatus = await strapi.services['order-statuses'].findOne({ code: 1 });
+        const orderPendingStatus = await strapi.services['order-statuses'].findOne({ code: 1 });
 
         let options = null;
         if (params.userId > 0) {
-            options = { 'order_status.id': orderStatus.id, 'user.id': params.userId };
+            options = { 'order_status.id': orderPendingStatus.id, 'user.id': params.userId };
         } else {
-            options = { 'order_status.id': orderStatus.id, 'order_token': params.orderToken };
+            options = { 'order_status.id': orderPendingStatus.id, 'order_token': params.orderToken };
         }
         let order = await strapi.services.order.findOne(options);
         if (order) {
@@ -269,29 +269,20 @@ module.exports = {
             }
             await this.recomputeOrder(order.id);
 
-            order = await this.pullOrder(order.id);
+            order = await this.getOrderWithContains(order.id);
             ctx.send(order);
         }
-    },
-    async placeOrder(ctx) {
-        let params = ctx.request.body;
-
-        const newOrderStatus = await strapi.services['order-statuses'].findOne({ code: 'completed' });
-
-        params.order_status = newOrderStatus.id;
-        await strapi.services.order.update({ id: params.id }, params);
-        ctx.send(null);
     },
     async getOrder(ctx) {
         let params = ctx.request.query;
         let order = await strapi.services.order.findOne(params);
         if (order) {
-            order = await this.pullOrder(order.id);
+            order = await this.getOrderWithContains(order.id);
         }
         ctx.send(order);
     },
-    async pullOrder(id) {
-        const order = await strapi.services.order.findOne({ id: id}, [
+    async getOrderWithContains(id) {
+        const order = await strapi.services.order.findOne({ id: id }, [
             'order_status',
             'user',
             'order_items',
