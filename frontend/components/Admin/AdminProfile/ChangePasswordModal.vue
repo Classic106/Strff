@@ -88,8 +88,8 @@ export default {
     showPassword: false,
     showPasswordConfirmation: false,
     form: {
-      password: "test1234567",
-      passwordConfirmation: "test1234567",
+      password: "",
+      passwordConfirmation: "",
     },
   }),
   computed: {

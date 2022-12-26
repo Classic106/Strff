@@ -5,8 +5,6 @@ module.exports = {
     const { body } = ctx.request;
     const { id, username, email, password } = body;
 
-    console.log(body)
-    // The identifier is required.
     if (!username || !email) {
       return ctx.badRequest(
         null,
@@ -24,7 +22,7 @@ module.exports = {
     // const validPassword = await strapi.plugins[
     //   "users-permissions"
     // ].services.user.validatePassword(password, user.password);
-    console.log(user)
+
     if (!user) {
       return ctx.badRequest(null, [
         { messages: [{ message: "Identifier or password invalid." }] },
@@ -37,7 +35,7 @@ module.exports = {
       // Update user password
       await strapi
         .query("user", "users-permissions")
-        .update({ id }, { resetPasswordToken: null, newPassword });
+        .update({ id }, { resetPasswordToken: null, password: newPassword });
 
       // Return new jwt token
       ctx.send({
@@ -49,7 +47,5 @@ module.exports = {
         }),
       });
     }
-
-    return "Hello World!";
   },
 };
