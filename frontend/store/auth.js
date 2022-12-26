@@ -1,4 +1,5 @@
-import { error } from "../utils/error";
+import { error } from "~/utils/error";
+import { success } from "~/utils/success";
 
 export const state = () => ({
   user: null,
@@ -32,6 +33,43 @@ export const actions = {
       this.$cookies.remove("token");
       error(e);
     }
+  },
+  async changeUserPassword({ commit, state }, newPassword) {
+    const { password, passwordConfirmation } = newPassword;
+    const { user } = state;
+
+    if (
+      password !== "" &&
+      passwordConfirmation !== "" &&
+      password !== passwordConfirmation
+    ) {
+      error("Passwords must be coincidence");
+      return;
+    }
+
+    if (user) {
+      try {
+        const { id, username, email } = user;
+
+        const requestData = { ...newPassword, id, username, email };
+        const { data } = await this.$axios.post(
+          "/auth/reset-password",
+          requestData
+        );
+
+        const { jwt, user: newUser } = data;
+
+        this.$axios.setHeader("Authorization", `Bearer ${jwt}`);
+        this.$cookies.set("token", jwt);
+
+        commit("setUser", newUser);
+        success("Password was succesfully change");
+      } catch (e) {
+        error(e);
+      }
+      return;
+    }
+    error("User is undefined");
   },
 };
 

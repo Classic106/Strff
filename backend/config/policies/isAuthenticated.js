@@ -24,6 +24,6 @@ module.exports = async (ctx, next) => {
   }
 
   return ctx.badRequest(null, [
-    { messages: [{ id: "No authorization header was found" }] },
+    { messages: [{ message: "No authorization header was found" }] },
   ]);
 };
