@@ -62,7 +62,7 @@
         </div>
         <div class="mb-4">
           <label class="d-flex mb-2" for="role"> Role </label>
-          <select class="w-100" id="role" v-model="currentUser.role.id">
+          <select class="w-100" id="role" v-model="roleId">
             <option :value="role.id" v-for="role in roles" :key="role.id">
               {{ role.name }}
             </option>
@@ -73,22 +73,23 @@
         </button>
       </form>
     </div>
-    <ResetPasswordModal />
+    <ChangePasswordModal />
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 
-import ResetPasswordModal from "./ResetPasswordModal.vue";
+import ChangePasswordModal from "./ChangePasswordModal.vue";
 
 export default {
   name: "AdminProfile",
-  components: { ResetPasswordModal },
+  components: { ChangePasswordModal },
   data: () => ({
     backUrl: null,
     currentUser: null,
     roles: null,
+    roleId: null,
     isResetPassword: false,
   }),
   computed: {
@@ -98,8 +99,10 @@ export default {
     back: function () {
       this.$router.push(this.backUrl);
     },
-    handleSubmit: function () {
-      console.log(this.currentUser);
+    handleSubmit: async function () {
+      const { id } = this.currentUser;
+      const updatetdUser = { ...this.currentUser, role: this.roleId };
+      const { data } = await this.$axios.put(`/users/${id}`, updatetdUser);
     },
   },
   async beforeMount() {
@@ -112,7 +115,8 @@ export default {
 
     this.backUrl = backUrl ? backUrl : "/admin";
     this.currentUser = JSON.parse(JSON.stringify(this.user));
-    //console.log(this.user);
+    this.roleId = this.currentUser.role.id;
+    console.log(this.user);
   },
 };
 </script>

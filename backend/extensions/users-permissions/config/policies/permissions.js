@@ -1,16 +1,10 @@
 module.exports = async (ctx, next) => {
-  //console.log(ctx.request.header.Authorization, 3232);
+  // if (ctx.request && ctx.request.header && ctx.request.header.authorization) {
+  //   return next();
+  // }
 
-  //console.log(ctx.request.header.authorization, 15);
-
+  // return ctx.badRequest(null, [
+  //   { messages: [{ id: "No authorization header was found" }] },
+  // ]);
   return next();
-
-  //console.log(ctx.request.header);
-  /*if (ctx.request && ctx.request.header && !ctx.request.header.authorization) {
-    const token = ctx.cookies.get("authorization");
-    console.log(token, 5555555)
-    if (token) {
-      ctx.request.header.authorization = "Bearer " + token;
-    }
-  }*/
 };

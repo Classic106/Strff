@@ -109,6 +109,8 @@ export default {
       "BIconClipboard",
       "BIconStack",
       "BIconCheckCircle",
+      "BIconEyeFill",
+      "BIconEyeSlashFill",
       "BAvatar",
       "BProgress",
       "BProgressBar",
