@@ -21,92 +21,20 @@
     "order_status": {
       "model": "order-statuses"
     },
-    "user": {
-      "plugin": "users-permissions",
-      "model": "user"
-    },
     "order_bundles": {
-      "via": "order",
-      "collection": "order-bundle"
+      "collection": "order-bundle",
+      "via": "order"
     },
     "order_items": {
       "via": "order",
       "collection": "order-item"
     },
-    "order_no": {
-      "type": "string"
+    "paid": {
+      "type": "boolean"
     },
-    "billing_first_name": {
-      "type": "string"
-    },
-    "billing_last_name": {
-      "type": "string"
-    },
-    "billing_company": {
-      "type": "string"
-    },
-    "billing_address_1": {
-      "type": "text"
-    },
-    "billing_address_2": {
-      "type": "text"
-    },
-    "billing_city": {
-      "type": "string"
-    },
-    "billing_state": {
-      "type": "string"
-    },
-    "billing_zip_code": {
-      "type": "string"
-    },
-    "billing_contact_no": {
-      "type": "string"
-    },
-    "billing_email": {
-      "type": "string"
-    },
-    "shipping_first_name": {
-      "type": "string"
-    },
-    "shipping_last_name": {
-      "type": "string"
-    },
-    "shipping_company": {
-      "type": "string"
-    },
-    "shipping_address_1": {
-      "type": "text"
-    },
-    "shipping_address_2": {
-      "type": "text"
-    },
-    "shipping_city": {
-      "type": "string"
-    },
-    "shipping_state": {
-      "type": "string"
-    },
-    "shipping_zip_code": {
-      "type": "string"
-    },
-    "shipping_contact_no": {
-      "type": "string"
-    },
-    "shipping_email": {
-      "type": "string"
-    },
-    "order_token": {
-      "type": "string"
-    },
-    "card_no": {
-      "type": "string"
-    },
-    "card_expiry": {
-      "type": "string"
-    },
-    "card_security_code": {
-      "type": "integer"
+    "customer": {
+      "via": "orders",
+      "model": "customer"
     }
   }
 }

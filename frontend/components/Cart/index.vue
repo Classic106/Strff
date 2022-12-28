@@ -2,11 +2,16 @@
   <div class="container d-flex m-0 p-0">
     <div class="content d-flex flex-column" :class="isOpen && 'open'">
       <div class="header d-flex align-items-center justify-content-between">
-        <h6 class="text-uppercase m-0 p-3">Shopping Bag</h6>
+        <h6 class="text-uppercase m-0 p-3">shopping bag</h6>
         <CloseButton class="mr-3 my-2" v-on:close="$emit('close')" />
       </div>
       <div class="steps">
-        <CartDetail v-on:close="$emit('close')"/>
+        <FirstStep
+          v-if="step === 1"
+          :nextStep="nextStep"
+          v-on:close="$emit('close')"
+        />
+        <SecondStep v-if="step === 2" v-on:firstStep="firstStep" />
       </div>
     </div>
   </div>
@@ -14,21 +19,41 @@
 
 <script>
 import { mapGetters } from "vuex";
-import CartDetail from "./CartDetail";
+import FirstStep from "./FirstStep";
+import SecondStep from "./SecondStep.vue";
 import CloseButton from "@/components/common/CloseButton";
 
 export default {
   components: {
-    CartDetail,
+    FirstStep,
+    SecondStep,
     CloseButton,
   },
   props: ["isOpen"],
   data: () => ({
+    step: 1,
     settings: {
       suppressScrollX: true,
       wheelPropagation: false,
     },
-  })
+  }),
+  computed: {
+    ...mapGetters({
+      order_items: "order/getOrderItems",
+      order_bundles: "order/getBundleItems",
+    }),
+  },
+  methods: {
+    nextStep: function () {
+      this.step = this.step + 1;
+    },
+    firstStep: function () {
+      setTimeout(() => {
+        this.isShipping = false;
+        this.step = 1;
+      }, 2000);
+    },
+  },
 };
 </script>
 

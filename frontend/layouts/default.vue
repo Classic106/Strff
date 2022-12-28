@@ -1,8 +1,10 @@
 <template>
   <div class="flex justify-center">
     <div class="flex flex-col">
-      <Nuxt />
+      <Nuxt v-if="!$slots.default" />
+      <slot />
     </div>
+    <notifications group="all" position="top center" />
   </div>
 </template>
 
@@ -12,7 +14,10 @@ export default {};
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
-@import "vue-custom-scrollbar/dist/vueScrollbar.css";
+
+.page-link {
+  height: 100%;
+}
 
 .h-100vh {
   height: 100vh !important;
@@ -24,6 +29,10 @@ export default {};
 
 .grey {
   color: #919191;
+}
+
+.bg-grey {
+  background-color: #f6f6f6;
 }
 
 .text-ellipsis {
@@ -56,7 +65,7 @@ form {
 }
 
 .col-black {
-  color: #000;
+  color: #333;
 }
 
 img {
@@ -125,7 +134,7 @@ img.loaded {
   }
 
   h6 {
-    font-size: 1.5rem;
+    font-size: 0.9rem;
   }
 }
 

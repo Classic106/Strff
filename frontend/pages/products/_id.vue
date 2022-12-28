@@ -7,16 +7,10 @@
       <div class="row m-1 m-md-5">
         <div class="col-md-6 col-12 rounded pt-2 pb-2">
           <div class="m-auto images-wrapper">
-            <CoolLightBox
-              :items="images"
-              :index="imageIndex"
-              :loop="true"
-              @close="imageIndex = null"
-            />
             <div class="image-wrapper">
               <div
                 class="image"
-                @click="imageIndex = index"
+                @click="setCoolLightBox(index)"
                 :style="{ backgroundImage: `url(${images[index]})` }"
               ></div>
               <ssr-carousel
@@ -118,7 +112,6 @@
                   </div>
                 </div>
                 <button
-                  v-if="product.status === 'published'"
                   class="
                     py-2
                     px-4
@@ -135,17 +128,6 @@
                   <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
                   Add to cart
                 </button>
-
-                <div class="text-center mr-5 mb-1" v-else>
-                  <div class="p-2" role="alert">
-                    <span class="d-flex uppercase px-2 py-1 mr-3"
-                      >Coming soon...</span
-                    >
-                    <span class="mr-2 text-left d-flex"
-                      >This article is not available yet.</span
-                    >
-                  </div>
-                </div>
               </div>
             </div>
             <PurchaseTypes
@@ -177,8 +159,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import "vue-cool-lightbox/dist/vue-cool-lightbox.min.css";
+import { mapGetters, mapMutations } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
 import { colorTitleNumbers } from "~/helpers";
 
@@ -207,16 +188,24 @@ export default {
     },
     index: 0,
     imageIndex: null,
-    purchaseTypes: []
   }),
+  computed: {
+    ...mapGetters({
+      purchaseTypes: "purchase-types/getTypes",
+    }),
+  },
   async mounted() {
     try {
-      this.product = await this.$strapi.findOne('products', this.$route.params.id);
-      this.purchaseTypes = await this.$strapi.find('purchase-types');
+      this.product = await this.$strapi.findOne(
+        "products",
+        this.$route.params.id
+      );
 
       this.selected.product = this.product;
       this.selected.total = this.product.price;
       this.images = this.product.image.map((item) => this.getImage(item));
+
+      this.setImages(this.images);
 
       if (this.product.included) {
         this.included = this.product.included;
@@ -228,6 +217,13 @@ export default {
   methods: {
     getStrapiMedia,
     colorTitleNumbers,
+    ...mapMutations({
+      setImages: "cool_light_box/setImages",
+      setImageIndex: "cool_light_box/setImageIndex",
+    }),
+    setCoolLightBox: function (index) {
+      this.setImageIndex(index);
+    },
     getImage: function (image) {
       if (image.url) {
         return this.getStrapiMedia(image.url);
@@ -251,8 +247,8 @@ export default {
       }
     },
     calcPrice: function () {
-        const { product, quantity } = this.selected;
-        return product? product.price * quantity: 0;
+      const { product, quantity } = this.selected;
+      return product.price * quantity;
     },
     calcDiscoutPrice: function () {
       const { product, quantity } = this.selected;
@@ -299,19 +295,17 @@ export default {
       return price;
     },
     addToCart: async function () {
-        const selected = {
-            productId: this.selected.product.id,
-            quantity: this.selected.quantity,
-            purchaseTypeId: this.selected.purchase_type,
-            subscriptionTypeId: this.selected.subscription_type
-        };
-        this.$store.dispatch("order/addProduct", selected);
+      await this.$store.dispatch("order/addProduct", this.selected);
     },
   },
 };
 </script>
 
 <style scoped>
+button:hover {
+  color: #9e7d24;
+}
+
 .icon-tag {
   display: inline-block;
   min-width: 44px;

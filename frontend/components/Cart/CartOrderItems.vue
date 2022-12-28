@@ -13,11 +13,11 @@
             <h6 class="block-with-text">{{ item.product.title }}</h6>
             <div>
               <p class="mb-2 grey text-uppercase">
-                Price {{ item.product.price | formatNumber }} $
+                price {{ item.product.price | formatNumber }} $
               </p>
             </div>
             <p v-if="item.quantity > 1">
-              Total Price
+              total price
               {{ (item.product.price * item.quantity) | formatNumber }}
               $
             </p>
@@ -25,50 +25,66 @@
         </div>
         <div class="d-flex flex-column mt-3">
           <div class="d-flex flex-sm-row flex-column">
-            <p class="w-25 mb-2 grey mr-2 text-uppercase">Quantity</p>
-            <div class="d-flex" v-if="isEdit">
-              <button v-if="isEdit" v-on:click="quantityMinus()" class="gold-background">
+            <p class="w-25 mb-2 grey mr-2 text-uppercase">quantity</p>
+            <div class="d-flex">
+              <button
+                v-if="edit"
+                v-on:click="quantityMinus(item.id)"
+                class="gold-background"
+              >
                 -
               </button>
-              <p class="my-auto text-uppercase" :class="isEdit && 'mx-3'">
-                {{ selectedItem.quantity }}
+              <p class="my-auto text-uppercase" :class="edit && 'mx-3'">
+                {{ item.quantity }}
               </p>
-              <button v-if="isEdit" v-on:click="quantityPlus()" class="gold-background">
+              <button
+                v-if="edit"
+                v-on:click="quantityPlus(item.id)"
+                class="gold-background"
+              >
                 +
               </button>
             </div>
-            <div class="d-flex" v-else>
-                {{ item.quantity }}
-            </div>
           </div>
           <div class="d-flex flex-sm-row flex-column">
-            <p class="w-25 mb-2 grey mr-2 text-uppercase">Category</p>
-            <p v-for="category in item.product.categories" :key="category.id" class="mr-2 mb-2">
+            <p class="w-25 mb-2 grey mr-2 text-uppercase">category</p>
+            <p
+              v-for="category in item.product.categories"
+              :key="category.id"
+              class="mr-2 mb-2"
+            >
               {{ category.name }}
             </p>
           </div>
           <div class="d-flex flex-sm-row flex-column">
             <p class="w-25 mb-2 grey mr-2 text-uppercase">Purchase</p>
-            <p class="mb-2" v-if="!isEdit">
-              {{ item.purchase_type.title + (item.subscription_type? ' - ' + item.subscription_type.title: '') }}
+            <p class="mb-2" v-if="!edit">
+              {{
+                purchaseTypes.filter(
+                  (type) => item.purchase_type === type.id
+                )[0].title
+              }}
             </p>
             <PurchaseTypes
               v-else
               cart
-              :purType="item.purchase_type ? item.purchase_type.id : null"
-              :subType="item.subscription_type ? item.subscription_type.id : null"
+              :purType="item.purchase_type ? item.purchase_type : null"
+              :subType="item.subscription_type ? item.subscription_type : null"
               v-on:setTypes="(types) => setTypes(types, item.id)"
             />
           </div>
         </div>
         <div class="w-100 d-flex justify-content-between">
-          <div class="d-flex align-items-center pen" v-on:click="editOrSaveItem(item)">
+          <div class="d-flex align-items-center pen" v-on:click="edit = !edit">
             <span class="icon icon-pen m-2"></span>
             <p class="m-0 pl-1 gold text-uppercase">
-              {{ isEdit ? "Save" : "Edit" }}
+              {{ edit ? "save" : "edit" }}
             </p>
           </div>
-          <span class="icon icon-trash m-2" v-on:click="removeItemFromCart(item)"></span>
+          <span
+            class="icon icon-trash m-2"
+            v-on:click="removeProduct(item.id)"
+          ></span>
         </div>
       </div>
     </li>
@@ -78,7 +94,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 
-import PreloaderImage from "~/components/PreloaderImage";
+import PreloaderImage from "~/components/common/PreloaderImage";
 import PurchaseTypes from "~/components/common/PurchaseTypes";
 
 export default {
@@ -88,54 +104,42 @@ export default {
   },
   components: { PreloaderImage, PurchaseTypes },
   data: () => ({
-    isEdit: false,
-    purchaseTypes: [],
-    selectedItem: {
-        id: null,
-        quantity: 0,
-        purchaseTypeId: null,
-        subscriptionTypeId: null,
-        orderId: null
-    }
+    edit: false,
   }),
+  computed: {
+    ...mapGetters({
+      purchaseTypes: "purchase-types/getTypes",
+    }),
+  },
   methods: {
-    quantityPlus() {
-        if (this.selectedItem.quantity < 99) {
-            this.selectedItem.quantity += 1
-        }
+    ...mapActions({
+      removeProduct: "order/removeProduct",
+      updateProduct: "order/updateProduct",
+    }),
+    quantityPlus: function (id) {
+      const index = this.order_items.findIndex((item) => item.id === id);
+      if (index !== -1 && this.order_items[index].quantity < 99) {
+        const item = { ...this.order_items[index] };
+        item.quantity = item.quantity + 1;
+        this.updateProduct(item);
+      }
     },
-    quantityMinus() {
-        if (this.selectedItem.quantity > 1) {
-            this.selectedItem.quantity -= 1
-        }
+    quantityMinus: function (id) {
+      const index = this.order_items.findIndex((item) => item.id === id);
+      if (index !== -1 && this.order_items[index].quantity > 1) {
+        const item = { ...this.order_items[index] };
+        item.quantity = item.quantity - 1;
+        this.updateProduct(item);
+      }
     },
     setTypes: function (types, id) {
-        this.selectedItem.purchaseTypeId = types.purchase_type;
-        this.selectedItem.subscriptionTypeId = types.subscription_type;
+      const index = this.order_items.findIndex((item) => item.id === id);
+      if (index !== -1) {
+        const item = { ...this.order_items[index], ...types };
+        this.updateProduct(item);
+      }
     },
-    removeItemFromCart(item) {
-        this.$store.dispatch('order/removeItem', item);
-    },
-    editOrSaveItem(item) {
-        if (this.isEdit) {
-            this.updateCart(this.selectedItem);
-            this.isEdit = false;
-        } else {
-            this.selectedItem.id = item.id;
-            this.selectedItem.quantity = item.quantity;
-            this.selectedItem.purchaseTypeId = item.purchase_type.id? item.purchase_type: null;
-            this.selectedItem.subscriptionTypeId = item.subscription_type? item.subscription_type.id: null;
-            this.orderId = item.order.id;
-            this.isEdit = true;
-        }
-    },
-    updateCart: async function (data) {
-        this.$store.dispatch("order/updateItem", data);
-    }
   },
-  async mounted () {
-    this.purchaseTypes = await this.$strapi.find('purchase-types');
-  }
 };
 </script>
 
@@ -162,10 +166,6 @@ li {
   background-size: cover;
 }
 
-.pen {
-  cursor: pointer;
-}
-
 .icon-pen {
   width: 20px;
   background-image: url("../../assets/icons/pen-solid.svg");
@@ -185,17 +185,27 @@ button {
 }
 
 .block-with-text {
+  /* hide text if it more than N lines  */
   overflow: hidden;
+  /* for set '...' in absolute position */
   position: relative;
+  /* use this value to count block height */
   line-height: 1.2em;
+  /* max-height = line-height (1.2) * lines max number (3) */
   max-height: 2.4em;
+  /* fix problem when last visible word doesn't adjoin right side  */
   text-align: justify;
+
+  /*margin-right: -1em; */
   padding-right: 1em;
 }
 
 .block-with-text:before {
+  /* points in the end */
   content: "...";
+  /* absolute position */
   position: absolute;
+  /* set position to right bottom corner of block */
   right: 0;
   bottom: 0;
 }

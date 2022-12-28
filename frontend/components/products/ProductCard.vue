@@ -24,11 +24,28 @@
         </h5>
       </div>
     </nuxt-link>
+    <button
+      class="
+        py-2
+        px-4
+        rounded
+        btn
+        d-flex
+        justify-content-center
+        align-items-center
+        text-uppercase text-nowrap
+        w-100
+      "
+      v-on:click="addToCart"
+    >
+      <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
+      Add to cart
+    </button>
   </div>
 </template>
 
 <script>
-import PreloaderImage from "~/components/PreloaderImage";
+import PreloaderImage from "~/components/common/PreloaderImage";
 
 export default {
   name: "ProductCard",
@@ -37,10 +54,15 @@ export default {
   },
   components: { PreloaderImage },
   methods: {
-    addToCart(product) {
+    addToCart() {
+      const { product } = this;
+
       const selected = {
-        productId: product.id,
-        quantity: 1
+        product,
+        quantity: 1,
+        purchase_type: 1,
+        subscription_type: null,
+        total: product.price,
       };
       this.$store.dispatch("order/addProduct", selected);
     },
@@ -49,6 +71,15 @@ export default {
 </script>
 
 <style scoped>
+button {
+  background-color: #1f2020;
+  color: #fff;
+}
+
+button:hover {
+  color: #9e7d24;
+}
+
 .content {
   margin-left: 35px;
   margin-right: 35px;
@@ -56,5 +87,10 @@ export default {
 
 .price {
   font-size: 1.5rem;
+}
+
+.icon-bag {
+  filter: invert(98%) sepia(98%) saturate(0%) hue-rotate(326deg)
+    brightness(103%) contrast(102%);
 }
 </style>

@@ -29,7 +29,7 @@
       "path": "/articles",
       "handler": "article.create",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -37,15 +37,15 @@
       "path": "/articles/:id",
       "handler": "article.update",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
       "method": "DELETE",
-      "path": "/articles/:id",
+      "path": "/articles/:ids",
       "handler": "article.delete",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     }
   ]

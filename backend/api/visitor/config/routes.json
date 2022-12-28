@@ -1,0 +1,60 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/connected_visitors/count",
+      "handler": "visitor.connected_visitors",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/visitors",
+      "handler": "visitor.find",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/visitors/count",
+      "handler": "visitor.count",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/visitors/:id",
+      "handler": "visitor.findOne",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/visitors",
+      "handler": "visitor.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/visitors/:id",
+      "handler": "visitor.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/visitors/:id",
+      "handler": "visitor.delete",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    }
+  ]
+}
