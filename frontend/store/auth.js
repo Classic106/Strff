@@ -84,6 +84,51 @@ export const actions = {
     }
     error("User is undefined");
   },
+  async createCustomer({ commit }, customer) {
+    try {
+      const { email } = customer;
+
+      const { data } = await this.$axios
+        .post("/customers", {
+          orders_count: 0,
+          total_price: 0,
+          email,
+        })
+        .then(({ data }) => {
+          const { id } = data;
+
+          return this.$axios.post("/users", {
+            ...customer,
+            confirmed: false,
+            blocked: false,
+            customer: id,
+            role: 3, //customer role
+          });
+        });
+
+      const { user, jwt } = data;
+
+      this.$axios.setHeader("Authorization", `Bearer ${jwt}`);
+      this.$cookies.set("token", jwt);
+
+      this.$router.push("/profile");
+
+      commit("setUser", user);
+    } catch (e) {
+      error(e);
+    }
+  },
+  async checkEmail(_, email) {
+    try {
+      const { data } = await this.$axios.get(`/check_email?email=${email}`);
+      if (data) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      error(e);
+    }
+  },
 };
 
 export const mutations = {

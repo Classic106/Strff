@@ -12,7 +12,7 @@
               id="username"
               type="text"
               placeholder="Enter your username"
-              v-model="username"
+              v-model.trim="form.username"
               autocomplete="off"
               required
               autofocus="true"
@@ -34,7 +34,7 @@
               id="email"
               type="email"
               placeholder="Enter your email"
-              v-model="email"
+              v-model.trim="form.email"
               required
               autofocus="true"
               autocomplete="off"
@@ -50,13 +50,16 @@
                 focus:outline-none focus:shadow-outline
               "
             />
+            <p :class="isEmail ? 'd-flex' : 'd-none'">
+              Email has been already exist
+            </p>
           </div>
           <div class="mb-4">
             <input
               id="password"
               type="password"
               placeholder="Enter your password"
-              v-model="password"
+              v-model.trim="form.password"
               required
               autofocus="true"
               autocomplete="off"
@@ -105,20 +108,54 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   name: "SingUp",
   props: { isMenu: Boolean, toggle: Function },
-  data() {
-    return {
+  data: () => ({
+    form: {
       email: "",
       password: "",
       username: "",
-      loading: false,
-    };
+    },
+    isEmail: false,
+    timer: null,
+  }),
+  watch: {
+    form: {
+      handler() {
+        this.checkCurrentEmail();
+      },
+      deep: true,
+    },
   },
   methods: {
+    ...mapActions({
+      createCustomer: "auth/createCustomer",
+      checkEmail: "auth/checkEmail",
+    }),
+    checkCurrentEmail: async function () {
+      const { email } = this.form;
+
+      if (email) {
+        clearInterval(this.timer);
+        this.timer = null;
+
+        this.timer = setTimeout(async () => {
+          const result = await this.checkEmail(email);
+
+          if (result) {
+            this.isEmail = true;
+          } else {
+            this.isEmail = false;
+          }
+        }, 1000);
+      } else {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+    },
     linkClick() {
       if (this.isMenu) {
         this.toggle();
@@ -127,24 +164,19 @@ export default {
       this.$router.push("/login");
     },
     async handleSubmit() {
-      try {
-        this.loading = true;
-        const response = await this.$strapi.register({
-          email: this.email,
-          username: this.username,
-          password: this.password,
-        });
-        this.loading = false;
-        this.setCurrentLoggedUser(response.user);
-        this.$router.push("/");
-      } catch (err) {
-        this.loading = false;
-        alert(err.message || "An error occurred.");
+      const { isEmail, form } = this;
+      const { email, username, password } = form;
+
+      if (!isEmail && email && username && password) {
+        await this.createCustomer(form);
       }
     },
-    ...mapMutations({
-      setCurrentLoggedUser: "auth/setUser",
-    }),
+  },
+  destroyed() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
   },
 };
 </script>

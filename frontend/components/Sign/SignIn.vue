@@ -19,6 +19,7 @@
               type="email"
               placeholder="Email"
               v-model="identifier"
+              required
             />
           </div>
           <div class="mb-6">
@@ -38,6 +39,7 @@
               type="password"
               placeholder="Password"
               v-model="password"
+              required
             />
           </div>
           <div class="flex items-center justify-between">

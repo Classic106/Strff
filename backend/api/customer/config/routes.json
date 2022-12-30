@@ -29,7 +29,7 @@
       "path": "/customers",
       "handler": "customer.create",
       "config": {
-        "policies": ["global::isAuthenticated"]
+        "policies": []
       }
     },
     {
