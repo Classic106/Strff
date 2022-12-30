@@ -35,7 +35,7 @@ export default {
     script: [],
   },
   router: {
-    middleware: ["isAdminAuthenticated"],
+    middleware: ["isAuthenticated"],
   },
   /*
    ** Global CSS

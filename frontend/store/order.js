@@ -76,6 +76,7 @@ export const actions = {
         order_item.order = state.id;
         const result = await this.$strapi.create("order-items", order_item);
         commit("addProduct", result);
+        console.log(1)
         success("Product successfully added");
       }
     } else {

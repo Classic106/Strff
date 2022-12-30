@@ -8,7 +8,6 @@ import AdminProfile from "~/components/Admin/AdminProfile";
 export default {
   name: "AdminPage",
   layout: "admin",
-  middleware: "isAdminAuthenticated",
   components: { AdminProfile },
 };
 </script>

@@ -17,6 +17,19 @@ export const actions = {
       //console.log(this.$axios.defaults.baseURL)
       const { jwt, user } = await this.$axios.$post("auth/local", login);
 
+      if (user) {
+        const { role } = user;
+        const { type } = role;
+
+        if (type === "authenticated") {
+          this.$router.push("/admin");
+        }
+
+        if (type === "customer") {
+          this.$router.push("/profile");
+        }
+      }
+
       this.$axios.setHeader("Authorization", `Bearer ${jwt}`);
       this.$cookies.set("token", jwt);
 

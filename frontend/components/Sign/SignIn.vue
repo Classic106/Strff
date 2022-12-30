@@ -1,21 +1,14 @@
 <template>
   <section class="container">
-    <div class="grid md:grid-cols-1 mt-3">
+    <div class="grid md:grid-cols-1 mt-5 mb-5">
       <div class="w-full max-w-md my-0 mx-auto">
-        <form class="px-8 pt-6 pb-8 mb-4" @submit.stop.prevent="handleSubmit">
+        <form class="px-8 pt-8 pb-8 mb-4" @submit.stop.prevent="handleSubmit">
           <div class="mb-4">
-            <label
-              class="block text-gray-700 text-sm font-bold mb-2"
-              for="username"
-            >
-              Email
-            </label>
             <input
               class="
                 appearance-none
                 border
                 rounded
-                w-full
                 py-2
                 px-3
                 text-gray-700
@@ -25,23 +18,15 @@
               id="email"
               type="email"
               placeholder="Email"
-              v-model="email"
-              required
+              v-model="identifier"
             />
           </div>
           <div class="mb-6">
-            <label
-              class="block text-gray-700 text-sm font-bold mb-2"
-              for="password"
-            >
-              Password
-            </label>
             <input
               class="
                 appearance-none
                 border
                 rounded
-                w-full
                 py-2
                 px-3
                 text-gray-700
@@ -51,16 +36,18 @@
               "
               id="password"
               type="password"
-              placeholder="******************"
+              placeholder="Password"
               v-model="password"
             />
           </div>
           <div class="flex items-center justify-between">
             <button
               class="
+                border-0
                 bg-blue-500
                 hover:bg-blue-700
                 text-white
+                gold-background
                 font-bold
                 py-2
                 px-4
@@ -74,7 +61,7 @@
           </div>
           <p class="text-center mt-3">
             Don't have account?
-            <nuxt-link event="" v-on:click.native="linkClick" to="/signup">
+            <nuxt-link event="" v-on:click.native="linkClick" to="/register">
               Registration
             </nuxt-link>
           </p>
@@ -85,45 +72,39 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   name: "SingIn",
   props: { isMenu: Boolean, toggle: Function },
   data() {
     return {
-      email: "",
+      identifier: "",
       password: "",
-      loading: false,
     };
   },
   methods: {
+    ...mapActions({ login: "auth/login" }),
     linkClick() {
       if (this.isMenu) {
         this.toggle();
         return;
       }
-      this.$router.push("/signup");
+      this.$router.push("/register");
     },
     async handleSubmit() {
-      try {
-        this.loading = true;
-        const response = await this.$strapi.login({
-          identifier: this.email,
-          password: this.password,
-        });
-        this.loading = false;
-        this.setUser(response.user);
-        this.$store.dispatch("cart/syncByUser", response.user.id);
-        this.$router.go(-1);
-      } catch (err) {
-        this.loading = false;
-        alert(err.message || "An error occurred.");
-      }
+      //const data = { identifier: "test@test.test", password: "test123456" }; //customer
+      const data = { identifier: "test1@test.test", password: "test123456" }; //admin
+      //const { identifier, password } = this;
+      await this.login(data);
     },
-    ...mapMutations({
-      setUser: "auth/setUser",
-    }),
   },
 };
 </script>
+
+<style lang="scss">
+input {
+  width: 100%;
+  max-width: 450px;
+}
+</style>

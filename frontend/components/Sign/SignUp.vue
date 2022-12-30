@@ -1,6 +1,6 @@
 <template>
   <section class="container">
-    <div class="grid md:grid-cols-1 mt-3">
+    <div class="grid md:grid-cols-1 mt-5 mb-5">
       <div class="w-full max-w-md my-0 mx-auto">
         <form
           class="px-8 pt-6 pb-8 mb-4"
@@ -8,17 +8,12 @@
           @submit.stop.prevent="handleSubmit"
         >
           <div class="mb-4">
-            <label
-              class="block text-gray-700 text-sm font-bold mb-2"
-              for="username"
-            >
-              Username
-            </label>
             <input
               id="username"
               type="text"
               placeholder="Enter your username"
               v-model="username"
+              autocomplete="off"
               required
               autofocus="true"
               class="
@@ -35,12 +30,6 @@
             />
           </div>
           <div class="mb-4">
-            <label
-              class="block text-gray-700 text-sm font-bold mb-2"
-              for="email"
-            >
-              Email
-            </label>
             <input
               id="email"
               type="email"
@@ -48,6 +37,7 @@
               v-model="email"
               required
               autofocus="true"
+              autocomplete="off"
               class="
                 appearance-none
                 border
@@ -62,12 +52,6 @@
             />
           </div>
           <div class="mb-4">
-            <label
-              class="block text-gray-700 text-sm font-bold mb-2"
-              for="password"
-            >
-              Password
-            </label>
             <input
               id="password"
               type="password"
@@ -75,6 +59,7 @@
               v-model="password"
               required
               autofocus="true"
+              autocomplete="off"
               class="
                 appearance-none
                 border
@@ -91,9 +76,11 @@
           <div class="flex items-center justify-between">
             <button
               class="
+                border-0
                 bg-blue-500
                 hover:bg-blue-700
                 text-white
+                gold-background
                 font-bold
                 py-2
                 px-4
@@ -107,7 +94,7 @@
           </div>
           <p class="text-center mt-3">
             Already have an account?
-            <nuxt-link event="" v-on:click.native="linkClick" to="/signin">
+            <nuxt-link event="" v-on:click.native="linkClick" to="/login">
               Login
             </nuxt-link>
           </p>
@@ -137,7 +124,7 @@ export default {
         this.toggle();
         return;
       }
-      this.$router.push("/signin");
+      this.$router.push("/login");
     },
     async handleSubmit() {
       try {
@@ -148,7 +135,7 @@ export default {
           password: this.password,
         });
         this.loading = false;
-        this.setUser(response.user);
+        this.setCurrentLoggedUser(response.user);
         this.$router.push("/");
       } catch (err) {
         this.loading = false;
@@ -156,8 +143,15 @@ export default {
       }
     },
     ...mapMutations({
-      setUser: "auth/setUser",
+      setCurrentLoggedUser: "auth/setUser",
     }),
   },
 };
 </script>
+
+<style lang="scss">
+input {
+  width: 100%;
+  max-width: 450px;
+}
+</style>

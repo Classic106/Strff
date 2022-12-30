@@ -8,7 +8,6 @@ import Articles from "~/components/Admin/Articles";
 export default {
   name: "AdminArticles",
   layout: "admin",
-  middleware: "isAdminAuthenticated",
   components: { Articles },
 };
 </script>

@@ -22,37 +22,36 @@ module.exports = {
         const user = await strapi
           .query("user", "users-permissions")
           .findOne({ id });
-        if (user.role.name === "Authenticated") {
+
+        if (user) {
           const {
             blocked,
             confirmed,
             created_at,
             email,
-            first_name,
             id,
-            last_name,
             provider,
             role,
             updated_at,
             username,
+            customer,
           } = user;
           return {
             blocked,
             confirmed,
             created_at,
             email,
-            first_name,
             id,
-            last_name,
             provider,
             role,
             updated_at,
             username,
+            customer,
           };
         }
       }
     } catch (e) {
-      return ctx.badRequest("Unauthenticated user");
+      return ctx.badRequest("Unrecognized user");
     }
   },
 };
