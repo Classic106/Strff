@@ -220,7 +220,7 @@
     layout: "club",
     data() {
       return {
-          isCheckoutDone: true,
+          isCheckoutDone: false,
           order: {},
           loading: false,
           isSameAsShipping: true,
@@ -294,7 +294,6 @@
               if (paymentResult && shippingResult) {
                   this.placeOrder(this.order);
                   this.isCheckoutDone = true;
-                  alert('Your order have been successfully submitted.');
               } else {
                   alert('Your order submittion was not successfull.');
               }
