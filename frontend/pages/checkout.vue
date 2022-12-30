@@ -1,5 +1,5 @@
 <template>
-    <section class="container checkout">
+    <section v-if="!isCheckoutDone" class="container checkout">
       <div class="row">
         <div class="col-12 col-md-4">
             <div class="block">
@@ -196,6 +196,14 @@
         </div>
       </div>
     </section>
+    <section v-else class="thankyou">
+        <div class="container">
+            <h1>Thank you, your order has been placed</h1>
+            <p>
+                Please check your email for order confirmation and detailed delivery Information.
+            </p>
+        </div>
+    </section>
   </template>
 
   <script>
@@ -212,6 +220,7 @@
     layout: "club",
     data() {
       return {
+          isCheckoutDone: true,
           order: {},
           loading: false,
           isSameAsShipping: true,
@@ -284,7 +293,7 @@
               }
               if (paymentResult && shippingResult) {
                   this.placeOrder(this.order);
-                  this.$router.push('/');
+                  this.isCheckoutDone = true;
                   alert('Your order have been successfully submitted.');
               } else {
                   alert('Your order submittion was not successfull.');
@@ -319,16 +328,16 @@
       },
     },
     async mounted () {
+      if (!this.orderNoOfItems) {
+        this.$router.push('/');
+      }
       this.order = Object.assign({}, this.cart);
       if (this.loggedUser) {
           this.order.shipping_first_name = this.loggedUser.first_name;
           this.order.shipping_last_name = this.loggedUser.last_name;
           this.order.shipping_email = this.loggedUser.email;
       }
-
       this.purchaseTypes = await this.$strapi.find('purchase-types');
-
-      this.order.card_expiry = '11/22'; //new Date().getFullYear();
     }
   }
   </script>
@@ -382,6 +391,27 @@
             margin-top: 10px;
             border-radius: 10px;
         }
+    }
+  }
+
+  .thankyou {
+
+    .container {
+        position: relative;
+        display: block;
+        width: 100%;
+        max-width: 800px;
+        margin: 15% auto;
+    }
+
+    h1 {
+        font-size: 32px;
+        line-height: 36px;
+    }
+
+    p {
+        font-size: 20px;
+        line-height: 25px;
     }
   }
 
