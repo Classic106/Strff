@@ -407,11 +407,13 @@
     h1 {
         font-size: 32px;
         line-height: 36px;
+        margin-bottom: 25px;
     }
 
     p {
         font-size: 20px;
         line-height: 25px;
+        max-width: 500px;
     }
   }
 
