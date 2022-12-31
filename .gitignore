@@ -65,7 +65,6 @@ $RECYCLE.BIN/
 ############################
 
 .tmp
-database
 *.log
 *.sql
 *.sqlite
@@ -118,6 +117,4 @@ frontend/.nuxt/
 frontend/node_modules/
 backend/.cache/
 backend/node_modules/
-
-backend/database/*
-backend/database/strapi-data.db
+backend/.database/

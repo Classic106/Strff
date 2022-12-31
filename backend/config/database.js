@@ -5,7 +5,7 @@ module.exports = ({ env }) => ({
       connector: 'bookshelf',
       settings: {
         client: 'sqlite',
-        filename: env('DATABASE_FILENAME', 'database/strapi-data.db'),
+        filename: env('DATABASE_FILENAME', '.database/strapi-data.db'),
       },
       options: {
         useNullAsDefault: true,
