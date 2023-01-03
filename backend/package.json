@@ -5,25 +5,27 @@
   "description": "A Strapi application",
   "scripts": {
     "develop": "HOST=localhost PORT=1338 strapi develop",
-    "develop-local": "HOST=localhost PORT=1338 strapi develop",
+    "develop-local": "cross-env HOST=localhost PORT=1338 strapi develop",
     "start": "HOST=localhost PORT=1338 strapi start",
     "build": "strapi build",
     "strapi": "strapi"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  },
   "dependencies": {
+    "knex": "0.21.18",
+    "sqlite3": "5.0.0",
     "strapi": "3.6.8",
     "strapi-admin": "3.6.8",
-    "strapi-utils": "3.6.8",
-    "strapi-plugin-content-type-builder": "3.6.8",
-    "strapi-plugin-content-manager": "3.6.8",
-    "strapi-plugin-users-permissions": "3.6.8",
-    "strapi-plugin-email": "3.6.8",
-    "strapi-plugin-upload": "3.6.8",
-    "strapi-plugin-i18n": "3.6.8",
     "strapi-connector-bookshelf": "3.6.8",
-    "knex": "0.21.18",
-    "sqlite3": "5.0.0"
+    "strapi-plugin-content-manager": "3.6.8",
+    "strapi-plugin-content-type-builder": "3.6.8",
+    "strapi-plugin-email": "3.6.8",
+    "strapi-plugin-i18n": "3.6.8",
+    "strapi-plugin-upload": "3.6.8",
+    "strapi-plugin-users-permissions": "3.6.8",
+    "strapi-utils": "3.6.8"
   },
   "author": {
     "name": "A Strapi developer"
