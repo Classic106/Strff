@@ -86,18 +86,20 @@
             <div class="block">
                 <h2>Payment Method</h2>
                 <ul class="payment-options">
-                    <li v-on:click="paymentType = 1">Creditcard</li>
-                        <div v-if="paymentType == 1" class="creditcard-payment">
+                    <li v-for="m in paymentMethods" :key="m.id" v-on:click="selectedPaymentMethodId = m.id; selectedPaymentMethodCode = m.code">
+                        {{ m.name }}
+                        <div v-if="m.code == 'creditcard' && selectedPaymentMethodCode == 'creditcard'" class="creditcard-payment">
                             <Creditcard v-on:setCreditcard="setCreditcard"/>
                         </div>
-                    <li v-on:click="paymentType = 2">Paypal</li>
+                    </li>
                 </ul>
             </div>
             <div class="block">
                 <h2>Shipping Method</h2>
                 <ul class="shipping-options">
-                    <li v-on:click="shippingType = 1">USPS</li>
-                    <li v-on:click="shippingType = 2">UPS</li>
+                    <li v-for="m in shippingMethods" :key="m.id" v-on:click="selectedShippingMethodId = m.id; selectedShippingMethodCode = m.code">
+                        {{ m.name }}
+                    </li>
                 </ul>
             </div>
         </div>
@@ -224,14 +226,17 @@
           order: {},
           loading: false,
           isSameAsShipping: true,
-          paymentType: 0,
-          shippingType: 0,
           purchaseTypes: [],
           states,
           card: {},
-          selectedPaymentMethod: null,
           paymentApiAuthorizeNet: null,
-          shippingApiUsps: null
+          shippingApiUsps: null,
+          paymentMethods: [],
+          shippingMethods: [],
+          selectedPaymentMethodId: null,
+          selectedPaymentMethodCode: null,
+          selectedShippingMethodId: null,
+          selectedShippingMethodCode: null
       }
     },
     computed: {
@@ -278,15 +283,17 @@
               let orderDate = Date.now();
               this.order.order_no = orderNo;
               this.order.order_date = orderDate;
+              this.order.payment_method = this.selectedPaymentMethodId;
+              this.order.shipping_method = this.selectedShippingMethodId;
 
               let paymentResult = true;
-              if (this.paymentType == 1) {
+              if (this.selectedPaymentMethodCode == 'creditcard') {
                   /* this.paymentApiAuthorizeNet = new PayWithAuthorizeNet(this.order, this.$axios);
                   paymentResult = this.paymentApiAuthorizeNet.pay();
                   console.log(paymentResult); */
               }
               let shippingResult = true;
-              if (this.shippingType == 1) {
+              if (this.selectedShippingMethodCode == 'usps') {
                   /* this.shippingApiUsps = new ShipWithUsps();
                   shippingResult = this.shippingApiUsps.ship();
                   console.log(shippingResult); */
@@ -335,8 +342,12 @@
           this.order.shipping_first_name = this.loggedUser.first_name;
           this.order.shipping_last_name = this.loggedUser.last_name;
           this.order.shipping_email = this.loggedUser.email;
+      } else {
+          this.$router.push('/login');
       }
       this.purchaseTypes = await this.$strapi.find('purchase-types');
+      this.paymentMethods = await this.$strapi.find('payment-methods');
+      this.shippingMethods = await this.$strapi.find('shipping-methods');
     }
   }
   </script>
