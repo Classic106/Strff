@@ -1,19 +1,6 @@
 <template>
-  <div
-    class="icon-bag-wrap position-relative"
-    v-on:click="$nuxt.$emit('rightSide', 'cart')"
-  >
-    <span
-      class="
-        position-absolute
-        w-100
-        d-flex
-        justify-content-center
-        align-items-center
-        gold
-      "
-      >{{ numberOfItems }}</span
-    >
+  <div class="icon-bag-wrap position-relative" v-on:click="$nuxt.$emit('rightSide', 'cart')">
+    <span class="position-absolute w-100 d-flex justify-content-center align-items-center gold order-items-count">{{ orderNoOfItems }}</span>
     <span class="icon icon-bag position-relative"></span>
   </div>
 </template>
@@ -24,7 +11,7 @@ import { mapGetters } from "vuex";
 export default {
   computed: {
     ...mapGetters({
-      numberOfItems: "order/numberOfItems",
+      orderNoOfItems: "order/orderNoOfItems",
     }),
   },
 };
@@ -64,5 +51,10 @@ export default {
 .icon-bag > span {
   filter: invert(50%) sepia(56%) saturate(571%) hue-rotate(6deg) brightness(88%)
     contrast(86%);
+}
+
+.order-items-count {
+    font-size: 14px !important;
+    top: 7px;
 }
 </style>

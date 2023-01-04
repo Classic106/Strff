@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import PreloaderImage from "~/components/common/PreloaderImage";
+import PreloaderImage from "~/components/PreloaderImage";
 
 export default {
   name: "SearchBestSellers",

@@ -46,7 +46,7 @@
               "
             >
               <h6 class="text-center text-uppercase mr-1">
-                {{ new Date(article.created_at).getDate() | formatDay }}
+                {{ new Date(article.created_at).getDate() | formatDate }}
               </h6>
               <h6>
                 {{ new Date(article.created_at).getMonth() | parseMonth }}
@@ -67,14 +67,10 @@ import { getStrapiMedia } from "~/utils/medias";
 export default {
   data: () => ({
     articles: [],
+    allArticles: []
   }),
-  computed: {
-    ...mapGetters({
-      allArticles: "articles/articles",
-    }),
-  },
   methods: { getStrapiMedia },
-  mounted() {
+  async mounted() {
     this.articles = [...this.allArticles]
       .sort(function (a, b) {
         const dateA = new Date(a.created_at);
@@ -82,6 +78,7 @@ export default {
         return dateA - dateB;
       })
       .reverse();
+    this.articles = await this.$strapi.find('articles');
     this.articles.length = 2;
   },
 };

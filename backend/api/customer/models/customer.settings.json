@@ -42,10 +42,6 @@
     "email": {
       "type": "string"
     },
-    "orders": {
-      "via": "customer",
-      "collection": "order"
-    },
     "orders_count": {
       "type": "integer"
     },

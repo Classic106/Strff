@@ -15,7 +15,7 @@
       >
         <div class="row justify-content-center m-0 w-100">
           <div
-            v-for="product in shuffleArray(this.best_sellers)"
+            v-for="product in products"
             :key="product.id"
             class="product col-11 col-sm-6 col-md-4 col-lg-3 p-3 m-2"
           >
@@ -28,9 +28,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 import { shuffleArray } from "~/helpers";
-
 import ProductCard from "~/components/products/ProductCard";
 
 export default {
@@ -39,17 +37,16 @@ export default {
     products: [],
     error: null,
   }),
-  computed: {
-    ...mapGetters({
-      best_sellers: "best_sellers/best_sellers",
-    }),
-  },
-  methods: {
-    shuffleArray,
-  },
   async mounted() {
-    this.products = this.shuffleArray(this.best_sellers);
+    try {
+      const result = await this.$strapi.$bestsellers.find();
+      this.products = this.shuffleArray(result[0].products);
+      this.products.length = 4;
+    } catch (error) {
+      this.error = error;
+    }
   },
+  methods: { shuffleArray },
 };
 </script>
 

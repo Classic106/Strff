@@ -172,7 +172,6 @@ export default {
     entities: [
       "appointment-orders",
       "appointments",
-      "bestsellers",
       "articles",
       "categories",
       "sizes",

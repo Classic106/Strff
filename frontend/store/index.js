@@ -1,34 +1,49 @@
 import cookieparser from "cookieparser";
-import { error } from "../utils/error";
 
 export const actions = {
   async nuxtServerInit({ commit, dispatch }, { req }) {
+    let user = null;
     let order = null;
-    let userInfo = {};
     let token = null;
 
     if (req && req.headers && req.headers.cookie) {
       const parsed = cookieparser.parse(req.headers.cookie);
-      order = parsed.order || null;
-      token = parsed.token || null;
-      userInfo = parsed.user_info || {};
+      user = (parsed.user && JSON.parse(parsed.user)) || null;
+      token = parsed.order_token || null;
     }
 
-    if (order !== null) {
-      try {
-        const data = await this.$strapi.findOne("orders", order);
-        commit("order/setOrder", data);
-      } catch (e) {
-        error(e);
-      }
-    }
-    if (Object.keys(userInfo).length) {
-      commit("userInfo/setUserInfo", JSON.parse(userInfo));
-    }
+    // if (token == null && req.session.id) {
+    //   token = req.session.id;
+    // }
 
-    if (token) {
-      await dispatch("auth/loginByToken");
-    }
+    // let orderStatusPending = await this.$strapi.find("order-statuses", {
+    //   code: 1,
+    // });
+    // if (orderStatusPending && orderStatusPending.length) {
+    //   orderStatusPending = orderStatusPending[0];
+    //   let options = {};
+    //   if (user) {
+    //     options = {
+    //       "order_status.id": orderStatusPending.id,
+    //       "user.id": user.id,
+    //     };
+    //   } else {
+    //     options = {
+    //       "order_status.id": orderStatusPending.id,
+    //       order_token: token,
+    //     };
+    //   }
+    //   order = await this.$strapi.$http.$get(
+    //     "/order/getorder?" + convertObjectToQueryUrl(options)
+    //   );
+    // }
+
+    // console.log("Token: ", token);
+
+    commit("order/setToken", token);
+    commit("auth/setUser", user);
+    commit("order/setOrder", order);
+
     await dispatch("best_sellers/getBestSellers");
     await dispatch("categories/getCategories");
     await dispatch("articles/getArticles");

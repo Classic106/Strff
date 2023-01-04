@@ -153,7 +153,7 @@
 <script>
 import { mapActions } from "vuex";
 import { colorTitleNumbers } from "~/helpers";
-import PreloaderImage from "~/components/common/PreloaderImage";
+import PreloaderImage from "~/components/PreloaderImage";
 
 export default {
   name: "BundleProducts",

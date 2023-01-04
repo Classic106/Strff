@@ -19,7 +19,7 @@
               type="email"
               placeholder="Email"
               v-model="identifier"
-              required
+              
             />
           </div>
           <div class="mb-6">
@@ -39,7 +39,7 @@
               type="password"
               placeholder="Password"
               v-model="password"
-              required
+              
             />
           </div>
           <div class="flex items-center justify-between">
@@ -95,8 +95,8 @@ export default {
       this.$router.push("/register");
     },
     async handleSubmit() {
-      //const data = { identifier: "test@test.test", password: "test123456" }; //customer
-      const data = { identifier: "test1@test.test", password: "test123456" }; //admin
+      const data = { identifier: "test@test.test", password: "test123456" }; //customer
+      //const data = { identifier: "test1@test.test", password: "test123456" }; //admin
       //const { identifier, password } = this;
       await this.login(data);
     },

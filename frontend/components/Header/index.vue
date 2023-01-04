@@ -1,48 +1,35 @@
 <template>
   <header
-    class="
-      d-flex
-      flex-column
-      p-0
-      m-0
-      justify-content-center
-      align-items-center
-      w-100
-      position-sticky
-    "
-  >
-    <div
-      class="
-        head
-        d-flex
-        flex-column
-        px-4
-        my-4
-        mb-lg-2
-        justify-content-between
-        align-items-center
-        text-uppercase
-        w-100
-        position-relative
-      "
-    >
+    class="d-flex flex-column p-0 m-0 justify-content-center align-items-center w-100 position-sticky">
+    <div class="head d-flex flex-column px-4 my-4 mb-lg-2 justify-content-between align-items-center text-uppercase w-100 position-relative">
       <div class="w-100 d-flex">
-        <div ref="menuButton">
-          <BurgerMenuButton
-            :isOpenMenu="isOpenMenu"
-            v-on:isOpenMenu="isOpenMenu = !isOpenMenu"
-          />
+        <div ref="menuButton" class="nav-menu-arrow d-flex d-lg-none" :class="isOpenMenu && 'open'" v-on:click="isOpenMenu = !isOpenMenu">
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
         <h6 class="d-flex justify-content-center align-items-center w-100 m-0">
-          <nuxt-link to="/" class="gold m-0">strff</nuxt-link>
+          <nuxt-link to="/" class="gold m-0">STRFF</nuxt-link>
         </h6>
-        <div class="d-flex align-items-center ml-sm-4 ml-1">
-          <Search class="cursor-pointer" />
-          <Cart class="cursor-pointer" />
+      </div>
+      <div class="right-menu-section">
+        <div class="d-flex align-items-center ml-sm-4 ml-1 justify-content-end">
+            <div v-if="currentUserName" class="mr-3">
+                Hi {{ currentUserName }}
+                <a href="#" class="gold" @click="logout">Logout</a>
+            </div>
+            <div v-if="!currentUserName" class="mr-3">
+                <nuxt-link to="/login" class="gold">Login</nuxt-link>
+            </div>
+            <div v-if="!currentUserName" class="mr-3">
+                <nuxt-link to="/register" class="gold">Register</nuxt-link>
+            </div>
+            <Search class="cursor-pointer" />
+            <Cart class="cursor-pointer" />
         </div>
       </div>
       <div
-        class="row m-0 w-100"
+        class="row m-0 w-50"
         :class="
           isMobile
             ? isOpenMenu
@@ -51,30 +38,10 @@
             : 'position-relative justify-content-between'
         "
       >
-        <div class="menu-wrap col-lg col-sm-8 m-0" ref="menu">
-          <ul
-            class="
-              pl-sm-4 pl-1
-              text-uppercase
-              d-flex
-              w-100
-              m-0
-              flex-column flex-lg-row
-              justify-content-center
-            "
-            :class="isMobile ? 'ul-mobile' : ''"
-          >
-            <li
-              v-for="category in categories"
-              :key="category.id"
-              class="px-md-3 px-1 py-2"
-            >
-              <NuxtLink
-                :to="`/categories/${category.slug}`"
-                class="gold"
-                v-on:click.native="linkClick(`/categories/${category.slug}`)"
-                >{{ category.name }}</NuxtLink
-              >
+        <div class="menu-wrap col-lg col-sm-8 m-0">
+          <ul ref="menu" class="pl-sm-4 pl-1 text-uppercase d-flex w-100 m-0 flex-column flex-lg-row justify-content-center" :class="isMobile ? 'ul-mobile' : ''">
+            <li v-for="category in categories" :key="category.id" class="px-md-3 px-1 py-2">
+              <NuxtLink :to="`/categories/${category.slug}`" class="gold" v-on:click.native="lickClick(`/categories/${category.slug}`)">{{ category.name }}</NuxtLink>
             </li>
             <li
               class="d-flex"
@@ -85,44 +52,19 @@
               "
               ref="additionalMenu"
             >
-              <a
-                v-on:click.prevent="isOpen = !isOpen"
-                class="
-                  gold
-                  cursor-pointer
-                  d-flex
-                  align-items-center
-                  text-nowrap
-                  m-0
-                "
-              >
+              <a v-on:click.prevent="isOpen = !isOpen" class="gold cursor-pointer d-flex align-items-center text-nowrap m-0">
                 MAN`S CARE
-                <Icon
-                  v-if="!isMobile"
-                  :icon="isOpen ? 'angle-up' : 'angle-down'"
-                  class="angle ml-1"
-                />
+                <Icon v-if="!isMobile" :icon="isOpen ? 'angle-up' : 'angle-down'" class="angle ml-1"/>
               </a>
-              <vueCustomScrollbar
-                class="
-                  scroll-area
-                  position-realtive
-                  d-flex
-                  flex-column
-                  overflow-auto
-                  rounded
-                  p-3
-                "
-                :settings="scrollSettings"
-                v-if="isMobile ? true : isOpen"
-                :class="isMobile ? '' : 'position-absolute additional_menu'"
-              >
+              <vueCustomScrollbar class="scroll-area position-realtive d-flex flex-column overflow-auto rounded p-3"
+                    :settings="scrollSettings" v-if="isMobile ? true : isOpen"
+                    :class="isMobile ? '' : 'position-absolute additional_menu'">
                 <ul class="p-0">
                   <li v-for="article in articles" :key="article.name">
                     <NuxtLink
                       :to="`/article/${article.id}`"
                       class="gold"
-                      v-on:click.native="linkClick(`/article/${article.id}`)"
+                      v-on:click.native="lickClick(`/article/${article.id}`)"
                       >{{ article.name }}</NuxtLink
                     >
                   </li>
@@ -142,9 +84,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-
 import Icon from "@/assets/icons";
-import BurgerMenuButton from "~/components/common/BurgerMenuButton.vue";
 import Search from "./Search";
 import Cart from "./Cart";
 
@@ -156,7 +96,7 @@ export default {
       default: false,
     },
   },
-  components: { Icon, Search, Cart, BurgerMenuButton },
+  components: { Icon, Search, Cart },
   data: () => ({
     isOpenMenu: false,
     isMobile: true,
@@ -166,25 +106,19 @@ export default {
       suppressScrollX: true,
       wheelPropagation: false,
     },
+    articles: [],
+    categories: []
   }),
   computed: {
     ...mapGetters({
-      //categories: "categories/categories",
-      articles: "articles/articles",
+      currentUserName: 'auth/username',
     }),
-    categories: {
-      //return this.$store.getters["categories/categories"];
-      get: function () {
-        return this.$store.getters["categories/categories"];
-      },
-      set: function (newValue) {},
-    },
   },
   methods: {
     handlerResize(e) {
       this.isMobile = !(e.target.innerWidth > 992);
     },
-    linkClick(link) {
+    lickClick(link) {
       this.$router.push(link);
       this.isOpenMenu = false;
       this.isOpen = false;
@@ -208,8 +142,12 @@ export default {
         this.isOpen = false;
       }
     },
+    logout() {
+      this.$store.dispatch('auth/logout');
+    }
   },
   async mounted() {
+    this.articles = await this.$strapi.find('articles');
     this.handlerResize({ target: window });
     window.addEventListener("resize", this.handlerResize);
     document.addEventListener("click", this.closeOutsideMenu);
@@ -222,7 +160,7 @@ export default {
   },
   destroyed() {
     window.removeEventListener("resize", this.handlerResize);
-    document.removeEventListener("click", this.closeOutsideMenu);
+    document.addEventListener("click", this.closeOutsideMenu);
   },
 };
 </script>
@@ -304,5 +242,49 @@ a:hover {
 .angle {
   width: 0.8rem !important;
   height: 0.8rem !important;
+}
+
+.nav-menu-arrow {
+  width: 80px;
+  height: 26px;
+  position: relative;
+  cursor: pointer;
+}
+.nav-menu-arrow span {
+  transform: rotate(0deg);
+  transition: all 0.5s ease, top 0.5s ease;
+  width: 30px;
+  position: absolute;
+  height: 4px;
+  background-color: #fff;
+  border-radius: 5px;
+  left: 0;
+}
+.nav-menu-arrow span:nth-child(1) {
+  top: 0px;
+}
+.nav-menu-arrow span:nth-child(2) {
+  top: 10px;
+}
+.nav-menu-arrow span:nth-child(3) {
+  top: 20px;
+}
+.nav-menu-arrow.open span:nth-child(1) {
+  transform: rotate(-45deg);
+  top: 5px;
+  width: 20px;
+  left: -4px;
+}
+.nav-menu-arrow.open span:nth-child(3) {
+  transform: rotate(45deg);
+  top: 17px;
+  width: 20px;
+  left: -4px;
+}
+.right-menu-section {
+    position: absolute;
+    top: 0;
+    right: 24px;
+    text-transform: none;
 }
 </style>

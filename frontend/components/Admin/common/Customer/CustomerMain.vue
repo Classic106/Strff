@@ -82,7 +82,6 @@
 
 <script>
 import { prevCurrNextItems } from "~/helpers";
-import { states_hashes } from "@/data";
 import "~/utils/filters";
 
 import CustomerOrder from "./CustomerOrder.vue";
@@ -102,7 +101,6 @@ export default {
     viewAll: false,
     customerOrders: [],
     ordersSpent: 0,
-    states_hashes,
   }),
   methods: {
     prevCurrNextItems,

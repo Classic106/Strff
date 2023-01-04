@@ -66,7 +66,7 @@
           :class="address.state && 'chosed'"
         >
           <option disabled :value="''">Chose state</option>
-          <option v-for="state in states_hashes" :key="state.name" :value="state.name">
+          <option v-for="state in states" :key="state.name" :value="state.name">
             {{ state.name }}
           </option>
         </select>
@@ -114,8 +114,8 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { states_hashes } from "@/data";
+import { mapGetters, mapMutations } from "vuex";
+import { states } from "@/data";
 
 export default {
   props: {
@@ -140,7 +140,7 @@ export default {
     },
     isSaved: false,
     openSelect: false,
-    states_hashes,
+    states,
   }),
   computed: {
     ...mapGetters({

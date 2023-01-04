@@ -16,6 +16,11 @@ export const actions = {
     try {
       //console.log(this.$axios.defaults.baseURL)
       const { jwt, user } = await this.$axios.$post("auth/local", login);
+//console.log(jwt, user)
+      if (jwt) {
+        this.$axios.setHeader("Authorization", `Bearer ${jwt}`);
+        this.$cookies.set("token", jwt);
+      }
 
       if (user) {
         const { role } = user;
@@ -28,12 +33,11 @@ export const actions = {
         if (type === "customer") {
           this.$router.push("/profile");
         }
+
+        commit("setUser", user);
       }
 
-      this.$axios.setHeader("Authorization", `Bearer ${jwt}`);
-      this.$cookies.set("token", jwt);
-
-      commit("setUser", user);
+      return user;
     } catch (e) {
       error(e);
     }
@@ -121,10 +125,7 @@ export const actions = {
   async checkEmail(_, email) {
     try {
       const { data } = await this.$axios.get(`/check_email?email=${email}`);
-      if (data) {
-        return true;
-      }
-      return false;
+      return data ? true : false;
     } catch (e) {
       error(e);
     }

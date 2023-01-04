@@ -99,7 +99,7 @@
           <label class="d-flex" for="s-state"> State </label>
           <select
             size="1"
-            name="states_hash"
+            name="states"
             v-model="currentOrder.state"
             ref="select"
             required
@@ -108,7 +108,7 @@
           >
             <option disabled :value="''">Chose state</option>
             <option
-              v-for="hash in states_hashes"
+              v-for="hash in states"
               :key="hash.name"
               :value="hash"
             >
@@ -157,14 +157,14 @@
 </template>
 
 <script>
-import { states_hashes } from "@/data";
+import { states } from "@/data";
 
 export default {
   name: "ShippingModal",
   props: { order: Object },
   data: () => ({
     show: false,
-    states_hashes,
+    states,
     addresses: ["addresses", "addresses1", "addresses2", "addresses3"],
     selectedAddress: "",
     country: "",

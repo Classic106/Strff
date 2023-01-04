@@ -89,7 +89,7 @@
           <label class="d-flex" for="s-state"> State </label>
           <select
             size="1"
-            name="states_hash"
+            name="states"
             v-model.trim="userInfo.state"
             ref="select"
             required
@@ -97,7 +97,7 @@
           >
             <option disabled :value="''">Chose state</option>
             <option
-              v-for="hash in states_hashes"
+              v-for="hash in states"
               :key="hash.name"
               :value="hash"
             >
@@ -140,7 +140,7 @@
 </template>
 
 <script>
-import { states_hashes } from "@/data";
+import { states } from "@/data";
 
 export default {
   name: "AddCustomerModal",
@@ -160,7 +160,7 @@ export default {
     },
     saved: false,
     openSelect: false,
-    states_hashes,
+    states,
   }),
   methods: {
     showHash: function (hash) {

@@ -59,8 +59,11 @@
       "plugin": "users-permissions",
       "configurable": false
     },
-    "customer": {
-      "model": "customer"
+    "last_name": {
+      "type": "string"
+    },
+    "first_name": {
+      "type": "string"
     }
   }
 }

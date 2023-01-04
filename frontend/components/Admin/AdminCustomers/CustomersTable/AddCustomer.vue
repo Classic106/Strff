@@ -104,7 +104,7 @@
             >
               <option disabled :value="''">Chose state</option>
               <option
-                v-for="hash in states_hashes"
+                v-for="hash in states"
                 :key="hash.name"
                 :value="hash"
               >
@@ -161,7 +161,7 @@
 <script>
 import { mapActions } from "vuex";
 
-import { states_hashes } from "@/data";
+import { states } from "@/data";
 
 export default {
   name: "AddCustomer",
@@ -197,7 +197,7 @@ export default {
       /\d/,
       /\d/,
     ],
-    states_hashes,
+    states,
   }),
   methods: {
     ...mapActions({
