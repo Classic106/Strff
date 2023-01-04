@@ -95,8 +95,7 @@ export default {
       this.$router.push("/register");
     },
     async handleSubmit() {
-      const data = { identifier: "test@test.test", password: "test123456" }; //customer
-      //const data = { identifier: "test1@test.test", password: "test123456" }; //admin
+      const data = { identifier: "test@test.test", password: "test123456" };
       //const { identifier, password } = this;
       await this.login(data);
     },

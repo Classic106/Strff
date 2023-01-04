@@ -1,5 +1,4 @@
 "use strict";
-const { sanitizeEntity } = require("strapi-utils");
 
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
@@ -23,59 +22,37 @@ module.exports = {
         const user = await strapi
           .query("user", "users-permissions")
           .findOne({ id });
-
-        if (user) {
+        if (user.role.name === "Authenticated") {
           const {
             blocked,
             confirmed,
             created_at,
             email,
+            first_name,
             id,
+            last_name,
             provider,
             role,
             updated_at,
             username,
-            customer,
           } = user;
           return {
             blocked,
             confirmed,
             created_at,
             email,
+            first_name,
             id,
+            last_name,
             provider,
             role,
             updated_at,
             username,
-            customer,
           };
         }
       }
     } catch (e) {
-      return ctx.badRequest("Unrecognized user");
-    }
-  },
-
-  async create(ctx) {
-    const { body } = ctx.request;
-
-    try {
-      const user = await strapi
-        .query("user", "users-permissions")
-        .create({ ...body, resetPasswordToken: null });
-
-      const { id } = user;
-      // Return new jwt token
-      ctx.send({
-        jwt: strapi.plugins["users-permissions"].services.jwt.issue({
-          id,
-        }),
-        user: sanitizeEntity(user.toJSON ? user.toJSON() : user, {
-          model: strapi.query("user", "users-permissions").model,
-        }),
-      });
-    } catch (e) {
-      return ctx.badRequest("Bad request");
+      return ctx.badRequest("Unauthenticated user");
     }
   },
 };

@@ -42,83 +42,83 @@
     },
     {
       "method": "DELETE",
-      "path": "/orders/:id",
-      "handler": "order.delete",
+      "path": "/orders/:ids",
+      "handler": "order.deleteMany",
       "config": {
         "policies": []
       }
     },
     {
-      "method": "POST",
-      "path": "/orders/addproduct",
-      "handler": "order.addProduct",
-      "config": {
-        "policies": []
-      }
+       "method": "POST",
+       "path": "/orders/addproduct",
+       "handler": "order.addProduct",
+       "config": {
+          "policies": []
+       }
     },
     {
-      "method": "POST",
-      "path": "/orders/removeproduct",
-      "handler": "order.removeProduct",
-      "config": {
-        "policies": []
-      }
+        "method": "POST",
+        "path": "/orders/removeproduct",
+        "handler": "order.removeProduct",
+        "config": {
+           "policies": []
+        }
     },
     {
-      "method": "POST",
-      "path": "/orders/addbundle",
-      "handler": "order.addBundle",
-      "config": {
-        "policies": []
-      }
+        "method": "POST",
+        "path": "/orders/addbundle",
+        "handler": "order.addBundle",
+        "config": {
+           "policies": []
+        }
     },
     {
-      "method": "POST",
-      "path": "/orders/empty",
-      "handler": "order.emptyOrder",
-      "config": {
-        "policies": []
-      }
+        "method": "POST",
+        "path": "/orders/empty",
+        "handler": "order.emptyOrder",
+        "config": {
+           "policies": []
+        }
     },
     {
-      "method": "POST",
-      "path": "/order/updateitem",
-      "handler": "order.updateItem",
-      "config": {
-        "policies": []
-      }
+        "method": "POST",
+        "path": "/order/updateitem",
+        "handler": "order.updateItem",
+        "config": {
+           "policies": []
+        }
     },
     {
-      "method": "POST",
-      "path": "/order/removeitem",
-      "handler": "order.removeItem",
-      "config": {
-        "policies": []
-      }
+        "method": "POST",
+        "path": "/order/removeitem",
+        "handler": "order.removeItem",
+        "config": {
+           "policies": []
+        }
     },
     {
-      "method": "POST",
-      "path": "/order/removebundle",
-      "handler": "order.removeBundle",
-      "config": {
-        "policies": []
-      }
+        "method": "POST",
+        "path": "/order/removebundle",
+        "handler": "order.removeBundle",
+        "config": {
+           "policies": []
+        }
     },
     {
-      "method": "POST",
-      "path": "/order/updateorder",
-      "handler": "order.updateOrder",
-      "config": {
-        "policies": []
-      }
+        "method": "POST",
+        "path": "/order/updateorder",
+        "handler": "order.updateOrder",
+        "config": {
+           "policies": []
+        }
     },
     {
-      "method": "GET",
-      "path": "/order/getorder",
-      "handler": "order.getOrder",
-      "config": {
-        "policies": []
-      }
-    }
+        "method": "GET",
+        "path": "/order/getorder",
+        "handler": "order.getOrder",
+        "config": {
+          "policies": []
+        }
+     }
   ]
 }
