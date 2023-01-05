@@ -16,7 +16,7 @@ export const actions = {
     try {
       //console.log(this.$axios.defaults.baseURL)
       const { jwt, user } = await this.$axios.$post("auth/local", login);
-//console.log(jwt, user)
+
       if (jwt) {
         this.$axios.setHeader("Authorization", `Bearer ${jwt}`);
         this.$cookies.set("token", jwt);
