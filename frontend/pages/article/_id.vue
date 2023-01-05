@@ -9,7 +9,14 @@
     </div>
     <div
       v-else
-      class="article d-flex flex-column justify-content-center m-sm-5 m-1 p-lg-5 p-0"
+      class="
+        article
+        d-flex
+        flex-column
+        justify-content-center
+        m-sm-5 m-1
+        p-lg-5 p-0
+      "
     >
       <div class="d-flex position-relative mb-5">
         <img :src="`${getStrapiMedia(article.image.url)}`" alt="image" />
@@ -25,7 +32,7 @@
           "
         >
           <h6 class="text-center text-uppercase mr-1">
-            {{ new Date(article.created_at).getDate() | formatDate }}
+            {{ new Date(article.created_at).getDate() | formatDay }}
           </h6>
           <h6 class="text-center text-uppercase">
             {{ new Date(article.created_at).getMonth() | parseMonth }}
@@ -42,26 +49,35 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from "vuex";
+
 import "~/utils/filters";
 import { getStrapiMedia } from "~/utils/medias";
-import Loader from "@/components/Loader.vue";
+
+import Loader from "@/components/common/Loader.vue";
 
 export default {
   layout: "club",
   components: { Loader },
-  data: () => ({ article: null, loading: true }),
-  methods: { getStrapiMedia },
+  data: () => ({
+    loading: true,
+  }),
+  computed: {
+    ...mapGetters({ article: "articles/article" }),
+  },
+  methods: {
+    getStrapiMedia,
+    ...mapActions({ getArticle: "articles/getArticle" }),
+    ...mapMutations({ setArticle: "articles/setArticle" }),
+  },
   async mounted() {
-    try {
-      const result = await this.$strapi.$articles.findOne(
-        this.$route.params.id
-      );
-      result.date = new Date(result.date);
-      this.article = result;
-      this.loading = false;
-    } catch (error) {
-      this.loading = false;
-    }
+    this.loading = true;
+    const { id } = this.$route.params;
+    await this.getArticle(id);
+    this.loading = false;
+  },
+  destroyed() {
+    this.setArticle(null);
   },
 };
 </script>

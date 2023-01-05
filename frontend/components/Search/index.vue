@@ -51,9 +51,10 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { shuffleArray } from "~/helpers";
 
-import Loader from "@/components/Loader";
+import Loader from "@/components/common/Loader";
 import CloseButton from "@/components/common/CloseButton";
 import SearchInput from "./SearchInput.vue";
 import SearchBestSellers from "./SearchBestSellers.vue";
@@ -83,6 +84,11 @@ export default {
       wheelPropagation: false,
     },
   }),
+  computed: {
+    ...mapGetters({
+      best_sellers: "best_sellers/best_sellers",
+    }),
+  },
   watch: {
     text: function () {
       if (this.text === "") {
@@ -135,16 +141,20 @@ export default {
   async mounted() {
     this.isLoading = true;
 
-    this.products = await this.$strapi.find("products");
-    this.articles = await this.$strapi.find("articles");
+    try {
+      this.products = await this.$strapi.find("products");
+      this.articles = await this.$strapi.find("articles");
 
-    const result = await this.$strapi.find("bestsellers");
-
-    if (result.length && result[0].products) {
-      this.bestSellers = this.shuffleArray(result[0].products);
-      this.bestSellers.length = 4;
+      this.bestSellers = this.shuffleArray(this.best_sellers);
+    } catch (e) {
+      const { data } = e.response;
+      const messge = data.message[0].messages[0].id;
+      this.$notify({
+        group: "all",
+        type: "error",
+        text: messge,
+      });
     }
-
     this.isLoading = false;
   },
 };

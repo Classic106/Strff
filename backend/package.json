@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "description": "A Strapi application",
   "scripts": {
-    "develop": "HOST=localhost PORT=1338 strapi develop",
+    "develop": "HOST=localhost PORT=1338 FRONT_APP_URL=https://strff.com/ strapi develop",
     "develop-local": "cross-env HOST=localhost PORT=1338 strapi develop",
-    "start": "HOST=localhost PORT=1338 strapi start",
+    "start": "HOST=localhost PORT=1338 FRONT_APP_URL=https://strff.com/ strapi start",
     "build": "strapi build",
     "strapi": "strapi"
   },
@@ -14,7 +14,9 @@
     "cross-env": "^7.0.3"
   },
   "dependencies": {
+    "cross-env": "^7.0.3",
     "knex": "0.21.18",
+    "socket.io": "^4.5.4",
     "sqlite3": "5.0.0",
     "strapi": "3.6.8",
     "strapi-admin": "3.6.8",
@@ -41,3 +43,4 @@
   },
   "license": "MIT"
 }
+

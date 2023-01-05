@@ -29,7 +29,7 @@
       "path": "/categories",
       "handler": "category.create",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -37,7 +37,7 @@
       "path": "/categories/:id",
       "handler": "category.update",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -45,7 +45,7 @@
       "path": "/categories/:id",
       "handler": "category.delete",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     }
   ]
