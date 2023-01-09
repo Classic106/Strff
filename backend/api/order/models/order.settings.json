@@ -107,6 +107,12 @@
     },
     "card_security_code": {
       "type": "integer"
+    },
+    "payment_method": {
+      "model": "payment-method"
+    },
+    "shipping_method": {
+      "model": "shipping-method"
     }
   }
 }
