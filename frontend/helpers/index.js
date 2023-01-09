@@ -25,4 +25,53 @@ function shuffleArray(array) {
   return arr;
 }
 
-export { colorTitleNumbers, shuffleArray };
+function prevCurrNextItems(selected, arr) {
+  const { length } = arr;
+  const index = arr.findIndex((item) => item.id === selected.id);
+
+  const result = {
+    selected,
+    next: null,
+    previous: null,
+  };
+
+  if (index < length) {
+    result.next = arr[index + 1];
+  }
+
+  if (index > 0) {
+    result.previous = arr[index - 1];
+  }
+  return result;
+}
+
+function getSeason(date = new Date()) {
+  const month = (date.getMonth() + 1).toString();
+  let season = "";
+
+  switch (month) {
+    case "12":
+    case "1":
+    case "2":
+      season = "Winter";
+      break;
+    case "3":
+    case "4":
+    case "5":
+      season = "Spring";
+      break;
+    case "6":
+    case "7":
+    case "8":
+      season = "Summer";
+      break;
+    case "9":
+    case "10":
+    case "11":
+      season = "Autumn";
+      break;
+  }
+  return season;
+}
+
+export { colorTitleNumbers, shuffleArray, prevCurrNextItems, getSeason };

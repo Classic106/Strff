@@ -29,7 +29,7 @@
       "path": "/subscription-types",
       "handler": "subscription-type.create",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -37,7 +37,7 @@
       "path": "/subscription-types/:id",
       "handler": "subscription-type.update",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     },
     {
@@ -45,7 +45,7 @@
       "path": "/subscription-types/:id",
       "handler": "subscription-type.delete",
       "config": {
-        "policies": []
+        "policies": ["global::isAuthenticated"]
       }
     }
   ]

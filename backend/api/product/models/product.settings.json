@@ -8,8 +8,9 @@
   "options": {
     "increments": true,
     "timestamps": true,
-    "draftAndPublish": false
+    "draftAndPublish": true
   },
+  "pluginOptions": {},
   "attributes": {
     "title": {
       "type": "string",
@@ -17,7 +18,7 @@
     },
     "description": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "price": {
       "type": "float"
@@ -43,30 +44,20 @@
       "repeatable": true,
       "component": "custom.custom-field"
     },
-    "status": {
-      "type": "enumeration",
-      "enum": [
-        "draft",
-        "published"
-      ],
-      "default": "published",
-      "required": true
-    },
-    "bestseller": {
-      "via": "products",
-      "model": "bestseller"
-    },
     "bundle": {
       "via": "products",
       "model": "bundle"
     },
     "categories": {
-      "collection": "category",
       "via": "products",
+      "collection": "category",
       "dominant": true
     },
     "included": {
       "type": "json"
+    },
+    "sales": {
+      "type": "biginteger"
     }
   }
 }

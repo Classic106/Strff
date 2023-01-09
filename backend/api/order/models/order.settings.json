@@ -113,6 +113,10 @@
     },
     "shipping_method": {
       "model": "shipping-method"
+    },
+    "customer": {
+      "via": "orders",
+      "model": "customer"
     }
   }
 }

@@ -10,7 +10,7 @@ export default {
    */
 
   head: {
-    title: "STRFF",
+    title: "Strff",
     meta: [
       {
         charset: "utf-8",
@@ -34,6 +34,9 @@ export default {
     ],
     script: [],
   },
+  router: {
+    middleware: ["isAuthenticated"],
+  },
   /*
    ** Global CSS
    */
@@ -43,9 +46,18 @@ export default {
    ** https://nuxtjs.org/guide/plugins
    */
   plugins: [
+    "~/plugins/axios.js",
+    "~/plugins/text-mask.js",
+    "~/plugins/country-region-select.js",
+    "~/plugins/vue-custom-scrollbar.js",
+    "~/plugins/vue-good-table",
+    "~/plugins/vue-cool-lightbox.js",
+    "~/plugins/v-select.js",
+    { src: "~/plugins/fingerprint.js", mode: "client" },
+    { src: "~/plugins/notify.client", mode: "client" },
+    { src: "~/plugins/notify.server", mode: "server" },
     { src: "~/plugins/v-credit-card-form.js", mode: "client" },
-    { src: "~/plugins/vue-cool-lightbox.js", mode: "client" },
-    { src: "~/plugins/vue-custom-scrollbar.js", mode: "client" },
+    { src: "~/plugins/vue-apexchart.js", mode: "client" },
   ],
   /*
    ** Auto import components
@@ -63,27 +75,103 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
+    "nuxt-socket-io",
     "bootstrap-vue/nuxt",
     "@nuxtjs/strapi",
     "nuxt-session",
     "@nuxtjs/axios",
     "@nuxtjs/proxy",
   ],
-  axios: {
-    proxy: true,
+  io: {
+    // module options
+    sockets: [
+      {
+        name: "strff.com",
+        url: process.env.API_URL || "http://localhost:1338",
+      },
+    ],
   },
+  bootstrapVue: {
+    // Add the desired icon components to the `components` array
+    components: [
+      "BIconArrowLeft",
+      "BIconChevronLeft",
+      "BIconChevronRight",
+      "BIconHouseDoorFill",
+      "BIconInboxFill",
+      "BIconTagFill",
+      "BIconTagsFill",
+      "BIconPersonFill",
+      "BIconSearch",
+      "BIconDot",
+      "BIconJournalText",
+      "BIconX",
+      "BIconClipboard",
+      "BIconStack",
+      "BIconCheckCircle",
+      "BIconEyeFill",
+      "BIconEyeSlashFill",
+      "BAvatar",
+      "BProgress",
+      "BProgressBar",
+      "BModal",
+      "BDropdown",
+      "BDropdownItem",
+    ],
+  },
+  axios: {
+    baseURL: "http://localhost:1338",
+    browserBaseURL: "http://localhost:1338",
+  },
+  publicRuntimeConfig: {
+    axios: {
+      browserBaseURL: process.env.API_URL,
+    },
+  },
+
   proxy: {
-    '/payment-authorize-net/': { target: 'https://api.authorize.net/xml/v1/request.api', pathRewrite: {'^/payment-authorize-net/': ''}, changeOrigin: true },
-    '/payment-authorize-net-test/': { target: 'https://apitest.authorize.net/xml/v1/request.api', pathRewrite: {'^/payment-authorize-net-test/': ''}, changeOrigin: true },
-    '/shipping-usps/': { target: 'https://secure.shippingapis.com/ShippingApi.dll', pathRewrite: {'^/shipping-usps/': ''}, changeOrigin: true },
-    '/shipping-usps-test/': { target: 'https://stg-secure.shippingapis.com/ShippingApi.dll', pathRewrite: {'^/shipping-usps-test/': ''}, changeOrigin: true },
+    "/payment-nmi/": {
+      target: "https://secure.networkmerchants.com/api/transact.php",
+      pathRewrite: { "^/payment-nmi/": "" },
+      changeOrigin: true,
+    },
+    "/payment-square/": {
+      target: "https://connect.squareupsandbox.com/v2/payments",
+      pathRewrite: { "^/payment-square/": "" },
+      changeOrigin: true,
+    },
+    "/payment-authorize-net/": {
+      target: "https://apitest.authorize.net/xml/v1/request.api",
+      pathRewrite: { "^/payment-authorize-net/": "" },
+      changeOrigin: true,
+    },
+    "/payment-usa-epay/": {
+      target: "https://sandbox.usaepay.com/api/XXZR8SWS/transactions",
+      pathRewrite: { "^/payment-usa-epay/": "" },
+      changeOrigin: true,
+    },
+    "/payment-stripe/": {
+      target: "https://api.stripe.com/v1/payment_methods",
+      pathRewrite: { "^/payment-stripe/": "" },
+      changeOrigin: true,
+    },
+    "/payment-paypal/": {
+      target: "https://api-m.sandbox.paypal.com/v1/payments/payment",
+      pathRewrite: { "^/payment-paypal/": "" },
+      changeOrigin: true,
+    },
+    "/payment-klarna/": {
+      target:
+        "https://api-na.klarna.com/payments/v1/authorizations/{authorizationToken}/order",
+      pathRewrite: { "^/payment-klarna/": "" },
+      changeOrigin: true,
+    },
   },
   strapi: {
     url: process.env.API_URL || "http://localhost:1338",
     entities: [
       "appointment-orders",
       "appointments",
-      "bestsellers",
       "articles",
       "categories",
       "sizes",
@@ -101,6 +189,9 @@ export default {
    ** Build configuration
    ** See https://nuxtjs.org/api/configuration-build/
    */
-  build: {},
+  build: {
+    transpile: ["vue-upload-drop-images"],
+    vendor: ["@johmun/vue-tags-input", "vue-apexchart"],
+  },
   buildModules: ["vue-ssr-carousel/nuxt"],
 };
