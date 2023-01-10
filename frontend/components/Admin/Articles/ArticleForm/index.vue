@@ -69,7 +69,7 @@ import { mapActions } from "vuex";
 import UploadImages from "vue-upload-drop-images";
 
 import ArticleMedia from "./ArticleMedia.vue";
-import ConfirmModal from "./ConfirmModal.vue";
+import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
 
 export default {
   name: "ArticleForm",

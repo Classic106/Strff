@@ -360,7 +360,11 @@ module.exports = {
   },
   async recomputeOrder(id) {
     let order = await strapi.services.order.findOne({ id: id });
+    let pr_order_total;
+
     if (order) {
+      pr_order_total = order.total;
+
       let total = 0;
       let orderItems = await strapi.services["order-item"].find({
         "order.id": order.id,
@@ -379,55 +383,43 @@ module.exports = {
         }
       }
       order.total = total;
-      await strapi.services.order.update({ id: order.id }, order);
+      order = await strapi.services.order.update({ id: order.id }, order);
+
+      if (order.user) {
+        const { id } = order.user;
+
+        const user = await strapi
+          .query("user", "users-permissions")
+          .findOne({ id });
+
+        if (user) {
+          const { id, orders, total_price } = user;
+
+          let new_total = 0;
+
+          if (pr_order_total > order.total) {
+            new_total = total_price - (pr_order_total - order.total);
+          } else if (pr_order_total < order.total) {
+            new_total = total_price + (order.total - pr_order_total);
+          }
+
+          await strapi.query("user", "users-permissions").update(
+            { id },
+            {
+              orders_count: orders.length,
+              total_price: new_total,
+            }
+          );
+        }
+      }
     }
   },
   async deleteMany(ctx) {
     const { ids } = ctx.params;
 
     const deleteItems = ids.split(",");
-
-    const deletedOrders = await Promise.all(
-      deleteItems.map(async (id) => {
-        const order = await strapi.services["order"].findOne({ id });
-
-        if (order) {
-          const { order_items, order_bundles, customer } = order;
-          let additonal_total_price = 0;
-
-          if (order_items.length) {
-            for (let k = 0; k < order_items.length; k++) {
-              const item = await strapi.services["order-item"].delete({
-                id: order_items[k].id,
-              });
-              additonal_total_price += item.total;
-            }
-          }
-
-          if (order_bundles.length) {
-            for (let k = 0; k < order_bundles.length; k++) {
-              const bundle = await strapi.services["order-bundle"].delete({
-                id: order_bundles[k].id,
-              });
-              additonal_total_price += bundle.bundle.price;
-            }
-          }
-
-          if (customer) {
-            const { orders_count, total_price } =
-              await strapi.services.customer.findOne({ id: customer.id });
-
-            await strapi.services.customer.update(
-              { id: customer.id },
-              {
-                orders_count: orders_count - 1,
-                total_price: total_price - additonal_total_price,
-              }
-            );
-          }
-        }
-        return await strapi.services["order"].delete({ id });
-      })
+    const deletedOrders = await strapi.services["order"].deleteMany(
+      deleteItems
     );
 
     return deletedOrders.length;

@@ -38,14 +38,20 @@
       compactMode
     >
       <template slot="table-row" slot-scope="props">
-        <div v-if="props.column.field == 'firstName'">
+        <div v-if="props.column.field == 'username'">
           <p class="text-ellipsis m-0">{{ getCustomerName(props.row) }}</p>
+        </div>
+        <div
+          v-else-if="props.column.field == 'blocked'"
+          class="d-flex align-items-center"
+        >
+          <p class="m-0">{{ props.row.blocked }}</p>
         </div>
         <div
           v-else-if="props.column.field == 'orders_count'"
           class="d-flex align-items-center"
         >
-          <p class="m-0">{{ props.row.orders_count }} orders</p>
+          <p class="m-0">{{ props.row.orders_count || 0 }} orders</p>
         </div>
         <div
           v-else-if="props.column.field == 'total_price'"
@@ -60,9 +66,16 @@
         </div>
       </template>
       <div slot="selected-row-actions">
+        <button class="btn btn-warning" v-on:click="blockItems(true)">
+          Block
+        </button>
+        <button class="btn btn-success" v-on:click="blockItems(false)">
+          Unblock
+        </button>
         <button class="btn btn-danger" v-on:click="deleteItems">Delete</button>
       </div>
     </vue-good-table>
+    <ConfirmModal :id="'confirm-delete-users'" v-on:confirm="confirm" />
   </div>
 </template>
 
@@ -70,17 +83,24 @@
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import { prevCurrNextItems } from "~/helpers";
 
+import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
+
 import "~/utils/filters";
 
 export default {
   name: "CustomerTable",
+  components: { ConfirmModal },
   data: () => ({
     selectedRows: [],
     timer: null,
     columns: [
       {
-        label: "Customer name",
-        field: "firstName",
+        label: "Customer",
+        field: "username",
+      },
+      {
+        label: "Blocked",
+        field: "blocked",
       },
       {
         label: "Email",
@@ -111,6 +131,7 @@ export default {
     prevCurrNextItems,
     ...mapActions({
       deleteCustomers: "admin_customers/deleteCustomers",
+      blockCustomers: "admin_customers/blockCustomers",
       getCustomers: "admin_customers/getCustomers",
     }),
     ...mapMutations({
@@ -149,13 +170,27 @@ export default {
       this.setParams({ ...this.params, sort: params[0] });
       this.getCustomers();
     },
-    async deleteItems() {
+    deleteItems() {
+      this.$root.$emit("bv::show::modal", "confirm-delete-users");
+    },
+    confirm: async function () {
       const ids = this.selectedRows.map((item) => item.id);
       await this.deleteCustomers(ids);
     },
+    async blockItems(blocked) {
+      const ids = this.selectedRows.map((item) => item.id);
+      await this.blockCustomers({ ids, blocked });
+    },
     getCustomerName: function (customer) {
-      const { firstName, lastName } = customer;
-      return `${firstName} ${lastName}`;
+      const { first_name, last_name, username } = customer;
+
+      if (first_name && last_name) {
+        return `${first_name} ${last_name}`;
+      }
+      if (username) {
+        return username;
+      }
+      return "undefined";
     },
   },
 };

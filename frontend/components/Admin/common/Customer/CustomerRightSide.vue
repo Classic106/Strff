@@ -6,9 +6,9 @@
     </div>
     <div class="block d-flex flex-column p-3">
       <h6>Default address</h6>
-      <p>{{ customer.address1 && customer.address2 }}</p>
-      <p>{{ customer.state }}</p>
-      <p>{{ customer.cellphone }}</p>
+      <p>{{ (customer.address1 && customer.address2) || "undefined" }}</p>
+      <p>{{ customer.state || "undefined" }}</p>
+      <p>{{ customer.cellphone || "undefined" }}</p>
     </div>
   </div>
 </template>

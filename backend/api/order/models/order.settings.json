@@ -16,12 +16,15 @@
       "type": "datetime"
     },
     "total": {
-      "type": "decimal"
+      "type": "decimal",
+      "min": 0,
+      "default": 0
     },
     "order_status": {
       "model": "order-statuses"
     },
     "user": {
+      "via": "orders",
       "plugin": "users-permissions",
       "model": "user"
     },
@@ -113,10 +116,6 @@
     },
     "shipping_method": {
       "model": "shipping-method"
-    },
-    "customer": {
-      "via": "orders",
-      "model": "customer"
     }
   }
 }

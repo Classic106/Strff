@@ -70,12 +70,15 @@
       </template>
       <div slot="selected-row-actions">
         <button class="btn btn-danger" v-on:click="deleteItems">Delete</button
-        ><button class="btn btn-success mx-1" v-on:click="publish">Publish</button>
+        ><button class="btn btn-success mx-1" v-on:click="publish">
+          Publish
+        </button>
         <button class="btn btn-warning" v-on:click="unPublish">
           Unpublish
         </button>
       </div>
     </vue-good-table>
+    <ConfirmModal :id="'confirm-delete-bundles'" v-on:confirm="confirm" />
   </div>
 </template>
 
@@ -85,10 +88,11 @@ import { prevCurrNextItems } from "~/helpers";
 
 import "~/utils/filters";
 import BundleProducts from "./BundleProducts.vue";
+import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
 
 export default {
   name: "BundleTable",
-  components: { BundleProducts },
+  components: { BundleProducts, ConfirmModal },
   data: () => ({
     selectedRows: [],
     timer: null,
@@ -163,6 +167,9 @@ export default {
       this.getBundles();
     },
     deleteItems() {
+      this.$root.$emit("bv::show::modal", "confirm-delete-bundles");
+    },
+    confirm: async function () {
       const ids = this.selectedRows.map((item) => item.id);
       this.deleteBundles(ids);
     },
