@@ -55,4 +55,28 @@ module.exports = {
       return ctx.badRequest("Unauthenticated user");
     }
   },
+  async findOne(ctx) {
+    const { id } = ctx.params;
+
+    const populate = [
+      "orders",
+      "orders.order_items",
+      "orders.order_items.product",
+      "orders.order_items.product.image",
+      "orders.order_items.product.categories",
+      "orders.order_items.size",
+      "orders.order_items.purchase_type",
+      "orders.order_items.subscription_type",
+      "orders.order_bundles",
+      "orders.order_bundles.bundle",
+      "orders.order_bundles.bundle.products",
+      "orders.order_bundles.bundle.products.image",
+    ];
+
+    const user = await strapi
+      .query("user", "users-permissions")
+      .findOne({ id }, populate);
+
+    return ctx.send(user);
+  },
 };

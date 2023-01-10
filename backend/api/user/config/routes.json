@@ -1,0 +1,20 @@
+{
+  "routes": [
+    {
+      "method": "DELETE",
+      "path": "/users/:ids",
+      "handler": "user.deleteMany",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/users/block/:ids",
+      "handler": "user.blockMany",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    }
+  ]
+}

@@ -127,9 +127,15 @@ export default {
       return `${count} ${interval.label}${count !== 1 ? "s" : ""} ago`;
     },
     getCustomerName: function () {
-      const { firstName, lastName } = this.customer;
+      const { first_name, last_name, username } = this.customer;
 
-      return `${firstName} ${lastName}`;
+      if (first_name && last_name) {
+        return `${first_name} ${last_name}`;
+      }
+      if (username) {
+        return username;
+      }
+      return "undefined";
     },
   },
   async beforeMount() {

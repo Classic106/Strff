@@ -84,6 +84,7 @@
         <button class="btn btn-danger" v-on:click="deleteItems">Delete</button>
       </div>
     </vue-good-table>
+    <ConfirmModal :id="'confirm-delete-orders'" v-on:confirm="confirm" />
   </div>
 </template>
 
@@ -95,10 +96,16 @@ import "~/utils/filters";
 import OrderItems from "./OrderItems.vue";
 import OrderCustomers from "./OrderCustomers.vue";
 import OrderDate from "./OrderDate.vue";
+import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
 
 export default {
   name: "OrderTable",
-  components: { OrderItems, OrderCustomers, OrderDate },
+  components: {
+    OrderItems,
+    OrderCustomers,
+    OrderDate,
+    ConfirmModal,
+  },
   data: () => ({
     selectedRows: [],
     timer: null,
@@ -192,6 +199,9 @@ export default {
       this.getOrders();
     },
     deleteItems() {
+      this.$root.$emit("bv::show::modal", "confirm-delete-orders");
+    },
+    confirm: async function () {
       const ids = this.selectedRows.map((item) => item.id);
       this.deleteOrders(ids);
     },

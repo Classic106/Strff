@@ -28,6 +28,8 @@ export const actions = {
       const queryData = {
         _start: (page - 1) * currentPerPage,
         _limit: currentPerPage,
+        //_or: [{ blocked: true }, { blocked: false }],
+        "role.type": "customer",
       };
 
       if (sort && type !== "none") {
@@ -39,16 +41,18 @@ export const actions = {
           queryData._or = [{ orders_count: search }, { total_price: search }];
         } else {
           queryData._or = [
-            { firstName_containss: search },
+            { first_name_containss: search },
+            { last_name_containss: search },
             { email_containss: search },
+            { state: search },
           ];
         }
       }
 
       const query = qs.stringify(queryData);
 
-      const total = await this.$axios.get(`/customers/count?${query}`);
-      const result = await this.$axios.get(`/customers?${query}`);
+      const total = await this.$axios.get(`/users/count?${query}`);
+      const result = await this.$axios.get(`/users?${query}`);
 
       commit("setTotal", total.data);
       commit("setCustomers", result.data);
@@ -58,7 +62,7 @@ export const actions = {
   },
   async getCustomer(_, id) {
     try {
-      const { data } = await this.$axios.get(`/customers/${id}`);
+      const { data } = await this.$axios.get(`/users/${id}`);
       return data;
     } catch (e) {
       error(e);
@@ -66,7 +70,7 @@ export const actions = {
   },
   async createCustomer({ commit }, customer) {
     try {
-      const { data } = await this.$axios.post(`/customers`, customer);
+      const { data } = await this.$axios.post(`/users`, customer);
 
       commit("addCustomer", data);
       success("Customer successfully created");
@@ -74,9 +78,20 @@ export const actions = {
       error(e);
     }
   },
+  async blockCustomers({ commit }, { ids, blocked }) {
+    try {
+      const { data } = await this.$axios.put(`/users/block/${ids}`, {
+        blocked,
+      });
+      commit("blockCustomers", data);
+      success(`Customer(s) successfully ${blocked ? "" : "un"}blocked`);
+    } catch (e) {
+      error(e);
+    }
+  },
   async deleteCustomers({ commit }, customersIds) {
     try {
-      const { data } = await this.$axios.delete(`/customers/${customersIds}`);
+      const { data } = await this.$axios.delete(`/users/${customersIds}`);
 
       commit("deleteCustomers", customersIds);
       success("Customer(s) successfully deleted");
@@ -103,6 +118,9 @@ export const mutations = {
       }
       return acc;
     }, []);
+    state.customers = newCustomers;
+  },
+  blockCustomers(state, newCustomers) {
     state.customers = newCustomers;
   },
   setCustomers(state, customers) {

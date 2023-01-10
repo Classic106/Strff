@@ -109,7 +109,7 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 import { prevCurrNextItems } from "~/helpers";
 
 import ProductMedia from "./ProductMedia.vue";
-import ConfirmModal from "./ConfirmModal.vue";
+import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
 
 export default {
   name: "AdminProduct",

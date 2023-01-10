@@ -134,14 +134,14 @@
               <a href="#" v-on:click.prevent="$emit('setCustomer')">
                 <p class="text-ellipsis m-0">{{ getCustomerName() }}</p>
               </a>
-              <p>{{ selected.customer.orders_count }} order</p>
+              <p>{{ getOrdersCount() }} order</p>
             </div>
             <div class="block-main p-3">
               <div class="d-flex justify-content-between align-items-center">
                 <h6 class="text-uppercase m-0">Contact information</h6>
                 <span v-on:click="openModal('contact-modal')">Edit</span>
               </div>
-              <p class="text-ellipsis">{{ selected.email }} customer</p>
+              <p class="text-ellipsis">{{ selected.billing_email }} customer</p>
             </div>
             <div class="block-main p-3">
               <div class="d-flex justify-content-between align-items-center">
@@ -245,6 +245,17 @@ export default {
     openModal: function (modal) {
       this.$root.$emit("bv::show::modal", modal);
     },
+    getOrdersCount: function () {
+      const { user, customer } = this.selected;
+
+      if (customer) {
+        return 0;
+      }
+      if (user) {
+        return 0;
+      }
+      return 0;
+    },
     setNextOrder: async function () {
       const index = this.findIndex();
 
@@ -315,11 +326,16 @@ export default {
       return this.orders.findIndex((item) => item.id === this.selected.id);
     },
     getCustomerName: function () {
-      const { customer } = this.selected;
+      const { customer, user } = this.selected;
 
       if (customer) {
-        const { firstName, lastName } = customer;
-        return `${firstName} ${lastName}`;
+        const { first_name, last_name } = customer;
+        return `${first_name} ${last_name}`;
+      }
+
+      if (user) {
+        const { first_name, last_name } = user;
+        return `${first_name} ${last_name}`;
       }
 
       return "undefined undefined";

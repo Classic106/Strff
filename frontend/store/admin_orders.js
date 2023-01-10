@@ -1,6 +1,6 @@
 import qs from "qs";
-import { error } from "../utils/error";
-import { success } from "../utils/success";
+import { error } from "~/utils/error";
+import { success } from "~/utils/success";
 
 export const state = () => ({
   total: 0,
