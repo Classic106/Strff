@@ -81,6 +81,24 @@
     },
     "state": {
       "type": "string"
+    },
+    "company": {
+      "type": "string"
+    },
+    "address_1": {
+      "type": "text"
+    },
+    "address_2": {
+      "type": "text"
+    },
+    "city": {
+      "type": "string"
+    },
+    "contact_no": {
+      "type": "string"
+    },
+    "zip_code": {
+      "type": "string"
     }
   }
 }

@@ -15,6 +15,18 @@
         ref="form"
       >
         <div class="p-2">
+          <div class="mb-2">
+            <label class="d-flex" for="username"> User Name </label>
+            <input
+              id="username"
+              type="text"
+              placeholder="Enter username"
+              v-model.trim="customer.username"
+              required
+              autofocus="true"
+              class="w-100"
+            />
+          </div>
           <div class="row mb-2">
             <div class="col-6">
               <label class="d-flex" for="first-name"> First Name </label>
@@ -22,8 +34,7 @@
                 id="first-name"
                 type="text"
                 placeholder="Enter first name"
-                v-model.trim="customer.firstName"
-                required
+                v-model.trim="customer.first_name"
                 autofocus="true"
                 class="w-100"
               />
@@ -34,8 +45,7 @@
                 id="last-name"
                 type="text"
                 placeholder="Enter last name"
-                v-model.trim="customer.lastName"
-                required
+                v-model.trim="customer.last_name"
                 autofocus="true"
                 class="w-100"
               />
@@ -48,7 +58,7 @@
                 type="text"
                 name="s-contact-no"
                 class="w-100"
-                v-model.trim="customer.cellphone"
+                v-model.trim="customer.contact_no"
                 :mask="phoneMask"
                 :guide="true"
                 placeholder="+1(___)-___-____"
@@ -67,17 +77,29 @@
               />
             </div>
           </div>
-          <div class="mb-2">
-            <label class="d-flex" for="s-address"> Address </label>
-            <input
-              id="s-address"
-              type="text"
-              placeholder="Enter your address"
-              v-model.trim="customer.address1"
-              required
-              autofocus="true"
-              class="w-100"
-            />
+          <div class="row mb-2">
+            <div class="col-6">
+              <label class="d-flex" for="s-address1"> Address 1</label>
+              <input
+                id="s-address1"
+                type="text"
+                placeholder="Enter your address"
+                v-model.trim="customer.address_1"
+                autofocus="true"
+                class="w-100"
+              />
+            </div>
+            <div class="col-6">
+              <label class="d-flex" for="s-address2"> Address 2</label>
+              <input
+                id="s-address2"
+                type="text"
+                placeholder="Enter your address"
+                v-model.trim="customer.address_2"
+                autofocus="true"
+                class="w-100"
+              />
+            </div>
           </div>
           <div class="mb-2">
             <label class="d-flex" for="s-city"> City </label>
@@ -86,7 +108,6 @@
               type="text"
               placeholder="Enter your city"
               v-model.trim="customer.city"
-              required
               autofocus="true"
               class="w-100"
             />
@@ -98,16 +119,11 @@
               name="states_hash"
               v-model="customer.state"
               ref="select"
-              required
               class="w-100"
               :class="customer.state && 'chosed'"
             >
               <option disabled :value="''">Chose state</option>
-              <option
-                v-for="hash in states"
-                :key="hash.name"
-                :value="hash"
-              >
+              <option v-for="hash in states" :key="hash.name" :value="hash">
                 {{ showHash(hash) }}
               </option>
             </select>
@@ -118,8 +134,7 @@
               id="s-zip-code"
               type="text"
               placeholder="Enter your Zip code"
-              v-model.trim="customer.zip"
-              required
+              v-model.trim="customer.zip_code"
               autofocus="true"
               class="w-100"
             />
@@ -167,16 +182,18 @@ export default {
   name: "AddCustomer",
   data: () => ({
     customer: {
-      firstName: "",
-      lastName: "",
+      username: "",
+      email: "",
+      first_name: "",
+      last_name: "",
       company: "",
-      address1: "",
-      address2: "",
+      address_1: "",
+      address_2: "",
       city: "",
       state: "",
-      zip: "",
-      cellphone: "",
-      email: "",
+      zip_code: "",
+      contact_no: "",
+      role: 3,
     },
     phoneMask: [
       "+",
@@ -232,6 +249,10 @@ export default {
 </script>
 
 <style scoped>
+input {
+  max-width: 100%;
+}
+
 input,
 select {
   position: relative;
