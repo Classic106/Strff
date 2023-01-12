@@ -28,7 +28,6 @@ export const actions = {
       const queryData = {
         _start: (page - 1) * currentPerPage,
         _limit: currentPerPage,
-        //_or: [{ blocked: true }, { blocked: false }],
         "role.type": "customer",
       };
 

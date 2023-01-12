@@ -1,6 +1,6 @@
 <template>
   <Order v-if="!isCutomer" v-on:setCustomer="isCutomer = true" />
-  <Customer v-else :customer="customer" :back="back" />
+  <Customer v-else :id="customer" :back="back" />
 </template>
 
 <script>
@@ -29,7 +29,7 @@ export default {
   beforeMount() {
     const { user } = this.selected;
     if (user) {
-      this.customer = user;
+      this.customer = user.id;
     }
   },
 };

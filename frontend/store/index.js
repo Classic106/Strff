@@ -10,7 +10,6 @@ export const actions = {
 
     if (req && req.headers && req.headers.cookie) {
       const parsed = cookieparser.parse(req.headers.cookie);
-      //user = (parsed.user && JSON.parse(parsed.user)) || null;
       order_token = parsed.order_token || null;
       user_token = parsed.token || null;
     }
@@ -52,7 +51,6 @@ export const actions = {
     console.log("Token: ", order_token);
 
     commit("order/setToken", order_token);
-    //commit("auth/setUser", user);
     commit("order/setOrder", order);
 
     await dispatch("best_sellers/getBestSellers");

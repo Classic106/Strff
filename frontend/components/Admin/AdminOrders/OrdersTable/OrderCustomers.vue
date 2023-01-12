@@ -10,19 +10,18 @@ export default {
   },
   methods: {
     getCustomerName: function () {
-      const { customer, user } = this.order;
-
-      if (customer) {
-        const { first_name, last_name } = customer;
-        return `${first_name} ${last_name}`;
-      }
+      const { user } = this.order;
 
       if (user) {
-        const { first_name, last_name } = user;
-        return `${first_name} ${last_name}`;
+        const { username, first_name, last_name } = user;
+
+        if (first_name) {
+          return `${first_name} ${last_name}`;
+        }
+        return username;
       }
 
-      return "undefined undefined";
+      return "undefined";
     },
   },
 };

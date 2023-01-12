@@ -24,6 +24,11 @@
     },
     "price": {
       "type": "decimal"
+    },
+    "sales": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
     }
   }
 }
