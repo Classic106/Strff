@@ -3,8 +3,12 @@
     v-if="loading"
     class="w-100 h-100 d-flex align-items-center justify-content-center"
   />
-  <div v-else>
-    <AddOrder v-if="isAddOrder" v-on:closeCreateOrder="isAddOrder = false" />
+  <div v-else class="h-100">
+    <AddOrder
+      v-if="isAddOrder"
+      v-on:closeCreateOrder="isAddOrder = false"
+      :customer="customer"
+    />
     <CustomerMain
       v-else
       v-on:openAddOrder="isAddOrder = true"
@@ -51,7 +55,7 @@ export default {
       }
     },
   },
-  async mounted() {
+  async beforeMount() {
     this.loading = true;
     this.customer = await this.getCustomer(this.id);
     this.loading = false;

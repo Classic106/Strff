@@ -4,6 +4,7 @@
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
  * to customize this controller
  */
+const { sanitizeEntity } = require("strapi-utils");
 
 module.exports = {
   async me(ctx) {
@@ -22,33 +23,11 @@ module.exports = {
         const user = await strapi
           .query("user", "users-permissions")
           .findOne({ id });
+
         if (user.role.name === "Authenticated") {
-          const {
-            blocked,
-            confirmed,
-            created_at,
-            email,
-            first_name,
-            id,
-            last_name,
-            provider,
-            role,
-            updated_at,
-            username,
-          } = user;
-          return {
-            blocked,
-            confirmed,
-            created_at,
-            email,
-            first_name,
-            id,
-            last_name,
-            provider,
-            role,
-            updated_at,
-            username,
-          };
+          return sanitizeEntity(user.toJSON ? user.toJSON() : user, {
+            model: strapi.query("user", "users-permissions").model,
+          });
         }
       }
     } catch (e) {
@@ -78,5 +57,59 @@ module.exports = {
       .findOne({ id }, populate);
 
     return ctx.send(user);
+  },
+  async create(ctx) {
+    const { body } = ctx.request;
+    const { username, email, role, password, blocked, confirmed } = body;
+
+    const users = await strapi
+      .query("user", "users-permissions")
+      .find({ _or: [{ username }, { email }] });
+
+    if (users.length) {
+      return ctx.badRequest(
+        null,
+        "User with username or email is alredy exist"
+      );
+    }
+
+    if (!password && role === 3) {
+      body.password = "Standard123456";
+    }
+
+    if (!body.password) {
+      return ctx.badRequest(null, "missing.password");
+    }
+
+    if (!email) {
+      return ctx.badRequest(null, "missing.email");
+    }
+
+    if (!username) {
+      return ctx.badRequest(null, "missing.username");
+    }
+
+    if (!role) {
+      body.role = 2;
+    }
+
+    if (!blocked) {
+      body.blocked = false;
+    }
+
+    if (!confirmed) {
+      body.confirmed = false;
+    }
+
+    const user = await strapi.query("user", "users-permissions").create(body);
+
+    ctx.send({
+      jwt: strapi.plugins["users-permissions"].services.jwt.issue({
+        id: user.id,
+      }),
+      user: sanitizeEntity(user.toJSON ? user.toJSON() : user, {
+        model: strapi.query("user", "users-permissions").model,
+      }),
+    });
   },
 };

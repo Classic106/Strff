@@ -94,19 +94,63 @@ export const actions = {
       error(e);
     }
   },
-  async getCustomers() {
+  async getCustomers(_, data) {
     try {
-      const { data } = await this.$axios.get(`/customers`);
-      return data;
+      let newData = data;
+
+      if (!newData) {
+        newData = {
+          search: "",
+          currentPage: 1,
+          perPage: 3,
+        };
+      }
+
+      const { search, currentPage, perPage } = newData;
+
+      const queryData = {
+        _start: (currentPage - 1) * currentPage,
+        _limit: perPage,
+        "role.type": "customer",
+      };
+
+      if (search) {
+        if (!isNaN(+search)) {
+          queryData._or = [{ orders_count: search }, { total_price: search }];
+        } else {
+          queryData._or = [
+            { first_name_containss: search },
+            { last_name_containss: search },
+            { email_containss: search },
+            { state: search },
+          ];
+        }
+      }
+      const query = qs.stringify(queryData);
+
+      const total = await this.$axios.get(`/users/count?${query}`);
+      const result = await this.$axios.get(`/users?${query}`);
+
+      return {
+        customers: result.data,
+        total: total.data,
+      };
     } catch (e) {
       error(e);
     }
   },
   async createOrder({ commit }, order) {
+    const { order_bundles, order_items } = order;
+
+    if (order_items.length === 0 && order_bundles.length === 0) {
+      error("Order hasn't any items");
+      return;
+    }
+
     try {
       const { data } = await this.$axios.post(`/orders`, {
         ...order,
-        order_status: 4,
+        order_status: 5,
       });
 
       commit("addOrder", data);

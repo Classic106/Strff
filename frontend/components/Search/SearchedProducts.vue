@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import Loader from "@/components/Loader";
+import Loader from "@/components/common/Loader.vue";
 import PreloaderImage from "~/components/PreloaderImage";
 
 export default {

@@ -45,13 +45,13 @@
           v-else-if="props.column.field == 'blocked'"
           class="d-flex align-items-center"
         >
-          <p class="m-0">{{ props.row.blocked }}</p>
+          <p class="m-0">{{ props.row.blocked ? "true" : "false" }}</p>
         </div>
         <div
           v-else-if="props.column.field == 'orders_count'"
           class="d-flex align-items-center"
         >
-          <p class="m-0">{{ props.row.orders_count || 0 }} orders</p>
+          <p class="m-0">{{ props.row.orders.length || 0 }} orders</p>
         </div>
         <div
           v-else-if="props.column.field == 'total_price'"
@@ -184,13 +184,10 @@ export default {
     getCustomerName: function (customer) {
       const { first_name, last_name, username } = customer;
 
-      if (first_name && last_name) {
+      if (first_name) {
         return `${first_name} ${last_name}`;
       }
-      if (username) {
-        return username;
-      }
-      return "undefined";
+      return username;
     },
   },
 };

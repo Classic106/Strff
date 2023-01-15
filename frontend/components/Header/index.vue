@@ -1,9 +1,38 @@
 <template>
   <header
-    class="d-flex flex-column p-0 m-0 justify-content-center align-items-center w-100 position-sticky">
-    <div class="head d-flex flex-column px-4 my-4 mb-lg-2 justify-content-between align-items-center text-uppercase w-100 position-relative">
+    class="
+      d-flex
+      flex-column
+      p-0
+      m-0
+      justify-content-center
+      align-items-center
+      w-100
+      position-sticky
+    "
+  >
+    <div
+      class="
+        head
+        d-flex
+        flex-column
+        px-4
+        my-4
+        mb-lg-2
+        justify-content-between
+        align-items-center
+        text-uppercase
+        w-100
+        position-relative
+      "
+    >
       <div class="w-100 d-flex">
-        <div ref="menuButton" class="nav-menu-arrow d-flex d-lg-none" :class="isOpenMenu && 'open'" v-on:click="isOpenMenu = !isOpenMenu">
+        <div
+          ref="menuButton"
+          class="nav-menu-arrow d-flex d-lg-none"
+          :class="isOpenMenu && 'open'"
+          v-on:click="isOpenMenu = !isOpenMenu"
+        >
           <span></span>
           <span></span>
           <span></span>
@@ -14,18 +43,18 @@
       </div>
       <div class="right-menu-section">
         <div class="d-flex align-items-center ml-sm-4 ml-1 justify-content-end">
-            <div v-if="currentUserName" class="mr-3">
-                Hi {{ currentUserName }}
-                <a href="#" class="gold" @click="logout">Logout</a>
-            </div>
-            <div v-if="!currentUserName" class="mr-3">
-                <nuxt-link to="/login" class="gold">Login</nuxt-link>
-            </div>
-            <div v-if="!currentUserName" class="mr-3">
-                <nuxt-link to="/register" class="gold">Register</nuxt-link>
-            </div>
-            <Search class="cursor-pointer" />
-            <Cart class="cursor-pointer" />
+          <div v-if="currentUserName" class="mr-3">
+            Hi {{ currentUserName }}
+            <a href="#" class="gold" @click="logout">Logout</a>
+          </div>
+          <div v-if="!currentUserName" class="mr-3">
+            <nuxt-link to="/login" class="gold">Login</nuxt-link>
+          </div>
+          <div v-if="!currentUserName" class="mr-3">
+            <nuxt-link to="/register" class="gold">Register</nuxt-link>
+          </div>
+          <Search class="cursor-pointer" />
+          <Cart class="cursor-pointer" />
         </div>
       </div>
       <div
@@ -39,9 +68,30 @@
         "
       >
         <div class="menu-wrap col-lg col-sm-8 m-0">
-          <ul ref="menu" class="pl-sm-4 pl-1 text-uppercase d-flex w-100 m-0 flex-column flex-lg-row justify-content-center" :class="isMobile ? 'ul-mobile' : ''">
-            <li v-for="category in categories" :key="category.id" class="px-md-3 px-1 py-2">
-              <NuxtLink :to="`/categories/${category.slug}`" class="gold" v-on:click.native="lickClick(`/categories/${category.slug}`)">{{ category.name }}</NuxtLink>
+          <ul
+            ref="menu"
+            class="
+              pl-sm-4 pl-1
+              text-uppercase
+              d-flex
+              w-100
+              m-0
+              flex-column flex-lg-row
+              justify-content-center
+            "
+            :class="isMobile ? 'ul-mobile' : ''"
+          >
+            <li
+              v-for="category in categories"
+              :key="category.id"
+              class="px-md-3 px-1 py-2"
+            >
+              <NuxtLink
+                :to="`/categories/${category.slug}`"
+                class="gold"
+                v-on:click.native="lickClick(`/categories/${category.slug}`)"
+                >{{ category.name }}</NuxtLink
+              >
             </li>
             <li
               class="d-flex"
@@ -52,20 +102,53 @@
               "
               ref="additionalMenu"
             >
-              <a v-on:click.prevent="isOpen = !isOpen" class="gold cursor-pointer d-flex align-items-center text-nowrap m-0">
+              <a
+                v-on:click.prevent="isOpen = !isOpen"
+                class="
+                  gold
+                  cursor-pointer
+                  d-flex
+                  align-items-center
+                  text-nowrap
+                  m-0
+                "
+              >
                 MAN`S CARE
-                <Icon v-if="!isMobile" :icon="isOpen ? 'angle-up' : 'angle-down'" class="angle ml-1"/>
+                <Icon
+                  v-if="!isMobile"
+                  :icon="isOpen ? 'angle-up' : 'angle-down'"
+                  class="angle ml-1"
+                />
               </a>
-              <vueCustomScrollbar class="scroll-area position-realtive d-flex flex-column overflow-auto rounded p-3"
-                    :settings="scrollSettings" v-if="isMobile ? true : isOpen"
-                    :class="isMobile ? '' : 'position-absolute additional_menu'">
+              <vueCustomScrollbar
+                class="
+                  scroll-area
+                  position-realtive
+                  d-flex
+                  flex-column
+                  overflow-auto
+                  rounded
+                  p-3
+                "
+                :settings="scrollSettings"
+                v-if="isMobile ? true : isOpen"
+                :class="isMobile ? '' : 'position-absolute additional_menu'"
+              >
                 <ul class="p-0">
                   <li v-for="article in articles" :key="article.name">
                     <NuxtLink
-                      :to="`/article/${article.id}`"
+                      :to="`/articles/${article.id}`"
                       class="gold"
-                      v-on:click.native="lickClick(`/article/${article.id}`)"
+                      v-on:click.native="lickClick(`/articles/${article.id}`)"
                       >{{ article.name }}</NuxtLink
+                    >
+                  </li>
+                  <li>
+                    <NuxtLink
+                      :to="`/articles`"
+                      class="gold"
+                      v-on:click.native="lickClick(`/articles`)"
+                      >... more</NuxtLink
                     >
                   </li>
                 </ul>
@@ -107,11 +190,11 @@ export default {
       wheelPropagation: false,
     },
     articles: [],
-    categories: []
+    categories: [],
   }),
   computed: {
     ...mapGetters({
-      currentUserName: 'auth/username',
+      currentUserName: "auth/username",
     }),
   },
   methods: {
@@ -143,11 +226,11 @@ export default {
       }
     },
     logout() {
-      this.$store.dispatch('auth/logout');
-    }
+      this.$store.dispatch("auth/logout");
+    },
   },
   async mounted() {
-    this.articles = await this.$strapi.find('articles');
+    this.articles = await this.$strapi.find("articles");
     this.handlerResize({ target: window });
     window.addEventListener("resize", this.handlerResize);
     document.addEventListener("click", this.closeOutsideMenu);
@@ -282,9 +365,9 @@ a:hover {
   left: -4px;
 }
 .right-menu-section {
-    position: absolute;
-    top: 0;
-    right: 24px;
-    text-transform: none;
+  position: absolute;
+  top: 0;
+  right: 24px;
+  text-transform: none;
 }
 </style>

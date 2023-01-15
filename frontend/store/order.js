@@ -104,7 +104,6 @@ export const getters = {
     return state.order;
   },
   orderItems(state) {
-    console.log(state)
     return state.order ? state.order.order_items : null;
   },
   orderBundles(state) {

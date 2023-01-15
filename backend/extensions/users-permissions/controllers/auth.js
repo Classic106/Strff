@@ -6,13 +6,7 @@ module.exports = {
     const { id, username, email, password } = body;
 
     if (!username || !email) {
-      return ctx.badRequest(
-        null,
-        formatError({
-          id: "Auth.form.error.email.provide",
-          message: "Username or e-mail is undefined",
-        })
-      );
+      return ctx.badRequest(null, "Username or e-mail is undefined");
     }
 
     const user = await strapi
@@ -24,9 +18,7 @@ module.exports = {
     // ].services.user.validatePassword(password, user.password);
 
     if (!user) {
-      return ctx.badRequest(null, [
-        { messages: [{ message: "Identifier or password invalid." }] },
-      ]);
+      return ctx.badRequest(null, "Identifier or password invalid.");
     } else {
       // Generate new hash password
       const newPassword = await strapi.plugins[

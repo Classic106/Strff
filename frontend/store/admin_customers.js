@@ -28,7 +28,6 @@ export const actions = {
       const queryData = {
         _start: (page - 1) * currentPerPage,
         _limit: currentPerPage,
-        //_or: [{ blocked: true }, { blocked: false }],
         "role.type": "customer",
       };
 
@@ -71,8 +70,9 @@ export const actions = {
   async createCustomer({ commit }, customer) {
     try {
       const { data } = await this.$axios.post(`/users`, customer);
+      const { jwt, user } = data;
 
-      commit("addCustomer", data);
+      commit("addCustomer", user);
       success("Customer successfully created");
     } catch (e) {
       error(e);

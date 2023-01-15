@@ -246,15 +246,10 @@ export default {
       this.$root.$emit("bv::show::modal", modal);
     },
     getOrdersCount: function () {
-      const { user, customer } = this.selected;
+      const { user } = this.selected;
+      const { orders_count } = user;
 
-      if (customer) {
-        return 0;
-      }
-      if (user) {
-        return 0;
-      }
-      return 0;
+      return orders_count;
     },
     setNextOrder: async function () {
       const index = this.findIndex();
@@ -326,19 +321,18 @@ export default {
       return this.orders.findIndex((item) => item.id === this.selected.id);
     },
     getCustomerName: function () {
-      const { customer, user } = this.selected;
-
-      if (customer) {
-        const { first_name, last_name } = customer;
-        return `${first_name} ${last_name}`;
-      }
+      const { user } = this.selected;
 
       if (user) {
-        const { first_name, last_name } = user;
-        return `${first_name} ${last_name}`;
+        const { username, first_name, last_name } = user;
+
+        if (first_name) {
+          return `${first_name} ${last_name}`;
+        }
+        return username;
       }
 
-      return "undefined undefined";
+      return "undefined";
     },
   },
   async destroyed() {

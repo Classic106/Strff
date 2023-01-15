@@ -9,6 +9,18 @@
   >
     <form v-on:submit.stop.prevent="save" class="mb-3" ref="form">
       <div class="p-2">
+        <div>
+          <label class="d-flex" for="username"> Username </label>
+          <input
+            id="username"
+            type="text"
+            placeholder="Enter first name"
+            v-model.trim="userInfo.username"
+            required
+            autofocus="true"
+            class="w-100"
+          />
+        </div>
         <div class="row mb-2">
           <div class="col-6">
             <label class="d-flex" for="first-name"> First Name </label>
@@ -16,8 +28,7 @@
               id="first-name"
               type="text"
               placeholder="Enter first name"
-              v-model.trim="userInfo.firstName"
-              required
+              v-model.trim="userInfo.first_name"
               autofocus="true"
               class="w-100"
             />
@@ -28,8 +39,7 @@
               id="last-name"
               type="text"
               placeholder="Enter last name"
-              v-model.trim="userInfo.lastName"
-              required
+              v-model.trim="userInfo.last_name"
               autofocus="true"
               class="w-100"
             />
@@ -42,7 +52,7 @@
               id="s-contact-no"
               type="text"
               placeholder="Enter cellphone"
-              v-model.trim="userInfo.cellphone"
+              v-model.trim="userInfo.contact_no"
               required
               autofocus="true"
               class="w-100"
@@ -67,7 +77,7 @@
             id="s-address"
             type="text"
             placeholder="Enter your address"
-            v-model.trim="userInfo.address1"
+            v-model.trim="userInfo.address_1"
             required
             autofocus="true"
             class=""
@@ -96,11 +106,7 @@
             :class="userInfo.state && 'chosed'"
           >
             <option disabled :value="''">Chose state</option>
-            <option
-              v-for="hash in states"
-              :key="hash.name"
-              :value="hash"
-            >
+            <option v-for="hash in states" :key="hash.name" :value="hash">
               {{ showHash(hash) }}
             </option>
           </select>
@@ -147,15 +153,15 @@ export default {
   data: () => ({
     show: false,
     userInfo: {
-      firstName: "",
-      lastName: "",
+      first_name: "",
+      last_name: "",
       company: "",
-      address1: "",
-      address2: "",
+      address_1: "",
+      address_2: "",
       city: "",
       state: "",
       zip: "",
-      cellphone: "",
+      contact_no: "",
       email: "",
     },
     saved: false,
