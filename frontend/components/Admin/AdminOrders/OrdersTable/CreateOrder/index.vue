@@ -33,9 +33,9 @@
             <a
               href="#"
               id="customer"
-              v-if="!order.customer"
+              v-if="!order.user"
               v-on:click.prevent="
-                !order.customer &&
+                !order.user &&
                   $root.$emit('bv::show::modal', 'create-order-modal')
               "
               >Add customer</a
@@ -85,7 +85,7 @@ export default {
     order: {
       order_items: [],
       order_bundles: [],
-      customer: null,
+      user: null,
       total: 0,
     },
   }),
@@ -99,8 +99,8 @@ export default {
       this.order.order_bundles = data;
       this.order.total = this.calcTotal();
     },
-    setCustomer: function (customer) {
-      this.order.customer = customer;
+    setCustomer: function (user) {
+      this.order.user = user;
     },
     calcTotal: function () {
       const totalProducts = this.order.order_items.reduce(
@@ -116,37 +116,41 @@ export default {
       return totalProducts + totalBundles;
     },
     getCustomerName: function () {
-      const { customer } = this.order;
+      const { user } = this.order;
 
-      if (customer) {
-        const { firstName, lastName } = customer;
-        return `${firstName} ${lastName}`;
+      if (user) {
+        const { username, first_name, last_name } = user;
+
+        if (first_name) {
+          return `${first_name} ${last_name}`;
+        }
+        return username;
       }
 
-      return "undefined undefined";
+      return "undefined";
     },
-    addCustomer: function (customer) {
-      this.order.customer = customer;
+    addCustomer: function (user) {
+      this.order.user = user;
     },
     submit: async function () {
-      const { order_items, order_bundles, customer, total } = this.order;
+      const { order_items, order_bundles, user, total } = this.order;
 
       if (!order_items.length && order_bundles.length) {
         warn("Chooose product or bundle");
         return;
       }
 
-      if (!customer) {
+      if (!user) {
         warn("Add or create customer");
         return;
       }
 
-      const { id } = customer;
+      const { id } = user;
 
       const order = {
         order_items,
         order_bundles,
-        customer: id,
+        user: id,
         total,
         paid: false,
         order_status: 1,
@@ -158,7 +162,7 @@ export default {
       this.order = {
         order_items: [],
         order_bundles: [],
-        customer: null,
+        user: null,
         total: 0,
       };
     },

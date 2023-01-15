@@ -4,7 +4,11 @@
     class="w-100 h-100 d-flex align-items-center justify-content-center"
   />
   <div v-else class="h-100">
-    <AddOrder v-if="isAddOrder" v-on:closeCreateOrder="isAddOrder = false" />
+    <AddOrder
+      v-if="isAddOrder"
+      v-on:closeCreateOrder="isAddOrder = false"
+      :customer="customer"
+    />
     <CustomerMain
       v-else
       v-on:openAddOrder="isAddOrder = true"
