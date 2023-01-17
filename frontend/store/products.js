@@ -2,13 +2,13 @@ import qs from "qs";
 import { error } from "~/utils/error";
 
 export const state = () => ({
-  articles: [],
-  article: null,
+  products: [],
+  product: null,
   total: 0,
 });
 
 export const actions = {
-  async getArticles({ commit }, data) {
+  async getProducts({ commit }, data) {
     try {
       let newData = data;
 
@@ -28,28 +28,24 @@ export const actions = {
       };
 
       if (search) {
-        queryData._or = [
-          { article_containss: search },
-          { title_containss: search },
-        ];
+        queryData._or = [{ title_containss: search }];
       }
       const query = qs.stringify(queryData);
 
-      const total = await this.$axios.get(`/articles/count?${query}`);
-      const articles = await this.$axios.get(`/articles?${query}`);
+      const total = await this.$axios.get(`/products/count?${query}`);
+      const products = await this.$axios.get(`/products?${query}`);
 
       commit("setTotal", total.data);
-      commit("setArticles", articles.data);
+      commit("setProducts", products.data);
     } catch (e) {
+
       error(e);
     }
   },
-  async getArticle({ commit }, id) {
+  async getProduct({ commit }, id) {
     try {
-      const { data } = await this.$axios.get(`/articles/${id}`);
-
-      data.date = new Date(data.date);
-      commit("setArticle", data);
+      const { data } = await this.$axios.get(`/products/${id}`);
+      commit("setProduct", data);
     } catch (e) {
       error(e);
     }
@@ -57,28 +53,28 @@ export const actions = {
 };
 
 export const mutations = {
-  setArticles(state, articles) {
-    state.articles = articles;
+  setProducts(state, products) {
+    state.products = products;
   },
-  setArticle(state, article) {
-    state.article = article;
+  setProduct(state, product) {
+    state.product = product;
   },
   setTotal(state, total) {
     state.total = total;
   },
   clearAll(state) {
-    state.articles = [];
-    state.article = null;
+    state.products = [];
+    state.product = null;
     state.total = 0;
   },
 };
 
 export const getters = {
-  articles: (state) => {
-    return state.articles;
+  products: (state) => {
+    return state.products;
   },
-  article: (state) => {
-    return state.article;
+  product: (state) => {
+    return state.product;
   },
   total(state) {
     return state.total;
