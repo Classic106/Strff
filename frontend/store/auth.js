@@ -122,10 +122,14 @@ export const actions = {
       error(e);
     }
   },
-  async checkEmail(_, email) {
+  async checkUser(_, { username, email }) {
     try {
-      const { data } = await this.$axios.get(`/check_email?email=${email}`);
-      return data ? true : false;
+      const { data } = await this.$axios.post("/users/check_user", {
+        username,
+        email,
+      });
+
+      return data;
     } catch (e) {
       error(e);
     }
