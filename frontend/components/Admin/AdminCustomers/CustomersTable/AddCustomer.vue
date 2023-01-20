@@ -11,7 +11,7 @@
         autocomplete="off"
         id="add-customer-form"
         v-on:submit.stop.prevent="save"
-        class="block mb-3 p-3"
+        class="block was-validated mb-3 p-3"
         ref="form"
       >
         <div class="p-2">
@@ -21,11 +21,65 @@
               id="username"
               type="text"
               placeholder="Enter username"
-              v-model.trim="customer.username"
+              v-model.trim="customerMain.username"
+              :pattern="
+                isUsername ? '^[a-zA-Z0-9]{1000000}$' : '^[a-zA-Z0-9]{8,}$'
+              "
               required
               autofocus="true"
-              class="w-100"
+              :class="`form-control w-100`"
             />
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">
+              {{
+                isUsername
+                  ? "Username has been already exist"
+                  : "Username must be least 8 or more characters"
+              }}
+            </div>
+          </div>
+          <div class="mb-4">
+            <label class="d-flex" for="username"> Email </label>
+            <input
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              v-model.trim="customerMain.email"
+              required
+              autofocus="true"
+              autocomplete="off"
+              :pattern="
+                isEmail
+                  ? '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{10000}$'
+                  : '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$'
+              "
+              title="Invalid email address"
+              class="form-control py-2 px-3"
+            />
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">
+              {{
+                isEmail
+                  ? "Email has been already exist"
+                  : "Email must contain @"
+              }}
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="d-flex" for="s-contact-no"> Cellphone </label>
+            <masked-input
+              type="text"
+              name="s-contact-no"
+              class="form-control w-100"
+              pattern="\+1 \(\d{3}\)-\d{3}-\d{4}"
+              required
+              v-model.trim="customerMain.contact_no"
+              :mask="phoneMask"
+              :guide="true"
+              placeholder="+1 (___)-___-____"
+            />
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Wrong number</div>
           </div>
           <div class="row mb-2">
             <div class="col-6">
@@ -34,7 +88,9 @@
                 id="first-name"
                 type="text"
                 placeholder="Enter first name"
-                v-model.trim="customer.first_name"
+                v-model.trim="customerAdditional.first_name"
+                pattern="^[a-zA-Z]+$"
+                :class="customerAdditional.first_name ? 'form-control' : ''"
                 autofocus="true"
                 class="w-100"
               />
@@ -45,33 +101,9 @@
                 id="last-name"
                 type="text"
                 placeholder="Enter last name"
-                v-model.trim="customer.last_name"
-                autofocus="true"
-                class="w-100"
-              />
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-6">
-              <label class="d-flex" for="s-contact-no"> Cellphone </label>
-              <masked-input
-                type="text"
-                name="s-contact-no"
-                class="w-100"
-                v-model.trim="customer.contact_no"
-                :mask="phoneMask"
-                :guide="true"
-                placeholder="+1(___)-___-____"
-              />
-            </div>
-            <div class="col-6">
-              <label class="d-flex" for="s-email"> Email </label>
-              <input
-                id="s-email"
-                type="text"
-                placeholder="Enter email"
-                v-model="customer.email"
-                required
+                v-model.trim="customerAdditional.last_name"
+                pattern="^[a-zA-Z]+$"
+                :class="customerAdditional.last_name ? 'form-control' : ''"
                 autofocus="true"
                 class="w-100"
               />
@@ -84,7 +116,9 @@
                 id="s-address1"
                 type="text"
                 placeholder="Enter your address"
-                v-model.trim="customer.address_1"
+                :class="customerAdditional.address_1 ? 'form-control' : ''"
+                pattern="[\.\-\,\w ]+"
+                v-model.trim="customerAdditional.address_1"
                 autofocus="true"
                 class="w-100"
               />
@@ -95,7 +129,9 @@
                 id="s-address2"
                 type="text"
                 placeholder="Enter your address"
-                v-model.trim="customer.address_2"
+                :class="customerAdditional.address_2 ? 'form-control' : ''"
+                pattern="[\.\-\,\w ]+"
+                v-model.trim="customerAdditional.address_2"
                 autofocus="true"
                 class="w-100"
               />
@@ -107,7 +143,9 @@
               id="s-city"
               type="text"
               placeholder="Enter your city"
-              v-model.trim="customer.city"
+              v-model.trim="customerAdditional.city"
+              :class="customerAdditional.city ? 'form-control' : ''"
+              pattern="[a-zA-Z]+"
               autofocus="true"
               class="w-100"
             />
@@ -117,10 +155,10 @@
             <select
               size="1"
               name="states_hash"
-              v-model="customer.state"
+              v-model="customerAdditional.state"
               ref="select"
               class="w-100"
-              :class="customer.state && 'chosed'"
+              :class="customerAdditional.state && 'chosed form-control'"
             >
               <option disabled :value="''">Chose state</option>
               <option v-for="hash in states" :key="hash.name" :value="hash">
@@ -130,13 +168,16 @@
           </div>
           <div class="mb-2">
             <label class="d-flex" for="s-zip-code"> Zip Code </label>
-            <input
-              id="s-zip-code"
+            <masked-input
               type="text"
-              placeholder="Enter your Zip code"
-              v-model.trim="customer.zip_code"
-              autofocus="true"
+              name="s-zip-code"
               class="w-100"
+              :class="customerAdditional.zip_code ? 'form-control ' : ''"
+              pattern="\d{5}-\d{4}"
+              v-model.trim="customerAdditional.zip_code"
+              :mask="zipMask"
+              :guide="true"
+              placeholder="_____-____"
             />
           </div>
           <div class="mb-2">
@@ -145,30 +186,32 @@
               id="s-company"
               type="text"
               placeholder="Enter company name"
-              v-model.trim="customer.company"
+              v-model.trim="customerAdditional.company"
+              :class="customerAdditional.company ? 'form-control' : ''"
+              pattern="[\.\-\,\w ]+"
               autofocus="true"
               class="w-100"
             />
           </div>
         </div>
+        <div class="w-100 d-flex justify-content-end">
+          <button
+            size="sm"
+            class="btn btn-light mr-2"
+            v-on:click="$emit('setIsTable')"
+          >
+            Cancel
+          </button>
+          <button
+            size="sm"
+            class="btn btn-success"
+            type="submit"
+            form="add-customer-form"
+          >
+            Save
+          </button>
+        </div>
       </form>
-      <div class="w-100 d-flex justify-content-end">
-        <button
-          size="sm"
-          class="btn btn-light mr-2"
-          v-on:click="$emit('setIsTable')"
-        >
-          Cancel
-        </button>
-        <button
-          size="sm"
-          class="btn btn-success"
-          type="submit"
-          form="add-customer-form"
-        >
-          Save
-        </button>
-      </div>
     </div>
   </div>
 </template>
@@ -181,9 +224,12 @@ import { states } from "@/data";
 export default {
   name: "AddCustomer",
   data: () => ({
-    customer: {
+    customerMain: {
       username: "",
       email: "",
+      contact_no: "",
+    },
+    customerAdditional: {
       first_name: "",
       last_name: "",
       company: "",
@@ -192,9 +238,10 @@ export default {
       city: "",
       state: "",
       zip_code: "",
-      contact_no: "",
       role: 3,
     },
+    isUsername: false,
+    isEmail: false,
     phoneMask: [
       "+",
       "1",
@@ -204,7 +251,7 @@ export default {
       /\d/,
       /\d/,
       ")",
-      " ",
+      "-",
       /\d/,
       /\d/,
       /\d/,
@@ -214,11 +261,21 @@ export default {
       /\d/,
       /\d/,
     ],
+    zipMask: [/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/],
     states,
   }),
+  watch: {
+    customerMain: {
+      handler: async function () {
+        await this.checkUs();
+      },
+      deep: true,
+    },
+  },
   methods: {
     ...mapActions({
       createCustomer: "admin_customers/createCustomer",
+      checkUser: "auth/checkUser",
     }),
     vueTelInputProps: (required = true) => ({
       mode: "international",
@@ -229,21 +286,53 @@ export default {
       },
     }),
     showHash: function (hash) {
-      if (this.customer.state && this.customer.state.name === hash.name) {
+      if (
+        this.customerAdditional.state &&
+        this.customerAdditional.state.name === hash.name
+      ) {
         return hash.abbreviation;
       }
 
       return hash.name;
     },
+    checkUs: async function () {
+      const { username, email } = this.customerMain;
+
+      if (username || email) {
+        clearInterval(this.timer);
+        this.timer = null;
+
+        this.timer = setTimeout(async () => {
+          const { isUsername, isEmail } = await this.checkUser({
+            username,
+            email,
+          });
+
+          this.isEmail = isEmail;
+          this.isUsername = isUsername;
+        }, 1000);
+      } else {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+    },
     save: async function () {
-      const { state } = this.customer;
+      const { customerMain, customerAdditional } = this;
+      const { state } = customerAdditional;
+
       const data = {
-        ...this.customer,
-        state: state.name,
+        ...customerMain,
+        ...{ ...customerAdditional, state: state.name },
       };
       await this.createCustomer(data);
       this.$refs.form.reset();
     },
+  },
+  destroyed() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
   },
 };
 </script>
@@ -255,9 +344,28 @@ input {
 
 input,
 select {
-  position: relative;
-  border: 1px solid #000;
-  border-radius: 5px;
+  display: block;
+  width: 100%;
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+input:focus,
+select:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
 }
 
 .block {

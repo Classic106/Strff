@@ -57,8 +57,8 @@
               autocomplete="off"
               :pattern="
                 isEmail
-                  ? '[^@\s]+@[^@\s]+\.[^@\s]{100000}'
-                  : '[^@\s]+@[^@\s]+\.[^@\s]+'
+                  ? '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{10000}$'
+                  : '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$'
               "
               title="Invalid email address"
               class="

@@ -37,17 +37,16 @@
         align-items-center
         position-relative
       "
-    >
-      <BIconSearch class="search-icon d-flex position-absolute" />
-      <input
-        v-model="text"
-        type="text"
-        placeholder="Search"
-        class="bg-grey py-1 w-100"
-      />
-    </div>
+    ></div>
     <div class="col-sm-3 col-1 d-flex justify-content-end">
-      <div class="user-name d-sm-flex d-none align-items-center">
+      <div
+        class="
+          user-name
+          justify-content-end
+          d-sm-flex d-none
+          align-items-center
+        "
+      >
         <span class="text-ellipsis px-3 align-items-center p-0">
           {{ (user && user.username) || "user" }}
         </span>
