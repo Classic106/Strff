@@ -11,50 +11,68 @@
         <form
           id="add-product-form"
           v-on:submit.stop.prevent="submit"
+          class="was-validated mb-3"
           ref="form"
         >
           <div class="mb-2">
-            <label class="d-flex" for="last-name"> Title </label>
+            <label class="d-flex" for="title"> Title </label>
             <input
               id="title"
               type="text"
               placeholder="Enter title"
               v-model.trim="form.title"
+              pattern="^[a-zA-Z\s.,-:]{10,100}$"
               required
               autofocus="true"
-              class="bts_input_style w-100"
+              class="form-control w-100"
             />
+            <div class="invalid-feedback">
+              <div class="d-flex align-items-center">
+                Title must be from 10 to 100 symbols and may contain &nbsp;
+                <h6>. , - :</h6>
+              </div>
+            </div>
           </div>
           <div class="mb-2">
-            <label class="d-flex" for="last-name"> Description </label>
+            <label class="d-flex" for="description"> Description </label>
             <input
               id="description"
               type="text"
               placeholder="Enter description"
               v-model.trim="form.description"
-              required
+              pattern="^[a-zA-Z\s.,-:]{10,100}$"
               autofocus="true"
-              class="bts_input_style w-100"
+              class="w-100"
+              min="10"
+              max="100"
+              :class="form.description ? 'form-control' : 'bts_input_style'"
             />
+            <div v-if="form.description" class="invalid-feedback">
+              <div class="d-flex align-items-center">
+                Description must be from 10 to 100 symbols and may contain
+                &nbsp;
+                <h6>. , - :</h6>
+              </div>
+            </div>
           </div>
           <div class="mb-2">
-            <label class="d-flex" for="last-name"> Price </label>
-            <input
+            <label class="d-flex" for="price"> Price </label>
+            <InputMoney
               id="price"
-              type="number"
-              placeholder="Enter price"
-              v-model="form.price"
+              class="form-control w-100"
+              :price="form.price"
+              v-on:setPrice="setPrice"
               required
-              autofocus="true"
-              class="bts_input_style w-100"
             />
+            <div class="invalid-feedback">Price mustn't be zero</div>
           </div>
           <div class="mb-2">
-            <label class="d-flex" for="last-name"> Category </label>
+            <label class="d-flex" for="category"> Category </label>
             <select
+              id="category"
               required
               v-model="form.categories"
-              class="bts_input_style w-100"
+              class="form-control w-100"
             >
               <option
                 v-for="category in categories"
@@ -64,11 +82,12 @@
                 {{ category.name }}
               </option>
             </select>
+            <div class="invalid-feedback">Category isn't chesed</div>
           </div>
           <div class="mb-2">
             <label class="d-flex" for="published_at">Status</label>
             <select
-              class="bts_input_style w-100"
+              class="form-control w-100"
               id="published_at"
               required
               v-model="status"
@@ -82,24 +101,24 @@
             <UploadImages v-on:changed="handleImages" :max="5" id="media" />
           </div>
         </form>
+        <button class="btn btn-success w-100" form="add-product-form">
+          Create product
+        </button>
       </div>
-      <button class="btn btn-success w-100" form="add-product-form">
-        Create product
-      </button>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import UploadImages from "vue-upload-drop-images";
 
 import { warn } from "~/utils/warn";
-
-import UploadImages from "vue-upload-drop-images";
+import InputMoney from "~/components/Admin/common/InputMoney.vue";
 
 export default {
   name: "CreateProduct",
-  components: { UploadImages },
+  components: { UploadImages, InputMoney },
   data: () => ({
     status: "null",
     form: {
@@ -115,6 +134,9 @@ export default {
   },
   methods: {
     ...mapActions({ createProduct: "admin_products/createProduct" }),
+    setPrice: function (val) {
+      this.form.price = val;
+    },
     handleImages(files) {
       this.form.image = files;
     },
@@ -140,9 +162,4 @@ export default {
 </script>
 
 <style scoped>
-input {
-  position: relative;
-  border: 1px solid #000;
-  border-radius: 5px;
-}
 </style>

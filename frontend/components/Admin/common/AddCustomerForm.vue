@@ -77,9 +77,13 @@
             placeholder="Enter first name"
             v-model.trim="customerAdditional.first_name"
             pattern="^[a-zA-Z]+$"
-            :class="customerAdditional.first_name ? 'form-control' : ''"
             autofocus="true"
-            class="bts_input_style w-100"
+            class="w-100"
+            :class="
+              customerAdditional.first_name
+                ? 'form-control'
+                : 'bts_input_style '
+            "
           />
         </div>
         <div class="col-6">
@@ -90,9 +94,11 @@
             placeholder="Enter last name"
             v-model.trim="customerAdditional.last_name"
             pattern="^[a-zA-Z]+$"
-            :class="customerAdditional.last_name ? 'form-control' : ''"
             autofocus="true"
-            class="bts_input_style w-100"
+            class="w-100"
+            :class="
+              customerAdditional.last_name ? 'form-control' : 'bts_input_style '
+            "
           />
         </div>
       </div>
@@ -103,11 +109,13 @@
             id="s-address1"
             type="text"
             placeholder="Enter your address"
-            :class="customerAdditional.address_1 ? 'form-control' : ''"
             pattern="[\.\-\,\w ]+"
             v-model.trim="customerAdditional.address_1"
             autofocus="true"
-            class="bts_input_style w-100"
+            class="w-100"
+            :class="
+              customerAdditional.address_1 ? 'form-control' : 'bts_input_style '
+            "
           />
         </div>
         <div class="col-6">
@@ -116,11 +124,13 @@
             id="s-address2"
             type="text"
             placeholder="Enter your address"
-            :class="customerAdditional.address_2 ? 'form-control' : ''"
             pattern="[\.\-\,\w ]+"
             v-model.trim="customerAdditional.address_2"
             autofocus="true"
-            class="bts_input_style w-100"
+            class="w-100"
+            :class="
+              customerAdditional.address_2 ? 'form-control' : 'bts_input_style '
+            "
           />
         </div>
       </div>
@@ -131,10 +141,10 @@
           type="text"
           placeholder="Enter your city"
           v-model.trim="customerAdditional.city"
-          :class="customerAdditional.city ? 'form-control' : ''"
           pattern="[a-zA-Z]+"
           autofocus="true"
-          class="bts_input_style w-100"
+          class="w-100"
+          :class="customerAdditional.city ? 'form-control' : 'bts_input_style '"
         />
       </div>
       <div class="mb-2">
@@ -144,8 +154,10 @@
           name="states_hash"
           v-model="customerAdditional.state"
           ref="select"
-          class="bts_input_style w-100"
-          :class="customerAdditional.state && 'chosed form-control'"
+          class="w-100"
+          :class="
+            customerAdditional.state ? 'form-control' : 'bts_input_style '
+          "
         >
           <option disabled :value="''">Chose state</option>
           <option v-for="hash in states" :key="hash.name" :value="hash">
@@ -158,8 +170,10 @@
         <masked-input
           type="text"
           name="s-zip-code"
-          class="bts_input_style w-100"
-          :class="customerAdditional.zip_code ? 'form-control ' : ''"
+          class="w-100"
+          :class="
+            customerAdditional.zip_code ? 'form-control ' : 'bts_input_style'
+          "
           pattern="\d{5}-\d{4}"
           v-model.trim="customerAdditional.zip_code"
           :mask="zipMask"
@@ -174,10 +188,12 @@
           type="text"
           placeholder="Enter company name"
           v-model.trim="customerAdditional.company"
-          :class="customerAdditional.company ? 'form-control' : ''"
           pattern="[\.\-\,\w ]+"
           autofocus="true"
           class="bts_input_style w-100"
+          :class="
+            customerAdditional.company ? 'form-control ' : 'bts_input_style'
+          "
         />
       </div>
     </div>

@@ -1,49 +1,62 @@
 <template>
-  <div class="mb-3 p-3">
+  <form
+    id="add-bundle-form"
+    v-on:submit.stop.prevent="submit"
+    class="was-validated"
+    ref="form"
+  >
     <div class="mb-2">
-      <label class="d-flex" for="first-name"> Title </label>
+      <label class="d-flex" for="title"> Title </label>
       <input
         id="title"
         type="text"
         placeholder="Enter title"
         v-model.trim="currentBundle.title"
         required
+        pattern="^[a-zA-Z\s.,-:]{10,100}$"
         autofocus="true"
-        class="bts_input_style w-100"
+        class="form-control w-100"
       />
+      <div class="invalid-feedback">
+        <div class="d-flex align-items-center">
+          Title must be from 10 to 100 symbols and may contain &nbsp;
+          <h6>. , - :</h6>
+        </div>
+      </div>
     </div>
     <div class="mb-2">
-      <label class="d-flex" for="first-name"> Description </label>
+      <label class="d-flex" for="description"> Description </label>
       <input
         id="description"
         type="text"
         placeholder="Enter description"
         v-model.trim="currentBundle.description"
-        required
         autofocus="true"
-        class="bts_input_style w-100"
+        pattern="^[a-zA-Z\s.,-:]{10,100}$"
+        class="w-100"
+        :class="currentBundle.description ? 'form-control' : 'bts_input_style '"
       />
+      <div class="invalid-feedback">
+        <div class="d-flex align-items-center">
+          Description must be from 10 to 100 symbols and may contain &nbsp;
+          <h6>. , - :</h6>
+        </div>
+      </div>
     </div>
     <div class="mb-2">
-      <label class="d-flex" for="first-name"> Price </label>
-      <input
+      <label class="d-flex" for="price"> Price </label>
+      <InputMoney
         id="price"
-        type="number"
-        placeholder="Enter price"
-        v-model="currentBundle.price"
+        class="form-control w-100"
+        :price="currentBundle.price"
+        v-on:setPrice="setPrice"
         required
-        autofocus="true"
-        class="bts_input_style w-100"
       />
+      <div class="invalid-feedback">Price mustn't be zero</div>
     </div>
     <div class="d-flex flex-column mb-2">
       <label class="d-flex" for="published_at">Status</label>
-      <select
-        id="published_at"
-        required
-        v-model="status"
-        class="bts_input_style"
-      >
+      <select id="published_at" required v-model="status" class="form-control">
         <option value="published">published</option>
         <option value="null">draft</option>
       </select>
@@ -81,14 +94,16 @@
         </ul>
       </div>
     </div>
-  </div>
+  </form>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import { warn } from "~/utils/warn";
 
 import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
 import ProductCard from "~/components/Admin/common/ProductCard.vue";
+import InputMoney from "~/components/Admin/common/InputMoney.vue";
 
 export default {
   name: "BundleForm",
@@ -96,6 +111,7 @@ export default {
     SelectWithSearch,
     ProductCard,
     ProductCard,
+    InputMoney,
   },
   props: {
     bundle: Object,
@@ -141,10 +157,14 @@ export default {
     },
   },
   methods: {
+    ...mapActions({ createBundle: "admin_bundles/createBundle" }),
     filterProducts: function (text, data) {
       return data.filter((item) =>
         item.title.toLowerCase().includes(text.toLowerCase())
       );
+    },
+    setPrice: function (val) {
+      this.currentBundle.price = val;
     },
     addProduct: function (item) {
       const index = this.currentBundle.products.findIndex(
@@ -161,6 +181,22 @@ export default {
       this.currentBundle.products = this.currentBundle.products.filter(
         (product) => product.id != id
       );
+    },
+    submit: async function () {
+      if (this.currentBundle.products.length < 2) {
+        this.$notify({
+          group: "all",
+          type: "error",
+          text: "Chose 2 products",
+        });
+        return;
+      }
+
+      const products = this.currentBundle.products.map((item) => item.id);
+      const bundle = { ...this.currentBundle, products };
+      await this.createBundle(bundle);
+      this.$refs.form.reset();
+      this.currentBundle.products = [];
     },
   },
   async beforeMount() {

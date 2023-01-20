@@ -164,7 +164,6 @@ img.loaded {
 .bts_input_style {
   display: block;
   width: 100%;
-  min-width: 100%;
   height: calc(1.5em + 0.75rem + 2px);
   padding: 0.375rem 0.75rem;
   font-size: 1rem;
