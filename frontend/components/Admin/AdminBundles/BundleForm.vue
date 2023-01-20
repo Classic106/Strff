@@ -9,7 +9,7 @@
         v-model.trim="currentBundle.title"
         required
         autofocus="true"
-        class="w-100"
+        class="bts_input_style w-100"
       />
     </div>
     <div class="mb-2">
@@ -21,7 +21,7 @@
         v-model.trim="currentBundle.description"
         required
         autofocus="true"
-        class="w-100"
+        class="bts_input_style w-100"
       />
     </div>
     <div class="mb-2">
@@ -33,12 +33,17 @@
         v-model="currentBundle.price"
         required
         autofocus="true"
-        class="w-100"
+        class="bts_input_style w-100"
       />
     </div>
     <div class="d-flex flex-column mb-2">
       <label class="d-flex" for="published_at">Status</label>
-      <select id="published_at" required v-model="status">
+      <select
+        id="published_at"
+        required
+        v-model="status"
+        class="bts_input_style"
+      >
         <option value="published">published</option>
         <option value="null">draft</option>
       </select>

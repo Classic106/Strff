@@ -22,7 +22,7 @@
               v-model.trim="form.title"
               required
               autofocus="true"
-              class="w-100"
+              class="bts_input_style w-100"
             />
           </div>
           <div class="mb-2">
@@ -34,7 +34,7 @@
               v-model.trim="form.description"
               required
               autofocus="true"
-              class="w-100"
+              class="bts_input_style w-100"
             />
           </div>
           <div class="mb-2">
@@ -46,12 +46,16 @@
               v-model="form.price"
               required
               autofocus="true"
-              class="w-100"
+              class="bts_input_style w-100"
             />
           </div>
           <div class="mb-2">
             <label class="d-flex" for="last-name"> Category </label>
-            <select required v-model="form.categories" class="w-100">
+            <select
+              required
+              v-model="form.categories"
+              class="bts_input_style w-100"
+            >
               <option
                 v-for="category in categories"
                 :key="category.id"
@@ -63,7 +67,12 @@
           </div>
           <div class="mb-2">
             <label class="d-flex" for="published_at">Status</label>
-            <select class="w-100" id="published_at" required v-model="status">
+            <select
+              class="bts_input_style w-100"
+              id="published_at"
+              required
+              v-model="status"
+            >
               <option value="published">published</option>
               <option value="null">draft</option>
             </select>
