@@ -89,7 +89,21 @@ export default {
       await this.getProds();
     },
     search: async function () {
-      await this.getProds();
+      const { search } = this;
+
+      if (search) {
+        clearInterval(this.timer);
+        this.timer = null;
+
+        this.timer = setTimeout(async () => {
+          await this.getProds();
+        }, 1000);
+      } else {
+        clearInterval(this.timer);
+        this.timer = null;
+
+        await this.getProds();
+      }
     },
   },
   methods: {
@@ -99,6 +113,7 @@ export default {
     }),
     ...mapMutations({
       setParams: "admin_products/setParams",
+      clearProducts: "admin_products/clearProducts",
     }),
     getProds: async function () {
       const { search, page, currentPerPage } = this;
@@ -158,6 +173,13 @@ export default {
   },
   async beforeMount() {
     this.getProds();
+  },
+  destroyed() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+    this.clearProducts();
   },
 };
 </script>

@@ -50,6 +50,7 @@ export default {
     page: 1,
     search: "",
     selectedBundles: [],
+    timer: null, //for lazy search
   }),
   computed: {
     ...mapGetters({
@@ -62,13 +63,28 @@ export default {
       await this.getBnds();
     },
     search: async function () {
-      await this.getBnds();
+      const { search } = this;
+
+      if (search) {
+        clearInterval(this.timer);
+        this.timer = null;
+
+        this.timer = setTimeout(async () => {
+          await this.getBnds();
+        }, 1000);
+      } else {
+        clearInterval(this.timer);
+        this.timer = null;
+
+        await this.getBnds();
+      }
     },
   },
   methods: {
     ...mapActions({ getBundles: "admin_bundles/getBundles" }),
     ...mapMutations({
       setParams: "admin_bundles/setParams",
+      clearBundles: "admin_bundles/clearBundles",
     }),
     getBnds: async function () {
       const { search, page, currentPerPage } = this;
@@ -108,6 +124,13 @@ export default {
   },
   async mounted() {
     this.getBnds();
+  },
+  destroyed() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+    this.clearBundles();
   },
 };
 </script>

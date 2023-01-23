@@ -75,7 +75,6 @@ export default {
       wheelPropagation: false,
     },
     page: 1,
-    timer: null,
   }),
   watch: {
     data: function () {
