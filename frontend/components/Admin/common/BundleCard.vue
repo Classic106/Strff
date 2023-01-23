@@ -1,11 +1,11 @@
 <template>
   <div class="row align-item-center">
     <div class="col-3 d-flex align-items-center">
-      <div class="wrap-img">
+      <div v-if="bundle.products[0]" class="wrap-img">
         <PreloaderImage :image="bundle.products[0].image[0].url" class="p-0" />
       </div>
-      +
-      <div class="wrap-img">
+      <span v-if="bundle.products[0] && bundle.products[1]">+</span>
+      <div v-if="bundle.products[1]" class="wrap-img">
         <PreloaderImage :image="bundle.products[1].image[0].url" />
       </div>
     </div>

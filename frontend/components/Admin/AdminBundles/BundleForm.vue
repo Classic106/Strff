@@ -1,62 +1,85 @@
 <template>
-  <div class="mb-3 p-3">
+  <form
+    id="add-bundle-form"
+    v-on:submit.stop.prevent="submit"
+    class="was-validated"
+    ref="form"
+  >
     <div class="mb-2">
-      <label class="d-flex" for="first-name"> Title </label>
+      <label class="d-flex" for="title"> Title </label>
       <input
         id="title"
         type="text"
         placeholder="Enter title"
         v-model.trim="currentBundle.title"
         required
+        pattern="^[a-zA-Z\s.,-:]{10,100}$"
         autofocus="true"
-        class="w-100"
+        class="form-control w-100"
       />
+      <div class="invalid-feedback">
+        <div class="d-flex align-items-center">
+          Title must be from 10 to 100 symbols and may contain &nbsp;
+          <h6>. , - :</h6>
+        </div>
+      </div>
     </div>
     <div class="mb-2">
-      <label class="d-flex" for="first-name"> Description </label>
+      <label class="d-flex" for="description"> Description </label>
       <input
         id="description"
         type="text"
         placeholder="Enter description"
         v-model.trim="currentBundle.description"
-        required
         autofocus="true"
+        pattern="^[a-zA-Z\s.,-:]{10,100}$"
         class="w-100"
+        :class="currentBundle.description ? 'form-control' : 'bts_input_style '"
       />
+      <div class="invalid-feedback">
+        <div class="d-flex align-items-center">
+          Description must be from 10 to 100 symbols and may contain &nbsp;
+          <h6>. , - :</h6>
+        </div>
+      </div>
     </div>
     <div class="mb-2">
-      <label class="d-flex" for="first-name"> Price </label>
-      <input
+      <label class="d-flex" for="price"> Price </label>
+      <InputMoney
         id="price"
-        type="number"
-        placeholder="Enter price"
-        v-model="currentBundle.price"
+        class="form-control w-100"
+        :price="currentBundle.price"
+        v-on:setPrice="setPrice"
         required
-        autofocus="true"
-        class="w-100"
       />
+      <div class="invalid-feedback">Price mustn't be zero</div>
     </div>
     <div class="d-flex flex-column mb-2">
       <label class="d-flex" for="published_at">Status</label>
-      <select id="published_at" required v-model="status">
+      <select id="published_at" required v-model="status" class="form-control">
         <option value="published">published</option>
         <option value="null">draft</option>
       </select>
     </div>
     <div class="mb-2">
       <label class="d-flex"> Products </label>
-      <SelectWithSearch
-        :data="products"
-        :filter="filterProducts"
-        :clickItem="addProduct"
-        :placeholder="'Serch products'"
-        class="mb-3"
-      >
-        <template v-slot:item="products">
-          <ProductCard class="w-100 m-0 mb-2" :product="products.item" />
-        </template>
-      </SelectWithSearch>
-      <div v-if="currentBundle.products.length">
+      <div class="d-flex">
+        <SelectWithSearch
+          :data="products"
+          :total="total"
+          :currentPerPage="currentPerPage"
+          :placeholder="'Serch products'"
+          v-on:clickItem="addProduct"
+          v-on:setPage="setPage"
+          v-on:setSearchText="setSearchText"
+          class="w-100"
+        >
+          <template v-slot:item="products">
+            <ProductCard class="w-100 m-0 mb-2" :product="products.item" />
+          </template>
+        </SelectWithSearch>
+      </div>
+      <div v-if="currentBundle.products.length" class="mt-3">
         <ul class="p-0">
           <li
             v-for="product in currentBundle.products"
@@ -76,14 +99,17 @@
         </ul>
       </div>
     </div>
-  </div>
+  </form>
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from "vuex";
+
 import { warn } from "~/utils/warn";
 
 import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
 import ProductCard from "~/components/Admin/common/ProductCard.vue";
+import InputMoney from "~/components/Admin/common/InputMoney.vue";
 
 export default {
   name: "BundleForm",
@@ -91,6 +117,7 @@ export default {
     SelectWithSearch,
     ProductCard,
     ProductCard,
+    InputMoney,
   },
   props: {
     bundle: Object,
@@ -103,9 +130,24 @@ export default {
       desription: "",
       price: 0,
     },
-    products: [],
+    currentPerPage: 10,
+    page: 1,
+    search: "",
+    timer: null,
   }),
+  computed: {
+    ...mapGetters({
+      products: "admin_products/products",
+      total: "admin_products/total",
+    }),
+  },
   watch: {
+    page: async function () {
+      await this.getProds();
+    },
+    search: async function () {
+      await this.getProds();
+    },
     status: function () {
       const { published_at } = this.currentBundle;
 
@@ -136,10 +178,27 @@ export default {
     },
   },
   methods: {
-    filterProducts: function (text, data) {
-      return data.filter((item) =>
-        item.title.toLowerCase().includes(text.toLowerCase())
-      );
+    ...mapActions({
+      createBundle: "admin_bundles/createBundle",
+      getProducts: "admin_products/getProducts",
+    }),
+    ...mapMutations({
+      setParams: "admin_products/setParams",
+    }),
+    getProds: async function () {
+      const { search, page, currentPerPage } = this;
+
+      this.setParams({ search, page, currentPerPage });
+      await this.getProducts();
+    },
+    setSearchText: function (text) {
+      this.search = text;
+    },
+    setPage: function (page) {
+      this.page = page;
+    },
+    setPrice: function (val) {
+      this.currentBundle.price = val;
     },
     addProduct: function (item) {
       const index = this.currentBundle.products.findIndex(
@@ -157,6 +216,22 @@ export default {
         (product) => product.id != id
       );
     },
+    submit: async function () {
+      if (this.currentBundle.products.length < 2) {
+        this.$notify({
+          group: "all",
+          type: "error",
+          text: "Chose 2 products",
+        });
+        return;
+      }
+
+      const products = this.currentBundle.products.map((item) => item.id);
+      const bundle = { ...this.currentBundle, products };
+      await this.createBundle(bundle);
+      this.$refs.form.reset();
+      this.currentBundle.products = [];
+    },
   },
   async beforeMount() {
     if (this.bundle) {
@@ -165,7 +240,7 @@ export default {
         this.status = "published";
       }
     }
-    this.products = await this.$strapi.find("products");
+    this.getProds();
   },
 };
 </script>

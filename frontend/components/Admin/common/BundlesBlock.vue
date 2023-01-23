@@ -1,12 +1,14 @@
 <template>
   <div class="d-flex flex-column align-items-center position-relative">
-    <BIconSearch class="search-icon d-flex position-absolute" />
     <SelectWithSearch
       :data="bundles"
-      :filter="filterBundles"
-      :clickItem="addBundle"
+      :total="total"
+      :currentPerPage="currentPerPage"
       :placeholder="'Serch bundles'"
-      class="mb-3"
+      v-on:clickItem="addBundle"
+      v-on:setPage="setPage"
+      v-on:setSearchText="setSearchText"
+      class="mb-3 w-100"
     >
       <template v-slot:item="bundles">
         <BundleCard :bundle="bundles.item" class="w-100 m-0 p-0" />
@@ -33,7 +35,8 @@
 </template>
 
 <script>
-import "~/utils/filters";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+
 import { warn } from "~/utils/warn";
 
 import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
@@ -43,14 +46,61 @@ export default {
   name: "BundlesBlock",
   components: { SelectWithSearch, BundleCard },
   data: () => ({
-    bundles: [],
+    currentPerPage: 10,
+    page: 1,
+    search: "",
     selectedBundles: [],
+    timer: null, //for lazy search
   }),
+  computed: {
+    ...mapGetters({
+      bundles: "admin_bundles/bundles",
+      total: "admin_bundles/total",
+    }),
+  },
+  watch: {
+    page: async function () {
+      await this.getBnds();
+    },
+    search: async function () {
+      const { search } = this;
+
+      if (search) {
+        clearInterval(this.timer);
+        this.timer = null;
+
+        this.timer = setTimeout(async () => {
+          await this.getBnds();
+        }, 1000);
+      } else {
+        clearInterval(this.timer);
+        this.timer = null;
+
+        await this.getBnds();
+      }
+    },
+  },
   methods: {
-    filterBundles: function (text, data) {
-      return data.filter((item) =>
-        item.title.toLowerCase().includes(text.toLowerCase())
-      );
+    ...mapActions({ getBundles: "admin_bundles/getBundles" }),
+    ...mapMutations({
+      setParams: "admin_bundles/setParams",
+      clearBundles: "admin_bundles/clearBundles",
+    }),
+    getBnds: async function () {
+      const { search, page, currentPerPage } = this;
+
+      this.setParams({ search, page, currentPerPage });
+      await this.getBundles({
+        search,
+        page,
+        currentPerPage,
+      });
+    },
+    setSearchText: function (text) {
+      this.search = text;
+    },
+    setPage: function (page) {
+      this.page = page;
     },
     addBundle: function (item) {
       const index = this.selectedBundles.findIndex(
@@ -72,8 +122,15 @@ export default {
       this.$emit("setBundles", this.selectedBundles);
     },
   },
-  async beforeMount() {
-    this.bundles = await this.$strapi.find("bundles");
+  async mounted() {
+    this.getBnds();
+  },
+  destroyed() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+    this.clearBundles();
   },
 };
 </script>

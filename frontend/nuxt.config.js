@@ -48,6 +48,7 @@ export default {
   plugins: [
     "~/plugins/axios.js",
     "~/plugins/text-mask.js",
+    "~/plugins/v-money.js",
     "~/plugins/country-region-select.js",
     "~/plugins/vue-custom-scrollbar.js",
     "~/plugins/vue-good-table",

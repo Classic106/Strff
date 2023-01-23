@@ -15,6 +15,14 @@
       "config": {
         "policies": ["global::isAuthenticated"]
       }
+    },
+    {
+      "method": "POST",
+      "path": "/users/check_user",
+      "handler": "user.checkUser",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }

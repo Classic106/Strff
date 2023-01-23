@@ -3,228 +3,24 @@
     v-model="show"
     id="create-order-modal"
     title="Add customer"
+    size="lg"
     centered
     scrollable
     :hide-footer="true"
   >
-    <form v-on:submit.stop.prevent="save" class="mb-3" ref="form">
-      <div class="p-2">
-        <div>
-          <label class="d-flex" for="username"> Username </label>
-          <input
-            id="username"
-            type="text"
-            placeholder="Enter first name"
-            v-model.trim="userInfo.username"
-            required
-            autofocus="true"
-            class="w-100"
-          />
-        </div>
-        <div class="row mb-2">
-          <div class="col-6">
-            <label class="d-flex" for="first-name"> First Name </label>
-            <input
-              id="first-name"
-              type="text"
-              placeholder="Enter first name"
-              v-model.trim="userInfo.first_name"
-              autofocus="true"
-              class="w-100"
-            />
-          </div>
-          <div class="col-6">
-            <label class="d-flex" for="last-name"> Last Name </label>
-            <input
-              id="last-name"
-              type="text"
-              placeholder="Enter last name"
-              v-model.trim="userInfo.last_name"
-              autofocus="true"
-              class="w-100"
-            />
-          </div>
-        </div>
-        <div class="row mb-2">
-          <div class="col-6">
-            <label class="d-flex" for="s-contact-no"> Cellphone </label>
-            <input
-              id="s-contact-no"
-              type="text"
-              placeholder="Enter cellphone"
-              v-model.trim="userInfo.contact_no"
-              required
-              autofocus="true"
-              class="w-100"
-            />
-          </div>
-          <div class="col-6">
-            <label class="d-flex" for="s-email"> Email </label>
-            <input
-              id="s-email"
-              type="text"
-              placeholder="Enter email"
-              v-model.trim="userInfo.email"
-              required
-              autofocus="true"
-              class="w-100"
-            />
-          </div>
-        </div>
-        <div class="mb-2">
-          <label class="d-flex" for="s-address"> Address </label>
-          <input
-            id="s-address"
-            type="text"
-            placeholder="Enter your address"
-            v-model.trim="userInfo.address_1"
-            required
-            autofocus="true"
-            class=""
-          />
-        </div>
-        <div class="mb-2">
-          <label class="d-flex" for="s-city"> City </label>
-          <input
-            id="s-city"
-            type="text"
-            placeholder="Enter your city"
-            v-model.trim="userInfo.city"
-            required
-            autofocus="true"
-            class=""
-          />
-        </div>
-        <div class="mb-2">
-          <label class="d-flex" for="s-state"> State </label>
-          <select
-            size="1"
-            name="states"
-            v-model.trim="userInfo.state"
-            ref="select"
-            required
-            :class="userInfo.state && 'chosed'"
-          >
-            <option disabled :value="''">Chose state</option>
-            <option v-for="hash in states" :key="hash.name" :value="hash">
-              {{ showHash(hash) }}
-            </option>
-          </select>
-        </div>
-        <div class="mb-2">
-          <label class="d-flex" for="s-zip-code"> Zip Code </label>
-          <input
-            id="s-zip-code"
-            type="text"
-            placeholder="Enter your Zip code"
-            v-model.trim="userInfo.zip"
-            required
-            autofocus="true"
-            class=""
-          />
-        </div>
-        <div class="mb-2">
-          <label class="d-flex" for="s-company"> Company </label>
-          <input
-            id="s-company"
-            type="text"
-            placeholder="Enter company name"
-            v-model.trim="userInfo.company"
-            autofocus="true"
-            class=""
-          />
-        </div>
-      </div>
-      <div class="w-100 d-flex justify-content-end">
-        <button size="sm" class="btn btn-light mr-2" v-on:click="show = false">
-          Cancel
-        </button>
-        <button size="sm" class="btn btn-success" type="submit">Save</button>
-      </div>
-    </form>
+    <AddCustomerForm />
   </BModal>
 </template>
 
 <script>
-import { states } from "@/data";
+import AddCustomerForm from "~/components/Admin/common/AddCustomerForm.vue";
 
 export default {
   name: "AddCustomerModal",
-  data: () => ({
-    show: false,
-    userInfo: {
-      first_name: "",
-      last_name: "",
-      company: "",
-      address_1: "",
-      address_2: "",
-      city: "",
-      state: "",
-      zip: "",
-      contact_no: "",
-      email: "",
-    },
-    saved: false,
-    openSelect: false,
-    states,
-  }),
-  methods: {
-    showHash: function (hash) {
-      if (
-        !this.openSelect &&
-        this.userInfo.state &&
-        this.userInfo.state.name === hash.name
-      ) {
-        return hash.abbreviation;
-      }
-
-      return hash.name;
-    },
-    save: async function () {
-      const { name } = this.userInfo.state;
-      const form = { ...this.userInfo, state: name };
-
-      try {
-        const token = this.$cookies.get("token");
-
-        const { data } = await this.$axios.post(`/customers`, form, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        this.$emit("addCustomer", data);
-        this.$refs.form.reset();
-        this.show = false;
-      } catch (e) {
-        const { data } = e.response;
-        const messge = data.message[0].messages[0].id;
-        this.$notify({
-          group: "all",
-          type: "error",
-          text: messge,
-        });
-      }
-    },
-  },
+  components: { AddCustomerForm },
+  data: () => ({ show: false }),
 };
 </script>
 
 <style scoped>
-input,
-select {
-  padding: 10px;
-  border: 1px solid #000;
-  border-radius: 6px;
-  color: #000;
-  width: 100%;
-}
-
-select {
-  color: gray;
-}
-
-.save {
-  color: #fff;
-  border: none;
-}
 </style>

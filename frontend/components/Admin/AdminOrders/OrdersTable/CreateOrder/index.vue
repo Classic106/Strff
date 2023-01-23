@@ -13,18 +13,16 @@
         v-on:submit.prevent="submit"
         class="mb-3"
       >
-        <div class="row">
-          <div class="col-6">
-            <div class="block p-3 mb-3">
-              <label class="d-flex" for="products"> Products </label>
-              <ProductsBlock v-on:setProducts="setProducts" id="products" />
-            </div>
+        <div>
+          <div class="block p-3 mb-3">
+            <label class="d-flex" for="products"> Products </label>
+            <ProductsBlock v-on:setProducts="setProducts" id="products" />
           </div>
-          <div class="col-6">
-            <div class="block p-3 mb-3">
-              <label class="d-flex" for="bundles"> Bundles </label>
-              <BundlesBlock v-on:setBundles="setBundles" id="bundles" />
-            </div>
+        </div>
+        <div>
+          <div class="block p-3 mb-3">
+            <label class="d-flex" for="bundles"> Bundles </label>
+            <BundlesBlock v-on:setBundles="setBundles" id="bundles" />
           </div>
         </div>
         <div class="block p-3 mb-3">

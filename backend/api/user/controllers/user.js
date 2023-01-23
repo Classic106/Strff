@@ -49,4 +49,22 @@ module.exports = {
     );
     return ctx.send(blockedUsers);
   },
+  async checkUser(ctx) {
+    const { body } = ctx.request;
+    const { username, email } = body;
+
+    const users = await strapi
+      .query("user", "users-permissions")
+      .find({ _or: [{ username }, { email }] });
+
+    const isUsername = users.filter((user) => user.username === username);
+    const isEmail = users.filter((user) => user.email === email);
+
+    const data = {
+      isUsername: isUsername.length ? true : false,
+      isEmail: isEmail.length ? true : false,
+    };
+
+    return data;
+  },
 };

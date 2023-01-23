@@ -4,7 +4,11 @@
       <div class="w-full max-w-md my-0 mx-auto">
         <form
           class="px-8 pt-6 pb-8 mb-4"
+          :class="
+            username || email || password ? 'was-validated' : 'needs-validation'
+          "
           autocomplete="off"
+          novalidate
           @submit.stop.prevent="handleSubmit"
         >
           <div class="mb-4">
@@ -12,11 +16,16 @@
               id="username"
               type="text"
               placeholder="Enter your username"
-              v-model.trim="form.username"
+              v-model.trim="username"
               autocomplete="off"
               required
               autofocus="true"
+              :pattern="
+                isUsername ? '^[a-zA-Z0-9]{1000000}$' : '^[a-zA-Z0-9]{8,}$'
+              "
+              title="Invalid email address"
               class="
+                form-control
                 appearance-none
                 border
                 rounded
@@ -28,17 +37,32 @@
                 focus:outline-none focus:shadow-outline
               "
             />
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">
+              {{
+                isUsername
+                  ? "Username has been already exist"
+                  : "Username nust be least 8 or more characters"
+              }}
+            </div>
           </div>
           <div class="mb-4">
             <input
               id="email"
               type="email"
               placeholder="Enter your email"
-              v-model.trim="form.email"
+              v-model.trim="email"
               required
               autofocus="true"
               autocomplete="off"
+              :pattern="
+                isEmail
+                  ? '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{10000}$'
+                  : '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$'
+              "
+              title="Invalid email address"
               class="
+                form-control
                 appearance-none
                 border
                 rounded
@@ -50,20 +74,27 @@
                 focus:outline-none focus:shadow-outline
               "
             />
-            <p :class="isEmail ? 'd-flex' : 'd-none'">
-              Email has been already exist
-            </p>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">
+              {{
+                isEmail
+                  ? "Email has been already exist"
+                  : "Email must contain @"
+              }}
+            </div>
           </div>
           <div class="mb-4">
             <input
               id="password"
               type="password"
               placeholder="Enter your password"
-              v-model.trim="form.password"
+              v-model.trim="password"
               required
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
               autofocus="true"
               autocomplete="off"
               class="
+                form-control
                 appearance-none
                 border
                 rounded
@@ -75,6 +106,11 @@
                 focus:outline-none focus:shadow-outline
               "
             />
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">
+              Must contain at least one number and one uppercase and lowercase
+              letter, and at least 8 or more characters
+            </div>
           </div>
           <div class="flex items-center justify-between">
             <button
@@ -114,42 +150,41 @@ export default {
   name: "SingUp",
   props: { isMenu: Boolean, toggle: Function },
   data: () => ({
-    form: {
-      email: "",
-      password: "",
-      username: "",
-    },
+    username: "",
+    email: "",
+    password: "",
+    isUsername: false,
     isEmail: false,
     timer: null,
   }),
   watch: {
-    form: {
-      handler() {
-        this.checkCurrentEmail();
-      },
-      deep: true,
+    username: function () {
+      this.checkUs();
+    },
+    email: function () {
+      this.checkUs();
     },
   },
   methods: {
     ...mapActions({
       createCustomer: "auth/createCustomer",
-      checkEmail: "auth/checkEmail",
+      checkUser: "auth/checkUser",
     }),
-    checkCurrentEmail: async function () {
-      const { email } = this.form;
+    checkUs: async function () {
+      const { username, email } = this;
 
-      if (email) {
+      if (username || email) {
         clearInterval(this.timer);
         this.timer = null;
 
         this.timer = setTimeout(async () => {
-          const result = await this.checkEmail(email);
+          const { isUsername, isEmail } = await this.checkUser({
+            username,
+            email,
+          });
 
-          if (result) {
-            this.isEmail = true;
-          } else {
-            this.isEmail = false;
-          }
+          this.isEmail = isEmail;
+          this.isUsername = isUsername;
         }, 1000);
       } else {
         clearInterval(this.timer);
@@ -164,11 +199,11 @@ export default {
       this.$router.push("/login");
     },
     async handleSubmit() {
-      const { isEmail, form } = this;
-      const { email, username, password } = form;
+      const { isEmail, isUsername, email, username, password } = this;
 
-      if (!isEmail && email && username && password) {
-        await this.createCustomer(form);
+      if (!isEmail && !isUsername && email && username && password) {
+        const data = { email, username, password };
+        await this.createCustomer(data);
       }
     },
   },
@@ -181,7 +216,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 input {
   width: 100%;
   max-width: 450px;

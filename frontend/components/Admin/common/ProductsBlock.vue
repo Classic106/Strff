@@ -1,12 +1,14 @@
 <template>
   <div class="d-flex flex-column align-items-center position-relative">
-    <BIconSearch class="search-icon d-flex position-absolute" />
     <SelectWithSearch
       :data="products"
-      :filter="filterProducts"
-      :clickItem="addProduct"
+      :total="total"
+      :currentPerPage="currentPerPage"
       :placeholder="'Serch products'"
-      class="mb-3"
+      v-on:clickItem="addProduct"
+      v-on:setPage="setPage"
+      v-on:setSearchText="setSearchText"
+      class="mb-3 w-100"
     >
       <template v-slot:item="products">
         <ProductCard class="w-100 m-0 p-0" :product="products.item" />
@@ -54,6 +56,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from "vuex";
+
 import { warn } from "~/utils/warn";
 
 import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
@@ -68,14 +72,60 @@ export default {
     ProductSearchItem,
   },
   data: () => ({
-    products: [],
     selectedProducts: [],
+    currentPerPage: 10,
+    page: 1,
+    search: "",
+    timer: null,
   }),
+  computed: {
+    ...mapGetters({
+      products: "admin_products/products",
+      total: "admin_products/total",
+    }),
+  },
+  watch: {
+    page: async function () {
+      await this.getProds();
+    },
+    search: async function () {
+      const { search } = this;
+
+      if (search) {
+        clearInterval(this.timer);
+        this.timer = null;
+
+        this.timer = setTimeout(async () => {
+          await this.getProds();
+        }, 1000);
+      } else {
+        clearInterval(this.timer);
+        this.timer = null;
+
+        await this.getProds();
+      }
+    },
+  },
   methods: {
-    filterProducts: function (text, data) {
-      return data.filter((item) =>
-        item.title.toLowerCase().includes(text.toLowerCase())
-      );
+    ...mapActions({
+      createBundle: "admin_bundles/createBundle",
+      getProducts: "admin_products/getProducts",
+    }),
+    ...mapMutations({
+      setParams: "admin_products/setParams",
+      clearProducts: "admin_products/clearProducts",
+    }),
+    getProds: async function () {
+      const { search, page, currentPerPage } = this;
+
+      this.setParams({ search, page, currentPerPage });
+      await this.getProducts();
+    },
+    setSearchText: function (text) {
+      this.search = text;
+    },
+    setPage: function (page) {
+      this.page = page;
     },
     addProduct: function (item) {
       const index = this.selectedProducts.findIndex(
@@ -122,7 +172,14 @@ export default {
     },
   },
   async beforeMount() {
-    this.products = await this.$strapi.find("products");
+    this.getProds();
+  },
+  destroyed() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+    this.clearProducts();
   },
 };
 </script>
