@@ -1,7 +1,12 @@
 <template>
   <div class="d-flex flex-column align-items-center position-relative">
     <div v-if="!user" class="d-flex flex-column w-100">
-      <input v-model="search" type="text" placeholder="Search customerы" />
+      <input
+        v-model="search"
+        class="form-control"
+        type="text"
+        placeholder="Search customers"
+      />
       <div
         v-if="loadingCustomers"
         class="d-flex w-100 justify-content-center p-5"
@@ -57,13 +62,12 @@
 <script>
 import { mapActions } from "vuex";
 
-import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
 import AddCustomerModal from "./AddCustomerModal.vue";
 import Loader from "@/components/common/Loader.vue";
 
 export default {
   name: "CustomersBlock",
-  components: { SelectWithSearch, AddCustomerModal, Loader },
+  components: { AddCustomerModal, Loader },
   data: () => ({
     perPage: 5,
     currentPage: 1,
@@ -95,15 +99,6 @@ export default {
   },
   methods: {
     ...mapActions({ getCustomers: "admin_orders/getCustomers" }),
-    filterCustomers: function (text, data) {
-      return data.filter(
-        (item) =>
-          item.firstName.toLowerCase().includes(text.toLowerCase()) ||
-          item.lastName.toLowerCase().includes(text.toLowerCase()) ||
-          item.email.toLowerCase().includes(text.toLowerCase()) ||
-          item.cellphone.toLowerCase().includes(text.toLowerCase())
-      );
-    },
     addCustomer: function (user) {
       this.user = user;
       this.$emit("setCustomer", user);

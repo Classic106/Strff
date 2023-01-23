@@ -63,18 +63,23 @@
     </div>
     <div class="mb-2">
       <label class="d-flex"> Products </label>
-      <SelectWithSearch
-        :data="products"
-        :filter="filterProducts"
-        :clickItem="addProduct"
-        :placeholder="'Serch products'"
-        class="mb-3"
-      >
-        <template v-slot:item="products">
-          <ProductCard class="w-100 m-0 mb-2" :product="products.item" />
-        </template>
-      </SelectWithSearch>
-      <div v-if="currentBundle.products.length">
+      <div class="d-flex">
+        <SelectWithSearch
+          :data="products"
+          :total="total"
+          :currentPerPage="currentPerPage"
+          :placeholder="'Serch products'"
+          v-on:clickItem="addProduct"
+          v-on:setPage="setPage"
+          v-on:setSearchText="setSearchText"
+          class="w-100"
+        >
+          <template v-slot:item="products">
+            <ProductCard class="w-100 m-0 mb-2" :product="products.item" />
+          </template>
+        </SelectWithSearch>
+      </div>
+      <div v-if="currentBundle.products.length" class="mt-3">
         <ul class="p-0">
           <li
             v-for="product in currentBundle.products"
@@ -98,7 +103,8 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+
 import { warn } from "~/utils/warn";
 
 import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
@@ -124,9 +130,24 @@ export default {
       desription: "",
       price: 0,
     },
-    products: [],
+    currentPerPage: 10,
+    page: 1,
+    search: "",
+    timer: null,
   }),
+  computed: {
+    ...mapGetters({
+      products: "admin_products/products",
+      total: "admin_products/total",
+    }),
+  },
   watch: {
+    page: async function () {
+      await this.getProds();
+    },
+    search: async function () {
+      await this.getProds();
+    },
     status: function () {
       const { published_at } = this.currentBundle;
 
@@ -157,11 +178,24 @@ export default {
     },
   },
   methods: {
-    ...mapActions({ createBundle: "admin_bundles/createBundle" }),
-    filterProducts: function (text, data) {
-      return data.filter((item) =>
-        item.title.toLowerCase().includes(text.toLowerCase())
-      );
+    ...mapActions({
+      createBundle: "admin_bundles/createBundle",
+      getProducts: "admin_products/getProducts",
+    }),
+    ...mapMutations({
+      setParams: "admin_products/setParams",
+    }),
+    getProds: async function () {
+      const { search, page, currentPerPage } = this;
+
+      this.setParams({ search, page, currentPerPage });
+      await this.getProducts();
+    },
+    setSearchText: function (text) {
+      this.search = text;
+    },
+    setPage: function (page) {
+      this.page = page;
     },
     setPrice: function (val) {
       this.currentBundle.price = val;
@@ -206,7 +240,7 @@ export default {
         this.status = "published";
       }
     }
-    this.products = await this.$strapi.find("products");
+    this.getProds();
   },
 };
 </script>

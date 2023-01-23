@@ -25,7 +25,6 @@ export const actions = {
       const token = this.$cookies.get("token");
 
       const { sort, search, page, currentPerPage } = state.params;
-      const { field, type } = sort;
 
       const queryData = {
         _start: (page - 1) * currentPerPage,
@@ -33,8 +32,12 @@ export const actions = {
         _publicationState: token ? "preview" : "live",
       };
 
-      if (sort && type !== "none") {
-        queryData._sort = `${field}:${type.toUpperCase()}`;
+      if (sort) {
+        const { field, type } = sort;
+
+        if (type !== "none") {
+          queryData._sort = `${field}:${type.toUpperCase()}`;
+        }
       }
 
       if (search) {

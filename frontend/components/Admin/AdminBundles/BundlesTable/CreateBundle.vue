@@ -23,9 +23,6 @@ import BundleForm from "../BundleForm";
 export default {
   name: "CreateBundle",
   components: { BundleForm },
-  async beforeMount() {
-    this.products = await this.$strapi.find("products");
-  },
 };
 </script>
 

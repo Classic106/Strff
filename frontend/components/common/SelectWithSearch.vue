@@ -1,26 +1,29 @@
 <template>
-  <div
-    class="custom-select"
-    :tabindex="tabindex"
-    @focus="open = true"
-    @focusout="open = false"
-  >
-    <div
-      class="text-ellipsis selected"
-      :class="{ open: open }"
-      @click="open = !open"
-    >
-      <input
-        type="text"
-        v-model.trim="text"
-        :placeholder="placeholder || 'Search...'"
-        class="w-100 p-0"
-        v-on:input="fiterData"
-      />
+  <div class="position-relative">
+    <div class="d-flex flex-column align-items-center">
+      <BPagination
+        v-model="page"
+        aria-controls="my-table"
+        class="m-0 mb-3"
+        :class="page < 2 && total < currentPerPage && 'd-none'"
+        :total-rows="total"
+        :per-page="currentPerPage"
+      ></BPagination>
+      <div class="custom-select" :tabindex="tabindex">
+        <div class="text-ellipsis selected" @click="open = !open">
+          <input
+            type="text"
+            v-model.trim="text"
+            :placeholder="placeholder || 'Search...'"
+            class="p-0"
+            v-on:input="$emit('setSearchText', text)"
+          />
+        </div>
+      </div>
     </div>
     <ul
-      class="items p-1"
-      v-if="filteredData.length"
+      class="block items p-1 position-absolute w-100"
+      v-if="data.length"
       :class="open ? 'd-flex flex-column align-self-end' : 'd-none'"
     >
       <vueCustomScrollbar
@@ -28,7 +31,7 @@
         :settings="scrollSettings"
       >
         <li
-          v-for="(option, i) of filteredData"
+          v-for="(option, i) of data"
           :key="i"
           v-on:click="clickOnItem(option)"
         >
@@ -44,14 +47,6 @@ export default {
   name: "SelectWithSearch",
   props: {
     data: Array,
-    filter: {
-      type: Function,
-      required: false,
-    },
-    clickItem: {
-      type: Function,
-      required: false,
-    },
     tabindex: {
       type: Number,
       required: false,
@@ -60,40 +55,40 @@ export default {
     placeholder: {
       type: String,
     },
+    currentPerPage: {
+      type: Number,
+      required: true,
+      default: 10,
+    },
+    total: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
   data: () => ({
     selected: null,
     open: false,
     text: "",
-    filteredData: [],
     scrollSettings: {
       suppressScrollX: true,
       wheelPropagation: false,
     },
+    page: 1,
+    timer: null,
   }),
   watch: {
     data: function () {
       this.selected = this.data.length > 0 ? this.data[0] : null;
-      this.fiterData(this.text, this.data);
+    },
+    page: function () {
+      this.$emit("setPage", this.page);
     },
   },
   methods: {
     clickOnItem: function (item) {
-      if (this.clickItem) {
-        this.clickItem(item);
-      }
+      this.$emit("clickItem", item);
       this.open = false;
-    },
-    fiterData: function () {
-      if (this.filter && this.text) {
-        this.filteredData = this.filter(this.text, this.data);
-        return;
-      }
-      if (this.text) {
-        this.filteredData = this.data.filter((item) => item === this.text);
-        return;
-      }
-      this.filteredData = this.data;
     },
   },
 };
@@ -136,7 +131,7 @@ input {
   border-color: #fff transparent transparent transparent;
 }
 
-.custom-select .items {
+.items {
   color: #000;
   border-radius: 0px 0px 6px 6px;
   overflow: hidden;
