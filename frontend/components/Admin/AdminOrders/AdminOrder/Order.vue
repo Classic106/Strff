@@ -72,9 +72,9 @@
             <div class="d-flex justify-content-end p-3">
               <button
                 class="btn btn-success"
-                v-on:click="openModal('tracking-modal')"
+                v-on:click="openModal('package_planner')"
               >
-                Add tracking
+                Package planner
               </button>
             </div>
           </div>
@@ -194,7 +194,7 @@
         </div>
       </div>
     </div>
-    <AddTrackingModal />
+    <PackagePlannerModal :order="selected" />
     <ContactModal :order="selected" />
     <ShippingModal :order="selected" />
     <FraudAnalysisModal />
@@ -210,15 +210,15 @@ import "~/utils/filters";
 
 import ContactModal from "./modals/ContactModal.vue";
 import ShippingModal from "./modals/ShippingModal.vue";
-import AddTrackingModal from "./modals/AddTrackingModal.vue";
 import FraudAnalysisModal from "./modals/FraudAnalysisModal.vue";
+import PackagePlannerModal from "./modals/PackagePlannerModal.vue";
 
 export default {
   name: "Order",
   components: {
     ContactModal,
     ShippingModal,
-    AddTrackingModal,
+    PackagePlannerModal,
     FraudAnalysisModal,
   },
   computed: {

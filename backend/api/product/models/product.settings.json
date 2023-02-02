@@ -60,6 +60,36 @@
       "type": "integer",
       "default": 0,
       "min": 0
+    },
+    "width": {
+      "type": "decimal",
+      "default": 0,
+      "required": true,
+      "min": 0
+    },
+    "height": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "min": 0
+    },
+    "lengtt": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "min": 0
+    },
+    "volume": {
+      "type": "decimal",
+      "default": 0,
+      "required": true,
+      "min": 0
+    },
+    "weight": {
+      "type": "decimal",
+      "default": 0,
+      "required": true,
+      "min": 0
     }
   }
 }
