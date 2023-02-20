@@ -338,6 +338,7 @@
         this.$router.push('/');
       }
       this.order = Object.assign({}, this.cart);
+
       if (this.loggedUser) {
           this.order.shipping_first_name = this.loggedUser.first_name;
           this.order.shipping_last_name = this.loggedUser.last_name;

@@ -132,8 +132,8 @@
             </div>
             <PurchaseTypes
               v-on:setTypes="setTypes"
-              :purType="selected.purchase_type"
-              :subType="selected.subscription_type"
+              :purType="selected.purchaseTypeId"
+              :subType="selected.subscriptionTypeId"
             />
             <div class="mt-1 items-baseline text-gray-600">
               {{ product.description }}
@@ -180,10 +180,10 @@ export default {
     discount: null,
     included: [],
     selected: {
-      product: null,
+      productId: null,
       quantity: 1,
-      purchase_type: 1,
-      subscription_type: null,
+      purchaseTypeId: 1,
+      subscriptionTypeId: null,
       total: 0,
     },
     index: 0,
@@ -201,7 +201,7 @@ export default {
         this.$route.params.id
       );
 
-      this.selected.product = this.product;
+      this.selected.productId = this.product.id;
       this.selected.total = this.product.price;
       this.images = this.product.image.map((item) => this.getImage(item));
 
@@ -231,7 +231,8 @@ export default {
       return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
     },
     setTypes: function (types) {
-      this.selected = { ...this.selected, ...types };
+      this.selected.purchaseTypeId = types.purchase_type;
+      this.selected.subscriptionTypeId = types.subscription_type;
       this.calcDiscoutPrice();
     },
     quantityPlus: function () {
@@ -247,17 +248,14 @@ export default {
       }
     },
     calcPrice: function () {
-      const { product, quantity } = this.selected;
-      return product.price * quantity;
+      return this.product.price * this.selected.quantity;
     },
     calcDiscoutPrice: function () {
-      const { product, quantity } = this.selected;
-
       const purchaseType = this.purchaseTypes.filter(
-        (item) => item.id === this.selected.purchase_type
+        (item) => item.id === this.selected.purchaseTypeId
       );
 
-      const price = product.price * quantity;
+      const price = this.product.price * this.selected.quantity;
 
       if (purchaseType.length && purchaseType[0].title) {
         const { description } = purchaseType[0];
