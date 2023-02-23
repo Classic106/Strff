@@ -1,76 +1,93 @@
 <template>
-  <div class="">
-    <div class="d-flex">
-      <div class="d-flex flex-column">
-        <button
-          v-on:click="open.sameVolume = !open.sameVolume"
-          class="btn btn-primary"
+  <div class="d-flex flex-column">
+    <div class="d-flex justify-content-between">
+      <div class="d-flex mr-1">
+        <div
+          v-on:click="getBoxes('ups')"
+          class="d-flex align-items-center mr-1"
         >
-          Same Volume
-        </button>
-        <ul class="flex-column" :class="open.sameVolume ? 'd-flex ' : 'd-none'">
-          <li v-for="same in sameVolume" :key="same.id" class="m-0">
-            {{ same.v }}
-          </li>
-        </ul>
+          <img
+            src=" https://www.ups.com/assets/resources/images/UPS_logo.svg"
+            alt="UPS_logo"
+          />
+        </div>
+        <div v-on:click="getBoxes('usps')" class="d-flex align-items-center">
+          <img
+            src="https://www.usps.com/global-elements/header/images/utility-header/logo-sb.svg"
+            alt="UPS_logo"
+          />
+        </div>
       </div>
-      <div class="d-flex flex-column">
-        <button
-          v-on:click="open.upperVolume = !open.upperVolume"
-          class="btn btn-primary"
-        >
-          Upper Volumes
-        </button>
-        <ul
-          class="flex-column"
-          :class="open.upperVolume ? 'd-flex ' : 'd-none'"
-        >
-          <li v-for="upper in upperVolume" :key="upper.id" class="m-0">
-            {{ upper.v }}
-          </li>
-        </ul>
-      </div>
-      <div class="d-flex flex-column">
-        <button
-          v-on:click="open.equalsVolumes = !open.equalsVolumes"
-          class="btn btn-primary"
-        >
-          Equals Volumes
-        </button>
-        <ul
-          class="flex-column"
-          :class="open.equalsVolumes ? 'd-flex ' : 'd-none'"
-        >
-          <li v-for="equal in equalsVolumes" :key="equal.id" class="m-0">
-            {{ equal }}
-          </li>
-        </ul>
-      </div>
-      <div class="d-flex flex-column">
-        <button
-          v-on:click="open.combineVolumes = !open.combineVolumes"
-          class="btn btn-primary"
-        >
-          Combine Volumes
-        </button>
-        <ul
-          class="flex-column"
-          :class="open.combineVolumes ? 'd-flex ' : 'd-none'"
-        >
-          <li v-for="combine in combineVolumes" :key="combine.id" class="m-0">
-            {{ combine }}
-          </li>
-        </ul>
+      <div class="d-flex align-items-center">
+        <div class="d-flex flex-column position-relative">
+          <button
+            v-on:click="isPersentage = !isPersentage"
+            class="btn btn-primary mr-1"
+          >
+            Persentage
+          </button>
+          <ul
+            :class="isPersentage ? 'd-flex ' : 'd-none'"
+            class="w-100 flex-column position-absolute p-0 m-0"
+          >
+            <li v-on:click="persentage = 10" class="text-center">10</li>
+            <li v-on:click="persentage = 15" class="text-center">15</li>
+            <li v-on:click="persentage = 20" class="text-center">20</li>
+            <li v-on:click="persentage = 25" class="text-center">25</li>
+          </ul>
+        </div>
+        <div class="d-flex flex-column position-relative">
+          <button v-on:click="isVariants = !isVariants" class="btn btn-primary">
+            Variants
+          </button>
+          <ul
+            :class="isVariants ? 'd-flex' : 'd-none'"
+            class="w-100 flex-column position-absolute p-0 m-0"
+          >
+            <li
+              :class="sameVolumes.length ? 'd-flex' : 'd-none'"
+              class="text-center p-1"
+              v-on:click="setVariant('same')"
+            >
+              Same box
+            </li>
+            <li
+              :class="upperVolumes.length ? 'd-flex' : 'd-none'"
+              class="text-center p-1"
+              v-on:click="setVariant('upper')"
+            >
+              Upper box
+            </li>
+            <li
+              :class="equalsVolumes.length ? 'd-flex' : 'd-none'"
+              class="text-center p-1"
+              v-on:click="setVariant('equals')"
+            >
+              Equals boxes
+            </li>
+            <li
+              :class="combineVolumes.length ? 'd-flex' : 'd-none'"
+              class="text-center p-1"
+              v-on:click="setVariant('combines')"
+            >
+              Combine boxes
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
+    <ThreeJS :variant="variant" :items="items" :click="click" class="mt-4" />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
 
+import ThreeJS from "./ThreeJS.vue";
+
 export default {
   name: "PackagePlanner",
+  components: { ThreeJS },
   props: {
     items: {
       type: Array,
@@ -79,53 +96,108 @@ export default {
     },
   },
   data: () => ({
-    open: {
-      sameVolume: false,
-      upperVolume: false,
-      equalsVolumes: false,
-      combineVolumes: false,
+    click: false,
+    isVariants: false,
+    isPersentage: false,
+    middles: {
+      midH: 0,
+      midW: 0,
+      midL: 0,
+      midWeight: 0,
     },
-    minimums: {
-      minH: 999,
-      minW: 999,
-      minL: 999,
-      minWeight: 99999,
+    maximums: {
+      maxH: 0,
+      maxW: 0,
+      maxL: 0,
+      maxWeight: 0,
     },
+    variant: null,
     currentItems: [],
     currentBoxes: [],
     persentage: 10,
     totalWeight: 0,
     totalVolume: 0,
-    sameVolume: [],
-    upperVolume: [],
+    sameVolumes: [],
+    upperVolumes: [],
     equalsVolumes: [],
     combineVolumes: [],
   }),
+  watch: {
+    persentage: function () {
+      this.init();
+    },
+  },
   computed: {
     ...mapGetters({ boxes: "delivery_boxes/boxes" }),
   },
   methods: {
-    ...mapActions({ setBox: "delivery_boxes/setBox" }),
-    setMins: function (item) {
-      //set minimal for search box
+    ...mapActions({ getBoxes: "delivery_boxes/getBoxes" }),
+    setVariant: function (variant) {
+      const { sameVolumes, upperVolumes, equalsVolumes, combineVolumes } = this;
+
+      switch (variant) {
+        case "same":
+          this.variant = sameVolumes;
+          break;
+        case "upper":
+          this.variant = upperVolumes;
+          break;
+        case "equals":
+          this.variant = equalsVolumes;
+          break;
+        case "combine":
+          this.variant = combineVolumes;
+          break;
+      }
+    },
+    setMaxs: function (item) {
+      //set maximal for search box
       const { height, width, lengtt, weight } = item;
-      const { minH, minW, minL, minWeight } = this.minimums;
+      const { maxH, maxW, maxL, maxWeight } = this.maximums;
 
-      if (minH > height) {
-        this.minimums.minH = height;
+      if (maxH < height) {
+        this.maximums.maxH = height;
       }
 
-      if (minW > width) {
-        this.minimums.minW = width;
+      if (maxW < width) {
+        this.maximums.maxW = width;
       }
 
-      if (minL > lengtt) {
-        this.minimums.minL = lengtt;
+      if (maxL < lengtt) {
+        this.maximums.maxL = lengtt;
       }
 
-      if (minWeight > weight) {
-        this.minimums.minWeight = weight;
+      if (maxWeight < weight) {
+        this.maximums.maxWeight = weight;
       }
+    },
+    middleSizes: function (items) {
+      const result = items.reduce(
+        (acc, item) => {
+          acc.midH += item.height;
+          acc.midW += item.width;
+          acc.midL += item.lengtt;
+          acc.midWeight += item.weight;
+
+          return acc;
+        },
+        {
+          midH: 0,
+          midW: 0,
+          midL: 0,
+          midWeight: 0,
+        }
+      );
+
+      const { midH, midW, midL, midWeight } = result;
+      const { length } = items;
+
+      this.middles = {
+        midH: Math.ceil(midH / length),
+        midW: Math.ceil(midW / length),
+        midL: Math.ceil(midL / length),
+        midWeight: Math.ceil(midWeight / length),
+      };
     },
     calculateItemsTotals: function (items) {
       const { totalWeight, totalVolume } = items.reduce(
@@ -147,97 +219,143 @@ export default {
       const { persentage } = this;
       return (+d / 100) * persentage;
     },
+    sortByVolume: function (a, b) {
+      if (a.v < b.v) {
+        return -1;
+      }
+      if (a.v > b.v) {
+        return 1;
+      }
+      return 0;
+    },
+    checkMaximums: function (box) {
+      //check if can fit biggest item in box
+      const { h, w, l, weight } = box;
+      const { maxH, maxW, maxL, maxWeight } = this.maximums;
+
+      const isWeight = weight >= maxWeight;
+
+      const checkValues_lenghtAsHeight = l >= maxH && w >= maxW && h >= maxL;
+
+      if (checkValues_lenghtAsHeight && isWeight) {
+        return true;
+      }
+
+      const checkValues_widthAsHeight = w >= maxH && h >= maxW && l >= maxL;
+
+      if (checkValues_widthAsHeight && isWeight) {
+        return true;
+      }
+
+      const checkValue_widthAsLenght = h >= maxH && l >= maxW && w >= maxL;
+
+      if (checkValue_widthAsLenght && isWeight) {
+        return true;
+      }
+
+      const checkValues_widthAsHeight_heightAsLenght =
+        w >= maxH && l >= maxW && h >= maxL;
+
+      if (checkValues_widthAsHeight_heightAsLenght && isWeight) {
+        return true;
+      }
+
+      const checkValues_lenghtAsHeight_heightAsWidth =
+        l >= maxH && h >= maxW && w >= maxL;
+
+      if (checkValues_lenghtAsHeight_heightAsWidth && isWeight) {
+        return true;
+      }
+
+      const checkValues_same = h >= maxH && w >= maxW && l >= maxL;
+      if (checkValues_same && isWeight) {
+        return true;
+      }
+    },
     checkBox: function (box) {
       //checking if the box has same or bigger size
-      const { h, w, l, v, weight } = box;
-      const { minH, minW, minL, minWeight } = this.minimums;
-      const { totalVolume, calcPersentage } = this;
+      const { h, w, l, weight } = box;
+      const { midH, midW, midL, midWeight } = this.middles;
 
-      const isSameVolume =
-        v <= totalVolume + calcPersentage(v) && v >= totalVolume;
-      const isUpperVolume = v + calcPersentage(v) > totalVolume;
-      const isMinH = h >= minH;
-      const isMinW = w >= minW;
-      const isMinL = l >= minL;
-      const isWeight = weight >= minWeight;
+      const max = Math.max(midH, midW, midL);
 
-      return {
-        isSameVolume: isSameVolume && isMinH && isMinW && isMinL && isWeight,
-        isUpperVolume: isUpperVolume && isMinH && isMinW && isMinL && isWeight,
-      };
+      const isH = h >= max;
+      const isW = w >= max;
+      const isL = l >= max;
+      const isWeight = weight >= midWeight;
+
+      return isH && isW && isL && isWeight;
     },
     findBoxes: function () {
-      const { totalVolume, currentBoxes, checkBox } = this;
+      const {
+        totalVolume,
+        persentage,
+        currentBoxes,
+        checkBox,
+        sortByVolume,
+        checkMaximums,
+        calcPersentage,
+      } = this;
+
       if (totalVolume === 0) {
         return;
       }
-      //find same or upper volume boxes
-      const { sameVolume, upperVolume } = currentBoxes.reduce(
-        (acc, box) => {
-          const { isSameVolume, isUpperVolume } = checkBox(box);
 
-          if (isSameVolume) {
-            acc.sameVolume.push(box);
-          }
-          if (isUpperVolume) {
-            acc.upperVolume.push(box);
-          }
-
-          return acc;
-        },
-        {
-          sameVolume: [],
-          upperVolume: [],
-        }
+      const sameVolume = currentBoxes.filter(
+        (box) =>
+          totalVolume < box.v &&
+          totalVolume >= box.v - calcPersentage(box.v) &&
+          checkMaximums(box)
       );
 
-      sameVolume.sort((a, b) => sortByVolume(a, b));
-      upperVolume.sort((a, b) => sortByVolume(a, b));
+      const upperVolume = currentBoxes
+        .filter(
+          (box) =>
+            box.v > totalVolume + calcPersentage(box.v) && checkMaximums(box)
+        )
+        .reverse();
 
       const { equalsCombines, combines } = findCombineVolumes(
         currentBoxes,
-        totalVolume
+        totalVolume,
+        persentage
       );
 
-      this.sameVolume = sameVolume;
-      this.upperVolume = upperVolume;
+      if (upperVolume.length) {
+        this.upperVolumes = [upperVolume[0]];
+      }
+      this.sameVolumes = sameVolume;
       this.equalsVolumes = equalsCombines;
       this.combineVolumes = combines;
 
       return;
 
-      function sortByVolume(a, b) {
-        if (a.v < b.v) {
-          return -1;
-        }
-        if (a.v > b.v) {
-          return 1;
-        }
-        return 0;
-      }
-
-      function findCombineVolumes(boxes, totalVolume) {
+      function findCombineVolumes(boxes, totalVolume, persentage = 30) {
         const lessBoxes = boxes
-          .filter((val) => val.v < totalVolume)
+          .filter((box, index) => {
+            if (index === 0) {
+              return box.v < totalVolume && checkMaximums(box);
+            }
+            return box.v < totalVolume && checkBox(box);
+          })
           .sort((a, b) => sortByVolume(b, a));
 
         const equalsCombines = [];
         const combines = [];
 
-        if (!lessBoxes.length || lessBoxes.length === 1) {
+        if (!lessBoxes.length) {
           return { equalsCombines, combines };
         }
 
         //find equals boxes combinations for pack
         for (let i = 0; i < lessBoxes.length; i++) {
-          const { isSameVolume, isUpperVolume } = checkBox(lessBoxes[i]);
-
-          if (true || isSameVolume || isUpperVolume) {
-            const val = totalVolume / lessBoxes[i].v;
-            const count = val % 1 >= 0.8 ? Math.ceil(val) : Math.floor(val);
-
-            if (count >= 2 && count < 6) {
-              const boxes = new Array(count).fill(lessBoxes[i]);
+          if (checkMaximums(lessBoxes[i])) {
+            const count = totalVolume / lessBoxes[i].v;
+            const rest = +((totalVolume / lessBoxes[i].v) % 1).toFixed(1);
+            const isNear = rest + (persentage / 100 - 1);
+            //isNear is value that shows that the remainder is close to an integer
+            if (rest === 1 || isNear === 0) {
+              const boxes = new Array(Math.ceil(count)).fill(lessBoxes[i]);
               equalsCombines.push(boxes);
             }
           }
@@ -247,46 +365,72 @@ export default {
         const items = [];
         let currentTotalVolume = totalVolume;
 
-        for (let i = 0; i < lessBoxes.length; i++) {
-          const { isSameVolume, isUpperVolume } = checkBox(lessBoxes[i]);
-
+        for (let i = 1; i < lessBoxes.length; i++) {
           if (currentTotalVolume <= 0) {
             break;
           }
 
-          if (i === 0 /*&& isSameVolume && isUpperVolume*/) {
-            items.push(lessBoxes[i]);
-            currentTotalVolume -= lessBoxes[i].v;
+          if (i === 1) {
+            const vol = lessBoxes[0].v + lessBoxes[1].v;
+            items.push(lessBoxes[0]);
+            items.push(lessBoxes[1]);
+            currentTotalVolume -= vol;
           }
 
-          for (let j = 0; 0 < currentTotalVolume; j++) {
-            if (isSameVolume || isUpperVolume) {
-              currentTotalVolume -= lessBoxes[i].v;
-              items.push(lessBoxes[i]);
-            }
-            break;
-          }
+          items.push(lessBoxes[i]);
+          currentTotalVolume -= lessBoxes[i].v;
         }
 
-        if (items.length >= 2) {
-          combines.push(items);
-        }
+        return {
+          equalsCombines: equalsCombines.reverse(),
+          combines,
+        };
+      }
+    },
+    init: function () {
+      this.currentItems = this.items;
+      this.currentBoxes = [...this.boxes].sort((a, b) =>
+        this.sortByVolume(b, a)
+      );
 
-        return { equalsCombines, combines };
+      this.currentItems.map((item) => this.setMaxs(item));
+
+      this.calculateItemsTotals(this.currentItems);
+      this.middleSizes(this.currentItems);
+      this.findBoxes();
+
+      if (this.sameVolumes.length) {
+        this.variant = [this.sameVolumes[0]];
+        return;
+      }
+
+      if (this.equalsVolumes.length) {
+        this.variant = this.equalsVolumes[0];
+        return;
+      }
+
+      if (this.upperVolumes.length) {
+        this.variant = [this.upperVolumes[0]];
+        return;
+      }
+
+      if (this.combineVolumes.length) {
+        this.variant = this.combineVolumes[0];
+        return;
       }
     },
   },
   mounted() {
-    this.currentItems = this.items;
-    this.currentBoxes = this.boxes;
-
-    this.currentItems.map((item) => this.setMins(item));
-    this.calculateItemsTotals(this.currentItems);
-
-    this.findBoxes();
+    this.init();
   },
 };
 </script>
 
 <style scoped>
+ul {
+  top: 100%;
+  z-index: 1;
+  border-radius: 5px;
+  background-color: white;
+}
 </style>

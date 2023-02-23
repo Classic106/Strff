@@ -192,7 +192,7 @@ export default {
    ** See https://nuxtjs.org/api/configuration-build/
    */
   build: {
-    transpile: ["vue-upload-drop-images"],
+    transpile: ["vue-upload-drop-images", "three"],
     vendor: ["@johmun/vue-tags-input", "vue-apexchart"],
   },
   buildModules: ["vue-ssr-carousel/nuxt"],

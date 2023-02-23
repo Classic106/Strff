@@ -247,9 +247,8 @@ export default {
     },
     getOrdersCount: function () {
       const { user } = this.selected;
-      const { orders_count } = user;
 
-      return orders_count;
+      return user?.orders_count || 0;
     },
     setNextOrder: async function () {
       const index = this.findIndex();
