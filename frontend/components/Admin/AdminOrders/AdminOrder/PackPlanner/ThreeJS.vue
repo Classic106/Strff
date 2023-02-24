@@ -9,14 +9,7 @@
 
 <script>
 import * as THREE from "three";
-// import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
-// import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-
-// import Vue from "vue";
-// import DatGui from "@cyrilf/vue-dat-gui";
-
-// Vue.use(DatGui);
 
 export default {
   name: "ThreeJS",
@@ -60,33 +53,73 @@ export default {
       return { ws, ls, hs };
     },
     positionByIndex: function (index, w, l) {
+      const { length } = this.variant;
       let result = null;
 
-      switch (index) {
-        case 0:
-          result = {
-            x: -(w + this.scale) + (w / 2) * this.scale,
-            z: -(l + this.scale) + (l / 2) * this.scale,
-          };
-          break;
-        case 1:
-          result = {
-            x: w + this.scale - (w / 2) * this.scale,
-            z: -(l + this.scale) + (l / 2) * this.scale,
-          };
-          break;
-        case 2:
-          result = {
-            x: -(w + this.scale) + (w / 2) * this.scale,
-            z: l + this.scale - (l / 2) * this.scale,
-          };
-          break;
-        case 3:
-          result = {
-            x: w + this.scale - (w / 2) * this.scale,
-            z: l + this.scale - (l / 2) * this.scale,
-          };
-          break;
+      if (length === 2) {
+        switch (index) {
+          case 0:
+            result = {
+              x: -(w + this.scale) + (w / 2) * this.scale,
+            };
+            break;
+          case 1:
+            result = {
+              x: w + this.scale - (w / 2) * this.scale,
+            };
+            break;
+        }
+      }
+
+      if (length === 3) {
+        switch (index) {
+          case 0:
+            result = {
+              x: -(w + this.scale) + (w / 2) * this.scale,
+              z: -(l + this.scale) + (l / 2) * this.scale,
+            };
+            break;
+          case 1:
+            result = {
+              x: w + this.scale - (w / 2) * this.scale,
+              z: -(l + this.scale) + (l / 2) * this.scale,
+            };
+            break;
+          case 2:
+            result = {
+              z: l + this.scale - (l / 2) * this.scale,
+            };
+            break;
+        }
+      }
+
+      if (length === 4) {
+        switch (index) {
+          case 0:
+            result = {
+              x: -(w + this.scale) + (w / 2) * this.scale,
+              z: -(l + this.scale) + (l / 2) * this.scale,
+            };
+            break;
+          case 1:
+            result = {
+              x: w + this.scale - (w / 2) * this.scale,
+              z: -(l + this.scale) + (l / 2) * this.scale,
+            };
+            break;
+          case 2:
+            result = {
+              x: -(w + this.scale) + (w / 2) * this.scale,
+              z: l + this.scale - (l / 2) * this.scale,
+            };
+            break;
+          case 3:
+            result = {
+              x: w + this.scale - (w / 2) * this.scale,
+              z: l + this.scale - (l / 2) * this.scale,
+            };
+            break;
+        }
       }
 
       return result;
@@ -439,24 +472,37 @@ export default {
       const leftRightRotate = { y: Math.PI * 0.5 };
       const floorRotate = { x: Math.PI * 0.5 };
 
-      // const frontBorder = this.addPlane(w, h, frontPosition);
-      // const backBorder = this.addPlane(w, h, backPosition);
-      // const rightBorder = this.addPlane(l, h, rightPosition, leftRightRotate);
-      // const leftBorder = this.addPlane(l, h, leftPosition, leftRightRotate);
+      const frontBorder = this.addPlane(w, h, frontPosition, null, true);
+      const backBorder = this.addPlane(w, h, backPosition, null, true);
+      const rightBorder = this.addPlane(
+        l,
+        h,
+        rightPosition,
+        leftRightRotate,
+        true
+      );
+      const leftBorder = this.addPlane(
+        l,
+        h,
+        leftPosition,
+        leftRightRotate,
+        true
+      );
       const floorBorder = this.addPlane(w, l, floorPosition, floorRotate);
+      floorBorder.material.color.setHex(0xff9a00);
 
-      // group.add(frontBorder);
-      // group.add(backBorder);
-      // group.add(rightBorder);
-      // group.add(leftBorder);
+      group.add(frontBorder);
+      group.add(backBorder);
+      group.add(rightBorder);
+      group.add(leftBorder);
       group.add(floorBorder);
 
       if (position) {
-        const pos = { y: 0.001 };
+        const pos = { y: 0.05 };
         this.position(group, { ...position, ...pos });
       }
 
-      group.position.y = 0.001;
+      group.position.y = 0.05;
       const { uuid } = group;
 
       const volume = new Array(Math.ceil(l));
@@ -472,12 +518,22 @@ export default {
       this.boxUuids.push(uuid);
       this.scene.add(group);
     },
-    addPlane: function (w, l, position, rotate) {
+    addPlane: function (w, l, position, rotate, edge) {
       const planeGeo = new THREE.PlaneGeometry(w, l);
-      const planeMat = new THREE.MeshPhongMaterial({
-        side: THREE.DoubleSide,
-      });
-      const mesh = new THREE.Mesh(planeGeo, planeMat);
+      let mesh = null;
+
+      if (edge) {
+        const edges = new THREE.EdgesGeometry(planeGeo);
+        mesh = new THREE.LineSegments(
+          edges,
+          new THREE.LineBasicMaterial({ color: 0xff9a00 })
+        );
+      } else {
+        const planeMat = new THREE.MeshPhongMaterial({
+          side: THREE.DoubleSide,
+        });
+        mesh = new THREE.Mesh(planeGeo, planeMat);
+      }
 
       if (rotate) {
         this.rotate(mesh, rotate);
@@ -485,7 +541,6 @@ export default {
       if (position) {
         this.position(mesh, position);
       }
-
       return mesh;
     },
     addFloorPlane: function () {
@@ -517,7 +572,7 @@ export default {
       const boxWidth = this.boxesData[boxUuid].volume[0].length;
       const boxLength = this.boxesData[boxUuid].volume.length;
 
-      const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+      const color = THREE.MathUtils.randInt(0, 0xffffff);
       const cubeGeo = new THREE.BoxGeometry(w, h, l);
       const cubeMat = new THREE.MeshPhongMaterial({ color });
       const mesh = new THREE.Mesh(cubeGeo, cubeMat);
@@ -545,14 +600,22 @@ export default {
     },
     addLight: function () {
       const color = 0xffffff;
-      const intensity = 1;
-      const light = new THREE.DirectionalLight(color, intensity);
 
-      light.position.set(0, 10, 0);
-      light.target.position.set(-5, 0, 0);
+      const hemiLight = new THREE.HemisphereLight(color, 0x444444);
+      hemiLight.position.set(0, 20, 0);
+      this.scene.add(hemiLight);
 
-      this.scene.add(light);
-      this.scene.add(light.target);
+      const dirLight = new THREE.DirectionalLight(color, 0.5);
+      dirLight.position.set(3, 10, 10);
+      dirLight.castShadow = true;
+      dirLight.shadow.camera.top = 2;
+      dirLight.shadow.camera.bottom = -2;
+      dirLight.shadow.camera.left = -2;
+      dirLight.shadow.camera.right = 2;
+      dirLight.shadow.camera.near = 0.1;
+      dirLight.shadow.camera.far = 40;
+
+      this.scene.add(dirLight);
     },
     addCamera: function () {
       this.view1Elem = this.$refs.view1;
@@ -643,11 +706,6 @@ export default {
       this.itemsUuids = [];
     },
     init: function () {
-      //   const gui = new dat.GUI();
-      //   gui.add(camera, "fov", 1, 180);
-      //   const minMaxGUIHelper = this.MinMaxGUIHelper(camera, "near", "far", 0.1);
-      //   gui.add(minMaxGUIHelper, "min", 0.1, 50, 0.1).name("near");
-      //   gui.add(minMaxGUIHelper, "max", 0.1, 50, 0.1).name("far");
       this.addRenderer();
       this.addCamera();
       this.addControlls();

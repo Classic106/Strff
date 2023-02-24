@@ -987,17 +987,6 @@
   resolved "https://registry.npmjs.org/@csstools/selector-specificity/-/selector-specificity-2.0.1.tgz"
   integrity sha512-aG20vknL4/YjQF9BSV7ts4EWm/yrjagAN7OWBNmlbEOUiu0llj4OGrFoOKK3g2vey4/p2omKCoHrWtPxSwV3HA==
 
-"@cyrilf/vue-dat-gui@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.npmjs.org/@cyrilf/vue-dat-gui/-/vue-dat-gui-0.3.0.tgz"
-  integrity sha512-Uyw+7AviJIFY+rOp14aLQyKJtAtmSEEJjPXQlwNvQ/grV9b7jT1BZq7B1DbMWf5186r8EO40gnWfTOCpxv99yg==
-  dependencies:
-    core-js "^2.6.5"
-    lodash.clamp "^4.0.3"
-    lodash.tonumber "^4.0.3"
-    v-color "^1.1.2"
-    vue "^2.6.10"
-
 "@gar/promisify@^1.0.1":
   version "1.1.3"
   resolved "https://registry.npmjs.org/@gar/promisify/-/promisify-1.1.3.tgz"
@@ -6196,7 +6185,7 @@ internal-slot@^1.0.3:
     has "^1.0.3"
     side-channel "^1.0.4"
 
-invariant@^2.2.2, invariant@^2.2.4:
+invariant@^2.2.2:
   version "2.2.4"
   resolved "https://registry.npmjs.org/invariant/-/invariant-2.2.4.tgz"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -7349,11 +7338,6 @@ lodash._reinterpolate@^3.0.0:
   resolved "https://registry.npmjs.org/lodash._reinterpolate/-/lodash._reinterpolate-3.0.0.tgz"
   integrity sha512-xYHt68QRoYGjeeM/XOE1uJtvXQAgvszfBhjV4yvsQH0u2i9I6cI6c6/eG4Hh3UAOVn0y/xAXwmTzEay49Q//HA==
 
-lodash.clamp@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/lodash.clamp/-/lodash.clamp-4.0.3.tgz"
-  integrity sha512-HvzRFWjtcguTW7yd8NJBshuNaCa8aqNFtnswdT7f/cMd/1YKy5Zzoq4W/Oxvnx9l7aeY258uSdDfM793+eLsVg==
-
 lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz"
@@ -7389,17 +7373,12 @@ lodash.templatesettings@^4.0.0:
   dependencies:
     lodash._reinterpolate "^3.0.0"
 
-lodash.tonumber@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/lodash.tonumber/-/lodash.tonumber-4.0.3.tgz"
-  integrity sha512-SY0SwuPOHRwKcCNTdsntPYb+Zddz5mDUIVFABzRMqmAiL41pMeyoQFGxYAw5zdc9NnH4pbJqiqqp5ckfxa+zSA==
-
 lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.npmjs.org/lodash.uniq/-/lodash.uniq-4.5.0.tgz"
   integrity sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==
 
-"lodash@3 - 4", lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.7.0:
+"lodash@3 - 4", lodash@^4.15.0, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.7.0:
   version "4.17.21"
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -9578,11 +9557,6 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.npmjs.org/punycode/-/punycode-2.1.1.tgz"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-pure-color@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/pure-color/-/pure-color-1.3.0.tgz"
-  integrity sha512-QFADYnsVoBMw1srW7OVKEYjG+MbIa49s54w1MA1EDY6r2r/sTcKKYqRX1f4GYvnXP7eN/Pe9HFcX+hwzmrXRHA==
-
 q@^1.1.2:
   version "1.5.1"
   resolved "https://registry.npmjs.org/q/-/q-1.5.1.tgz"
@@ -11561,17 +11535,6 @@ uuid@^8.3.0, uuid@^8.3.2:
   resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
-v-color@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.npmjs.org/v-color/-/v-color-1.1.2.tgz"
-  integrity sha512-C3lbi9wjAnR4OVV41R73setGfdDAALcpv0u38vEqOpQY4nP7Tc7VyY2j/iUyKcSfOqczETas/xqIjeNvI7aHXQ==
-  dependencies:
-    invariant "^2.2.4"
-    lodash "^4.17.10"
-    object-assign "^4.1.1"
-    pure-color "^1.3.0"
-    v-ctrl "^1.1.0"
-
 v-credit-card-form@^1.2.8:
   version "1.2.8"
   resolved "https://registry.npmjs.org/v-credit-card-form/-/v-credit-card-form-1.2.8.tgz"
@@ -11579,13 +11542,6 @@ v-credit-card-form@^1.2.8:
   dependencies:
     imask "^4.1.5"
     vue "^2.6.10"
-
-v-ctrl@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/v-ctrl/-/v-ctrl-1.1.0.tgz"
-  integrity sha512-TLs69YET35pncz0/ivf7LjAcb0tsXaWz/gxWwWJrJjWGBNuiwwNsQXC6X5HxQJeidzlqZKV1eupRRQiBGvJ4wg==
-  dependencies:
-    lodash "^4.17.4"
 
 v-money@^0.8.1:
   version "0.8.1"
