@@ -76,7 +76,7 @@
         </div>
       </div>
     </div>
-    <ThreeJS :variant="variant" :items="items" :click="click" class="mt-4" />
+    <ThreeJS :variant="variant" :items="items" class="mt-4" />
   </div>
 </template>
 
@@ -96,7 +96,6 @@ export default {
     },
   },
   data: () => ({
-    click: false,
     isVariants: false,
     isPersentage: false,
     middles: {

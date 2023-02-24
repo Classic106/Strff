@@ -1,8 +1,33 @@
 <template>
-  <div class="d-flex position-relative">
-    <canvas ref="canvas"></canvas>
-    <div class="split">
-      <div ref="view1"></div>
+  <div>
+    <div class="d-flex position-relative mb-4">
+      <canvas ref="canvas"></canvas>
+      <div class="split">
+        <div ref="view1"></div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button
+        class="btn mr-1"
+        :class="autoPack ? 'btn-primary' : 'btn-danger'"
+        v-on:click="autoPack = !autoPack"
+      >
+        Auto pack
+      </button>
+      <button
+        class="btn btn-warning mr-1"
+        :disabled="autoPack"
+        v-on:click="reset"
+      >
+        Reset
+      </button>
+      <button
+        class="btn btn-primary"
+        :disabled="autoPack"
+        v-on:click="nextItem = !nextItem"
+      >
+        Next item
+      </button>
     </div>
   </div>
 </template>
@@ -16,9 +41,10 @@ export default {
   props: {
     variant: Array,
     items: Array,
-    click: Boolean,
   },
   data: () => ({
+    autoPack: true,
+    nextItem: false,
     canvas: null,
     renderer: null,
     camera: null,
@@ -31,14 +57,31 @@ export default {
     boxUuids: [],
     itemsUuids: [],
     boxesData: {},
+    boxFilled: [],
   }),
   watch: {
-    click: function () {
-      this.packBox(this.boxUuids[0]);
+    autoPack: function () {
+      if (this.autoPack) {
+        this.packItems();
+      } else {
+        this.reset();
+      }
+    },
+    nextItem: function () {
+      if (this.boxFilled.length) {
+        const boxes = [...this.boxUuids].filter(
+          (box) => !this.boxFilled.includes(box)
+        );
+
+        if (boxes.length) {
+          this.packBox(this.boxes[0]);
+        }
+      } else {
+        this.packBox(this.boxUuids[0]);
+      }
     },
     variant: function () {
-      this.variant;
-      this.currentItems = [...this.items].sort(this.sortByVolume);
+      this.initItems();
       this.clearAllItems();
       this.initBoxes();
       this.packItems();
@@ -223,10 +266,16 @@ export default {
           this.addCube(w, l, h, areas[i], boxUuid);
           break;
         }
+
+        if (i === areas.length - 1) {
+          console.log(4646465465);
+          this.boxFilled.push(uuid);
+        }
       }
 
-      if (this.currentItems.length) {
+      if (this.currentItems.length && this.autoPack) {
         this.packBox(boxUuid);
+        return;
       }
     },
     fillBox: function (boxUuid, area, item) {
@@ -714,6 +763,9 @@ export default {
       this.addFloorPlane();
       this.addLight();
     },
+    initItems: function () {
+      this.currentItems = [...this.items].sort(this.sortByVolume);
+    },
     sortByVolume: function (a, b) {
       if (a.volume > b.volume) {
         return -1;
@@ -723,9 +775,16 @@ export default {
       }
       return 0;
     },
+    reset: function () {
+      if (!this.autoPack) {
+        this.clearAllItems();
+        this.initItems();
+        this.initBoxes();
+      }
+    },
   },
   mounted() {
-    this.currentItems = [...this.items].sort(this.sortByVolume);
+    this.initItems();
     this.init();
     this.render();
     this.initBoxes();
