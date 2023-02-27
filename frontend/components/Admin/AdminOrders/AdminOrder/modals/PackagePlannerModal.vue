@@ -6,7 +6,10 @@
     centered
     size="xl"
   >
-    <div>
+    <div v-if="!isAvailable" class="text-center">
+      Your devices or browsers may still not support WebGL.
+    </div>
+    <div v-else>
       <PackagePlanner :items="items" />
     </div>
     <template #modal-footer>
@@ -20,6 +23,7 @@
 </template>
 
 <script>
+import WebGL from "~/utils/WebGL";
 import PackagePlanner from "../PackPlanner";
 
 export default {
@@ -29,7 +33,12 @@ export default {
   data: () => ({
     show: false,
     items: [],
+    isAvailable: false,
   }),
+  beforeMount() {
+    const { isWebGLAvailable } = WebGL;
+    this.isAvailable = isWebGLAvailable();
+  },
   mounted() {
     const { order_items, order_bundles } = this.order;
 
