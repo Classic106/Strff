@@ -47,6 +47,7 @@ export default {
 
     const a = [
       {
+        id: 0,
         width: 2,
         lengtt: 4,
         height: 4,
@@ -54,20 +55,16 @@ export default {
         weight: 165,
       },
       {
+        id: 1,
         width: 1,
         lengtt: 1,
         height: 1,
         volume: 1,
         weight: 229,
       },
+      { id: 2, width: 3, lengtt: 4, height: 1, volume: 12, weight: 166 },
       {
-        width: 3,
-        lengtt: 4,
-        height: 1,
-        volume: 12,
-        weight: 166,
-      },
-      {
+        id: 3,
         width: 5,
         lengtt: 1,
         height: 3,
@@ -75,6 +72,7 @@ export default {
         weight: 230,
       },
       {
+        id: 4,
         width: 1,
         lengtt: 2,
         height: 1,
@@ -82,6 +80,7 @@ export default {
         weight: 154,
       },
       {
+        id: 5,
         width: 2,
         lengtt: 4,
         height: 3,
@@ -89,13 +88,16 @@ export default {
         weight: 148,
       },
       {
+        id: 6,
         width: 1,
         lengtt: 1,
         height: 3,
         volume: 3,
         weight: 174,
       },
+      { id: 7, width: 3, lengtt: 4, height: 4, volume: 48, weight: 170 },
       {
+        id: 8,
         width: 3,
         lengtt: 4,
         height: 4,
@@ -103,13 +105,7 @@ export default {
         weight: 170,
       },
       {
-        width: 3,
-        lengtt: 4,
-        height: 4,
-        volume: 48,
-        weight: 170,
-      },
-      {
+        id: 9,
         width: 5,
         lengtt: 1,
         height: 4,
@@ -117,20 +113,16 @@ export default {
         weight: 117,
       },
       {
+        id: 10,
         width: 1,
         lengtt: 1,
         height: 4,
         volume: 4,
         weight: 183,
       },
+      { id: 11, width: 5, lengtt: 4, height: 1, volume: 20, weight: 149 },
       {
-        width: 5,
-        lengtt: 4,
-        height: 1,
-        volume: 20,
-        weight: 149,
-      },
-      {
+        id: 12,
         width: 4,
         lengtt: 5,
         height: 5,
@@ -138,6 +130,7 @@ export default {
         weight: 246,
       },
       {
+        id: 13,
         width: 5,
         lengtt: 3,
         height: 3,
@@ -145,6 +138,7 @@ export default {
         weight: 170,
       },
       {
+        id: 14,
         width: 2,
         lengtt: 2,
         height: 4,
@@ -152,6 +146,7 @@ export default {
         weight: 196,
       },
       {
+        id: 15,
         width: 5,
         lengtt: 2,
         height: 2,
@@ -159,6 +154,7 @@ export default {
         weight: 242,
       },
       {
+        id: 16,
         width: 4,
         lengtt: 2,
         height: 4,
@@ -166,6 +162,7 @@ export default {
         weight: 217,
       },
       {
+        id: 17,
         width: 1,
         lengtt: 4,
         height: 4,
@@ -173,6 +170,7 @@ export default {
         weight: 210,
       },
       {
+        id: 18,
         width: 2,
         lengtt: 4,
         height: 1,
@@ -180,6 +178,7 @@ export default {
         weight: 126,
       },
       {
+        id: 19,
         width: 1,
         lengtt: 4,
         height: 1,
@@ -187,6 +186,7 @@ export default {
         weight: 117,
       },
       {
+        id: 20,
         width: 1,
         lengtt: 5,
         height: 1,
@@ -194,6 +194,7 @@ export default {
         weight: 172,
       },
       {
+        id: 21,
         width: 1,
         lengtt: 4,
         height: 1,
@@ -201,6 +202,7 @@ export default {
         weight: 117,
       },
       {
+        id: 22,
         width: 1,
         lengtt: 5,
         height: 1,

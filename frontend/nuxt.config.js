@@ -54,6 +54,7 @@ export default {
     "~/plugins/vue-good-table",
     "~/plugins/vue-cool-lightbox.js",
     "~/plugins/v-select.js",
+    "~/plugins/VBTooltip.js",
     { src: "~/plugins/fingerprint.js", mode: "client" },
     { src: "~/plugins/notify.client", mode: "client" },
     { src: "~/plugins/notify.server", mode: "server" },

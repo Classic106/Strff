@@ -1,9 +1,14 @@
 <template>
   <div>
-    <div class="d-flex position-relative mb-4">
-      <canvas ref="canvas"></canvas>
-      <div class="split">
-        <div ref="view1"></div>
+    <div class="row">
+      <div class="d-flex col-10 position-relative mb-4">
+        <canvas ref="canvas"></canvas>
+        <div class="split">
+          <div ref="view1"></div>
+        </div>
+      </div>
+      <div class="col-2 p-0 pr-2">
+        <Items :items="packedItems" />
       </div>
     </div>
     <div class="d-flex justify-content-end">
@@ -36,12 +41,15 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
+import Items from "./Items.vue";
+
 export default {
   name: "ThreeJS",
   props: {
     variant: Array,
     items: Array,
   },
+  components: { Items },
   data: () => ({
     autoPack: true,
     nextItem: false,
@@ -52,6 +60,7 @@ export default {
     view1Elem: null,
     view2Elem: null,
     scale: 1, //1 full size, number < 1 less sizes
+    packedItems: [],
     floorPlaneSize: 40,
     currentItems: [],
     boxUuids: [],
@@ -79,6 +88,12 @@ export default {
       } else {
         this.packBox(this.boxUuids[0]);
       }
+    },
+    currentItems: {
+      handler() {
+        this.initPackedItems();
+      },
+      deep: true,
     },
     variant: function () {
       this.initItems();
@@ -261,21 +276,18 @@ export default {
         }
 
         if (result) {
-          const { w, l, h } = result;
           this.fillBox(boxUuid, areas[i], result);
-          this.addCube(w, l, h, areas[i], boxUuid);
+          this.addCube(result, areas[i], boxUuid);
           break;
         }
 
         if (i === areas.length - 1) {
-          console.log(4646465465);
           this.boxFilled.push(uuid);
         }
       }
 
       if (this.currentItems.length && this.autoPack) {
         this.packBox(boxUuid);
-        return;
       }
     },
     fillBox: function (boxUuid, area, item) {
@@ -298,7 +310,7 @@ export default {
       }
     },
     itemForArea: function (item, area, boxHeight) {
-      const { width, lengtt, height } = item;
+      const { width, lengtt, height, color } = item;
       const { value, rowCount, columnCount } = area;
       const { ws, ls, hs } = this.scaleSizes(width, lengtt, height);
 
@@ -309,42 +321,42 @@ export default {
         value + ls <= boxHeight && areaLenght >= hs && areaWidth >= ws;
 
       if (checkValues_lenghtAsHeight) {
-        return { w: ws, l: hs, h: ls };
+        return { w: ws, l: hs, h: ls, color };
       }
 
       const checkValues_widthAsHeight =
         value + ws <= boxHeight && areaLenght >= ls && areaWidth >= hs;
 
       if (checkValues_widthAsHeight) {
-        return { w: hs, l: ls, h: ws };
+        return { w: hs, l: ls, h: ws, color };
       }
 
       const checkValue_widthAsLenght =
         value + hs <= boxHeight && areaLenght >= ws && areaWidth >= ls;
 
       if (checkValue_widthAsLenght) {
-        return { w: ls, l: ws, h: hs };
+        return { w: ls, l: ws, h: hs, color };
       }
 
       const checkValues_widthAsHeight_heightAsLenght =
         value + ws <= boxHeight && areaLenght >= hs && areaWidth >= ls;
 
       if (checkValues_widthAsHeight_heightAsLenght) {
-        return { w: ls, l: hs, h: ws };
+        return { w: ls, l: hs, h: ws, color };
       }
 
       const checkValues_lenghtAsHeight_heightAsWidth =
         value + ls <= boxHeight && areaLenght >= ws && areaWidth >= hs;
 
       if (checkValues_lenghtAsHeight_heightAsWidth) {
-        return { w: hs, l: ws, h: ls };
+        return { w: hs, l: ws, h: ls, color };
       }
 
       const checkValues_same =
         value + hs <= boxHeight && areaLenght >= ls && areaWidth >= ws;
 
       if (checkValues_same) {
-        return { w: ws, l: ls, h: hs };
+        return { w: ws, l: ls, h: hs, color };
       }
 
       return null;
@@ -615,13 +627,15 @@ export default {
       mesh.rotation.x = Math.PI * -0.5;
       this.scene.add(mesh);
     },
-    addCube: function (w, l, h, area, boxUuid) {
+    addCube: function (item, area, boxUuid) {
+      const { w, l, h, color } = item;
+
       const box = this.scene.getObjectByProperty("uuid", boxUuid);
 
       const boxWidth = this.boxesData[boxUuid].volume[0].length;
       const boxLength = this.boxesData[boxUuid].volume.length;
 
-      const color = THREE.MathUtils.randInt(0, 0xffffff);
+      // const color = THREE.MathUtils.randInt(0, 0xffffff);
       const cubeGeo = new THREE.BoxGeometry(w, h, l);
       const cubeMat = new THREE.MeshPhongMaterial({ color });
       const mesh = new THREE.Mesh(cubeGeo, cubeMat);
@@ -764,7 +778,12 @@ export default {
       this.addLight();
     },
     initItems: function () {
-      this.currentItems = [...this.items].sort(this.sortByVolume);
+      this.currentItems = [...this.items]
+        .map((item) => {
+          item.color = THREE.MathUtils.randInt(0, 0xffffff);
+          return item;
+        })
+        .sort(this.sortByVolume);
     },
     sortByVolume: function (a, b) {
       if (a.volume > b.volume) {
@@ -781,6 +800,22 @@ export default {
         this.initItems();
         this.initBoxes();
       }
+    },
+    initPackedItems: function () {
+      const ids = this.currentItems.map((item) => item.id);
+
+      this.packedItems = [...this.items].map((item) => {
+        const { id } = item;
+        const isExist = ids.includes(id);
+
+        if (!isExist) {
+          item.packed = true;
+        } else {
+          item.packed = false;
+        }
+
+        return item;
+      });
     },
   },
   mounted() {
