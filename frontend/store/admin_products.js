@@ -53,34 +53,6 @@ export const actions = {
       const total = await this.$axios.get(`/products/count?${query}`);
       const products = await this.$axios.get(`/products?${query}`);
 
-      // const { data } = products;
-      // console.log(data);
-      // for (let i = 0; i < data.length; i++) {
-      //   function randomIntFromInterval(min, max) {
-      //     // min and max included
-      //     return Math.ceil(Math.random() * (max - min + 1) + min);
-      //   }
-      //   const width = randomIntFromInterval(0.07, 11.811);
-      //   const height = randomIntFromInterval(0.07, 11.811);
-      //   const lengtt = randomIntFromInterval(0.07, 11.811);
-      //   const weight = randomIntFromInterval(.2, 2000);
-
-      //   const { id } = data[i];
-      //   console.log(width, height, lengtt);
-      //   const res = await this.$axios.put(`/products/${id}`, {
-      //     ...data[i],
-      //     ...{
-      //       id,
-      //       width,
-      //       height,
-      //       lengtt,
-      //       weight,
-      //     },
-      //   });
-
-      //   //console.log(res);
-      // }
-
       commit("setTotal", total.data);
       commit("setProducts", products.data);
     } catch (e) {

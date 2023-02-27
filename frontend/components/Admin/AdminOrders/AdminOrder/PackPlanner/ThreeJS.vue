@@ -310,9 +310,9 @@ export default {
       }
     },
     itemForArea: function (item, area, boxHeight) {
-      const { width, lengtt, height, color } = item;
+      const { width, lengthy, height, color } = item;
       const { value, rowCount, columnCount } = area;
-      const { ws, ls, hs } = this.scaleSizes(width, lengtt, height);
+      const { ws, ls, hs } = this.scaleSizes(width, lengthy, height);
 
       const areaLenght = columnCount + 1;
       const areaWidth = rowCount + 1;

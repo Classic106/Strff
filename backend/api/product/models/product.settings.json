@@ -73,7 +73,7 @@
       "required": true,
       "min": 0
     },
-    "lengtt": {
+    "lengthy": {
       "type": "integer",
       "default": 0,
       "required": true,

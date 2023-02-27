@@ -151,7 +151,7 @@ export default {
     },
     setMaxs: function (item) {
       //set maximal for search box
-      const { height, width, lengtt, weight } = item;
+      const { height, width, lengthy, weight } = item;
       const { maxH, maxW, maxL, maxWeight } = this.maximums;
 
       if (maxH < height) {
@@ -162,8 +162,8 @@ export default {
         this.maximums.maxW = width;
       }
 
-      if (maxL < lengtt) {
-        this.maximums.maxL = lengtt;
+      if (maxL < lengthy) {
+        this.maximums.maxL = lengthy;
       }
 
       if (maxWeight < weight) {
@@ -175,7 +175,7 @@ export default {
         (acc, item) => {
           acc.midH += item.height;
           acc.midW += item.width;
-          acc.midL += item.lengtt;
+          acc.midL += item.lengthy;
           acc.midWeight += item.weight;
 
           return acc;

@@ -20,7 +20,7 @@ module.exports = {
   async update(ctx) {
     const { id } = ctx.params;
     const { body } = ctx.request;
-    const { image, newImages, width, lengtt, height } = body;
+    const { image, newImages, width, lengthy, height } = body;
 
     const product = await strapi.services.product.findOne({
       id,
@@ -38,10 +38,10 @@ module.exports = {
       }
     }
 
-    const { width: w, lengtt: l, height: h, volume: v } = product;
+    const { width: w, lengthy: l, height: h, volume: v } = product;
     let volume = v;
 
-    if (width !== w || lengtt !== l || height !== h) {
+    if (width !== w || lengthy !== l || height !== h) {
       volume = w * l * h;
     }
 
