@@ -55,6 +55,7 @@ export default {
     "~/plugins/vue-cool-lightbox.js",
     "~/plugins/v-select.js",
     "~/plugins/VBTooltip.js",
+    { src: "~/plugins/vue-color.js", mode: "client" },
     { src: "~/plugins/fingerprint.js", mode: "client" },
     { src: "~/plugins/notify.client", mode: "client" },
     { src: "~/plugins/notify.server", mode: "server" },
@@ -120,6 +121,7 @@ export default {
       "BDropdown",
       "BDropdownItem",
       "BPagination",
+      "BFormCheckbox",
     ],
   },
   axios: {

@@ -2,20 +2,17 @@
   <div class="d-flex flex-column">
     <div class="d-flex justify-content-between">
       <div class="d-flex mr-1">
-        <div
-          v-on:click="getBoxes('ups')"
-          class="d-flex align-items-center mr-1"
-        >
-          <img
-            src=" https://www.ups.com/assets/resources/images/UPS_logo.svg"
-            alt="UPS_logo"
-          />
+        <div v-if="!deliveries.length">
+          <p>Deliveries is not found</p>
         </div>
-        <div v-on:click="getBoxes('usps')" class="d-flex align-items-center">
-          <img
-            src="https://www.usps.com/global-elements/header/images/utility-header/logo-sb.svg"
-            alt="UPS_logo"
-          />
+        <div
+          v-else
+          v-for="delivery in deliveries"
+          :key="delivery.id"
+          v-on:click="set_delivery(delivery)"
+          class="d-flex align-items-center"
+        >
+          <PreloaderImage :img="delivery.logo" />
         </div>
       </div>
       <div class="d-flex align-items-center">
@@ -81,13 +78,15 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 
 import ThreeJS from "./ThreeJS.vue";
 
+import PreloaderImage from "~/components/common/PreloaderImage.vue";
+
 export default {
   name: "PackagePlanner",
-  components: { ThreeJS },
+  components: { ThreeJS, PreloaderImage },
   props: {
     items: {
       type: Array,
@@ -110,6 +109,7 @@ export default {
       maxL: 0,
       maxWeight: 0,
     },
+    boxes: [],
     variant: null,
     currentItems: [],
     currentBoxes: [],
@@ -127,10 +127,28 @@ export default {
     },
   },
   computed: {
-    ...mapGetters({ boxes: "delivery_boxes/boxes" }),
+    ...mapGetters({
+      selected: "admin_delivery/selected",
+      deliveries: "admin_delivery/deliveries",
+    }),
   },
   methods: {
-    ...mapActions({ getBoxes: "delivery_boxes/getBoxes" }),
+    ...mapActions({
+      getBoxes: "admin_delivery/getBoxes",
+      getDeliveries: "admin_delivery/getDeliveries",
+    }),
+    ...mapMutations({
+      set_delivery: "admin_delivery/set_delivery",
+    }),
+    logoUrl: function (delivery) {
+      const { logo_url } = delivery;
+
+      if (logo_url) {
+        return logo_url;
+      } else {
+        return;
+      }
+    },
     setVariant: function (variant) {
       const { sameVolumes, upperVolumes, equalsVolumes, combineVolumes } = this;
 
@@ -386,11 +404,18 @@ export default {
         };
       }
     },
-    init: function () {
+    init: async function () {
       this.currentItems = this.items;
-      this.currentBoxes = [...this.boxes].sort((a, b) =>
-        this.sortByVolume(b, a)
-      );
+
+      if (!this.deliveries) {
+        await this.getDeliveries();
+      }
+
+      if (this.deliveries.length) {
+        this.currentBoxes = [...this.deliveries[0].boxes].sort((a, b) =>
+          this.sortByVolume(b, a)
+        );
+      }
 
       this.currentItems.map((item) => this.setMaxs(item));
 
@@ -419,8 +444,8 @@ export default {
       }
     },
   },
-  mounted() {
-    this.init();
+  async mounted() {
+    await this.init();
   },
 };
 </script>

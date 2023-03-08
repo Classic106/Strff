@@ -104,4 +104,8 @@ export default {
   border-radius: 10px;
   background-color: #fff;
 }
+
+label.custom-control-label {
+  display: block !important;
+}
 </style>

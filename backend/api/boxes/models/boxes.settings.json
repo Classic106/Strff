@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "boxes",
+  "info": {
+    "name": "Boxes",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "lengthy": {
+      "type": "decimal",
+      "required": true,
+      "min": 1,
+      "default": 1
+    },
+    "width": {
+      "type": "decimal",
+      "required": true,
+      "min": 1,
+      "default": 1
+    },
+    "height": {
+      "required": true,
+      "type": "decimal",
+      "min": 1,
+      "default": 1
+    },
+    "delivery": {
+      "via": "boxes",
+      "model": "deliveries"
+    },
+    "dimension": {
+      "type": "enumeration",
+      "enum": [
+        "cm",
+        "inch"
+      ],
+      "required": true,
+      "default": "cm"
+    },
+    "volume": {
+      "type": "decimal",
+      "required": true,
+      "min": 1,
+      "default": 1
+    },
+    "color": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

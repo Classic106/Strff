@@ -14,10 +14,7 @@ import { getStrapiMedia } from "~/utils/medias";
 export default {
   name: "PreloaderImage",
   props: {
-    image: {
-      required: true,
-      type: String,
-    },
+    image: String,
     classStyle: String,
     rounded: Boolean,
   },
@@ -34,11 +31,24 @@ export default {
   },
   methods: {
     getStrapiMedia,
-    getImage: function (image) {
+    getImage: function () {
+      const { image } = this;
+
       this.pending = true;
-      fetch(this.getStrapiMedia(image))
-        .then((data) => (this.img = data.url))
-        .finally(() => (this.pending = false));
+
+      if (image) {
+        try {
+          fetch(this.getStrapiMedia(image)).then(
+            (data) => (this.img = data.url)
+          );
+        } catch (e) {
+          this.img = require("@/assets/img/image-not-found.jpg");
+        }
+      } else {
+        this.img = require("@/assets/img/image-not-found.jpg");
+      }
+
+      this.pending = false;
     },
     setClassStyle: function () {
       const rounded = this.rounded ? "border-round" : "";
@@ -50,7 +60,7 @@ export default {
     },
   },
   mounted() {
-    this.getImage(this.image);
+    this.getImage();
   },
 };
 </script>

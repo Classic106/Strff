@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/boxes",
+      "handler": "boxes.find",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/boxes/count",
+      "handler": "boxes.count",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/boxes/:id",
+      "handler": "boxes.findOne",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/boxes",
+      "handler": "boxes.create",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/boxes/:id",
+      "handler": "boxes.update",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/boxes/:id",
+      "handler": "boxes.delete",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    }
+  ]
+}

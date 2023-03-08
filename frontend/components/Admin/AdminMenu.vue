@@ -73,6 +73,15 @@
           ><BIconJournalText class="mr-2" />Articles</span
         >
       </li>
+      <li
+        v-on:click="setPage('deliveries')"
+        class="menu-item cursor-pointer d-flex align-items-center"
+        :class="currentPage === 'deliveries' && 'active'"
+      >
+        <span class="d-flex align-items-center w-100 p-1"
+          ><BIconJournalText class="mr-2" />Deliveries</span
+        >
+      </li>
     </ul>
   </div>
 </template>
