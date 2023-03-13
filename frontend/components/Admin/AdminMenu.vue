@@ -79,7 +79,7 @@
         :class="currentPage === 'deliveries' && 'active'"
       >
         <span class="d-flex align-items-center w-100 p-1"
-          ><BIconJournalText class="mr-2" />Deliveries</span
+          ><BIconCart class="mr-2" />Deliveries</span
         >
       </li>
     </ul>

@@ -5,63 +5,78 @@
     v-on:submit.prevent="submit"
     class="was-validated d-flex flex-column"
   >
-    <div class="mb-2">
-      <div class="mb-2">
+    <div class="row mb-2">
+      <div class="col-6">
         <label class="d-flex" for="title"> Dimension </label>
         <select v-model="form.dimension" required class="form-control w-100">
           <option value="cm">cm</option>
           <option value="inch">inch</option>
         </select>
       </div>
-      <label class="d-flex" for="title"> Length </label>
-      <input
-        id="length"
-        type="number"
-        placeholder="Enter length"
-        v-model.trim="form.lengthy"
-        required
-        min="1"
-        max="100"
-        autofocus="true"
-        class="form-control w-100"
-      />
+      <div class="col-6">
+        <label class="d-flex" for="volume"> Volume </label>
+        <input
+          id="volume"
+          type="number"
+          placeholder="Volume"
+          v-model.trim="form.volume"
+          disabled
+          autofocus="false"
+          class="form-control w-100"
+        />
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-4">
+        <label class="d-flex" for="title"> Length </label>
+        <input
+          id="length"
+          type="number"
+          placeholder="Enter length"
+          v-model.trim="form.lengthy"
+          required
+          min="1"
+          max="100"
+          autofocus="true"
+          class="form-control w-100"
+        />
+      </div>
+      <div class="col-4">
+        <label class="d-flex" for="width"> Width </label>
+        <input
+          id="width"
+          type="number"
+          placeholder="Enter width"
+          v-model.trim="form.width"
+          required
+          min="1"
+          max="100"
+          autofocus="true"
+          class="form-control w-100"
+        />
+      </div>
+      <div class="col-4">
+        <label class="d-flex" for="height"> Height </label>
+        <input
+          id="height"
+          type="number"
+          placeholder="Enter height"
+          v-model.trim="form.height"
+          required
+          min="1"
+          max="100"
+          autofocus="true"
+          class="form-control w-100"
+        />
+      </div>
     </div>
     <div class="mb-2">
-      <label class="d-flex" for="width"> Width </label>
+      <label class="d-flex" for="weight"> Weight </label>
       <input
-        id="width"
+        id="weight"
         type="number"
-        placeholder="Enter width"
-        v-model.trim="form.width"
-        required
-        min="1"
-        max="100"
-        autofocus="true"
-        class="form-control w-100"
-      />
-    </div>
-    <div class="mb-2">
-      <label class="d-flex" for="height"> Height </label>
-      <input
-        id="height"
-        type="number"
-        placeholder="Enter height"
-        v-model.trim="form.height"
-        required
-        min="1"
-        max="100"
-        autofocus="true"
-        class="form-control w-100"
-      />
-    </div>
-    <div class="mb-2">
-      <label class="d-flex" for="volume"> Volume </label>
-      <input
-        id="volume"
-        type="number"
-        placeholder="Volume"
-        v-model.trim="form.volume"
-        disabled
+        placeholder="Weight"
+        v-model.trim="form.weight"
         autofocus="false"
         class="form-control w-100"
       />
@@ -115,6 +130,7 @@ export default {
       width: 1,
       height: 1,
       volume: 1,
+      weight: 1,
       dimension: "cm",
       color: "",
     },

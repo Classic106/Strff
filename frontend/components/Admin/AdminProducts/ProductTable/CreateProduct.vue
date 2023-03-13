@@ -96,6 +96,86 @@
               <option value="null">draft</option>
             </select>
           </div>
+          <div class="row mb-2">
+            <div class="col-6">
+              <label class="d-flex" for="title"> Dimension </label>
+              <select
+                v-model="form.dimension"
+                required
+                class="form-control w-100"
+              >
+                <option value="cm">cm</option>
+                <option value="inch">inch</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="d-flex" for="volume"> Volume </label>
+              <input
+                id="volume"
+                type="number"
+                placeholder="Volume"
+                v-model.trim="form.volume"
+                disabled
+                autofocus="false"
+                class="form-control w-100"
+              />
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-4">
+              <label class="d-flex" for="title"> Length </label>
+              <input
+                id="length"
+                type="number"
+                placeholder="Enter length"
+                v-model.trim="form.lengthy"
+                required
+                min="1"
+                max="100"
+                autofocus="true"
+                class="form-control w-100"
+              />
+            </div>
+            <div class="col-4">
+              <label class="d-flex" for="width"> Width </label>
+              <input
+                id="width"
+                type="number"
+                placeholder="Enter width"
+                v-model.trim="form.width"
+                required
+                min="1"
+                max="100"
+                autofocus="true"
+                class="form-control w-100"
+              />
+            </div>
+            <div class="col-4">
+              <label class="d-flex" for="height"> Height </label>
+              <input
+                id="height"
+                type="number"
+                placeholder="Enter height"
+                v-model.trim="form.height"
+                required
+                min="1"
+                max="100"
+                autofocus="true"
+                class="form-control w-100"
+              />
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="d-flex" for="weight"> Weight </label>
+            <input
+              id="weight"
+              type="number"
+              placeholder="Weight"
+              v-model.trim="form.weight"
+              autofocus="false"
+              class="form-control w-100"
+            />
+          </div>
           <div class="mb-2">
             <label class="d-flex" for="media"> Media </label>
             <UploadImages v-on:changed="handleImages" :max="5" id="media" />
@@ -125,10 +205,25 @@ export default {
       title: "",
       description: "",
       price: 0,
+      lengthy: 1,
+      width: 1,
+      height: 1,
+      volume: 1,
+      weight: 1,
+      dimension: "cm",
       categories: null,
       image: [],
     },
   }),
+  watch: {
+    form: {
+      handler: function () {
+        const { lengthy, width, height } = this.form;
+        this.form.volume = lengthy * width * height;
+      },
+      deep: true,
+    },
+  },
   computed: {
     ...mapGetters({ categories: "categories/categories" }),
   },

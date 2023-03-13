@@ -114,6 +114,7 @@ export default {
       "BIconCheckCircle",
       "BIconEyeFill",
       "BIconEyeSlashFill",
+      "BIconCart",
       "BAvatar",
       "BProgress",
       "BProgressBar",

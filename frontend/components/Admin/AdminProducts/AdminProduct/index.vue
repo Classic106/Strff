@@ -24,7 +24,7 @@
         </div>
       </div>
       <form
-        class="row w-100"
+        class="was-validated row w-100"
         id="admin-product-form"
         v-on:submit.stop.prevent="update"
       >
@@ -36,8 +36,16 @@
                 id="title"
                 type="text"
                 required
+                pattern="^[a-zA-Z\s.,-:]{10,100}$"
+                class="form-control"
                 v-model.trim="currentProduct.title"
               />
+              <div class="invalid-feedback">
+                <div class="d-flex align-items-center">
+                  Title must be from 10 to 100 symbols and may contain &nbsp;
+                  <h6>. , - :</h6>
+                </div>
+              </div>
             </div>
             <div class="block d-flex flex-column p-2 mt-2">
               <label class="d-flex font-weight-bold" for="title"
@@ -46,9 +54,18 @@
               <textarea
                 id="title"
                 type="text"
+                class="form-control"
                 required
+                pattern="^[a-zA-Z\s.,-:]{10,100}$"
                 v-model.trim="currentProduct.description"
               />
+              <div v-if="currentProduct.description" class="invalid-feedback">
+                <div class="d-flex align-items-center">
+                  Description must be from 10 to 100 symbols and may contain
+                  &nbsp;
+                  <h6>. , - :</h6>
+                </div>
+              </div>
             </div>
             <ProductMedia class="mt-2" />
           </div>
@@ -58,7 +75,7 @@
             <label class="d-flex font-weight-bold" for="status"
               >Product status</label
             >
-            <select id="status" required v-model="status">
+            <select id="status" required v-model="status" class="form-control">
               <option value="published">published</option>
               <option value="null">draft</option>
             </select>
@@ -69,6 +86,7 @@
             >
             <select
               id="categories"
+              class="form-control"
               multiple
               v-model="currentProduct.categories"
             >
@@ -80,6 +98,85 @@
                 {{ category.name }}
               </option>
             </select>
+          </div>
+          <div class="block p-2 mt-2">
+            <label class="d-flex font-weight-bold">Sizes</label>
+            <div class="mb-2">
+              <label class="d-flex" for="title"> Dimension </label>
+              <select
+                v-model="currentProduct.dimension"
+                required
+                class="form-control w-100"
+              >
+                <option value="cm">cm</option>
+                <option value="inch">inch</option>
+              </select>
+            </div>
+            <div class="mb-2">
+              <label class="d-flex" for="title"> Length </label>
+              <input
+                id="length"
+                type="number"
+                placeholder="Enter length"
+                v-model.trim="currentProduct.lengthy"
+                required
+                min="1"
+                max="100"
+                autofocus="true"
+                class="form-control w-100"
+              />
+            </div>
+            <div class="mb-2">
+              <label class="d-flex" for="width"> Width </label>
+              <input
+                id="width"
+                type="number"
+                placeholder="Enter width"
+                v-model.trim="currentProduct.width"
+                required
+                min="1"
+                max="100"
+                autofocus="true"
+                class="form-control w-100"
+              />
+            </div>
+            <div class="mb-2">
+              <label class="d-flex" for="height"> Height </label>
+              <input
+                id="height"
+                type="number"
+                placeholder="Enter height"
+                v-model.trim="currentProduct.height"
+                required
+                min="1"
+                max="100"
+                autofocus="true"
+                class="form-control w-100"
+              />
+            </div>
+            <div class="mb-2">
+              <label class="d-flex" for="volume"> Volume </label>
+              <input
+                id="volume"
+                type="number"
+                placeholder="Volume"
+                v-model.trim="currentProduct.volume"
+                disabled
+                autofocus="false"
+                class="form-control w-100"
+              />
+            </div>
+            <div class="mb-2">
+              <label class="d-flex" for="weight"> Weight </label>
+              <input
+                id="weight"
+                type="number"
+                placeholder="Weight"
+                v-model.trim="currentProduct.weight"
+                autofocus="false"
+                class="form-control w-100"
+              />
+            </div>
           </div>
         </div>
       </form>
@@ -138,6 +235,13 @@ export default {
       if (published_at) {
         this.status = "published";
       }
+    },
+    currentProduct: {
+      handler: function () {
+        const { lengthy, width, height } = this.currentProduct;
+        this.currentProduct.volume = lengthy * width * height;
+      },
+      deep: true,
     },
   },
   methods: {
@@ -245,6 +349,7 @@ export default {
   },
   beforeMount() {
     const { image, published_at } = this.selected;
+
     this.currentProduct = JSON.parse(JSON.stringify(this.selected));
     this.currentProduct.categories = this.currentProduct.categories.map(
       (item) => item.id

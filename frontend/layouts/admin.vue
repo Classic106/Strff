@@ -46,7 +46,7 @@ export default {
     isMobile: true,
     scrollSettings: {
       suppressScrollX: false,
-      wheelPropagation: true,
+      wheelPropagation: false,
     },
   }),
   methods: {
