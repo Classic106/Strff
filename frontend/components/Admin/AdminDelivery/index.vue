@@ -24,7 +24,7 @@ import Deliveries from "./Deliveries.vue";
 import Boxes from "./Boxes.vue";
 
 export default {
-  name: "AdminDeliveryBoxes",
+  name: "AdminDelivery",
   components: { Deliveries, Boxes, Loader },
   data: () => ({
     loading: true,

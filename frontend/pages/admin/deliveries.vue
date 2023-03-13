@@ -1,14 +1,14 @@
 <template>
-  <AdminDeliveryBoxes />
+  <AdminDelivery />
 </template>
 
 <script>
-import AdminDeliveryBoxes from "~/components/Admin/AdminDeliveryBoxes";
+import AdminDelivery from "~/components/Admin/AdminDelivery";
 
 export default {
   name: "AdminPage",
   layout: "admin",
-  components: { AdminDeliveryBoxes },
+  components: { AdminDelivery },
 };
 </script>
 
