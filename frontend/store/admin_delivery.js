@@ -4,8 +4,8 @@ import { error } from "~/utils/error";
 import { success } from "~/utils/success";
 
 export const state = () => ({
-  boxes: null,
-  deliveries: null,
+  boxes: [],
+  deliveries: [],
   selectedBox: null,
   selectedDelivery: null,
 });

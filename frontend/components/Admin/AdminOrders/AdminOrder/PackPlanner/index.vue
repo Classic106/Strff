@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column">
-    <div class="d-flex justify-content-between">
-      <div class="d-flex mr-1">
+    <div class="row">
+      <div class="col-9 d-flex">
         <div v-if="!deliveries.length">
           <p>Deliveries is not found</p>
         </div>
@@ -9,17 +9,23 @@
           v-else
           v-for="delivery in deliveries"
           :key="delivery.id"
-          v-on:click="set_delivery(delivery)"
-          class="d-flex align-items-center"
+          v-on:click="set_selected_delivery(delivery)"
+          class="row w-100 m-0"
         >
-          <PreloaderImage :img="delivery.logo" />
+          <PreloaderImage
+            :img="delivery.logo"
+            :alt="delivery.title"
+            class="col-3 p-0"
+          />
         </div>
       </div>
-      <div class="d-flex align-items-center">
+      <div
+        class="col-3 row justify-content-sm-center justify-content-lg-end p-0"
+      >
         <div class="d-flex flex-column position-relative">
           <button
             v-on:click="isPersentage = !isPersentage"
-            class="btn btn-primary mr-1"
+            class="btn btn-primary mr-1 mb-1"
           >
             Persentage
           </button>
@@ -73,20 +79,20 @@
         </div>
       </div>
     </div>
-    <ThreeJS :variant="variant" :items="items" class="mt-4" />
+    <PlannerVisual :variant="variant" :items="items" class="mt-4" />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
-
-import ThreeJS from "./ThreeJS.vue";
+import { convertSizes } from "~/utils/functions";
 
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
+import PlannerVisual from "./PlannerVisual.vue";
 
 export default {
   name: "PackagePlanner",
-  components: { ThreeJS, PreloaderImage },
+  components: { PlannerVisual, PreloaderImage },
   props: {
     items: {
       type: Array,
@@ -133,12 +139,13 @@ export default {
     }),
   },
   methods: {
+    convertSizes,
     ...mapActions({
       getBoxes: "admin_delivery/getBoxes",
       getDeliveries: "admin_delivery/getDeliveries",
     }),
     ...mapMutations({
-      set_delivery: "admin_delivery/set_delivery",
+      set_selected_delivery: "admin_delivery/set_selected_delivery",
     }),
     logoUrl: function (delivery) {
       const { logo_url } = delivery;
@@ -405,19 +412,21 @@ export default {
       }
     },
     init: async function () {
-      this.currentItems = this.items;
+      this.currentItems = [...this.items].map((item) => {
+        const box = this.convertSizes(item);
+        this.setMaxs(box);
+        return item;
+      });
 
-      if (!this.deliveries) {
+      if (!this.deliveries.length) {
         await this.getDeliveries();
       }
 
       if (this.deliveries.length) {
-        this.currentBoxes = [...this.deliveries[0].boxes].sort((a, b) =>
-          this.sortByVolume(b, a)
-        );
+        this.currentBoxes = [...this.deliveries[0].boxes]
+          .map((box) => this.convertSizes(box))
+          .sort((a, b) => this.sortByVolume(b, a));
       }
-
-      this.currentItems.map((item) => this.setMaxs(item));
 
       this.calculateItemsTotals(this.currentItems);
       this.middleSizes(this.currentItems);

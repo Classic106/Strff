@@ -40,11 +40,12 @@
 <script>
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { convertSizes } from "~/utils/functions";
 
 import Items from "./Items.vue";
 
 export default {
-  name: "ThreeJS",
+  name: "PlannerVisual",
   props: {
     variant: Array,
     items: Array,
@@ -103,6 +104,7 @@ export default {
     },
   },
   methods: {
+    convertSizes,
     scaleSizes: function (w, l, h) {
       const ws = Math.ceil(w * this.scale) || 0;
       const hs = Math.ceil(h * this.scale) || 0;
@@ -692,10 +694,12 @@ export default {
     },
     addControlls: function () {
       const controls = new OrbitControls(this.camera, this.view1Elem);
-      //controls.minPolarAngle = 0;
-      //controls.maxPolarAngle = Math.PI * 0.5;
-      //controls.minDistance = 15;
-      //controls.maxDistance = 40;
+      // comment 4 below lines for rotate scene in all directions
+      controls.minPolarAngle = 0;
+      controls.maxPolarAngle = Math.PI * 0.5;
+      controls.minDistance = 15;
+      controls.maxDistance = 40;
+      // comment 4 above lines for rotate scene in all directions
       controls.target.set(0, 5, 0);
       controls.update();
     },
@@ -744,7 +748,7 @@ export default {
 
       if (this.variant.length > 1) {
         this.variant.map((v, index) => {
-          const { w, l, h } = v;
+          const { w, l, h } = this.convertSizes(v);
           const { ws, ls } = this.scaleSizes(w, l, h);
           const boxHeight = Math.floor(h);
           const pos = this.positionByIndex(index, w, l);
@@ -752,7 +756,7 @@ export default {
           this.addBox(ws, ls, boxHeight, pos);
         });
       } else if (this.variant.length === 1) {
-        const { w, l, h } = this.variant[0];
+        const { w, l, h } = this.convertSizes(this.variant[0]);
         const { ws, ls } = this.scaleSizes(w, l, h);
         const boxHeight = Math.floor(h);
 
@@ -781,7 +785,7 @@ export default {
       this.currentItems = [...this.items]
         .map((item) => {
           item.color = THREE.MathUtils.randInt(0, 0xffffff);
-          return item;
+          return this.convertSizes(item);
         })
         .sort(this.sortByVolume);
     },

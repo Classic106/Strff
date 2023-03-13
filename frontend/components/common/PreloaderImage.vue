@@ -1,11 +1,16 @@
 <template>
-  <img
-    src="@/assets/img/Curve-Loading.gif"
-    v-if="pending"
-    alt="image"
-    :class="setClassStyle()"
-  />
-  <img v-else :src="img" alt="image" :class="setClassStyle()" />
+  <div class="d-flex justify-content-center align-items-center">
+    <img
+      src="@/assets/img/Curve-Loading.gif"
+      v-if="pending"
+      alt="image"
+      :class="setClassStyle()"
+    />
+    <img v-else-if="!alt" :src="img" alt="image" :class="setClassStyle()" />
+    <p v-else class="text-ellipsis m-0" v-b-tooltip.hover :title="alt">
+      {{ alt }}
+    </p>
+  </div>
 </template>
 
 <script>
@@ -15,6 +20,7 @@ export default {
   name: "PreloaderImage",
   props: {
     image: String,
+    alt: String,
     classStyle: String,
     rounded: Boolean,
   },

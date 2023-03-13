@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { productItems } from "~/static/product_Items_Examples";
+import { mapMutations } from "vuex";
 
 import WebGL from "~/utils/WebGL";
 import PackagePlanner from "../PackPlanner";
@@ -36,8 +36,19 @@ export default {
     show: false,
     items: [],
     isAvailable: false,
-    productItems,
   }),
+  watch: {
+    show: function () {
+      if (!this.show) {
+        this.set_selected_delivery();
+      }
+    },
+  },
+  methods: {
+    ...mapMutations({
+      set_selected_delivery: "admin_delivery/set_selected_delivery",
+    }),
+  },
   beforeMount() {
     const { isWebGLAvailable } = WebGL;
     this.isAvailable = isWebGLAvailable();
@@ -57,17 +68,17 @@ export default {
       return acc;
     }, []);
 
-    this.items = [
-      /*...order_products, ...order_bundles_products,*/ ...this.productItems,
-    ].sort(function sortByVolume(b, a) {
-      if (a.volume < b.volume) {
-        return -1;
+    this.items = [...order_products, ...order_bundles_products].sort(
+      function sortByVolume(b, a) {
+        if (a.volume < b.volume) {
+          return -1;
+        }
+        if (a.volume > b.volume) {
+          return 1;
+        }
+        return 0;
       }
-      if (a.volume > b.volume) {
-        return 1;
-      }
-      return 0;
-    });
+    );
   },
 };
 </script>

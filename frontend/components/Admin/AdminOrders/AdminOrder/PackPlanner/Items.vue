@@ -15,14 +15,14 @@
           :title="item.title || 'undefined'"
         >
           <div
-            class="d-flex position-relative align-items-center"
+            class="d-flex position-relative align-items-center justify-content-between"
             :class="item.packed && 'item'"
           >
             <p class="text-ellipsis m-0 mr-2">
               {{ item.title || "undefined" }}
             </p>
             <div
-              class="box"
+              class="box mr-lg-3 mr-sm-1 mr-0"
               :style="{ 'background-color': getColor(item.color) }"
             />
           </div>
