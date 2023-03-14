@@ -8,7 +8,7 @@
     <div class="row mb-2">
       <div class="col-6">
         <label class="d-flex" for="title"> Dimension </label>
-        <select v-model="form.dimension" required class="form-control w-100">
+        <select v-model="form.dimension" required class="bts_input_style w-100">
           <option value="cm">cm</option>
           <option value="inch">inch</option>
         </select>
@@ -70,16 +70,29 @@
         />
       </div>
     </div>
-    <div class="mb-2">
-      <label class="d-flex" for="weight"> Weight </label>
-      <input
-        id="weight"
-        type="number"
-        placeholder="Weight"
-        v-model.trim="form.weight"
-        autofocus="false"
-        class="form-control w-100"
-      />
+    <div class="row mb-2">
+      <div class="col-6">
+        <label class="d-flex" for="weight"> Weight </label>
+        <InputDecimal
+          id="weight"
+          class="form-control w-100"
+          :value="form.weight"
+          v-on:setDecimal="setWeight"
+          required
+        />
+      </div>
+      <div class="col-6">
+        <label class="d-flex" for="weight_dimension"> Weight dimension </label>
+        <select
+          id="weight_dimension"
+          v-model="form.weight_dimension"
+          required
+          class="bts_input_style w-100"
+        >
+          <option value="kilo">kilo</option>
+          <option value="lbs">lbs</option>
+        </select>
+      </div>
     </div>
     <div class="mb-2">
       <label class="d-flex justify-content-between align-items-top" for="color">
@@ -121,17 +134,20 @@ import * as THREE from "three";
 import { mapGetters, mapActions } from "vuex";
 
 import isDarkColor from "is-dark-color";
+import InputDecimal from "~/components/Admin/common/InputDecimal.vue";
 
 export default {
   name: "BoxForm",
+  components: { InputDecimal },
   data: () => ({
     form: {
       lengthy: 1,
       width: 1,
       height: 1,
       volume: 1,
-      weight: 1,
+      weight: 1.0,
       dimension: "cm",
+      weight_dimension: "kilo",
       color: "",
     },
     isDark: false,
@@ -166,6 +182,9 @@ export default {
       setBox: "admin_delivery/setBox",
       updateBox: "admin_delivery/updateBox",
     }),
+    setWeight: function (val) {
+      this.form.weight = val;
+    },
     updateColor: function (val) {
       const { hex } = val;
 
@@ -190,7 +209,7 @@ export default {
       }
     },
   },
-  mounted() {
+  beforeMount() {
     const { selectedBox } = this;
 
     if (selectedBox) {

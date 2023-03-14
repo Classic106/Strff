@@ -9,7 +9,9 @@ export function pad(num, size) {
 }
 
 export function convertSizes(box) {
-  const { dimension } = box;
+  const { dimension, weight_dimension } = box;
+
+  let sizes = {};
 
   if (dimension === "inch") {
     const width = box.width * 2.54;
@@ -17,11 +19,15 @@ export function convertSizes(box) {
     const height = box.height * 2.54;
     const volume = box.volume * 2.54;
 
-    const sizes = { width, lengthy, height, volume };
-
-    return { ...box, ...sizes };
+    sizes = { width, lengthy, height, volume };
   }
-  return { ...box };
+
+  if (weight_dimension === "lbs") {
+    const weight = box.weight * 0.453592;
+    sizes = { ...sizes, weight };
+  }
+
+  return { ...box, ...sizes };
 }
 
 function isObj(a) {

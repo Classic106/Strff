@@ -1,7 +1,7 @@
 <template>
   <money
-    v-model="currentPrice"
-    v-bind="money"
+    v-model="currentDecimal"
+    v-bind="decimal"
     pattern="^[+-]?[1-9]{1,3}(?:,?[0-9]{3})*\.[0-9]{2}$|0\.[0-9][1-9]$"
     maxlength="12"
   ></money>
@@ -9,13 +9,13 @@
 
 <script>
 export default {
-  name: "InputMoney",
+  name: "InputDecimal",
   props: {
-    price: Number,
+    value: Number,
   },
   data: () => ({
-    currentPrice: 0,
-    money: {
+    currentDecimal: 0,
+    decimal: {
       decimal: ".",
       thousands: ",",
       prefix: "",
@@ -24,12 +24,12 @@ export default {
     },
   }),
   watch: {
-    currentPrice: function () {
-      this.$emit("setPrice", this.currentPrice);
+    currentDecimal: function () {
+      this.$emit("setDecimal", this.currentDecimal);
     },
   },
   mounted() {
-    this.currentPrice = this.price;
+    this.currentDecimal = this.value;
   },
 };
 </script>

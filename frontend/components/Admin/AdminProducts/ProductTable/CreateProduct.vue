@@ -56,12 +56,12 @@
             </div>
           </div>
           <div class="mb-2">
-            <label class="d-flex" for="price"> Price </label>
-            <InputMoney
+            <label class="d-flex" for="price"> Price $ </label>
+            <InputDecimal
               id="price"
               class="form-control w-100"
-              :price="form.price"
-              v-on:setPrice="setPrice"
+              :value="form.price"
+              v-on:setDecimal="setPrice"
               required
             />
             <div class="invalid-feedback">Price mustn't be zero</div>
@@ -102,7 +102,7 @@
               <select
                 v-model="form.dimension"
                 required
-                class="form-control w-100"
+                class="bts_input_style w-100"
               >
                 <option value="cm">cm</option>
                 <option value="inch">inch</option>
@@ -165,16 +165,31 @@
               />
             </div>
           </div>
-          <div class="mb-2">
-            <label class="d-flex" for="weight"> Weight </label>
-            <input
-              id="weight"
-              type="number"
-              placeholder="Weight"
-              v-model.trim="form.weight"
-              autofocus="false"
-              class="form-control w-100"
-            />
+          <div class="row mb-2">
+            <div class="col-6">
+              <label class="d-flex" for="weight"> Weight </label>
+              <InputDecimal
+                id="weight"
+                class="form-control w-100"
+                :value="form.weight"
+                v-on:setDecimal="setWeight"
+                required
+              />
+            </div>
+            <div class="col-6">
+              <label class="d-flex" for="weight_dimension">
+                Weight dimension
+              </label>
+              <select
+                id="weight_dimension"
+                v-model="form.weight_dimension"
+                required
+                class="bts_input_style w-100"
+              >
+                <option value="kilo">kilo</option>
+                <option value="lbs">lbs</option>
+              </select>
+            </div>
           </div>
           <div class="mb-2">
             <label class="d-flex" for="media"> Media </label>
@@ -194,11 +209,11 @@ import { mapGetters, mapActions } from "vuex";
 import UploadImages from "vue-upload-drop-images";
 
 import { warn } from "~/utils/warn";
-import InputMoney from "~/components/Admin/common/InputMoney.vue";
+import InputDecimal from "~/components/Admin/common/InputDecimal.vue";
 
 export default {
   name: "CreateProduct",
-  components: { UploadImages, InputMoney },
+  components: { UploadImages, InputDecimal },
   data: () => ({
     status: "null",
     form: {
@@ -209,8 +224,9 @@ export default {
       width: 1,
       height: 1,
       volume: 1,
-      weight: 1,
+      weight: 1.0,
       dimension: "cm",
+      weight_dimension: "kilo",
       categories: null,
       image: [],
     },
@@ -231,6 +247,9 @@ export default {
     ...mapActions({ createProduct: "admin_products/createProduct" }),
     setPrice: function (val) {
       this.form.price = val;
+    },
+    setWeight: function (val) {
+      this.form.weight = val;
     },
     handleImages(files) {
       this.form.image = files;

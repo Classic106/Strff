@@ -45,11 +45,11 @@
     </div>
     <div class="mb-2">
       <label class="d-flex" for="price"> Price </label>
-      <InputMoney
+      <InputDecimal
         id="price"
         class="form-control w-100"
-        :price="currentBundle.price"
-        v-on:setPrice="setPrice"
+        :value="currentBundle.price"
+        v-on:setDecimal="setPrice"
         required
       />
       <div class="invalid-feedback">Price mustn't be zero</div>
@@ -109,7 +109,7 @@ import { warn } from "~/utils/warn";
 
 import SelectWithSearch from "~/components/common/SelectWithSearch.vue";
 import ProductCard from "~/components/Admin/common/ProductCard.vue";
-import InputMoney from "~/components/Admin/common/InputMoney.vue";
+import InputDecimal from "~/components/Admin/common/InputDecimal.vue";
 
 export default {
   name: "BundleForm",
@@ -117,7 +117,7 @@ export default {
     SelectWithSearch,
     ProductCard,
     ProductCard,
-    InputMoney,
+    InputDecimal,
   },
   props: {
     bundle: Object,

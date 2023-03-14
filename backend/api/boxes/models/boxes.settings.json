@@ -52,6 +52,21 @@
     "color": {
       "type": "string",
       "required": true
+    },
+    "weight_dimension": {
+      "type": "enumeration",
+      "enum": [
+        "lbs",
+        "kilo"
+      ],
+      "required": true,
+      "default": "kilo"
+    },
+    "weight": {
+      "type": "decimal",
+      "default": 1,
+      "required": true,
+      "min": 1
     }
   }
 }

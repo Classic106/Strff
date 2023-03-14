@@ -67,6 +67,19 @@
                 </div>
               </div>
             </div>
+            <div class="block mt-2 p-2">
+              <label class="d-flex font-weight-bold" for="price">
+                Price $</label
+              >
+              <InputDecimal
+                id="price"
+                class="form-control w-100"
+                :value="currentProduct.price"
+                v-on:setDecimal="setPrice"
+                required
+              />
+              <div class="invalid-feedback">Price mustn't be zero</div>
+            </div>
             <ProductMedia class="mt-2" />
           </div>
         </div>
@@ -106,7 +119,7 @@
               <select
                 v-model="currentProduct.dimension"
                 required
-                class="form-control w-100"
+                class="bts_input_style w-100"
               >
                 <option value="cm">cm</option>
                 <option value="inch">inch</option>
@@ -167,14 +180,27 @@
               />
             </div>
             <div class="mb-2">
+              <label class="d-flex" for="weight_dimension">
+                Weight dimension
+              </label>
+              <select
+                id="weight_dimension"
+                v-model="currentProduct.weight_dimension"
+                required
+                class="bts_input_style w-100"
+              >
+                <option value="kilo">kilo</option>
+                <option value="lbs">lbs</option>
+              </select>
+            </div>
+            <div class="mb-2">
               <label class="d-flex" for="weight"> Weight </label>
-              <input
+              <InputDecimal
                 id="weight"
-                type="number"
-                placeholder="Weight"
-                v-model.trim="currentProduct.weight"
-                autofocus="false"
                 class="form-control w-100"
+                :value="currentProduct.weight"
+                v-on:setDecimal="setWeight"
+                required
               />
             </div>
           </div>
@@ -205,12 +231,13 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 
 import { prevCurrNextItems } from "~/helpers";
 
-import ProductMedia from "./ProductMedia.vue";
 import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
+import InputDecimal from "~/components/Admin/common/InputDecimal.vue";
+import ProductMedia from "./ProductMedia.vue";
 
 export default {
   name: "AdminProduct",
-  components: { ProductMedia, ConfirmModal },
+  components: { ProductMedia, ConfirmModal, InputDecimal },
   data: () => ({
     status: "null",
     currentProduct: null,
@@ -258,6 +285,12 @@ export default {
       setImages: "cool_light_box/setImages",
       setImageIndex: "cool_light_box/setImageIndex",
     }),
+    setPrice: function (val) {
+      this.currentProduct.price = val;
+    },
+    setWeight: function (val) {
+      this.currentProduct.weight = val;
+    },
     setNextProduct: async function () {
       const index = this.findIndex();
 

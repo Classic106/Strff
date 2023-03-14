@@ -23,9 +23,11 @@ export default {
     camera: null,
     scene: null,
     cube: null,
+    uuid: null,
   }),
   watch: {
     box: function () {
+      this.removeCube();
       this.addCube();
     },
   },
@@ -60,10 +62,8 @@ export default {
         alpha: true,
       });
 
-      this.addCube();
-
       this.scene = new THREE.Scene();
-      this.scene.add(this.cube);
+      this.addCube();
     },
     addCube: function () {
       const { width, lengthy, height, color } = this.box;
@@ -82,12 +82,27 @@ export default {
       const wireframe = new THREE.LineSegments(geo, mat);
       this.cube.add(wireframe);
       this.cube.rotation.x += 0.5;
+
+      this.uuid = this.cube.uuid;
+      this.scene.add(this.cube);
+    },
+    removeCube: function () {
+      const { uuid } = this;
+
+      if (uuid) {
+        const object = this.scene.getObjectByProperty("uuid", uuid);
+        object.clear();
+        object.removeFromParent();
+      }
     },
     render: function () {
       this.resizeRendererToDisplaySize();
       requestAnimationFrame(this.render);
-      this.cube.rotation.y += 0.005;
-      this.renderer.render(this.scene, this.camera);
+
+      if (this.cube) {
+        this.cube.rotation.y += 0.005;
+        this.renderer.render(this.scene, this.camera);
+      }
     },
   },
   mounted() {
