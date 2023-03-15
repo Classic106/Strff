@@ -54,6 +54,8 @@ export default {
     "~/plugins/vue-good-table",
     "~/plugins/vue-cool-lightbox.js",
     "~/plugins/v-select.js",
+    "~/plugins/VBTooltip.js",
+    { src: "~/plugins/vue-color.js", mode: "client" },
     { src: "~/plugins/fingerprint.js", mode: "client" },
     { src: "~/plugins/notify.client", mode: "client" },
     { src: "~/plugins/notify.server", mode: "server" },
@@ -112,6 +114,7 @@ export default {
       "BIconCheckCircle",
       "BIconEyeFill",
       "BIconEyeSlashFill",
+      "BIconCart",
       "BAvatar",
       "BProgress",
       "BProgressBar",
@@ -119,6 +122,7 @@ export default {
       "BDropdown",
       "BDropdownItem",
       "BPagination",
+      "BFormCheckbox",
     ],
   },
   axios: {
@@ -192,7 +196,7 @@ export default {
    ** See https://nuxtjs.org/api/configuration-build/
    */
   build: {
-    transpile: ["vue-upload-drop-images"],
+    transpile: ["vue-upload-drop-images", "three"],
     vendor: ["@johmun/vue-tags-input", "vue-apexchart"],
   },
   buildModules: ["vue-ssr-carousel/nuxt"],

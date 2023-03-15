@@ -56,7 +56,7 @@ export const actions = {
       commit("setTotal", total.data);
       commit("setProducts", products.data);
     } catch (e) {
-      error(e);
+      console.log(e);
     }
   },
   async createProduct({ commit }, product) {

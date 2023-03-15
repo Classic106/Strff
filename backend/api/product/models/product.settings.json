@@ -60,6 +60,54 @@
       "type": "integer",
       "default": 0,
       "min": 0
+    },
+    "width": {
+      "type": "decimal",
+      "default": 1,
+      "required": true,
+      "min": 1
+    },
+    "height": {
+      "type": "decimal",
+      "default": 0,
+      "required": true,
+      "min": 0
+    },
+    "lengthy": {
+      "type": "decimal",
+      "default": 1,
+      "required": true,
+      "min": 1
+    },
+    "volume": {
+      "type": "decimal",
+      "default": 1,
+      "required": true,
+      "min": 1
+    },
+    "weight": {
+      "type": "decimal",
+      "default": 0.01,
+      "required": true,
+      "min": 0.01
+    },
+    "dimension": {
+      "type": "enumeration",
+      "enum": [
+        "cm",
+        "inch"
+      ],
+      "required": true,
+      "default": "cm"
+    },
+    "weight_dimension": {
+      "type": "enumeration",
+      "enum": [
+        "lbs",
+        "kilo"
+      ],
+      "required": true,
+      "default": "kilo"
     }
   }
 }

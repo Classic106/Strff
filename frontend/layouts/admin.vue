@@ -46,7 +46,7 @@ export default {
     isMobile: true,
     scrollSettings: {
       suppressScrollX: false,
-      wheelPropagation: true,
+      wheelPropagation: false,
     },
   }),
   methods: {
@@ -103,5 +103,9 @@ export default {
   border: 1px solid #000;
   border-radius: 10px;
   background-color: #fff;
+}
+
+label.custom-control-label {
+  display: block !important;
 }
 </style>

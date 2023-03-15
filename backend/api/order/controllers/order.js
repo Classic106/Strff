@@ -6,6 +6,24 @@
  */
 
 module.exports = {
+  async find(ctx) {
+    const orders = await strapi.services.order.find(ctx.query, [
+      "order_status",
+      "user",
+      "order_items",
+      "order_items.product",
+      "order_items.product.image",
+      "order_items.product.categories",
+      "order_items.size",
+      "order_items.purchase_type",
+      "order_items.subscription_type",
+      "order_bundles",
+      "order_bundles.bundle",
+      "order_bundles.bundle.products",
+      "order_bundles.bundle.products.image",
+    ]);
+    return orders;
+  },
   async addProduct(ctx) {
     let params = ctx.request.body;
 
