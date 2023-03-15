@@ -90,25 +90,12 @@ export const actions = {
   },
   async createCustomer({ commit }, customer) {
     try {
-      const { email } = customer;
-
-      const { data } = await this.$axios
-        .post("/customers", {
-          orders_count: 0,
-          total_price: 0,
-          email,
-        })
-        .then(({ data }) => {
-          const { id } = data;
-
-          return this.$axios.post("/users", {
-            ...customer,
-            confirmed: false,
-            blocked: false,
-            customer: id,
-            role: 3, //customer role
-          });
-        });
+      const { data } = this.$axios.post("/users", {
+        ...customer,
+        confirmed: false,
+        blocked: false,
+        role: 3, //customer role
+      });
 
       const { user, jwt } = data;
 
@@ -118,6 +105,21 @@ export const actions = {
       this.$router.push("/profile");
 
       commit("setUser", user);
+    } catch (e) {
+      error(e);
+    }
+  },
+  async updateUser({ commit }, updatedUser) {
+    try {
+      const { id } = updatedUser;
+      const { data } = await this.$axios.put(`/users/${id}`, updatedUser);
+      const { user, jwt } = data;
+
+      this.$axios.setHeader("Authorization", `Bearer ${jwt}`);
+      this.$cookies.set("token", jwt);
+
+      commit("setUser", user);
+      success("User was succesfully updated");
     } catch (e) {
       error(e);
     }

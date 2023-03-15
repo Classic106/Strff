@@ -15,58 +15,50 @@
       </div>
       <form
         autocomplete="off"
-        @submit.stop.prevent="handleSubmit"
-        class="block p-3"
+        @submit.stop.prevent="submit"
+        class="block was-validated p-3"
       >
         <div class="mb-4">
           <label class="d-flex mb-2" for="username"> Name </label>
           <input
             id="username"
             type="text"
-            class="w-100"
+            :pattern="!isUsername ? '^[a-zA-Z0-9\s_]{5,100}$' : ''"
+            class="form-control w-100"
             placeholder="Name"
             v-model="currentUser.username"
             required
           />
+          <div class="invalid-feedback">
+            <div v-if="isUsername">Username is exist</div>
+            <div v-else class="d-flex align-items-center">
+              Title must be from 5 to 100 symbols and may contain &nbsp;
+              <h6>space, _</h6>
+            </div>
+          </div>
         </div>
         <div class="mb-4">
           <label class="d-flex mb-2" for="email"> Email </label>
           <input
             id="email"
             type="email"
-            class="w-100"
+            :pattern="
+              !isEmail
+                ? '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$'
+                : ''
+            "
+            class="form-control w-100"
             placeholder="Email"
             v-model="currentUser.email"
             required
           />
-        </div>
-        <!--div class="mb-4">
-          <label class="d-flex mb-2" for="first_name"> First name </label>
-          <input
-            id="first_name"
-            type="text"
-            class="w-100"
-            placeholder="First name"
-            v-model="currentUser.first_name"
-          />
-        </div>
-        <div class="mb-4">
-          <label class="d-flex mb-2" for="last_name"> Last name </label>
-          <input
-            id="last_name"
-            type="text"
-            class="w-100"
-            placeholder="Last name"
-            v-model="currentUser.last_name"
-          />
-        </div-->
-        <div class="mb-4">
-          <label class="d-flex mb-2" for="role"> Role </label>
-          <select class="w-100" id="role" v-model="roleId">
-            <option :value="role.id" v-for="role in roles" :key="role.id">
-              {{ role.name }}
-            </option>
-          </select>
+          <div class="invalid-feedback">
+            <div v-if="isEmail">Email is exist</div>
+            <div v-else class="d-flex align-items-center">
+              Title must be from 10 to 100 symbols and may contain &nbsp;
+              <h6>_</h6>
+            </div>
+          </div>
         </div>
         <button type="submit" class="btn btn-success btn-block mt-3">
           Update
@@ -78,7 +70,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 import ChangePasswordModal from "./ChangePasswordModal.vue";
 
@@ -88,26 +80,56 @@ export default {
   data: () => ({
     backUrl: null,
     currentUser: null,
-    roles: null,
-    roleId: null,
     isResetPassword: false,
+    isUsername: false,
+    isEmail: false,
+    timer: null,
   }),
   computed: {
     ...mapGetters({ user: "auth/user" }),
   },
+  watch: {
+    currentUser: {
+      handler: function () {
+        this.checkUs();
+      },
+      deep: true,
+    },
+  },
   methods: {
+    ...mapActions({
+      checkUser: "auth/checkUser",
+      updateUser: "auth/updateUser",
+    }),
     back: function () {
       this.$router.push(this.backUrl);
     },
-    handleSubmit: async function () {
-      const { id } = this.currentUser;
-      const updatetdUser = { ...this.currentUser, role: this.roleId };
-      const { data } = await this.$axios.put(`/users/${id}`, updatetdUser);
+    checkUs: function () {
+      const { username, email } = this.currentUser;
+      const { username: name, email: mail } = this.user;
+
+      if ((username && username !== name) || (email && email !== mail)) {
+        clearInterval(this.timer);
+        this.timer = null;
+
+        this.timer = setTimeout(async () => {
+          const { isUsername, isEmail } = await this.checkUser({
+            username,
+            email,
+          });
+
+          this.isUsername = isUsername && username !== name;
+          this.isEmail = isEmail && email !== mail;
+        }, 1000);
+      } else {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
     },
-  },
-  async beforeMount() {
-    const { data } = await this.$axios.get(`/users-permissions/roles`);
-    this.roles = data.roles;
+    submit: async function () {
+      const updatetdUser = { ...this.currentUser };
+      await this.updateUser(updatetdUser);
+    },
   },
   mounted() {
     const { params } = this.$route;
@@ -115,8 +137,6 @@ export default {
 
     this.backUrl = backUrl ? backUrl : "/admin";
     this.currentUser = JSON.parse(JSON.stringify(this.user));
-    this.roleId = this.currentUser.role.id;
-    console.log(this.user);
   },
 };
 </script>

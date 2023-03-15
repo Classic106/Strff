@@ -1,62 +1,69 @@
 <template>
   <BModal v-model="show" id="peset-password" title="Change password" centered>
-    <form ref="form" id="passwords" @submit.stop.prevent="handleSubmit">
+    <form
+      ref="form"
+      id="passwords"
+      class="was-validated"
+      @submit.stop.prevent="submit"
+    >
       <div class="mb-4">
         <label class="d-flex mb-2" for="new_password"> New password </label>
-        <div
-          class="
-            d-flex
-            position-relative
-            align-items-center
-            justify-content-end
-          "
-        >
+        <div class="col position-relative p-0">
           <input
             id="new_password"
             :type="showPassword ? 'text' : 'password'"
-            class="w-100 pr-4"
+            :pattern="'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,30}$'"
+            class="form-control w-100 pr-5"
+            required
             placeholder="New password"
             v-model="form.password"
           />
           <BIconEyeFill
             v-if="showPassword"
-            class="position-absolute mr-2"
+            class="icon position-absolute"
             v-on:click="showPassword = false"
           />
           <BIconEyeSlashFill
             v-else
-            class="position-absolute mr-2"
+            class="icon position-absolute"
             v-on:click="showPassword = true"
           />
+          <div class="invalid-feedback">
+            <div class="d-flex align-items-center">
+              Password must be from 8 to 30 symbols with !@#$%^&*_=+-
+            </div>
+          </div>
         </div>
       </div>
       <div class="mb-4">
         <label class="d-flex mb-2" for="confirm_password"> New password </label>
-        <div
-          class="
-            d-flex
-            position-relative
-            align-items-center
-            justify-content-end
-          "
-        >
+        <div class="col position-relative p-0">
           <input
             id="confirm_password"
             :type="showPasswordConfirmation ? 'text' : 'password'"
-            class="w-100 pr-4"
+            :pattern="
+              isSamePasswords
+                ? '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,30}$'
+                : ''
+            "
+            required
+            class="form-control w-100 pr-5"
             placeholder="Confirm password"
             v-model="form.passwordConfirmation"
           />
           <BIconEyeFill
             v-if="showPasswordConfirmation"
-            class="position-absolute mr-2"
+            class="icon position-absolute"
             v-on:click="showPasswordConfirmation = false"
           />
           <BIconEyeSlashFill
             v-else
-            class="position-absolute mr-2"
+            class="icon position-absolute"
             v-on:click="showPasswordConfirmation = true"
           />
+          <div class="invalid-feedback">
+            <div class="d-flex align-items-center">passwords aren't equal</div>
+          </div>
         </div>
       </div>
     </form>
@@ -70,6 +77,7 @@
           form="passwords"
           size="sm"
           class="btn btn-success"
+          :disabled="!isSamePasswords"
         >
           Change
         </button>
@@ -87,6 +95,7 @@ export default {
     show: false,
     showPassword: false,
     showPasswordConfirmation: false,
+    isSamePasswords: false,
     form: {
       password: "",
       passwordConfirmation: "",
@@ -95,9 +104,24 @@ export default {
   computed: {
     ...mapGetters({ user: "auth/user" }),
   },
+  watch: {
+    form: {
+      handler: function () {
+        const { password, passwordConfirmation } = this.form;
+        this.isSamePasswords = password === passwordConfirmation;
+      },
+      deep: true,
+    },
+  },
   methods: {
-    ...mapActions({ changeUserPassword: "auth/changeUserPassword" }),
-    handleSubmit: async function () {
+    ...mapActions({
+      changeUserPassword: "auth/changeUserPassword",
+    }),
+    submit: async function () {
+      if (!this.isSamePasswords) {
+        return;
+      }
+
       const { form } = this;
       await this.changeUserPassword(form);
     },
@@ -106,4 +130,9 @@ export default {
 </script>
 
 <style scoped>
+.icon {
+  top: 10px;
+  right: 0;
+  margin-right: 7%;
+}
 </style>

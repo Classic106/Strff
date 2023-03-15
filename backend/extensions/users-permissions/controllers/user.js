@@ -112,4 +112,28 @@ module.exports = {
       }),
     });
   },
+  async update(ctx) {
+    const { id } = ctx.params;
+    const { body } = ctx.request;
+
+    const result = await strapi.query("user", "users-permissions").find({ id });
+
+    if (result) {
+      const newUser = await strapi
+        .query("user", "users-permissions")
+        .update({ id }, body);
+
+      const jwt = strapi.plugins["users-permissions"].services.jwt.issue({
+        id,
+      });
+
+      const user = sanitizeEntity(newUser.toJSON ? newUser.toJSON() : newUser, {
+        model: strapi.query("user", "users-permissions").model,
+      });
+
+      ctx.send({ jwt, user });
+    } else {
+      return ctx.badRequest(null, "User isn't found");
+    }
+  },
 };

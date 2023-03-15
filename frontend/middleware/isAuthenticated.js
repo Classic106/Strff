@@ -15,11 +15,10 @@ export default function ({ store, route, redirect }) {
     const { role } = user;
     const { type } = role;
 
-    if (isAdminPage && type !== "authenticated") {
-      return redirect("/profile");
-    }
-
-    if (isUserProfile && type !== "customer") {
+    if (
+      (isAdminPage && type !== "authenticated") ||
+      (!isAdminPage && isUserProfile && type !== "customer")
+    ) {
       return redirect("/");
     }
   }

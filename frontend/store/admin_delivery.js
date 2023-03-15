@@ -96,7 +96,6 @@ export const actions = {
       commit("update_delivery", updatedDelivery);
       success("Delivery successfully updated");
     } catch (e) {
-      console.log(e);
       error(e);
     }
   },

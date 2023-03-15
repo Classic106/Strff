@@ -48,8 +48,6 @@ export const actions = {
       );
     }
 
-    console.log("Token: ", order_token);
-
     commit("order/setToken", order_token);
     commit("order/setOrder", order);
 
