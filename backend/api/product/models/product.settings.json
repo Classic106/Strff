@@ -108,6 +108,10 @@
       ],
       "required": true,
       "default": "kilo"
+    },
+    "color": {
+      "type": "string",
+      "required": true
     }
   }
 }

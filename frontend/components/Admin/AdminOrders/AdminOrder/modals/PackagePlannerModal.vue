@@ -27,6 +27,7 @@ import { mapMutations } from "vuex";
 
 import WebGL from "~/utils/WebGL";
 import PackagePlanner from "../PackPlanner";
+import { productItems } from "~/static/product_Items_Examples";
 
 export default {
   name: "PackagePlannerModal",
@@ -68,17 +69,19 @@ export default {
       return acc;
     }, []);
 
-    this.items = [...order_products, ...order_bundles_products].sort(
-      function sortByVolume(b, a) {
-        if (a.volume < b.volume) {
-          return -1;
-        }
-        if (a.volume > b.volume) {
-          return 1;
-        }
-        return 0;
+    this.items = [
+      ...productItems,
+      // ...order_products,
+      // ...order_bundles_products,
+    ].sort(function sortByVolume(b, a) {
+      if (a.volume < b.volume) {
+        return -1;
       }
-    );
+      if (a.volume > b.volume) {
+        return 1;
+      }
+      return 0;
+    });
   },
 };
 </script>

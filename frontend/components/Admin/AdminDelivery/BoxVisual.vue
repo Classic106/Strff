@@ -68,18 +68,19 @@ export default {
     addCube: function () {
       const { width, lengthy, height, color } = this.box;
 
-      const geometry = new THREE.BoxGeometry(width, height, lengthy);
       const colorValue = this.colorParse(color);
+      const isDark = this.isDarkColor(color);
+
+      const geometry = new THREE.BoxGeometry(width, height, lengthy);
       const material = new THREE.MeshBasicMaterial({ color: colorValue });
       this.cube = new THREE.Mesh(geometry, material);
-
-      const isDark = this.isDarkColor(color);
 
       const geo = new THREE.EdgesGeometry(this.cube.geometry);
       const mat = new THREE.LineBasicMaterial({
         color: isDark ? 0xffffff : 0x000000,
       });
       const wireframe = new THREE.LineSegments(geo, mat);
+
       this.cube.add(wireframe);
       this.cube.rotation.x += 0.5;
 
