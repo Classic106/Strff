@@ -94,51 +94,19 @@
         </select>
       </div>
     </div>
-    <div class="mb-2">
-      <label class="d-flex justify-content-between align-items-top" for="color">
-        Color
-        <input
-          id="color"
-          class="form-control ml-2 w-50 align-self-end"
-          required
-          disabled
-          v-model="form.color"
-          :style="{
-            backgroundColor: form.color,
-            color: isDark ? '#ffffff' : '#000000',
-          }"
-        />
-      </label>
-      <div
-        class="invalid-feedback mb-2 text-right"
-        :class="form.color ? '' : 'd-flex'"
-      >
-        Color isn't chesed
-      </div>
-      <div class="d-flex">
-        <vue-color
-          @input="updateColor"
-          :value="colors"
-          class="colorPicker w-100 mr-2"
-        />
-        <button class="btn btn-primary" v-on:click.prevent.stop="randomColor">
-          Random color
-        </button>
-      </div>
-    </div>
+    <ChoseColor class="mb-2" v-on:setColor="setColor" :color="form.color" />
   </form>
 </template>
 
 <script>
-import * as THREE from "three";
 import { mapGetters, mapActions } from "vuex";
 
-import isDarkColor from "is-dark-color";
 import InputDecimal from "~/components/Admin/common/InputDecimal.vue";
+import ChoseColor from "~/components/Admin/common/ChoseColor.vue";
 
 export default {
   name: "BoxForm",
-  components: { InputDecimal },
+  components: { InputDecimal, ChoseColor },
   data: () => ({
     form: {
       lengthy: 1,
@@ -150,15 +118,6 @@ export default {
       weight_dimension: "kilo",
       color: "",
     },
-    isDark: false,
-    colors: {
-      hex: "#194d33",
-      hex8: "#194D33A8",
-      hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
-      hsv: { h: 150, s: 0.66, v: 0.3, a: 1 },
-      rgba: { r: 25, g: 77, b: 51, a: 1 },
-      a: 1,
-    },
   }),
   computed: {
     ...mapGetters({
@@ -168,16 +127,13 @@ export default {
   watch: {
     form: {
       handler: function () {
-        const { lengthy, width, height, color } = this.form;
+        const { lengthy, width, height } = this.form;
         this.form.volume = lengthy * width * height;
-
-        this.isDark = this.isDarkColor(color);
       },
       deep: true,
     },
   },
   methods: {
-    isDarkColor,
     ...mapActions({
       setBox: "admin_delivery/setBox",
       updateBox: "admin_delivery/updateBox",
@@ -185,17 +141,8 @@ export default {
     setWeight: function (val) {
       this.form.weight = val;
     },
-    updateColor: function (val) {
-      const { hex } = val;
-
-      if (this.form.color !== hex) {
-        this.form.color = hex;
-      }
-    },
-    randomColor: function () {
-      const THREEcolor = THREE.MathUtils.randInt(0, 0xffffff);
-      const color = new THREE.Color().set(THREEcolor).getHexString();
-      this.form.color = `#${color}`;
+    setColor: function (color) {
+      this.form.color = color;
     },
     submit: function () {
       const { selectedBox, form } = this;

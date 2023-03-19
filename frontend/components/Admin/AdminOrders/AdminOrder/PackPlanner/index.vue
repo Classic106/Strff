@@ -86,7 +86,7 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { convertSizes } from "~/utils/functions";
-
+import { delivery_boxes } from "~/static/delivery_boxes_examples";
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
 import PlannerVisual from "./PlannerVisual.vue";
 
@@ -423,7 +423,8 @@ export default {
       }
 
       if (this.deliveries.length) {
-        this.currentBoxes = [...this.deliveries[0].boxes]
+        // this.currentBoxes = [...this.deliveries[0].boxes]
+        this.currentBoxes = [...delivery_boxes]
           .map((box) => this.convertSizes(box))
           .sort((a, b) => this.sortByVolume(b, a));
       }

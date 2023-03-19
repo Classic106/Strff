@@ -195,6 +195,11 @@
             <label class="d-flex" for="media"> Media </label>
             <UploadImages v-on:changed="handleImages" :max="5" id="media" />
           </div>
+          <ChoseColor
+            class="mb-2"
+            :color="form.color"
+            v-on:setColor="setColor"
+          />
         </form>
         <button class="btn btn-success w-100" form="add-product-form">
           Create product
@@ -209,11 +214,13 @@ import { mapGetters, mapActions } from "vuex";
 import UploadImages from "vue-upload-drop-images";
 
 import { warn } from "~/utils/warn";
+
 import InputDecimal from "~/components/Admin/common/InputDecimal.vue";
+import ChoseColor from "~/components/Admin/common/ChoseColor.vue";
 
 export default {
   name: "CreateProduct",
-  components: { UploadImages, InputDecimal },
+  components: { UploadImages, InputDecimal, ChoseColor },
   data: () => ({
     status: "null",
     form: {
@@ -250,6 +257,9 @@ export default {
     },
     setWeight: function (val) {
       this.form.weight = val;
+    },
+    setColor: function (color) {
+      this.form.color = color;
     },
     handleImages(files) {
       this.form.image = files;

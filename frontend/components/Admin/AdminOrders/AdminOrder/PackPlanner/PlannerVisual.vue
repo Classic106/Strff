@@ -41,6 +41,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { convertSizes } from "~/utils/functions";
+import isDarkColor from "is-dark-color";
 
 import Items from "./Items.vue";
 
@@ -64,6 +65,7 @@ export default {
     packedItems: [],
     floorPlaneSize: 40,
     currentItems: [],
+    copiedItems: [],
     boxUuids: [],
     itemsUuids: [],
     boxesData: {},
@@ -71,6 +73,8 @@ export default {
   }),
   watch: {
     autoPack: function () {
+      this.setCurrentItems();
+
       if (this.autoPack) {
         this.packItems();
       } else {
@@ -97,14 +101,18 @@ export default {
       deep: true,
     },
     variant: function () {
-      this.initItems();
       this.clearAllItems();
       this.initBoxes();
+      this.setCurrentItems();
       this.packItems();
     },
   },
   methods: {
+    isDarkColor,
     convertSizes,
+    colorParse: function (color) {
+      return parseInt(color.replace("#", "0x"), 16);
+    },
     scaleSizes: function (w, l, h) {
       const ws = Math.ceil(w * this.scale) || 0;
       const hs = Math.ceil(h * this.scale) || 0;
@@ -523,7 +531,7 @@ export default {
 
       return squares;
     },
-    addBox: function (w, l, h, position) {
+    addBox: function ({ w, l, h, color }, position) {
       const group = new THREE.Group();
 
       const frontPosition = { z: l / 2, y: h / 2 };
@@ -535,24 +543,24 @@ export default {
       const leftRightRotate = { y: Math.PI * 0.5 };
       const floorRotate = { x: Math.PI * 0.5 };
 
-      const frontBorder = this.addPlane(w, h, frontPosition, null, true);
-      const backBorder = this.addPlane(w, h, backPosition, null, true);
+      const frontBorder = this.addPlane(w, h, frontPosition, null, color);
+      const backBorder = this.addPlane(w, h, backPosition, null, color);
       const rightBorder = this.addPlane(
         l,
         h,
         rightPosition,
         leftRightRotate,
-        true
+        color
       );
       const leftBorder = this.addPlane(
         l,
         h,
         leftPosition,
         leftRightRotate,
-        true
+        color
       );
       const floorBorder = this.addPlane(w, l, floorPosition, floorRotate);
-      floorBorder.material.color.setHex(0xff9a00);
+      floorBorder.material.color.setHex(color);
 
       group.add(frontBorder);
       group.add(backBorder);
@@ -586,10 +594,11 @@ export default {
       let mesh = null;
 
       if (edge) {
+        const color = +edge || 0xff9a00;
         const edges = new THREE.EdgesGeometry(planeGeo);
         mesh = new THREE.LineSegments(
           edges,
-          new THREE.LineBasicMaterial({ color: 0xff9a00 })
+          new THREE.LineBasicMaterial({ color })
         );
       } else {
         const planeMat = new THREE.MeshPhongMaterial({
@@ -637,11 +646,19 @@ export default {
       const boxWidth = this.boxesData[boxUuid].volume[0].length;
       const boxLength = this.boxesData[boxUuid].volume.length;
 
-      // const color = THREE.MathUtils.randInt(0, 0xffffff);
+      const isDark = this.isDarkColor(color);
+
       const cubeGeo = new THREE.BoxGeometry(w, h, l);
       const cubeMat = new THREE.MeshPhongMaterial({ color });
       const mesh = new THREE.Mesh(cubeGeo, cubeMat);
 
+      const geo = new THREE.EdgesGeometry(mesh.geometry);
+      const mat = new THREE.LineBasicMaterial({
+        color: isDark ? 0xffffff : 0x000000,
+      });
+      const wireframe = new THREE.LineSegments(geo, mat);
+
+      mesh.add(wireframe);
       mesh.receiveShadow = true;
       mesh.castShadow = true;
 
@@ -737,6 +754,16 @@ export default {
       if (!this.variant) {
         return;
       }
+
+      function checkColor(color) {
+        if (!color) {
+          const col = THREE.MathUtils.randInt(0, 0xffffff);
+          const c = new THREE.Color().set(col).getHexString();
+          return `0x${c}`;
+        }
+        return color;
+      }
+
       //remove old boxes
       this.boxUuids.map((uuid) => {
         const object = this.scene.getObjectByProperty("uuid", uuid);
@@ -748,23 +775,44 @@ export default {
 
       if (this.variant.length > 1) {
         this.variant.map((v, index) => {
-          const { w, l, h } = this.convertSizes(v);
+          const { w, l, h, color } = this.convertSizes(v);
           const { ws, ls } = this.scaleSizes(w, l, h);
+
           const boxHeight = Math.floor(h);
           const pos = this.positionByIndex(index, w, l);
 
-          this.addBox(ws, ls, boxHeight, pos);
+          const currentColor = checkColor(color);
+          const changes = {
+            color: currentColor,
+            w: ws,
+            l: ls,
+            h: boxHeight,
+          };
+
+          const newItem = { ...v, ...changes };
+
+          this.addBox(newItem, pos);
         });
       } else if (this.variant.length === 1) {
-        const { w, l, h } = this.convertSizes(this.variant[0]);
+        const { w, l, h, color } = this.convertSizes(this.variant[0]);
         const { ws, ls } = this.scaleSizes(w, l, h);
+
         const boxHeight = Math.floor(h);
 
-        this.addBox(ws, ls, boxHeight);
+        const currentColor = checkColor(color);
+        const changes = {
+          color: currentColor,
+          w: ws,
+          l: ls,
+          h: boxHeight,
+        };
+
+        const newItem = { ...this.variant[0], ...changes };
+        this.addBox(newItem);
       }
     },
     clearAllItems: function () {
-      //remove items cibicles
+      //remove items cubicles
       this.itemsUuids.map((uuid) => {
         const object = this.scene.getObjectByProperty("uuid", uuid);
         object.clear();
@@ -782,12 +830,27 @@ export default {
       this.addLight();
     },
     initItems: function () {
-      this.currentItems = [...this.items]
+      const copiedItems = [...this.items]
         .map((item) => {
-          item.color = THREE.MathUtils.randInt(0, 0xffffff);
-          return this.convertSizes(item);
+          const newItem = { ...item };
+          const { color } = newItem;
+
+          if (!color) {
+            const col = THREE.MathUtils.randInt(0, 0xffffff);
+            const colorValue = new THREE.Color().set(col).getHexString();
+            newItem.color = `#${colorValue}`;
+          }
+          newItem.packed = false;
+
+          return this.convertSizes(newItem);
         })
         .sort(this.sortByVolume);
+
+      this.copiedItems = copiedItems;
+      this.setCurrentItems();
+    },
+    setCurrentItems: function () {
+      this.currentItems = [...this.copiedItems];
     },
     sortByVolume: function (a, b) {
       if (a.volume > b.volume) {
@@ -801,31 +864,26 @@ export default {
     reset: function () {
       if (!this.autoPack) {
         this.clearAllItems();
-        this.initItems();
         this.initBoxes();
       }
     },
     initPackedItems: function () {
       const ids = this.currentItems.map((item) => item.id);
 
-      this.packedItems = [...this.items].map((item) => {
+      this.packedItems = [...this.copiedItems].map((item) => {
         const { id } = item;
         const isExist = ids.includes(id);
 
-        if (!isExist) {
-          item.packed = true;
-        } else {
-          item.packed = false;
-        }
+        item.packed = !isExist;
 
         return item;
       });
     },
   },
   mounted() {
-    this.initItems();
     this.init();
     this.render();
+    this.initItems();
     this.initBoxes();
     this.packItems();
   },

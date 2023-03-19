@@ -8,8 +8,8 @@
     <vueCustomScrollbar class="scroll overflow-auto" :settings="settings">
       <ul class="d-flex flex-column p-0">
         <li
-          v-for="item in currentItems"
-          :key="item.id"
+          v-for="(item, index) in currentItems"
+          :key="`${item.id}_${index}`"
           class="p-0"
           v-b-tooltip.hover
           :title="item.title || 'undefined'"
@@ -23,7 +23,7 @@
             </p>
             <div
               class="box mr-lg-3 mr-sm-1 mr-0"
-              :style="{ 'background-color': getColor(item.color) }"
+              :style="{ 'background-color': item.color }"
             />
           </div>
         </li>
@@ -33,8 +33,6 @@
 </template>
 
 <script>
-import * as THREE from "three";
-
 export default {
   name: "Items",
   props: {
@@ -57,10 +55,6 @@ export default {
     },
   },
   methods: {
-    getColor: function (hex) {
-      const color = new THREE.Color().set(hex).getHexString();
-      return `#${color}`;
-    },
     filterItems: function () {
       switch (this.filter) {
         case null:

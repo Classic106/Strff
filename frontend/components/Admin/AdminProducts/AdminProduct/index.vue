@@ -80,6 +80,12 @@
               />
               <div class="invalid-feedback">Price mustn't be zero</div>
             </div>
+            <ChoseColor
+              class="block p-2 mt-2"
+              :color="currentProduct.color"
+              boldTitle
+              v-on:setColor="setColor"
+            />
             <ProductMedia class="mt-2" />
           </div>
         </div>
@@ -233,11 +239,12 @@ import { prevCurrNextItems } from "~/helpers";
 
 import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
 import InputDecimal from "~/components/Admin/common/InputDecimal.vue";
+import ChoseColor from "~/components/Admin/common/ChoseColor.vue";
 import ProductMedia from "./ProductMedia.vue";
 
 export default {
   name: "AdminProduct",
-  components: { ProductMedia, ConfirmModal, InputDecimal },
+  components: { ProductMedia, ConfirmModal, InputDecimal, ChoseColor },
   data: () => ({
     status: "null",
     currentProduct: null,
@@ -285,6 +292,9 @@ export default {
       setImages: "cool_light_box/setImages",
       setImageIndex: "cool_light_box/setImageIndex",
     }),
+    setColor: function (color) {
+      this.currentProduct.color = color;
+    },
     setPrice: function (val) {
       this.currentProduct.price = val;
     },
