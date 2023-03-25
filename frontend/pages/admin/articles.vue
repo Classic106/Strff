@@ -6,7 +6,7 @@
 import Articles from "~/components/Admin/Articles";
 
 export default {
-  name: "AdminArticles",
+  name: "AdminPage",
   layout: "admin",
   components: { Articles },
 };

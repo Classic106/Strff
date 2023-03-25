@@ -47,7 +47,10 @@
     "vue-select": "^3.20.0",
     "vue-ssr-carousel": "^1.4.0",
     "vue-text-mask": "^6.1.2",
-    "vue-upload-drop-images": "^1.0.7"
+    "vue-upload-drop-images": "^1.0.7",
+    "vue2-datepicker": "^3.11.1",
+    "geokdbush": "^1.1.0",
+    "kdbush": "^3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -63,6 +66,6 @@
     "jest": "^26.6.3",
     "sass": "^1.45.1",
     "sass-loader": "10",
-    "vue-jest": "^3.0.7"
+    "vue-jest": "^4.0.1"
   }
 }

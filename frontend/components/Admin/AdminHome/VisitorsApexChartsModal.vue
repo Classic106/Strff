@@ -31,6 +31,7 @@
         </button>
       </div>
       <VueApexCharts
+        ref="realtimeChart"
         class="w-100"
         height="400"
         :options="chartOptions"
@@ -64,6 +65,13 @@ export default {
       visitors: "admin_visitors/visitors",
     }),
   },
+  watch: {
+    show: function () {
+      if (this.show) {
+        this.byMonth();
+      }
+    },
+  },
   methods: {
     ...mapActions({
       getVisitors: "admin_visitors/getVisitors",
@@ -88,11 +96,11 @@ export default {
       this.setVisitors(fromDate);
       this.active = "year";
     },
-    setVisitors: async function (fromDate) {
-      await this.getVisitors(fromDate);
+    setVisitors: async function (from) {
+      await this.getVisitors({ from });
 
       const data = this.visitors.reduce((acc, item) => {
-        const date = new Date(item.created_at).toDateString();
+        const date = new Date(item.created_at).toLocaleDateString("en-US");
 
         if (!acc.length) {
           acc.push({ x: date, y: item.visits });
@@ -109,11 +117,13 @@ export default {
         return acc;
       }, []);
 
-      this.series[0].data = data;
+      this.updateSeriesLine(data);
     },
-  },
-  async mounted() {
-    this.byMonth();
+    updateSeriesLine(data) {
+      if (this.$refs.realtimeChart) {
+        this.$refs.realtimeChart.updateSeries([{ data }], false, true);
+      }
+    },
   },
 };
 </script>
