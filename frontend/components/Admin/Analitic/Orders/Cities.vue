@@ -14,11 +14,11 @@ export default {
   name: "Cities",
   components: { ChoseDates },
   data: () => ({
-    currentVisitors: [],
+    currentOrders: [],
   }),
   computed: {
     ...mapGetters({
-      visitors: "admin_visitors/visitors",
+      orders: "admin_orders/orders",
     }),
   },
   methods: {},

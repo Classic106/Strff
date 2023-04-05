@@ -1,17 +1,17 @@
 <template>
   <div class="col p-0">
     <div class="d-flex justify-content-between">
-      <label for="attendance" class="d-flex font-weight-bold">Attendance</label>
+      <label for="count" class="d-flex font-weight-bold">Count</label>
       <p class="m-0 p-0">Total: {{ total }}</p>
     </div>
     <client-only>
       <VueApexCharts
-        ref="attendance"
-        id="attendance"
+        ref="count"
+        id="count"
         class="mt-2 w-100"
         height="200"
         :options="chartOptions"
-        :series="attendance"
+        :series="count"
       />
     </client-only>
   </div>
@@ -21,33 +21,33 @@
 import { mapGetters } from "vuex";
 
 export default {
-  name: "Attendance",
+  name: "Activity",
   data: () => ({
     total: 0,
     chartOptions: {
       chart: {
-        id: "vuechart-analitic-visitors",
+        id: "vuechart-analitic-orders",
         type: "area",
       },
       xaxis: {
         type: "datetime",
       },
     },
-    attendance: [{ name: "visitors", data: [] }],
+    count: [{ name: "orders", data: [] }],
   }),
   computed: {
     ...mapGetters({
-      visitors: "admin_visitors/visitors",
+      orders: "admin_orders/orders",
     }),
   },
   watch: {
-    visitors: function () {
-      this.updateVisitors();
+    orders: function () {
+      this.updateOrders();
     },
   },
   methods: {
-    updateVisitors: async function () {
-      const data = this.visitors.reduce((acc, item) => {
+    updateOrders: async function () {
+      const data = this.orders.reduce((acc, item) => {
         const date = new Date(item.created_at).toDateString();
 
         const index = acc.findIndex((item) => item.x === date);
@@ -60,17 +60,17 @@ export default {
         return acc;
       }, []);
 
-      this.total = this.visitors.length;
+      this.total = this.orders.length;
       this.updateSeriesLine(data);
     },
     updateSeriesLine(data) {
-      if (this.$refs.attendance) {
-        this.$refs.attendance.updateSeries([{ data }], false, true);
+      if (this.$refs.count) {
+        this.$refs.count.updateSeries([{ data }], false, true);
       }
     },
   },
   mounted() {
-    this.updateVisitors();
+    this.updateOrders();
   },
 };
 </script>

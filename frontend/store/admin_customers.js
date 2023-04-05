@@ -59,6 +59,25 @@ export const actions = {
       error(e);
     }
   },
+  async getAnaliticCustomers({ commit }, { from, to }) {
+    try {
+      const queryData = {
+        created_at_gte: from.toISOString(),
+      };
+
+      if (to) {
+        queryData.created_at_lte = to.toISOString();
+      }
+
+      const query = qs.stringify(queryData);
+
+      const { data } = await this.$axios.get(`/users/get_customers?${query}`);
+
+      commit("setCustomers", data);
+    } catch (e) {
+      error(e);
+    }
+  },
   async getCustomer(_, id) {
     try {
       const { data } = await this.$axios.get(`/users/${id}`);

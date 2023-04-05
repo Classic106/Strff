@@ -67,4 +67,34 @@ module.exports = {
 
     return data;
   },
+  async getCustomers(ctx) {
+    const { created_at_gte, created_at_lte } = ctx.query;
+
+    const customers = await strapi
+      .query("user", "users-permissions")
+      .find({ created_at_gte, created_at_lte, role: 3 })
+      .then((data) =>
+        data.map(
+          ({
+            city,
+            state,
+            created_at,
+            username,
+            blocked,
+            orders_count,
+            total_price,
+          }) => ({
+            city,
+            state,
+            created_at,
+            username,
+            blocked,
+            orders_count,
+            total_price,
+          })
+        )
+      );
+
+    return customers;
+  },
 };

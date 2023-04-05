@@ -37,6 +37,13 @@ export default {
       return `${orderMountAsString} ${curDate}, ${curYear}`;
     },
   },
+  beforeMount() {
+    const from = new Date(new Date().setDate(new Date().getDate() - 1));
+    const to = new Date();
+
+    this.range = [from, to];
+    this.$emit("setRange", this.range);
+  },
 };
 </script>
 

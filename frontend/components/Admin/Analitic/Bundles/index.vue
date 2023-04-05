@@ -1,44 +1,50 @@
 <template>
   <div class="col">
     <ChoseDates class="mt-2" v-on:setRange="setRange" label="Chose dates" />
-    <Attendance class="mt-2" />
+    <Count class="mt-2" />
     <Cities class="mt-2" />
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 
 import ChoseDates from "../ChoseDates.vue";
-import Attendance from "./Attendance.vue";
+import Count from "./Count.vue";
 import Cities from "./Cities.vue";
 
 export default {
-  name: "Visitors",
-  components: { Attendance, Cities, ChoseDates },
+  name: "Bundles",
+  components: { Count, Cities, ChoseDates },
   data: () => ({
     range: [],
   }),
   watch: {
     range: function () {
-      this.setVisitorsByTime();
+      this.setOrdersByTime();
     },
   },
   methods: {
     ...mapActions({
-      getVisitors: "admin_visitors/getVisitors",
+      getAnaliticOrders: "admin_orders/getAnaliticOrders",
+    }),
+    ...mapMutations({
+      clearOrders: "admin_orders/clearOrders",
     }),
     setRange: function (range) {
       this.range = range;
     },
-    setVisitorsByTime: async function () {
+    setOrdersByTime: async function () {
       const [from, to] = this.range;
 
-      await this.getVisitors({ from, to });
+      await this.getAnaliticOrders({ from, to });
     },
   },
   async mounted() {
-    await this.setVisitorsByTime();
+    await this.setOrdersByTime();
+  },
+  destroy() {
+    this.clearOrders();
   },
 };
 </script>

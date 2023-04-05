@@ -1,6 +1,14 @@
 {
   "routes": [
     {
+      "method": "GET",
+      "path": "/users/get_customers",
+      "handler": "user.getCustomers",
+      "config": {
+        "policies": ["global::isAuthenticated"]
+      }
+    },
+    {
       "method": "DELETE",
       "path": "/users/:ids",
       "handler": "user.deleteMany",
