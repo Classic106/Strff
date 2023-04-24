@@ -83,6 +83,12 @@
         >
       </li>
       <li
+        v-on:click="setPage('discounts')"
+        class="menu-item cursor-pointer d-flex align-items-center"
+        :class="currentPage === '/discounts' && 'active'"
+      >
+        <span class="d-flex align-items-center w-100 p-1"
+          ><BIconCart class="mr-2" />Discounts</span
         v-on:click="setPage('analitic')"
         class="menu-item cursor-pointer d-flex align-items-center"
         :class="currentPage === '/analitic' && 'active'"

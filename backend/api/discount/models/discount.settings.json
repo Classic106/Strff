@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "discounts",
+  "info": {
+    "name": "Discount",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "value": {
+      "type": "decimal",
+      "required": true,
+      "min": 1,
+      "default": 1
+    },
+    "from_date": {
+      "type": "date",
+      "required": true
+    },
+    "to_date": {
+      "type": "date",
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "percent",
+        "currency"
+      ],
+      "required": true,
+      "default": "percent"
+    }
+  }
+}
