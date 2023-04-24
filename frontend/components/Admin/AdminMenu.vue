@@ -82,6 +82,15 @@
           ><BIconCart class="mr-2" />Deliveries</span
         >
       </li>
+      <li
+        v-on:click="setPage('discounts')"
+        class="menu-item cursor-pointer d-flex align-items-center"
+        :class="currentPage === '/discounts' && 'active'"
+      >
+        <span class="d-flex align-items-center w-100 p-1"
+          ><BIconCart class="mr-2" />Discounts</span
+        >
+      </li>
     </ul>
   </div>
 </template>
