@@ -57,6 +57,25 @@ export const actions = {
       error(e);
     }
   },
+  async getAnaliticOrders({ commit }, { from, to }) {
+    try {
+      const queryData = {
+        created_at_gte: from.toISOString(),
+      };
+
+      if (to) {
+        queryData.created_at_lte = to.toISOString();
+      }
+
+      const query = qs.stringify(queryData);
+
+      const { data } = await this.$axios.get(`/orders?${query}`);
+
+      commit("setOrders", data);
+    } catch (e) {
+      error(e);
+    }
+  },
   async getOrdersByTime(_, fromDate = new Date()) {
     try {
       const queryData = {

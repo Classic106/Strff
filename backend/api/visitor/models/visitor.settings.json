@@ -17,6 +17,18 @@
     },
     "visits": {
       "type": "integer"
+    },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "latitude": {
+      "type": "float"
+    },
+    "longitude": {
+      "type": "float"
     }
   }
 }

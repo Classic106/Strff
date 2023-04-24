@@ -1,5 +1,6 @@
 import qs from "qs";
-import { error } from "../utils/error";
+import { error } from "~/utils/error";
+import { warn } from "~/utils/warn";
 
 export const state = () => ({
   visitors: [],
@@ -14,20 +15,24 @@ export const actions = {
 
       commit("setCount_connected_visitors", data);
     } catch (e) {
-      console.warn(e);
+      warn(e);
     }
   },
-  async getVisitors({ commit }, fromDate = new Date()) {
+  async getVisitors({ commit }, { from, to }) {
     try {
       const queryData = {
-        created_at_gte: fromDate.toISOString().slice(0, 10),
+        created_at_gte: from.toISOString().slice(0, 10),
       };
+
+      if (to) {
+        queryData.created_at_lte = to.toISOString().slice(0, 10);
+      }
 
       const query = qs.stringify(queryData);
 
       const { data } = await this.$axios.get(`/visitors?${query}`);
 
-      commit("addVisitors", data);
+      commit("setVisitors", data);
     } catch (e) {
       error(e);
     }
@@ -44,8 +49,8 @@ export const actions = {
 };
 
 export const mutations = {
-  addVisitors(state, visitors) {
-    state.visitors = [...visitors, ...state.visitors];
+  setVisitors(state, visitors) {
+    state.visitors = visitors;
   },
   setCountVisitors(state, count) {
     state.count_visitors = count;

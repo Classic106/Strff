@@ -31,6 +31,7 @@
         </button>
       </div>
       <VueApexCharts
+        ref="realtimeChart"
         class="w-100"
         height="400"
         :options="chartOptions"
@@ -59,6 +60,13 @@ export default {
     },
     series: [{ name: "orders_amount", data: [] }],
   }),
+  watch: {
+    show: function () {
+      if (this.show) {
+        this.byMonth();
+      }
+    },
+  },
   methods: {
     ...mapActions({
       getOrdersByTime: "admin_orders/getOrdersByTime",
@@ -104,7 +112,12 @@ export default {
         return acc;
       }, []);
 
-      this.series[0].data = data;
+      this.updateSeriesLine(data);
+    },
+    updateSeriesLine(data) {
+      if (this.$refs.realtimeChart) {
+        this.$refs.realtimeChart.updateSeries([{ data }], false, true);
+      }
     },
   },
   async mounted() {

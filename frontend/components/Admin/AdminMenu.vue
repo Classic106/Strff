@@ -89,6 +89,12 @@
       >
         <span class="d-flex align-items-center w-100 p-1"
           ><BIconCart class="mr-2" />Discounts</span
+        v-on:click="setPage('analitic')"
+        class="menu-item cursor-pointer d-flex align-items-center"
+        :class="currentPage === '/analitic' && 'active'"
+      >
+        <span class="d-flex align-items-center w-100 p-1"
+          ><BIconFileBarGraph class="mr-2" />Analitic</span
         >
       </li>
     </ul>
