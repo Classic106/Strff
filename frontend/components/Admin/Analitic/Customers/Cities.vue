@@ -8,11 +8,8 @@
 <script>
 import { mapGetters } from "vuex";
 
-import ChoseDates from "../ChoseDates.vue";
-
 export default {
   name: "Cities",
-  components: { ChoseDates },
   data: () => ({
     currentVisitors: [],
   }),

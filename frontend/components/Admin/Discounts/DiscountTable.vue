@@ -159,7 +159,7 @@ export default {
     onCellClick: function (params) {
       const result = this.prevCurrNextItems(params.row, this.discounts);
       this.setSelectedDiscounts(result);
-      this.$root.$$emit("setIsTable");
+      this.$emit("setIsTable");
     },
     selectionChanged(params) {
       this.selectedRows = params.selectedRows;

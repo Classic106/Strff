@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 
-import ChoseDates from "../ChoseDates.vue";
+import ChoseDates from "~/components/Admin/common/ChoseDates.vue";
 import Attendance from "./Attendance.vue";
 import Cities from "./Cities.vue";
 
@@ -28,6 +28,9 @@ export default {
     ...mapActions({
       getVisitors: "admin_visitors/getVisitors",
     }),
+    ...mapMutations({
+      clearVisitors: "admin_visitors/clearVisitors",
+    }),
     setRange: function (range) {
       this.range = range;
     },
@@ -37,8 +40,8 @@ export default {
       await this.getVisitors({ from, to });
     },
   },
-  async mounted() {
-    await this.setVisitorsByTime();
+  destroy() {
+    this.clearVisitors();
   },
 };
 </script>

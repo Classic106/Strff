@@ -117,6 +117,7 @@ export default {
       "BIconEyeSlashFill",
       "BIconCart",
       "BIconFileBarGraph",
+      "BIconPercent",
       "BAvatar",
       "BProgress",
       "BProgressBar",

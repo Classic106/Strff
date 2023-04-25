@@ -58,6 +58,11 @@ export const mutations = {
   setCount_connected_visitors(state, count) {
     state.count_connected_visitors = count;
   },
+  clearVisitors(state) {
+    state.visitors = [];
+    state.count_visitors = 0;
+    state.count_connected_visitors = 0;
+  },
 };
 
 export const getters = {

@@ -13,7 +13,7 @@ export default {
   name: "Discounts",
   components: { Discount, DiscountTable },
   data: () => ({
-    isTable: false,
+    isTable: true,
   }),
   methods: {
     ...mapActions({

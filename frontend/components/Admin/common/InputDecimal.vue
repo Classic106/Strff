@@ -2,6 +2,7 @@
   <money
     v-model="currentDecimal"
     v-bind="decimal"
+    :class="currentDecimal ? 'is-valid' : 'is-invalid'"
     pattern="^[+-]?[1-9]{1,3}(?:,?[0-9]{3})*\.[0-9]{2}$|0\.[0-9][1-9]$"
     maxlength="12"
   ></money>

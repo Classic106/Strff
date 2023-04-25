@@ -2,7 +2,7 @@
   <div class="row w-100 justify-content-center m-0 mt-3">
     <div class="d-flex flex-column align-items-center col-10 p-0">
       <div class="d-flex align-items-center justify-content-between w-100">
-        <button v-on:click="clearSelectedDiscount()" class="button">
+        <button v-on:click="$emit('setIsTable')" class="button">
           <BIconArrowLeft />
         </button>
       </div>
@@ -22,13 +22,21 @@
           />
           <div class="invalid-feedback">Value must be greater than 1</div>
         </div>
+        <ChoseDates
+          class="block mt-2 p-2"
+          v-on:setRange="setRange"
+          label="Chose dates"
+          column
+          inline
+          from_today
+        />
         <div class="block mt-2 p-2">
-          <label class="d-flex" for="weight_dimension"> Type </label>
+          <label class="d-flex" for="type"> Type </label>
           <select
-            id="weight_dimension"
+            id="type"
             v-model="currentDiscount.type"
             required
-            class="bts_input_style w-100"
+            class="form-control is-valid w-100"
           >
             <option value="percent">%</option>
             <option value="currency">$</option>
@@ -36,7 +44,12 @@
         </div>
         <div class="block d-flex flex-column p-2 mt-2">
           <label class="d-flex font-weight-bold" for="status">Status</label>
-          <select id="status" required v-model="status" class="form-control">
+          <select
+            id="status"
+            required
+            v-model="status"
+            class="form-control is-valid"
+          >
             <option value="published">published</option>
             <option value="null">draft</option>
           </select>
@@ -44,7 +57,8 @@
       </form>
       <div class="row justify-content-between w-100">
         <button
-          class="w-100 btn btn-success text-uppercase my-2"
+          :class="selected ? 'col-8' : 'w-100'"
+          class="btn btn-success text-uppercase my-2"
           type="submit"
           form="admin-discount-form"
         >
@@ -69,10 +83,11 @@ import { prevCurrNextItems } from "~/helpers";
 
 import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
 import InputDecimal from "~/components/Admin/common/InputDecimal.vue";
+import ChoseDates from "~/components/Admin/common/ChoseDates.vue";
 
 export default {
   name: "Discount",
-  components: { ConfirmModal, InputDecimal },
+  components: { ConfirmModal, InputDecimal, ChoseDates },
   data: () => ({
     status: "null",
     currentDiscount: {
@@ -89,12 +104,16 @@ export default {
   },
   watch: {
     selected: function () {
-      this.currentDiscount = JSON.parse(JSON.stringify(this.selected));
+      const { selected } = this;
 
-      const { published_at } = this.currentDiscount;
+      if (selected) {
+        this.currentDiscount = JSON.parse(JSON.stringify(selected));
 
-      if (published_at) {
-        this.status = "published";
+        const { published_at } = this.currentDiscount;
+
+        if (published_at) {
+          this.status = "published";
+        }
       }
     },
   },
@@ -103,13 +122,19 @@ export default {
     ...mapActions({
       getDiscounts: "admin_discounts/getDiscounts",
       createDiscount: "admin_discounts/createDiscount",
-      updateDiscount: "admin_discounts/updateDiscounts",
+      updateDiscount: "admin_discounts/updateDiscount",
       deleteDiscounts: "admin_discounts/deleteDiscounts",
     }),
     ...mapMutations({
-      setParams: "admin_discounts/setParams",
+      clearDiscounts: "admin_discounts/clearDiscounts",
       clearSelectedDiscount: "admin_discounts/clearSelectedDiscount",
     }),
+    setRange: function (range) {
+      const [from_date, to_date] = range;
+
+      this.currentDiscount.from_date = from_date;
+      this.currentDiscount.to_date = to_date;
+    },
     setValue: function (val) {
       this.currentDiscount.value = val;
     },
@@ -130,7 +155,7 @@ export default {
       }
     },
     deleteDiscount: function () {
-      this.$root.$emit("bv::show::modal", "confirm-delete-discount");
+      this.$emit("bv::show::modal", "confirm-delete-discount");
     },
     confirm: async function () {
       const { id } = this.currentDiscount;
@@ -149,7 +174,7 @@ export default {
     }
   },
   async destroyed() {
-    this.setParams({ ...this.params, page: 1 });
+    this.clearDiscounts();
     await this.getDiscounts();
   },
 };

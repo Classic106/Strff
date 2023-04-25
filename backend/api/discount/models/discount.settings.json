@@ -15,8 +15,8 @@
     "value": {
       "type": "decimal",
       "required": true,
-      "min": 1,
-      "default": 1
+      "min": 0.01,
+      "default": 0.01
     },
     "from_date": {
       "type": "date",

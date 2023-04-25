@@ -9,7 +9,7 @@
 <script>
 import { mapActions, mapMutations } from "vuex";
 
-import ChoseDates from "../ChoseDates.vue";
+import ChoseDates from "~/components/Admin/common/ChoseDates.vue";
 import Count from "./Count.vue";
 import Cities from "./Cities.vue";
 
@@ -40,8 +40,8 @@ export default {
       await this.getAnaliticCustomers({ from, to });
     },
   },
-  async mounted() {
-    await this.setOrdersByTime();
+  destroy() {
+    this.clearCustomers();
   },
 };
 </script>
