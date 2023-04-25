@@ -18,6 +18,7 @@ export const state = () => ({
   next: null,
   previous: null,
   todayOrders: [],
+  countOrders: 0,
 });
 
 export const actions = {
@@ -90,10 +91,10 @@ export const actions = {
       error(e);
     }
   },
-  async getCountOrders() {
+  async getCountOrders({ commit }) {
     try {
       const { data } = await this.$axios.get(`/orders/count`);
-      return data;
+      commit("setCountOrders", data);
     } catch (e) {
       error(e);
     }
@@ -232,6 +233,9 @@ export const mutations = {
     }, []);
     state.orders = newOrders;
   },
+  setCountOrders(state, countOrders) {
+    state.countOrders = countOrders;
+  },
   setSelectedOrders(state, data) {
     const { selected, previous, next } = data;
 
@@ -282,5 +286,8 @@ export const getters = {
   },
   previous: (state) => {
     return state.previous;
+  },
+  countOrders: (state) => {
+    return state.countOrders;
   },
 };

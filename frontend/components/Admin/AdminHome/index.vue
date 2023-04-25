@@ -3,15 +3,28 @@
     <div class="d-flex col-8 flex-column w-100 text-left p-3">
       <h6>Here`s what`s heppenning with your store.</h6>
       <div class="row justify-content-between m-0 mb-3">
+        <div class="d-flex justify-content-end align-items-center w-100 mb-2">
+          <button
+            class="btn btn-primary btn-sm mr-2"
+            v-if="!auto"
+            v-on:click="getData"
+          >
+            update
+          </button>
+          auto
+          <div class="form-check d-flex align-items-center mx-2">
+            <input type="checkbox" v-model="auto" class="form-check-input" />
+          </div>
+          <select v-if="auto" v-model="time" class="col-2 form-control form-control-sm">
+            <option value="5">5 sec</option>
+            <option value="10">10 sec</option>
+            <option value="15">15 sec</option>
+          </select>
+        </div>
         <div class="block bg-white p-3 col-md-6 col-12 d-flex flex-column">
           <p class="text-uppercase m-0">total sessions</p>
           <div
-            class="
-              border-bottom
-              d-flex
-              justify-content-between
-              align-items-center
-            "
+            class="border-bottom d-flex justify-content-between align-items-center"
           >
             <h6>{{ count_visitors }}</h6>
             <a href="/#" v-on:click.prevent="openModal('visitors-apex-charts')"
@@ -64,11 +77,29 @@ export default {
     OrdersApexChartsModal,
   },
   data: () => ({
+    auto: true,
+    time: 10,
     timer: null,
-    countOrders: 0,
   }),
+  watch: {
+    auto: function () {
+      const { auto } = this;
+
+      if (auto) {
+        this.time = 10;
+        this.autoTimer();
+      } else {
+        this.clearTimer();
+      }
+    },
+    time: function () {
+      this.clearTimer();
+      this.autoTimer();
+    },
+  },
   computed: {
     ...mapGetters({
+      countOrders: "admin_orders/countOrders",
       count_visitors: "admin_visitors/count_visitors",
       count_connected_visitors: "admin_visitors/count_connected_visitors",
     }),
@@ -85,25 +116,31 @@ export default {
     openModal: function (modal) {
       this.$root.$emit("bv::show::modal", modal);
     },
-  },
-  async mounted() {
-    await this.getCountConnectedCountVisitors();
-    await this.getCountVisitors();
-    await this.getTodayOrders();
-    await this.getBestSellers();
-    this.countOrders = await this.getCountOrders();
-
-    this.timer = setInterval(async () => {
+    getData: async function () {
       await this.getCountConnectedCountVisitors();
       await this.getCountVisitors();
       await this.getTodayOrders();
       await this.getBestSellers();
-      this.countOrders = await this.getCountOrders();
-    }, 5000);
+      await this.getCountOrders();
+    },
+    autoTimer: function () {
+      const { time } = this;
+
+      this.timer = setInterval(async () => await this.getData(), +time * 1000);
+    },
+    clearTimer: function () {
+      if (this.timer) {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+    },
+  },
+  async mounted() {
+    await this.getData();
+    this.autoTimer();
   },
   destroyed() {
-    clearInterval(this.timer);
-    this.timer = null;
+    this.clearTimer();
   },
 };
 </script>
