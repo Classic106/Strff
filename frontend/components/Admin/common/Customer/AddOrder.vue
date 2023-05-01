@@ -10,7 +10,7 @@
       <div>
         <div class="block p-3 mb-3">
           <h6>Products</h6>
-          <ProductsBlock v-on:setProducts="setProducts" />
+          <ProductsBlock v-on:setProducts="setProducts" quantity />
         </div>
         <div class="block p-3 mb-3">
           <h6>Bundles</h6>

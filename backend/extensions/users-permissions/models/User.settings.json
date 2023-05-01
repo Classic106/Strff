@@ -99,6 +99,10 @@
     },
     "zip_code": {
       "type": "string"
+    },
+    "discounts": {
+      "via": "customers",
+      "collection": "discount"
     }
   }
 }

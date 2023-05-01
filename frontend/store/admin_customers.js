@@ -40,10 +40,8 @@ export const actions = {
           queryData._or = [{ orders_count: search }, { total_price: search }];
         } else {
           queryData._or = [
-            { first_name_containss: search },
-            { last_name_containss: search },
             { email_containss: search },
-            { state: search },
+            { username_containss: search },
           ];
         }
       }
@@ -55,6 +53,25 @@ export const actions = {
 
       commit("setTotal", total.data);
       commit("setCustomers", result.data);
+    } catch (e) {
+      error(e);
+    }
+  },
+  async getAnaliticCustomers({ commit }, { from, to }) {
+    try {
+      const queryData = {
+        created_at_gte: from.toISOString(),
+      };
+
+      if (to) {
+        queryData.created_at_lte = to.toISOString();
+      }
+
+      const query = qs.stringify(queryData);
+
+      const { data } = await this.$axios.get(`/users/get_customers?${query}`);
+
+      commit("setCustomers", data);
     } catch (e) {
       error(e);
     }
@@ -106,7 +123,7 @@ export const mutations = {
     state.total = total;
   },
   setParams(state, params) {
-    state.params = params;
+    state.params = { ...state.params, ...params };
   },
   addCustomer(state, customer) {
     state.customers.push(customer);

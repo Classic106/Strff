@@ -18,6 +18,7 @@ export const state = () => ({
   next: null,
   previous: null,
   todayOrders: [],
+  countOrders: 0,
 });
 
 export const actions = {
@@ -57,6 +58,25 @@ export const actions = {
       error(e);
     }
   },
+  async getAnaliticOrders({ commit }, { from, to }) {
+    try {
+      const queryData = {
+        created_at_gte: from.toISOString(),
+      };
+
+      if (to) {
+        queryData.created_at_lte = to.toISOString();
+      }
+
+      const query = qs.stringify(queryData);
+
+      const { data } = await this.$axios.get(`/orders?${query}`);
+
+      commit("setOrders", data);
+    } catch (e) {
+      error(e);
+    }
+  },
   async getOrdersByTime(_, fromDate = new Date()) {
     try {
       const queryData = {
@@ -71,10 +91,10 @@ export const actions = {
       error(e);
     }
   },
-  async getCountOrders() {
+  async getCountOrders({ commit }) {
     try {
       const { data } = await this.$axios.get(`/orders/count`);
-      return data;
+      commit("setCountOrders", data);
     } catch (e) {
       error(e);
     }
@@ -94,60 +114,16 @@ export const actions = {
       error(e);
     }
   },
-  async getCustomers(_, data) {
-    try {
-      let newData = data;
-
-      if (!newData) {
-        newData = {
-          search: "",
-          currentPage: 1,
-          perPage: 3,
-        };
-      }
-
-      const { search, currentPage, perPage } = newData;
-
-      const queryData = {
-        _start: (currentPage - 1) * currentPage,
-        _limit: perPage,
-        "role.type": "customer",
-      };
-
-      if (search) {
-        if (!isNaN(+search)) {
-          queryData._or = [{ orders_count: search }, { total_price: search }];
-        } else {
-          queryData._or = [
-            { first_name_containss: search },
-            { last_name_containss: search },
-            { email_containss: search },
-            { state: search },
-          ];
-        }
-      }
-      const query = qs.stringify(queryData);
-
-      const total = await this.$axios.get(`/users/count?${query}`);
-      const result = await this.$axios.get(`/users?${query}`);
-
-      return {
-        customers: result.data,
-        total: total.data,
-      };
-    } catch (e) {
-      error(e);
-    }
-  },
   async createOrder({ commit }, order) {
     const { order_bundles, order_items } = order;
 
-    if (order_items.length === 0 && order_bundles.length === 0) {
+    if (!order_items.length && !order_bundles.length) {
       error("Order hasn't any items");
       return;
     }
 
     try {
+      debugger;
       const { data } = await this.$axios.post(`/orders`, {
         ...order,
         order_status: 5,
@@ -213,6 +189,9 @@ export const mutations = {
     }, []);
     state.orders = newOrders;
   },
+  setCountOrders(state, countOrders) {
+    state.countOrders = countOrders;
+  },
   setSelectedOrders(state, data) {
     const { selected, previous, next } = data;
 
@@ -263,5 +242,8 @@ export const getters = {
   },
   previous: (state) => {
     return state.previous;
+  },
+  countOrders: (state) => {
+    return state.countOrders;
   },
 };

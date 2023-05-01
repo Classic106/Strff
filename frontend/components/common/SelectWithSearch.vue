@@ -142,7 +142,7 @@ input {
   left: 0;
   right: 0;
   top: calc(100% + 2px);
-  z-index: 1;
+  z-index: 4;
 }
 
 .custom-select .items div {
