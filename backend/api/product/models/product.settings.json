@@ -112,6 +112,10 @@
     "color": {
       "type": "string",
       "required": true
+    },
+    "discounts": {
+      "via": "products",
+      "collection": "discount"
     }
   }
 }

@@ -11,14 +11,19 @@
           >
             update
           </button>
-          auto
+          auto refresh
           <div class="form-check d-flex align-items-center mx-2">
             <input type="checkbox" v-model="auto" class="form-check-input" />
           </div>
-          <select v-if="auto" v-model="time" class="col-2 form-control form-control-sm">
+          <select
+            v-if="auto"
+            v-model="time"
+            class="col-2 form-control form-control-sm"
+          >
             <option value="5">5 sec</option>
             <option value="10">10 sec</option>
             <option value="15">15 sec</option>
+            <option value="30">30 sec</option>
           </select>
         </div>
         <div class="block bg-white p-3 col-md-6 col-12 d-flex flex-column">

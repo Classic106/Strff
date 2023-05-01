@@ -1,6 +1,11 @@
 import Vue from "vue";
 
 export function error(e) {
+  if (typeof e === "string") {
+    showError(e);
+    return;
+  }
+
   const { data } = e.response;
   const { message } = data;
 

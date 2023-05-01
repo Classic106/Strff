@@ -26,14 +26,35 @@
       "type": "date",
       "required": true
     },
-    "type": {
-      "type": "enumeration",
-      "enum": [
-        "percent",
-        "currency"
-      ],
+    "percent": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "products": {
+      "model": "product",
+      "via": "discounts"
+    },
+    "bundles": {
+      "model": "bundle",
+      "via": "discounts"
+    },
+    "customers": {
+      "plugin": "users-permissions",
+      "model": "user",
+      "via": "discounts"
+    },
+    "used": {
+      "type": "boolean",
+      "default": false
+    },
+    "code": {
+      "type": "string",
       "required": true,
-      "default": "percent"
+      "regex": "^[a-zA-Z0-9]{12}$",
+      "minLength": 12,
+      "maxLength": 12,
+      "unique": true
     }
   }
 }

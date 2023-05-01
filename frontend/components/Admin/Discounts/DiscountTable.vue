@@ -68,6 +68,18 @@
             }}
           </p>
         </div>
+        <div
+          v-else-if="props.column.field == 'used'"
+          class="d-flex align-items-center"
+        >
+          <p class="text-ellipsis m-0">
+            {{
+              props.formattedRow[props.column.field].length === 1
+                ? "true"
+                : "false"
+            }}
+          </p>
+        </div>
         <div v-else class="d-flex align-items-center">
           <p class="text-ellipsis m-0">
             {{ props.formattedRow[props.column.field] }}
@@ -105,8 +117,8 @@ export default {
     timer: null,
     columns: [
       {
-        label: "Id",
-        field: "id",
+        label: "Code",
+        field: "code",
       },
       {
         label: "Value",
@@ -127,6 +139,10 @@ export default {
       {
         label: "Status",
         field: "published_at",
+      },
+      {
+        label: "Used",
+        field: "used",
       },
     ],
   }),
@@ -178,6 +194,12 @@ export default {
       }, 1000);
     },
     onSortChange(params) {
+      const { field } = params[0];
+
+      if (field === "type") {
+        params[0].field = "percent";
+      }
+
       this.setParams({ ...this.params, sort: params[0] });
       this.getDiscounts();
     },

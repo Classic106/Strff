@@ -16,7 +16,11 @@
         <div>
           <div class="block p-3 mb-3">
             <label class="d-flex" for="products"> Products </label>
-            <ProductsBlock v-on:setProducts="setProducts" id="products" />
+            <ProductsBlock
+              v-on:setProducts="setProducts"
+              id="products"
+              quantity
+            />
           </div>
         </div>
         <div>
@@ -39,7 +43,7 @@
               >Add customer</a
             >
           </div>
-          <CustomersBlock v-on:setCustomer="setCustomer" />
+          <CustomersBlock v-on:setCustomer="setCustomer" one />
         </div>
         <div class="block p-3 mb-3">
           <label class="d-flex" for="payment"> Payment </label>
@@ -70,7 +74,7 @@ import { warn } from "~/utils/warn";
 
 import BundlesBlock from "~/components/Admin/common/BundlesBlock.vue";
 import ProductsBlock from "~/components/Admin/common/ProductsBlock.vue";
-import CustomersBlock from "./CustomersBlock.vue";
+import CustomersBlock from "~/components/Admin/common/CustomersBlock.vue";
 
 export default {
   name: "CreateOrder",
@@ -88,7 +92,9 @@ export default {
     },
   }),
   methods: {
-    ...mapActions({ createOrder: "admin_orders/createOrder" }),
+    ...mapActions({
+      createOrder: "admin_orders/createOrder",
+    }),
     setProducts: function (data) {
       this.order.order_items = data;
       this.order.total = this.calcTotal();
@@ -133,7 +139,7 @@ export default {
     submit: async function () {
       const { order_items, order_bundles, user, total } = this.order;
 
-      if (!order_items.length && order_bundles.length) {
+      if (!order_items.length && !order_bundles.length) {
         warn("Chooose product or bundle");
         return;
       }

@@ -14,16 +14,22 @@
         <BundleCard :bundle="bundles.item" class="w-100 m-0 p-0" />
       </template>
     </SelectWithSearch>
+    <div
+      v-if="search.length && !selectedBundles.length"
+      class="text-uppercase text-center p-3 w-100"
+    >
+      nothing not found
+    </div>
     <div class="w-100" v-if="selectedBundles.length">
       <ul class="d-flex flex-column p-0 w-100 m-0">
         <li
           v-for="(item, index) in selectedBundles"
           :key="item.bundle.id"
-          class="row w-100 mb-2 mx-auto justify-content-center"
+          class="row w-100 mb-2 m-0 justify-content-center"
         >
           <BundleCard :bundle="item.bundle" class="col-11 m-0 p-0" />
           <div
-            class="col-1 d-flex justify-content-center align-items-start p-0"
+            class="col-1 d-flex justify-content-end align-items-start p-0"
             v-on:click="deleteProduct(index)"
           >
             <BIconX />
@@ -68,10 +74,7 @@ export default {
       if (search) {
         clearInterval(this.timer);
         this.timer = null;
-
-        this.timer = setTimeout(async () => {
-          await this.getBnds();
-        }, 1000);
+        this.timer = setTimeout(async () => await this.getBnds(), 1000);
       } else {
         clearInterval(this.timer);
         this.timer = null;

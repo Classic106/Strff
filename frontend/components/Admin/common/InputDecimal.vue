@@ -3,8 +3,8 @@
     v-model="currentDecimal"
     v-bind="decimal"
     :class="currentDecimal ? 'is-valid' : 'is-invalid'"
-    pattern="^[+-]?[1-9]{1,3}(?:,?[0-9]{3})*\.[0-9]{2}$|0\.[0-9][1-9]$"
-    maxlength="12"
+    pattern="^[1-9]{1,3}(?:,?[0-9]{3})*\.[0-9]{2}$|0\.[0-9][1-9]$"
+    :maxlength="maxlength || 12"
   ></money>
 </template>
 
@@ -13,6 +13,7 @@ export default {
   name: "InputDecimal",
   props: {
     value: Number,
+    maxlength: Number,
   },
   data: () => ({
     currentDecimal: 0,
