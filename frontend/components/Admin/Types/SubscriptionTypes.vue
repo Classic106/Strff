@@ -8,18 +8,22 @@
         v-for="(type, index) in currentTypes"
         :key="type.name"
       >
-        <span v-if="activeTag !== index" @click="activeTag = index">{{
-          type.title
-        }}</span>
+        <span
+          v-if="activeTag !== index"
+          @click="activeTag = index"
+          class="p-1"
+          >{{ type.title }}</span
+        >
         <input
           v-else
           v-model.lazy="currentTypes[index].title"
           v-focus
+          class="mx-2"
           :style="{ width: type.title.length + 'ch' }"
           @blur="update(type)"
           @keyup.enter="update(type)"
         />
-        <span @click="remove(type)"><BIconX /></span>
+        <span @click="remove(type)" class="p-1"><BIconX /></span>
       </div>
       <input
         v-model="tagValue"
@@ -28,18 +32,27 @@
         placeholder="Add type..."
       />
     </div>
+    <ConfirmModal
+      :id="'confirm-delete-ST'"
+      v-on:confirm="confirm"
+      v-on:cancel="cancel"
+    />
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 
+import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
+
 export default {
   name: "SubscriptionTypes",
+  components: { ConfirmModal },
   data: () => ({
     tagValue: "",
     activeTag: null,
     currentTypes: [],
+    deleteItemId: null,
   }),
   computed: {
     ...mapGetters({
@@ -81,9 +94,17 @@ export default {
       await this.updateSubscriptionType({ id, body });
       this.activeTag = null;
     },
-    remove: async function (type) {
+    confirm: async function () {
+      await this.deleteSubscriptionType(this.deleteItemId);
+      this.deleteItemId = null;
+    },
+    cancel: function () {
+      this.deleteItemId = null;
+    },
+    remove(type) {
       const { id } = type;
-      await this.deleteSubscriptionType(id);
+      this.deleteItemId = id;
+      this.$root.$emit("bv::show::modal", "confirm-delete-ST");
     },
   },
   directives: {

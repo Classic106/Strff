@@ -14,12 +14,6 @@
         <BundleCard :bundle="bundles.item" class="w-100 m-0 p-0" />
       </template>
     </SelectWithSearch>
-    <div
-      v-if="search.length && !selectedBundles.length"
-      class="text-uppercase text-center p-3 w-100"
-    >
-      nothing not found
-    </div>
     <div class="w-100" v-if="selectedBundles.length">
       <ul class="d-flex flex-column p-0 w-100 m-0">
         <li
