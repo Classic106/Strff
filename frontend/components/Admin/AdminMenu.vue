@@ -100,6 +100,15 @@
           ><BIconFileBarGraph class="mr-2" />Analitic</span
         >
       </li>
+      <li
+        v-on:click="setPage('emails')"
+        class="menu-item cursor-pointer d-flex align-items-center"
+        :class="currentPage === '/emails' && 'active'"
+      >
+        <span class="d-flex align-items-center w-100 p-1"
+          ><BIconEnvelope class="mr-2" />Emails</span
+        >
+      </li>
     </ul>
   </div>
 </template>

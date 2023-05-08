@@ -117,6 +117,7 @@ export default {
       "BIconCart",
       "BIconFileBarGraph",
       "BIconPercent",
+      "BIconEnvelope",
       "BAvatar",
       "BProgress",
       "BProgressBar",
