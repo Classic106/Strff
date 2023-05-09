@@ -19,10 +19,11 @@ example@example.com
 example1@example.com"
       required
     />
-    <div class="row justify-content-end w-100 m-0 p-0">
+    <div class="row justify-content-end align-items-center w-100 m-0 p-0 mt-3">
+      <Loader v-if="loading" class="mr-2" small />
       <button
         type="submit"
-        class="btn btn-success mt-3"
+        class="btn btn-success"
         :disabled="text && !isValid"
       >
         Submit
@@ -34,11 +35,15 @@ example1@example.com"
 <script>
 import { mapActions } from "vuex";
 
+import Loader from "~/components/common/Loader";
+
 export default {
   name: "Textarea",
+  components: { Loader },
   data: () => ({
     isValid: true,
     text: "",
+    loading: false,
   }),
   watch: {
     text: function () {
@@ -46,7 +51,7 @@ export default {
 
       const split = text.split("\n");
       const match = text.match(
-        /^([a-z0-9._%+-]{0,100}@[a-z0-9.-]{0,300}\.[a-z]{3,4})[\t\n]*$/gm
+        /^([a-z0-9._%+-]{0,300}@[a-z0-9.-]{0,50}\.[a-z]{3,4})[\t\n]*$/gm
       );
 
       const splitResult = split && split.length;
@@ -59,9 +64,10 @@ export default {
     ...mapActions({
       setEmails: "admin_emails/setEmails",
     }),
-    submit: function () {
-      this.setEmails(this.text);
-      this.text = "";
+    submit: async function () {
+      this.loading = true;
+      await this.setEmails(this.text);
+      this.loading = false;
     },
   },
 };

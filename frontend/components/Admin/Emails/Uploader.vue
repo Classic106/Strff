@@ -15,12 +15,9 @@
       class="form-control w-100"
       required
     />
-    <div class="row justify-content-end w-100 m-0 p-0">
-      <button
-        type="submit"
-        class="btn btn-success mt-3"
-        :disabled="!files.length"
-      >
+    <div class="row justify-content-end align-items-center w-100 m-0 p-0 mt-3">
+      <Loader v-if="loading" class="mr-2" small />
+      <button type="submit" class="btn btn-success" :disabled="!files.length">
         Submit
       </button>
     </div>
@@ -30,10 +27,14 @@
 <script>
 import { mapActions } from "vuex";
 
+import Loader from "~/components/common/Loader";
+
 export default {
   name: "Uploader",
+  components: { Loader },
   data: () => ({
     files: [],
+    loading: false,
   }),
   methods: {
     ...mapActions({
@@ -42,9 +43,11 @@ export default {
     onFileChange: function (e) {
       this.files = e.target.files || e.dataTransfer.files;
     },
-    submit: function () {
-      this.setEmails(this.files);
+    submit: async function () {
+      this.loading = true;
+      await this.setEmails(this.files);
       this.files = [];
+      this.loading = false;
     },
   },
 };

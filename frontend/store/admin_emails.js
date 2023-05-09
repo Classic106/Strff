@@ -4,6 +4,14 @@ import { success } from "~/utils/success";
 export const state = () => ({});
 
 export const actions = {
+  async checkEmail(_, { email, save }) {
+    try {
+      const { data } = await this.$axios.post("/emails/check", { email, save });
+      return data;
+    } catch (e) {
+      error(e);
+    }
+  },
   async setEmails(_, emails) {
     try {
       const isString = typeof emails === "string";
@@ -23,7 +31,14 @@ export const actions = {
 
       success("Emails successfully uploaded");
     } catch (e) {
-      console.log(e);
+      error(e);
+    }
+  },
+  async deleteEmail(_, email) {
+    try {
+      const { data } = await this.$axios.delete(`/emails/${email}`);
+      return data;
+    } catch (e) {
       error(e);
     }
   },

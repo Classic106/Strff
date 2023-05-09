@@ -41,6 +41,14 @@
       }
     },
     {
+      "method": "POST",
+      "path": "/emails/check",
+      "handler": "email.check",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "PUT",
       "path": "/emails/:id",
       "handler": "email.update",

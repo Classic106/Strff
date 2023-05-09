@@ -8,6 +8,29 @@ const fs = require("fs");
 const checkEmail = require("../../../utils/checkEmail");
 
 module.exports = {
+  async check(ctx) {
+    const { body } = ctx.request;
+    const { email, save } = body;
+
+    const result = await strapi.services.email.findOne({ email });
+
+    if (result) {
+      const { valid } = result;
+      return valid;
+    }
+
+    try {
+      const valid = await checkEmail(email);
+
+      if (!valid && save) {
+        await strapi.services.email.create({ email });
+      }
+      return valid;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  },
   async upload(ctx) {
     const { body, files } = ctx.request;
 
@@ -36,6 +59,15 @@ module.exports = {
       } catch (e) {
         console.log(e);
       }
+    }
+  },
+  async delete(ctx) {
+    const { id } = ctx.params;
+
+    if (isNaN(+id)) {
+      return await strapi.services.email.delete({ email: id });
+    } else {
+      return await strapi.services.email.delete({ id });
     }
   },
 };
