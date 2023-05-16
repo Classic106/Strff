@@ -5,6 +5,8 @@
  * to customize this controller
  */
 const fs = require("fs");
+
+const { Vpn } = require("../../../utils/vpn");
 const checkEmail = require("../../../utils/checkEmail");
 
 module.exports = {
@@ -34,7 +36,7 @@ module.exports = {
   async upload(ctx) {
     const { body, files } = ctx.request;
 
-    if (body) {
+    if (typeof body === "string") {
       const emails = body.split("\n");
 
       for (const i in emails) {
@@ -46,11 +48,22 @@ module.exports = {
       const { path } = files.files;
       const array = fs.readFileSync(path).toString().split("\n");
 
+      const vpn = new Vpn();
+      vpn.connect();
+
       for (const i in array) {
+        const { status } = vpn;
+
+        if (status !== "connected") {
+          await vpn.nextConnect();
+        }
+
         await addToBase(array[i]);
       }
+
+      vpn.disconnect();
     }
-    return;
+    return [];
 
     async function addToBase(email) {
       try {
