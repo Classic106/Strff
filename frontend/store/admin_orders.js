@@ -123,7 +123,6 @@ export const actions = {
     }
 
     try {
-      debugger;
       const { data } = await this.$axios.post(`/orders`, {
         ...order,
         order_status: 5,

@@ -40,38 +40,36 @@ module.exports = {
       const emails = body.split("\n");
 
       for (const i in emails) {
-        await addToBase(emails[i]);
+        // const valid = await checkEmail(email);
+        // await strapi.services.email.create({ email, valid });
       }
     }
 
-    if (files) {
-      const { path } = files.files;
-      const array = fs.readFileSync(path).toString().split("\n");
+    try {
+      if (files) {
+        const { path } = files.files;
+        const array = fs.readFileSync(path).toString().split("\n");
+        const connected = await Vpn.connect();
 
-      const vpn = new Vpn();
-      vpn.connect();
+        if (connected) {
+          for (const i in array) {
+            try {
+              // const valid = await checkEmail(email);
+              // await strapi.services.email.create({ email, valid });
+            } catch (e) {
+              if (Vpn.connected) {
+                Vpn.nextConnect();
+              }
+            }
+          }
 
-      for (const i in array) {
-        const { status } = vpn;
-
-        if (status !== "connected") {
-          await vpn.nextConnect();
+          Vpn.disconnect();
         }
-
-        await addToBase(array[i]);
       }
-
-      vpn.disconnect();
-    }
-    return [];
-
-    async function addToBase(email) {
-      try {
-        const valid = await checkEmail(email);
-        return await strapi.services.email.create({ email, valid });
-      } catch (e) {
-        console.log(e);
-      }
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
     }
   },
   async delete(ctx) {

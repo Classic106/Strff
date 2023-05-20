@@ -41,7 +41,7 @@
       :class="!wrongEmail() || !email ? 'mt-2' : ''"
     >
       <Loader v-if="loading" class="mr-2" small />
-      <button type="submit" class="btn btn-success" :disabled="!!wrongEmail()">
+      <button type="submit" class="btn btn-success" :disabled="!email">
         Check
       </button>
     </div>

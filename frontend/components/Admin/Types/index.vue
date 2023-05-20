@@ -232,7 +232,6 @@ export default {
       this.currentST = items;
     },
     confirm: function () {
-      debugger;
       this.deletePurchaseType(this.deletePT_Id);
       this.this.deletePT_Id = null;
     },

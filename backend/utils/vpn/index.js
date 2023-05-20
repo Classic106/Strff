@@ -1,79 +1,82 @@
 const fs = require("fs");
-const path = require("path");
-
-const VPNFetch = import("@jolduca/vpn-fetch");
+const { VPNFetch } = require("./vpn-fetch");
 
 class Vpn {
-  configFiles = [];
+  configs = [];
+  connected = false;
   vpnFetch = null;
-  files_count = 0;
-  status = "stop";
-
-  get status() {
-    return this.status;
-  }
 
   constructor() {
-    this.resetConnections();
+    this.refresh();
   }
 
   async connect() {
-    try {
-      if (!this.files_count) {
-        this.status = "all connections were used";
-        return false;
-      }
+    if (this.configs.length > 0) {
+      try {
+        const config = this.configs.shift();
+        this.vpnFetch = new VPNFetch(
+          `${__dirname}/configs/${config}`,
+          `${__dirname}/auth`
+        );
 
-      const connectionFile = this.configFiles[0];
-      this.vpnFetch = new VPNFetch(`./configs/${connectionFile}`, `/.auth`);
-      await this.vpnFetch.connect();
-
-      this.status = "connected";
-      this.configFiles.shift();
-      this.files_count = this.configFiles.length;
-    } catch (err) {
-      this.configFiles.shift();
-      this.files_count = this.configFiles.length;
-
-      if (this.files_count > 0) {
-        await this.connect();
-      } else {
-        this.status = "stop";
+        await this.vpnFetch.connect();
+        const { body } = await this.vpnFetch.get("https://ifconfig.me/ip");
+        this.loging(`connected ${body}`);
+        this.connected = true;
+        return true;
+      } catch (e) {
+        this.loging(e);
+        this.connected = false;
+        await this.nextConnect();
       }
     }
+
+    this.connected = false;
+    return false;
   }
 
-  resetConnections() {
+  disconnect() {
     try {
-      const dirPath = path.resolve(__dirname, "./configs");
-      this.configFiles = fs.readdirSync(dirPath, (err, files) => files);
-      this.files_count = this.configFiles.length;
+      if (this.vpnFetch) {
+        this.vpnFetch.disconnect();
+      }
     } catch (e) {
-      this.status = "stop";
+      this.loging(e);
+    } finally {
+      this.loging("stop");
+      this.connected = false;
+      return true;
     }
   }
 
   async nextConnect() {
-    if (this.files_count === 0) {
-      this.resetConnections();
-      await this.connect();
+    try {
+      if (this.vpnFetch) {
+        this.vpnFetch.disconnect();
+        await this.connect();
+      }
+    } catch (e) {
+      this.loging(e);
+      this.connected = false;
     }
-
-    this.disconnect();
-    await this.connect();
   }
 
-  disconnect() {
+  refresh() {
     if (this.vpnFetch) {
-      try {
-        this.vpnFetch.disconnect();
-      } catch (err) {
-      } finally {
-        this.status = "stop";
-        this.Vpn = null;
-      }
+      this.vpnFetch.disconnect();
     }
+
+    this.connected = false;
+    this.configs = fs.readdirSync(`${__dirname}/configs`);
+  }
+
+  loging(text) {
+    const date = new Date().toString();
+    fs.appendFileSync(`${__dirname}/log.txt`, `${date} ${text} \n`, (err) => {
+      if (err) throw err;
+      console.log("The data was appended to file!");
+    });
   }
 }
 
-exports.Vpn = Vpn;
+module.exports.Vpn = new Vpn();

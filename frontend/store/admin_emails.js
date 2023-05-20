@@ -27,9 +27,15 @@ export const actions = {
         data = emails;
       }
 
-      await this.$axios.post("/emails/upload", data);
+      const result = await this.$axios.post("/emails/upload", data);
 
-      success("Emails successfully uploaded");
+      if (result.data) {
+        success("Emails successfully uploaded");
+      } else {
+        error("Try again");
+      }
+
+      return result.data;
     } catch (e) {
       error(e);
     }

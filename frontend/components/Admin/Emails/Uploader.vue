@@ -2,13 +2,14 @@
   <form class="col" v-on:submit.prevent.stop="submit">
     <div class="row m-0 p-0 justify-content-between mb-2">
       <label class="d-flex font-weight-bold" for="emails-file">File</label>
-      <button class="btn btn-warning btn-sm" v-on:click="files = []">
+      <button type="button" class="btn btn-warning btn-sm" v-on:click="clear()">
         Clear
       </button>
     </div>
     <input
       type="file"
       id="emails-file"
+      ref="fileupload"
       v-on:change="onFileChange"
       name="emails-file"
       accept=".csv, text/plain"
@@ -40,13 +41,20 @@ export default {
     ...mapActions({
       setEmails: "admin_emails/setEmails",
     }),
+    clear: function () {
+      this.$refs.fileupload.value = null;
+      this.files = [];
+    },
     onFileChange: function (e) {
       this.files = e.target.files || e.dataTransfer.files;
     },
     submit: async function () {
       this.loading = true;
-      await this.setEmails(this.files);
-      this.files = [];
+      const result = await this.setEmails(this.files);
+
+      if (result) {
+        this.clear();
+      }
       this.loading = false;
     },
   },
