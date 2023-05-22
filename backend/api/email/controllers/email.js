@@ -33,6 +33,7 @@ module.exports = {
       return false;
     }
   },
+
   async upload(ctx) {
     const { body, files } = ctx.request;
 
@@ -72,6 +73,7 @@ module.exports = {
       return false;
     }
   },
+
   async delete(ctx) {
     const { id } = ctx.params;
 

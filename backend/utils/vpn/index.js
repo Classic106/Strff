@@ -4,6 +4,7 @@ const { VPNFetch } = require("./vpn-fetch");
 class Vpn {
   configs = [];
   connected = false;
+  all_used = false;
   vpnFetch = null;
 
   constructor() {
@@ -11,21 +12,20 @@ class Vpn {
   }
 
   async connect() {
+    if (!this.configs.length) {
+      this.all_used = true;
+      return;
+    }
+
     if (this.configs.length > 0) {
       try {
         const config = this.configs.shift();
-        this.vpnFetch = new VPNFetch(
-          `${__dirname}/configs/${config}`,
-          `${__dirname}/auth`
-        );
+        this.vpnFetch = new VPNFetch(`${__dirname}/configs/${config}`);
 
         await this.vpnFetch.connect();
-        const { body } = await this.vpnFetch.get("https://ifconfig.me/ip");
-        this.loging(`connected ${body}`);
         this.connected = true;
         return true;
       } catch (e) {
-        this.loging(e);
         this.connected = false;
         await this.nextConnect();
       }
@@ -43,7 +43,6 @@ class Vpn {
     } catch (e) {
       this.loging(e);
     } finally {
-      this.loging("stop");
       this.connected = false;
       return true;
     }
@@ -56,7 +55,6 @@ class Vpn {
         await this.connect();
       }
     } catch (e) {
-      this.loging(e);
       this.connected = false;
     }
   }
@@ -66,16 +64,9 @@ class Vpn {
       this.vpnFetch.disconnect();
     }
 
+    this.all_used = false;
     this.connected = false;
     this.configs = fs.readdirSync(`${__dirname}/configs`);
-  }
-
-  loging(text) {
-    const date = new Date().toString();
-    fs.appendFileSync(`${__dirname}/log.txt`, `${date} ${text} \n`, (err) => {
-      if (err) throw err;
-      console.log("The data was appended to file!");
-    });
   }
 }
 

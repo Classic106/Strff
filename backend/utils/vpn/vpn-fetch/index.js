@@ -1,20 +1,23 @@
 const path = require("path");
+const fs = require("fs");
 const { spawn, exec } = require("child_process");
 const got = Promise.all([import("got")]).then(([module]) => module.default);
 
 module.exports.VPNFetch = class VPNFetch {
   configFile;
   loginFile;
-  verbose;
+  loging;
   tableId;
   interface;
   ovpnProcess;
   pkillFind;
+  develop;
 
-  constructor(configFile, loginFile, verbose = false) {
+  constructor(configFile, loginFile, loging = false) {
     this.configFile = configFile;
     this.loginFile = loginFile;
-    this.verbose = verbose;
+    this.loging = loging;
+    this.develop = strapi.app.env === "development";
   }
 
   async getNewTableId() {
@@ -26,87 +29,86 @@ module.exports.VPNFetch = class VPNFetch {
       sort | \\
       uniq | \\
       grep -e "[0-9]"`;
+
       exec(command, (err, stdout) => {
         if (err) {
-          if (this.verbose) {
-            console.log("err", err);
-          }
+          this.log(`err ${err}`);
           resolve("10");
         }
-        if (this.verbose) {
-          console.log("stdout", stdout);
-        }
+
+        this.log(`stdout: ${stdout}`);
+
         const existingIds = stdout
           .toString()
           .trim()
           .split("\n")
           .sort((a, b) => Number(a) - Number(b));
         const nextId = Number(existingIds[existingIds.length - 1]) + 10;
+
         resolve(nextId.toString());
       });
     });
   }
 
   async connect() {
+    fs.access(`${__dirname}/.auth`, fs.F_OK, (err) => {
+      if (err) {
+        this.log(err);
+        return;
+      }
+    });
+
     return new Promise(async (resolve, reject) => {
       this.tableId = await this.getNewTableId();
-      const startCommand = [
-        "openvpn",
-        "--script-security",
-        "2",
-        "--route-noexec",
-        `--route-up`,
-        `'${__dirname}/route_up.sh`,
-        `${this.tableId}'`,
-        `--config`,
-        `${this.configFile}`,
-        `--auth-user-pass`,
-        `${this.loginFile}`,
-      ];
+      const ovpnClient = spawn(
+        "sudo",
+        [
+          "openvpn",
+          "--route-noexec",
+          `--route-up`,
+          `'${__dirname}/route_up.sh`,
+          `${this.tableId}'`,
+          `--config`,
+          `${this.configFile}`,
+          `--auth-user-pass`,
+          `${__dirname}/.auth`,
+        ],
+        { env: { TABLE_ID: this.tableId.toString() }, shell: true }
+      );
 
-      this.pkillFind = startCommand.join(" ").replace(/\'/g, "");
-      const ovpnClient = spawn("sudo", startCommand, {
-        env: { TABLE_ID: this.tableId.toString() },
-        shell: true,
-      });
       ovpnClient.stdout.on("data", (chunk) => {
         chunk
           .toString()
           .split("\n")
           .forEach((line) => {
-            const data = line.toString().trim();
-            if (this.verbose) {
-              console.log(data);
-            }
+            const data = line.trim();
             if (data.toString().includes("[[network interface]]")) {
               this.interface = data.toString().split(":")[1]?.trim();
-              if (this.verbose) {
-                console.log("Echo from route_up.sh:", data.toString());
-              }
-              console.log(
-                `Sucessfully created VPN interface on ${this.interface}`
+              this.log(
+                `Sucessfully created VPN interface on ${this.interface}\n`
               );
+              this.log(`data.toString(): ${data.toString()}\n`);
             }
+
             if (data.toString().includes("AUTH_FAILED")) {
-              reject(new Error(`Auth failed for ${this.configFile}`));
+              this.log(`Auth failed for ${this.configFile}\n`);
+              reject(new Error(str));
             }
+
             if (data.toString().includes("Initialization Sequence Completed")) {
-              if (this.verbose) {
-                console.log("Openvpn completed:", data.toString().trim());
-              }
-              this.ovpnProcess = ovpnClient;
+              this.log(`Initialization Sequence Completed \n`);
               resolve(this);
             }
           });
       });
       ovpnClient.stderr.on("data", (data) => {
-        reject(new Error(`stderr: ${data}`));
+        this.log(`stderr ${data} \n`, "err");
       });
       ovpnClient.on("error", (err) => {
-        reject(new Error("Error spawning ovpn:", err));
+        this.log(`Error spawning ovpn ${err} \n`, "err");
       });
       ovpnClient.on("close", (code) => {
-        console.log("openvpn exited with code", code);
+        this.log(`openvpn exited with code ${code}\n`);
       });
     });
   }
@@ -117,6 +119,8 @@ module.exports.VPNFetch = class VPNFetch {
     exec(command);
     this.ovpnProcess?.kill();
     this.pkillFind = undefined;
+    this.log("disonnect");
+
     return true;
   }
 
@@ -130,5 +134,23 @@ module.exports.VPNFetch = class VPNFetch {
     }
     const g_o_t = await got;
     return await g_o_t.get(url, opts);
+  }
+
+  log(text, error) {
+    const date = new Date().toString();
+
+    if (!this.develop && this.loging) {
+      fs.appendFileSync(`${__dirname}/log.txt`, `${date} ${text} \n`, (err) => {
+        if (err) throw err;
+      });
+      return;
+    }
+
+    if (error) {
+      console.error(`${text}\n`);
+      return;
+    }
+
+    console.log(`${text}\n`);
   }
 };
