@@ -21,12 +21,24 @@ class Vpn {
       try {
         const config = this.configs.shift();
         this.vpnFetch = new VPNFetch(`${__dirname}/configs/${config}`);
-
         await this.vpnFetch.connect();
         this.connected = true;
         return true;
       } catch (e) {
+        const { message } = e;
         this.connected = false;
+        const mess = message.toLowerCase();
+
+        if (
+          mess.includes("is not") ||
+          mess.includes("no") ||
+          mess.includes("failed") ||
+          mess.includes("error") ||
+          mess.includes("err") ||
+          mess.includes("exited")
+        ) {
+          throw new Error(message);
+        }
         await this.nextConnect();
       }
     }
@@ -41,7 +53,7 @@ class Vpn {
         this.vpnFetch.disconnect();
       }
     } catch (e) {
-      this.loging(e);
+      throw e;
     } finally {
       this.connected = false;
       return true;

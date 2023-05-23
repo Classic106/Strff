@@ -51,7 +51,7 @@ export default {
 
       const split = text.split("\n");
       const match = text.match(
-        /^([a-z0-9._%+-]{0,300}@[a-z0-9.-]{0,50}\.[a-z]{3,4})[\t\n]*$/gm
+        /(^[a-z0-9._%+-]{0,300}@[a-z0-9.-]{0,50}.[a-z]{3,4}$|^([a-z0-9._%+-]{0,300}@[a-z0-9.-]{0,50}.[a-z]{3,4})\s(true|false)$)[\t\n]*/gm
       );
 
       const splitResult = split && split.length;

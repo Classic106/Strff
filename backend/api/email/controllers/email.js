@@ -37,40 +37,63 @@ module.exports = {
   async upload(ctx) {
     const { body, files } = ctx.request;
 
-    if (typeof body === "string") {
-      const emails = body.split("\n");
-
-      for (const i in emails) {
-        // const valid = await checkEmail(email);
-        // await strapi.services.email.create({ email, valid });
-      }
-    }
-
     try {
+      await Vpn.connect();
+
+      if (typeof body === "string") {
+        saveEmails(body);
+      }
+
       if (files) {
         const { path } = files.files;
-        const array = fs.readFileSync(path).toString().split("\n");
-        const connected = await Vpn.connect();
-
-        if (connected) {
-          for (const i in array) {
-            try {
-              // const valid = await checkEmail(email);
-              // await strapi.services.email.create({ email, valid });
-            } catch (e) {
-              if (Vpn.connected) {
-                Vpn.nextConnect();
-              }
-            }
-          }
-
-          Vpn.disconnect();
-        }
+        const emails = fs.readFileSync(path).toString();
+        saveEmails(emails);
       }
+
+       Vpn.disconnect();
       return true;
     } catch (e) {
       console.log(e);
       return false;
+    }
+
+    function saveEmails(emails) {
+      const data = splitData(emails);
+
+      for (const i in data) {
+        const [email, status] = data[i];
+
+        if (status !== undefined || status !== null) {
+          try {
+            // const valid = await checkEmail(email);
+            // await strapi.services.email.create({ email, valid });
+          } catch (e) {
+            //   if (Vpn.connected) {
+            //     Vpn.nextConnect();
+            //   }
+          }
+        } else {
+          //const valid = status === "true";
+          // await strapi.services.email.create({ email, valid });
+        }
+      }
+    }
+
+    function splitData(data) {
+      const result = data
+        .split("\n")
+        .map((item) => {
+          const result = item.match(
+            /(^[a-z0-9._%+-]{0,300}@[a-z0-9.-]{0,50}.[a-z]{3,4}$|^([a-z0-9._%+-]{0,300}@[a-z0-9.-]{0,50}.[a-z]{3,4})\s(true|false)$)[\t\n]*/gm
+          );
+
+          if (result) {
+            return item.split(" ");
+          }
+        })
+        .filter((item) => !!item);
+
+      return result;
     }
   },
 
