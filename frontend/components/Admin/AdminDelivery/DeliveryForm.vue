@@ -3,9 +3,9 @@
     id="delivery_form"
     ref="form"
     v-on:submit.prevent="submit"
-    class="was-validated d-flex flex-column"
+    class="d-flex flex-column"
   >
-    <div class="mb-2">
+    <div class="was-validated mb-2">
       <label class="d-flex" for="title"> Title </label>
       <input
         id="title"

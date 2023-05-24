@@ -5,7 +5,7 @@
       <div v-if="!currentBoxes.length" id="boxes">
         <p class="text-center">There aren't any boxes</p>
       </div>
-      <select v-model="selectedBox" class="bts_input_style" id="boxes" v-else>
+      <select v-model="selectedBox" class="form-control" id="boxes" v-else>
         <option :value="null">Choose a box</option>
         <option :value="box.id" v-for="box in currentBoxes" :key="box.id">
           <p class="col-11 m-0 p-0">
@@ -14,7 +14,10 @@
           </p>
         </option>
       </select>
-      <div class="invalid-feedback mt-2" :class="!selectedBoxes.length && 'd-flex'">
+      <div
+        class="invalid-feedback mt-2"
+        :class="!selectedBoxes.length && 'd-flex'"
+      >
         Boxes aren't chosed
       </div>
       <vueCustomScrollbar

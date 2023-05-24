@@ -15,7 +15,10 @@
   },
   "dependencies": {
     "cross-env": "^7.0.3",
+    "deep-email-validator": "^0.1.21",
+    "email-check": "^1.1.0",
     "knex": "0.21.18",
+    "module-alias": "^2.2.2",
     "socket.io": "^4.5.4",
     "sqlite3": "5.0.0",
     "strapi": "3.6.8",
@@ -28,6 +31,10 @@
     "strapi-plugin-upload": "3.6.8",
     "strapi-plugin-users-permissions": "3.6.8",
     "strapi-utils": "3.6.8"
+  },
+  "_moduleAliases": {
+    "@": ".",
+    "~": "."
   },
   "author": {
     "name": "A Strapi developer"
@@ -43,4 +50,3 @@
   },
   "license": "MIT"
 }
-

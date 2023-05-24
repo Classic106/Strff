@@ -11,10 +11,10 @@
         <form
           id="add-product-form"
           v-on:submit.stop.prevent="submit"
-          class="was-validated mb-3"
+          class="mb-3"
           ref="form"
         >
-          <div class="mb-2">
+          <div class="was-validated mb-2">
             <label class="d-flex" for="title"> Title </label>
             <input
               id="title"
@@ -33,7 +33,7 @@
               </div>
             </div>
           </div>
-          <div class="mb-2">
+          <div class="mb-2" :class="form.description && 'was-validated'">
             <label class="d-flex" for="description"> Description </label>
             <input
               id="description"
@@ -42,10 +42,9 @@
               v-model.trim="form.description"
               pattern="^[a-zA-Z\s.,-:]{10,100}$"
               autofocus="true"
-              class="w-100"
+              class="form-control w-100"
               min="10"
               max="100"
-              :class="form.description ? 'form-control' : 'bts_input_style'"
             />
             <div v-if="form.description" class="invalid-feedback">
               <div class="d-flex align-items-center">
@@ -102,7 +101,7 @@
               <select
                 v-model="form.dimension"
                 required
-                class="bts_input_style w-100"
+                class="form-control w-100"
               >
                 <option value="cm">cm</option>
                 <option value="inch">inch</option>
@@ -184,7 +183,7 @@
                 id="weight_dimension"
                 v-model="form.weight_dimension"
                 required
-                class="bts_input_style w-100"
+                class="form-control w-100"
               >
                 <option value="kilo">kilo</option>
                 <option value="lbs">lbs</option>

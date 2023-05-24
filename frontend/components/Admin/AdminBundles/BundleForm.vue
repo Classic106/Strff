@@ -1,11 +1,6 @@
 <template>
-  <form
-    id="add-bundle-form"
-    v-on:submit.stop.prevent="submit"
-    class="was-validated"
-    ref="form"
-  >
-    <div class="mb-2">
+  <form id="add-bundle-form" v-on:submit.stop.prevent="submit" ref="form">
+    <div class="was-validated mb-2">
       <label class="d-flex" for="title"> Title </label>
       <input
         id="title"
@@ -33,8 +28,7 @@
         v-model.trim="currentBundle.description"
         autofocus="true"
         pattern="^[a-zA-Z\s.,-:]{10,100}$"
-        class="w-100"
-        :class="currentBundle.description ? 'form-control' : 'bts_input_style '"
+        class="form-control w-100"
       />
       <div class="invalid-feedback">
         <div class="d-flex align-items-center">

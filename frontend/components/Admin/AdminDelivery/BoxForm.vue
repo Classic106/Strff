@@ -3,12 +3,12 @@
     id="box_form"
     ref="form"
     v-on:submit.prevent="submit"
-    class="was-validated d-flex flex-column"
+    class="d-flex flex-column"
   >
     <div class="row mb-2">
       <div class="col-6">
         <label class="d-flex" for="title"> Dimension </label>
-        <select v-model="form.dimension" required class="bts_input_style w-100">
+        <select v-model="form.dimension" required class="form-control w-100">
           <option value="cm">cm</option>
           <option value="inch">inch</option>
         </select>
@@ -87,7 +87,7 @@
           id="weight_dimension"
           v-model="form.weight_dimension"
           required
-          class="bts_input_style w-100"
+          class="form-control w-100"
         >
           <option value="kilo">kilo</option>
           <option value="lbs">lbs</option>

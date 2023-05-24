@@ -41,17 +41,18 @@ export default {
     try {
       const finger_print = this.fingerprint();
 
-      function getCity(position) {
+      const getCity = (position) => {
         const city = search_US_City(position);
         if (city) {
           this.socket = this.$nuxtSocket({ channel: "/" });
           this.socket.emit("addVisitor", { finger_print, ...city });
         }
-      }
-      function error(e) {
+      };
+
+      const error = (e) => {
         this.socket = this.$nuxtSocket({ channel: "/" });
         this.socket.emit("addVisitor", { finger_print });
-      }
+      };
 
       window.navigator.geolocation.getCurrentPosition(getCity, error);
     } catch (e) {

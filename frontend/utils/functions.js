@@ -1,3 +1,6 @@
+import { isValidPhoneNumber } from "libphonenumber-js";
+import parsePhoneNumber from "libphonenumber-js";
+
 export function getApiUrl() {
   return this.$config.strapi.url;
 }
@@ -65,4 +68,11 @@ export function convertObjectToQueryUrl(params, skipobjects, prefix) {
     }
   }
   return result;
+}
+
+export function isValidPhone(phone) {
+  const isValidPhone = isValidPhoneNumber(phone, "US");
+  const result = parsePhoneNumber(phone, "US");
+
+  return isValidPhone && result && result.country === "US";
 }

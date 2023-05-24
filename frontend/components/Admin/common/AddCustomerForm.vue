@@ -3,11 +3,11 @@
     autocomplete="off"
     id="add-customer-form"
     v-on:submit.stop.prevent="save"
-    class="was-validated mb-3"
+    class="mb-3"
     ref="form"
   >
     <div class="p-2">
-      <div class="mb-2">
+      <div class="was-validated mb-2">
         <label class="d-flex" for="username"> User Name </label>
         <input
           id="username"
@@ -18,6 +18,7 @@
           required
           autofocus="true"
           class="form-control w-100"
+          :class="isUsername ? 'is-valid' : 'is-invalid'"
         />
         <div class="valid-feedback">Looks good!</div>
         <div class="invalid-feedback">
@@ -28,7 +29,7 @@
           }}
         </div>
       </div>
-      <div class="mb-2">
+      <div class="was-validated mb-2">
         <label class="d-flex" for="username"> Email </label>
         <input
           id="email"
@@ -38,11 +39,7 @@
           required
           autofocus="true"
           autocomplete="off"
-          :pattern="
-            isEmail
-              ? '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{10000}$'
-              : '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$'
-          "
+          pattern="^[a-z0-9._%+-]{0,300}@[a-z0-9.-]{0,50}\.[a-z]{3,4}$"
           class="form-control py-2 px-3"
         />
         <div class="valid-feedback">Looks good!</div>
@@ -58,6 +55,7 @@
           type="text"
           name="s-contact-no"
           class="form-control w-100"
+          :class="isPhone ? 'is-valid' : 'is-invalid'"
           pattern="\+1 \(\d{3}\)-\d{3}-\d{4}"
           required
           v-model.trim="customerMain.contact_no"
@@ -69,7 +67,10 @@
         <div class="invalid-feedback">Wrong number</div>
       </div>
       <div class="row mb-2">
-        <div class="col-6">
+        <div
+          class="col-6"
+          :class="customerAdditional.first_name && 'was-validated'"
+        >
           <label class="d-flex" for="first-name"> First Name </label>
           <input
             id="first-name"
@@ -78,15 +79,13 @@
             v-model.trim="customerAdditional.first_name"
             pattern="^[a-zA-Z]+$"
             autofocus="true"
-            class="w-100"
-            :class="
-              customerAdditional.first_name
-                ? 'form-control'
-                : 'bts_input_style '
-            "
+            class="form-control w-100"
           />
         </div>
-        <div class="col-6">
+        <div
+          class="col-6"
+          :class="customerAdditional.last_name && 'was-validated'"
+        >
           <label class="d-flex" for="last-name"> Last Name </label>
           <input
             id="last-name"
@@ -95,30 +94,30 @@
             v-model.trim="customerAdditional.last_name"
             pattern="^[a-zA-Z]+$"
             autofocus="true"
-            class="w-100"
-            :class="
-              customerAdditional.last_name ? 'form-control' : 'bts_input_style '
-            "
+            class="form-control w-100"
           />
         </div>
       </div>
       <div class="row mb-2">
-        <div class="col-6">
+        <div
+          class="col-6"
+          :class="customerAdditional.address_1 && 'was-validated'"
+        >
           <label class="d-flex" for="s-address1"> Address 1</label>
           <input
             id="s-address1"
             type="text"
             placeholder="Enter your address"
-            pattern="[\.\-\,\w ]+"
+            pattern="[.-,\w]+"
             v-model.trim="customerAdditional.address_1"
             autofocus="true"
-            class="w-100"
-            :class="
-              customerAdditional.address_1 ? 'form-control' : 'bts_input_style '
-            "
+            class="form-control w-100"
           />
         </div>
-        <div class="col-6">
+        <div
+          class="col-6"
+          :class="customerAdditional.address_2 && 'was-validated'"
+        >
           <label class="d-flex" for="s-address2"> Address 2</label>
           <input
             id="s-address2"
@@ -127,14 +126,11 @@
             pattern="[\.\-\,\w ]+"
             v-model.trim="customerAdditional.address_2"
             autofocus="true"
-            class="w-100"
-            :class="
-              customerAdditional.address_2 ? 'form-control' : 'bts_input_style '
-            "
+            class="form-control w-100"
           />
         </div>
       </div>
-      <div class="mb-2">
+      <div class="mb-2" :class="customerAdditional.city && 'was-validated'">
         <label class="d-flex" for="s-city"> City </label>
         <input
           id="s-city"
@@ -143,8 +139,7 @@
           v-model.trim="customerAdditional.city"
           pattern="[a-zA-Z]+"
           autofocus="true"
-          class="w-100"
-          :class="customerAdditional.city ? 'form-control' : 'bts_input_style '"
+          class="form-control w-100"
         />
       </div>
       <div class="mb-2">
@@ -154,10 +149,7 @@
           name="states_hash"
           v-model="customerAdditional.state"
           ref="select"
-          class="w-100"
-          :class="
-            customerAdditional.state ? 'form-control' : 'bts_input_style '
-          "
+          class="form-control w-100"
         >
           <option disabled :value="''">Chose state</option>
           <option v-for="hash in states" :key="hash.name" :value="hash">
@@ -165,35 +157,29 @@
           </option>
         </select>
       </div>
-      <div class="mb-2">
+      <div class="mb-2" :class="customerAdditional.zip_code && 'was-validated'">
         <label class="d-flex" for="s-zip-code"> Zip Code </label>
         <masked-input
           type="text"
           name="s-zip-code"
-          class="w-100"
-          :class="
-            customerAdditional.zip_code ? 'form-control ' : 'bts_input_style'
-          "
-          pattern="\d{5}-\d{4}"
+          class="form-control w-100"
+          pattern="^\d{5}-\d{4}$"
           v-model.trim="customerAdditional.zip_code"
           :mask="zipMask"
           :guide="true"
           placeholder="_____-____"
         />
       </div>
-      <div class="mb-2">
+      <div class="mb-2" :class="customerAdditional.company && 'was-validated'">
         <label class="d-flex" for="s-company"> Company </label>
         <input
           id="s-company"
           type="text"
           placeholder="Enter company name"
           v-model.trim="customerAdditional.company"
-          pattern="[\.\-\,\w ]+"
+          pattern="[\w.-,]+"
           autofocus="true"
-          class="bts_input_style w-100"
-          :class="
-            customerAdditional.company ? 'form-control ' : 'bts_input_style'
-          "
+          class="form-control w-100"
         />
       </div>
     </div>
@@ -221,6 +207,7 @@
 import { mapActions } from "vuex";
 
 import { states } from "@/data";
+import { isValidPhone } from "~/utils/functions";
 
 export default {
   name: "AddCustomerForm",
@@ -243,6 +230,7 @@ export default {
     },
     isUsername: false,
     isEmail: false,
+    isPhone: false,
     phoneMask: [
       "+",
       "1",
@@ -278,14 +266,6 @@ export default {
       createCustomer: "admin_customers/createCustomer",
       checkUser: "auth/checkUser",
     }),
-    vueTelInputProps: (required = true) => ({
-      mode: "international",
-      validCharactersOnly: true,
-      inputOptions: {
-        placeholder: "Enter a phone number",
-        required,
-      },
-    }),
     showHash: function (hash) {
       if (
         this.customerAdditional.state &&
@@ -297,9 +277,9 @@ export default {
       return hash.name;
     },
     checkUs: async function () {
-      const { username, email } = this.customerMain;
+      const { username, email, contact_no } = this.customerMain;
 
-      if (username || email) {
+      if (username || email || contact_no) {
         clearInterval(this.timer);
         this.timer = null;
 
@@ -308,7 +288,8 @@ export default {
             username,
             email,
           });
-
+          console.log(isEmail);
+          this.isPhone = isValidPhone(contact_no);
           this.isEmail = isEmail;
           this.isUsername = isUsername;
         }, 1000);

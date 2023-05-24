@@ -24,18 +24,7 @@
                 isUsername ? '^[a-zA-Z0-9]{1000000}$' : '^[a-zA-Z0-9]{8,}$'
               "
               title="Invalid email address"
-              class="
-                form-control
-                appearance-none
-                border
-                rounded
-                w-full
-                py-2
-                px-3
-                text-gray-700
-                leading-tight
-                focus:outline-none focus:shadow-outline
-              "
+              class="form-control appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <div class="valid-feedback">Looks good!</div>
             <div class="invalid-feedback">
@@ -55,31 +44,16 @@
               required
               autofocus="true"
               autocomplete="off"
-              :pattern="
-                isEmail
-                  ? '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{10000}$'
-                  : '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$'
-              "
+              :pattern="emailPattern"
               title="Invalid email address"
-              class="
-                form-control
-                appearance-none
-                border
-                rounded
-                w-full
-                py-2
-                px-3
-                text-gray-700
-                leading-tight
-                focus:outline-none focus:shadow-outline
-              "
+              class="form-control appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <div class="valid-feedback">Looks good!</div>
             <div class="invalid-feedback">
               {{
                 isEmail
                   ? "Email has been already exist"
-                  : "Email must contain @"
+                  : "Invalid email address"
               }}
             </div>
           </div>
@@ -93,18 +67,7 @@
               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
               autofocus="true"
               autocomplete="off"
-              class="
-                form-control
-                appearance-none
-                border
-                rounded
-                w-full
-                py-2
-                px-3
-                text-gray-700
-                leading-tight
-                focus:outline-none focus:shadow-outline
-              "
+              class="form-control appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <div class="valid-feedback">Looks good!</div>
             <div class="invalid-feedback">
@@ -114,18 +77,7 @@
           </div>
           <div class="flex items-center justify-between">
             <button
-              class="
-                border-0
-                bg-blue-500
-                hover:bg-blue-700
-                text-white
-                gold-background
-                font-bold
-                py-2
-                px-4
-                rounded
-                focus:outline-none focus:shadow-outline
-              "
+              class="border-0 bg-blue-500 hover:bg-blue-700 text-white gold-background font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
               Submit
@@ -146,6 +98,8 @@
 <script>
 import { mapActions } from "vuex";
 
+import { emailPattern } from "~/patterns";
+
 export default {
   name: "SingUp",
   props: { isMenu: Boolean, toggle: Function },
@@ -156,6 +110,7 @@ export default {
     isUsername: false,
     isEmail: false,
     timer: null,
+    emailPattern,
   }),
   watch: {
     username: function () {

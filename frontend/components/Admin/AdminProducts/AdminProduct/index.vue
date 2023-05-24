@@ -24,13 +24,13 @@
         </div>
       </div>
       <form
-        class="was-validated row w-100"
+        class="row w-100"
         id="admin-product-form"
         v-on:submit.stop.prevent="update"
       >
         <div class="col-9 p-0">
           <div class="d-flex flex-column">
-            <div class="block d-flex flex-column p-2 mt-2">
+            <div class="block was-validated d-flex flex-column p-2 mt-2">
               <label class="d-flex font-weight-bold" for="title">Title</label>
               <textarea
                 id="title"
@@ -47,7 +47,7 @@
                 </div>
               </div>
             </div>
-            <div class="block d-flex flex-column p-2 mt-2">
+            <div class="block was-validated d-flex flex-column p-2 mt-2">
               <label class="d-flex font-weight-bold" for="title"
                 >Description</label
               >
@@ -125,7 +125,7 @@
               <select
                 v-model="currentProduct.dimension"
                 required
-                class="bts_input_style w-100"
+                class="form-control w-100"
               >
                 <option value="cm">cm</option>
                 <option value="inch">inch</option>
@@ -193,7 +193,7 @@
                 id="weight_dimension"
                 v-model="currentProduct.weight_dimension"
                 required
-                class="bts_input_style w-100"
+                class="form-control w-100"
               >
                 <option value="kilo">kilo</option>
                 <option value="lbs">lbs</option>
