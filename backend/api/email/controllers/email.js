@@ -8,6 +8,7 @@ const fs = require("fs");
 
 const { Vpn } = require("../../../utils/vpn");
 const checkEmail = require("../../../utils/checkEmail");
+const { email_with_status_RegExp } = require("../../../patterns");
 
 module.exports = {
   async check(ctx) {
@@ -50,7 +51,7 @@ module.exports = {
         saveEmails(emails);
       }
 
-       Vpn.disconnect();
+      Vpn.disconnect();
       return true;
     } catch (e) {
       console.log(e);
@@ -83,9 +84,7 @@ module.exports = {
       const result = data
         .split("\n")
         .map((item) => {
-          const result = item.match(
-            /(^[a-z0-9._%+-]{0,300}@[a-z0-9.-]{0,50}.[a-z]{3,4}$|^([a-z0-9._%+-]{0,300}@[a-z0-9.-]{0,50}.[a-z]{3,4})\s(true|false)$)[\t\n]*/gm
-          );
+          const result = item.match(email_with_status_RegExp);
 
           if (result) {
             return item.split(" ");

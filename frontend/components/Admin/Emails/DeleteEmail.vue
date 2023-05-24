@@ -6,9 +6,8 @@
         type="text"
         id="delete_email"
         class="form-control w-100"
-        v-model="email"
+        v-model.trim="email"
         :class="email ? (isValid ? 'is-valid' : 'is-invalid') : ''"
-        pattern="^[a-z0-9._%+-]{0,300}@[a-z0-9.-]{0,50}\.[a-z]{3,4}$"
       />
       <p v-if="result">Successully deleted</p>
       <div class="row m-0 p-0 justify-content-end align-items-center mt-2">
@@ -28,6 +27,8 @@
 <script>
 import { mapActions } from "vuex";
 
+import {emailPattern } from "~/patterns";
+
 import Loader from "~/components/common/Loader";
 
 export default {
@@ -43,15 +44,8 @@ export default {
     email: function () {
       const { email } = this;
 
-      const split = email.split("\n");
-      const match = email.match(
-        /^([a-z0-9._%+-]{0,300}@[a-z0-9.-]{0,50}\.[a-z]{3,4})[\t\n]*$/gm
-      );
-
-      const splitResult = split && split.length;
-      const matchResult = match && match.length;
-
-      this.isValid = splitResult === matchResult;
+      const match = email.match(emailPattern);
+      this.isValid = !!match;
     },
   },
   methods: {

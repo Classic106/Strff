@@ -24,7 +24,7 @@
     <input
       type="text"
       id="email-text"
-      v-model="email"
+      v-model.trim="email"
       name="emails-text"
       class="form-control w-100"
       :class="email ? (isMatch && isValid ? 'is-valid' : 'is-invalid') : ''"
@@ -51,6 +51,8 @@
 <script>
 import { mapActions } from "vuex";
 
+import { emailPattern } from "~/patterns";
+
 import Loader from "~/components/common/Loader";
 
 export default {
@@ -73,9 +75,7 @@ export default {
         return;
       }
 
-      const match = email.match(
-        /^[a-z0-9._%+-]{0,100}@[a-z0-9.-]{0,300}\.[a-z]{3,4}$/g
-      );
+      const match = email.match(emailPattern);
 
       this.isMatch = !!match;
       this.isValid = true;
