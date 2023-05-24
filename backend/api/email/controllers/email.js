@@ -6,9 +6,9 @@
  */
 const fs = require("fs");
 
-const { Vpn } = require("../../../utils/vpn");
-const checkEmail = require("../../../utils/checkEmail");
-const { email_with_status_RegExp } = require("../../../patterns");
+const { Vpn } = require("~/utils/vpn");
+const checkEmail = require("~/utils/checkEmail");
+const { email_with_status_RegExp } = require("~/patterns");
 
 module.exports = {
   async check(ctx) {
