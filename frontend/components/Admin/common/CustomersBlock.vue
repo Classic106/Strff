@@ -14,13 +14,7 @@
         <CustomerCard :customer="customers.item" class="w-100 m-0 p-0" />
       </template>
     </SelectWithSearch>
-    <div
-      v-if="search.length && !selectedCustomers.length"
-      class="text-uppercase text-center p-3 w-100"
-    >
-      nothing not found
-    </div>
-    <ul class="w-100 p-0" v-else-if="selectedCustomers.length">
+    <ul class="w-100 p-0" v-if="selectedCustomers.length">
       <li
         class="w-100 row m-0 justify-content-between"
         v-for="(customer, index) in selectedCustomers"

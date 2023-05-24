@@ -5,7 +5,7 @@
         v-model="page"
         aria-controls="my-table"
         class="m-0 mb-3"
-        :class="page < 2 && total < currentPerPage && 'd-none'"
+        :class="page < 2 && total <= currentPerPage && 'd-none'"
         :total-rows="total"
         :per-page="currentPerPage"
       ></BPagination>
@@ -23,10 +23,13 @@
     </div>
     <ul
       class="block items p-1 position-absolute w-100"
-      v-if="data.length"
       :class="open ? 'd-flex flex-column align-self-end' : 'd-none'"
     >
+      <div v-if="text && !data.length">
+        <p class="m-0 p-3 w-100 text-center">Nothing not found</p>
+      </div>
       <vueCustomScrollbar
+        v-else
         class="scroll w-100 overflow-auto"
         :settings="scrollSettings"
       >

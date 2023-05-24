@@ -5,7 +5,7 @@
         <button v-on:click="clearSelectedArticles()" class="button">
           <BIconArrowLeft />
         </button>
-        <p class="text-ellipsis m-0 ml-2">{{ selected.name }}</p>
+        <h6 class="text-ellipsis m-0 ml-2">{{ selected.name }}</h6>
         <div>
           <button
             class="border-left"

@@ -53,7 +53,6 @@ export default {
     "~/plugins/vue-custom-scrollbar.js",
     "~/plugins/vue-good-table",
     "~/plugins/vue-cool-lightbox.js",
-    "~/plugins/v-select.js",
     "~/plugins/VBTooltip.js",
     "~/plugins/datepicker.js",
     { src: "~/plugins/vue-color.js", mode: "client" },

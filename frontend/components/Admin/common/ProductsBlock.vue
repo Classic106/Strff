@@ -14,13 +14,7 @@
         <ProductCard class="w-100 m-0 p-0" :product="products.item" />
       </template>
     </SelectWithSearch>
-    <div
-      v-if="search.length && !selectedProducts.length"
-      class="text-uppercase text-center p-3 w-100"
-    >
-      nothing not found
-    </div>
-    <div class="w-100" v-else-if="selectedProducts.length">
+    <div class="w-100" v-if="selectedProducts.length">
       <ul class="d-flex flex-column p-0 m-0">
         <li
           v-for="(item, index) in selectedProducts"

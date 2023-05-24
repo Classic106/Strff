@@ -3,7 +3,7 @@
     <span class="w-100 text-center">Are you shure ?</span>
     <template #modal-footer>
       <div class="w-100 d-flex justify-content-end">
-        <button size="sm" class="btn btn-light mr-2" v-on:click="show = false">
+        <button size="sm" class="btn btn-light mr-2" v-on:click="cancel">
           Cancel
         </button>
         <button size="sm" class="btn btn-danger" v-on:click="remove">
@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: "ConfirmDeleteImageModal",
+  name: "ConfirmModal",
   props: {
     id: {
       type: String,
@@ -27,6 +27,10 @@ export default {
     show: false,
   }),
   methods: {
+    cancel: function () {
+      this.$emit("cancel");
+      this.show = false;
+    },
     remove: function () {
       this.$emit("confirm");
       this.show = false;
