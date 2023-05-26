@@ -18,6 +18,8 @@ class Vpn {
     }
 
     if (this.configs.length > 0) {
+      this.disconnect();
+
       try {
         const config = this.configs.shift();
         this.vpnFetch = new VPNFetch(`${__dirname}/configs/${config}`);
@@ -32,10 +34,8 @@ class Vpn {
         if (
           mess.includes("is not") ||
           mess.includes("no") ||
-          mess.includes("failed") ||
           mess.includes("error") ||
-          mess.includes("err") ||
-          mess.includes("exited")
+          mess.includes("err")
         ) {
           throw new Error(message);
         }
@@ -51,6 +51,7 @@ class Vpn {
     try {
       if (this.vpnFetch) {
         this.vpnFetch.disconnect();
+        this.vpnFetch = null;
       }
     } catch (e) {
       throw e;
