@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="row">
-      <div class="d-flex col-10 position-relative mb-4">
+    <div class="row m-0">
+      <div class="d-flex col-10 position-relative mb-4 pr-2 p-0">
         <canvas ref="canvas"></canvas>
         <div class="split">
           <div ref="view1"></div>
@@ -48,7 +48,7 @@ import Items from "./Items.vue";
 export default {
   name: "PlannerVisual",
   props: {
-    variant: Array,
+    variant: [Object, Array],
     items: Array,
   },
   components: { Items },
@@ -60,7 +60,6 @@ export default {
     camera: null,
     scene: null,
     view1Elem: null,
-    view2Elem: null,
     scale: 1, //1 full size, number < 1 less sizes
     packedItems: [],
     floorPlaneSize: 40,
@@ -73,7 +72,9 @@ export default {
   }),
   watch: {
     autoPack: function () {
-      this.setCurrentItems();
+      this.clearAllItems();
+      this.initBoxes();
+      this.initItems();
 
       if (this.autoPack) {
         this.packItems();
@@ -88,7 +89,7 @@ export default {
         );
 
         if (boxes.length) {
-          this.packBox(this.boxes[0]);
+          this.packBox(boxes[0]);
         }
       } else {
         this.packBox(this.boxUuids[0]);
@@ -102,8 +103,13 @@ export default {
     },
     variant: function () {
       this.clearAllItems();
-      this.initBoxes();
       this.setCurrentItems();
+      this.initBoxes();
+      this.packItems();
+    },
+    items: function () {
+      this.initBoxes();
+      this.initItems();
       this.packItems();
     },
   },
@@ -121,6 +127,10 @@ export default {
       return { ws, ls, hs };
     },
     positionByIndex: function (index, w, l) {
+      if (!Array.isArray(this.variant)) {
+        return;
+      }
+
       const { length } = this.variant;
       let result = null;
 
@@ -144,18 +154,18 @@ export default {
           case 0:
             result = {
               x: -(w + this.scale) + (w / 2) * this.scale,
-              z: -(l + this.scale) + (l / 2) * this.scale,
+              z: l + this.scale - (l / 2) * this.scale,
             };
             break;
           case 1:
             result = {
               x: w + this.scale - (w / 2) * this.scale,
-              z: -(l + this.scale) + (l / 2) * this.scale,
+              z: l + this.scale - (l / 2) * this.scale,
             };
             break;
           case 2:
             result = {
-              z: l + this.scale - (l / 2) * this.scale,
+              z: -(l + this.scale) + (l / 2) * this.scale,
             };
             break;
         }
@@ -221,83 +231,145 @@ export default {
       return mesh;
     },
     packBox: function (boxUuid) {
+      const { itemForArea, currentItems } = this;
+
+      if (!currentItems.length) {
+        return;
+      }
+
       const { volume, height } = this.boxesData[boxUuid];
+
       const widthAreas = this.findWidthSquare(volume);
       const lengthAreas = this.findLengthSquare(volume);
+      const current_items_length = this.currentItems.length;
 
-      const areas = [];
+      const width_result = itemInArea(widthAreas);
+      const length_result = itemInArea(lengthAreas);
 
-      [...lengthAreas, ...widthAreas]
-        .filter((area) => area.value < height)
-        .map((area) => {
-          const { value, rowIndex, rowCount, columnIndex, columnCount } = area;
-          const result = areas.filter((a) => {
-            return (
-              a.value === value &&
-              a.rowIndex === rowIndex &&
-              a.rowCount === rowCount &&
-              a.columnIndex === columnIndex &&
-              a.columnCount === columnCount
-            );
-          });
+      if (width_result && length_result) {
+        const {
+          area: width_area,
+          cube: width_cube,
+          item_index: width_item_index,
+        } = width_result;
+        const {
+          area: length_area,
+          cube: length_cube,
+          item_index: length_item_index,
+        } = length_result;
 
-          if (!result.length) {
-            areas.push(area);
-          }
-        });
+        const width_value = width_area.value;
+        const length_value = length_area.value;
 
-      areas.sort((a, b) => {
-        const { value: val_A, columnCount: colC_A, rowCount: rowC_A } = a;
-        const { value: val_B, columnCount: colC_B, rowCount: rowC_B } = b;
-
-        const square_A = colC_A * rowC_A;
-        const square_B = colC_B * rowC_B;
-
-        if (val_A < val_B) {
-          return -1;
-        } else if (val_A > val_B) {
-          return 1;
+        if (width_value < length_value) {
+          this.currentItems.splice(length_item_index, 1);
+          this.fillBox(boxUuid, length_area, length_cube);
+          this.addCube(length_cube, length_area, boxUuid);
         } else {
-          if (square_A > square_B) {
-            return -1;
-          } else if (square_A < square_B) {
-            return 1;
-          } else {
-            return 0;
-          }
+          this.currentItems.splice(width_item_index, 1);
+          this.fillBox(boxUuid, width_area, width_cube);
+          this.addCube(width_cube, width_area, boxUuid);
         }
-      });
+      } else if (width_result) {
+        const { area, cube, item_index } = width_result;
 
-      for (let i = 0; i < areas.length; i++) {
-        if (!this.currentItems.length) {
-          break;
-        }
+        this.currentItems.splice(item_index, 1);
+        this.fillBox(boxUuid, area, cube);
+        this.addCube(cube, area, boxUuid);
+      } else if (length_result) {
+        const { area, cube, item_index } = length_result;
 
-        let result = null;
+        this.currentItems.splice(item_index, 1);
+        this.fillBox(boxUuid, area, cube);
+        this.addCube(cube, area, boxUuid);
+      }
 
-        for (let j = 0; j < this.currentItems.length; j++) {
-          const item = this.currentItems[j];
-
-          result = this.itemForArea(item, areas[i], height);
-          if (result) {
-            this.currentItems.splice(j, 1);
-            break;
-          }
-        }
-
-        if (result) {
-          this.fillBox(boxUuid, areas[i], result);
-          this.addCube(result, areas[i], boxUuid);
-          break;
+      if (
+        this.currentItems.length &&
+        this.currentItems.length === current_items_length
+      ) {
+        if (!this.autoPack && this.boxUuids.length) {
+          this.nextItem = !this.nextItem;
         }
 
-        if (i === areas.length - 1) {
-          this.boxFilled.push(uuid);
+        this.boxFilled.push(boxUuid);
+        return;
+      }
+
+      if (this.autoPack) {
+        if (
+          this.currentItems.length &&
+          this.currentItems.length < current_items_length
+        ) {
+          this.packBox(boxUuid);
+          return;
         }
       }
 
-      if (this.currentItems.length && this.autoPack) {
-        this.packBox(boxUuid);
+      function itemInArea(areas) {
+        const free_areas = [];
+
+        areas
+          .filter((area) => area.value < height)
+          .map((area) => {
+            const { value, rowIndex, rowCount, columnIndex, columnCount } =
+              area;
+            const result = areas.filter((a) => {
+              return (
+                a.value === value &&
+                a.rowIndex === rowIndex &&
+                a.rowCount === rowCount &&
+                a.columnIndex === columnIndex &&
+                a.columnCount === columnCount
+              );
+            });
+
+            if (!result.length) {
+              areas.push(area);
+            }
+          });
+
+        free_areas.sort((a, b) => {
+          const { value: val_A, columnCount: colC_A, rowCount: rowC_A } = a;
+          const { value: val_B, columnCount: colC_B, rowCount: rowC_B } = b;
+
+          const square_A = colC_A * rowC_A;
+          const square_B = colC_B * rowC_B;
+
+          if (val_A < val_B && square_A < square_B) {
+            return -1;
+          } else if (val_A > val_B && square_A > square_B) {
+            return 1;
+          } else {
+            if (square_A < square_B) {
+              return -1;
+            } else if (square_A > square_B) {
+              return 1;
+            } else {
+              return 0;
+            }
+          }
+        });
+
+        let data = null;
+
+        for (let i = 0; i < areas.length; i++) {
+          if (!currentItems.length) {
+            break;
+          }
+
+          for (let j = 0; j < currentItems.length; j++) {
+            const item = currentItems[j];
+            const area = areas[i];
+            const cube = itemForArea(item, area, height);
+
+            if (cube) {
+              data = { cube, item_index: j, area };
+              break;
+            }
+          }
+        }
+        return data;
       }
     },
     fillBox: function (boxUuid, area, item) {
@@ -316,6 +388,9 @@ export default {
     },
     packItems: function () {
       for (const [key, value] of Object.entries(this.boxesData)) {
+        if (!this.currentItems.length) {
+          break;
+        }
         this.packBox(key);
       }
     },
@@ -532,62 +607,64 @@ export default {
       return squares;
     },
     addBox: function ({ w, l, h, color }, position) {
-      const group = new THREE.Group();
+      if (this.scene) {
+        const group = new THREE.Group();
 
-      const frontPosition = { z: l / 2, y: h / 2 };
-      const backPosition = { z: -l / 2, y: h / 2 };
-      const rightPosition = { x: w / 2, y: h / 2 };
-      const leftPosition = { x: -w / 2, y: h / 2 };
-      const floorPosition = { y: 0 };
+        const frontPosition = { z: l / 2, y: h / 2 };
+        const backPosition = { z: -l / 2, y: h / 2 };
+        const rightPosition = { x: w / 2, y: h / 2 };
+        const leftPosition = { x: -w / 2, y: h / 2 };
+        const floorPosition = { y: 0 };
 
-      const leftRightRotate = { y: Math.PI * 0.5 };
-      const floorRotate = { x: Math.PI * 0.5 };
+        const leftRightRotate = { y: Math.PI * 0.5 };
+        const floorRotate = { x: Math.PI * 0.5 };
 
-      const frontBorder = this.addPlane(w, h, frontPosition, null, color);
-      const backBorder = this.addPlane(w, h, backPosition, null, color);
-      const rightBorder = this.addPlane(
-        l,
-        h,
-        rightPosition,
-        leftRightRotate,
-        color
-      );
-      const leftBorder = this.addPlane(
-        l,
-        h,
-        leftPosition,
-        leftRightRotate,
-        color
-      );
-      const floorBorder = this.addPlane(w, l, floorPosition, floorRotate);
-      floorBorder.material.color.setHex(color);
+        const frontBorder = this.addPlane(w, h, frontPosition, null, color);
+        const backBorder = this.addPlane(w, h, backPosition, null, color);
+        const rightBorder = this.addPlane(
+          l,
+          h,
+          rightPosition,
+          leftRightRotate,
+          color
+        );
+        const leftBorder = this.addPlane(
+          l,
+          h,
+          leftPosition,
+          leftRightRotate,
+          color
+        );
+        const floorBorder = this.addPlane(w, l, floorPosition, floorRotate);
+        floorBorder.material.color.setHex(color);
 
-      group.add(frontBorder);
-      group.add(backBorder);
-      group.add(rightBorder);
-      group.add(leftBorder);
-      group.add(floorBorder);
+        group.add(frontBorder);
+        group.add(backBorder);
+        group.add(rightBorder);
+        group.add(leftBorder);
+        group.add(floorBorder);
 
-      if (position) {
-        const pos = { y: 0.05 };
-        this.position(group, { ...position, ...pos });
+        if (position) {
+          const pos = { y: 0.05 };
+          this.position(group, { ...position, ...pos });
+        }
+
+        group.position.y = 0.05;
+        const { uuid } = group;
+
+        const volume = new Array(Math.ceil(l));
+        for (var i = 0; i < l; i++) {
+          volume[i] = new Array(w).fill(0);
+        }
+
+        this.boxesData[uuid] = {
+          volume,
+          height: h,
+        };
+
+        this.boxUuids.push(uuid);
+        this.scene.add(group);
       }
-
-      group.position.y = 0.05;
-      const { uuid } = group;
-
-      const volume = new Array(Math.ceil(l));
-      for (var i = 0; i < l; i++) {
-        volume[i] = new Array(w).fill(0);
-      }
-
-      this.boxesData[uuid] = {
-        volume,
-        height: h,
-      };
-
-      this.boxUuids.push(uuid);
-      this.scene.add(group);
     },
     addPlane: function (w, l, position, rotate, edge) {
       const planeGeo = new THREE.PlaneGeometry(w, l);
@@ -616,88 +693,96 @@ export default {
       return mesh;
     },
     addFloorPlane: function () {
-      const loader = new THREE.TextureLoader();
-      const texture = loader.load(
-        "https://threejsfundamentals.org/threejs/resources/images/checker.png"
-      );
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-      texture.magFilter = THREE.NearestFilter;
-      const repeats = this.floorPlaneSize / 2;
-      texture.repeat.set(repeats, repeats);
+      if (this.scene) {
+        const loader = new THREE.TextureLoader();
+        const texture = loader.load(
+          "https://threejsfundamentals.org/threejs/resources/images/checker.png"
+        );
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.magFilter = THREE.NearestFilter;
+        const repeats = this.floorPlaneSize / 2;
+        texture.repeat.set(repeats, repeats);
 
-      const planeGeo = new THREE.PlaneGeometry(
-        this.floorPlaneSize,
-        this.floorPlaneSize
-      );
-      const planeMat = new THREE.MeshPhongMaterial({
-        map: texture,
-        side: THREE.DoubleSide,
-      });
-      const mesh = new THREE.Mesh(planeGeo, planeMat);
-      mesh.rotation.x = Math.PI * -0.5;
-      this.scene.add(mesh);
+        const planeGeo = new THREE.PlaneGeometry(
+          this.floorPlaneSize,
+          this.floorPlaneSize
+        );
+        const planeMat = new THREE.MeshPhongMaterial({
+          map: texture,
+          side: THREE.DoubleSide,
+        });
+        const mesh = new THREE.Mesh(planeGeo, planeMat);
+        mesh.rotation.x = Math.PI * -0.5;
+        this.scene.add(mesh);
+      }
     },
     addCube: function (item, area, boxUuid) {
       const { w, l, h, color } = item;
 
-      const box = this.scene.getObjectByProperty("uuid", boxUuid);
+      if (this.scene) {
+        const box = this.scene.getObjectByProperty("uuid", boxUuid);
 
-      const boxWidth = this.boxesData[boxUuid].volume[0].length;
-      const boxLength = this.boxesData[boxUuid].volume.length;
+        if (box) {
+          const boxWidth = this.boxesData[boxUuid].volume[0].length;
+          const boxLength = this.boxesData[boxUuid].volume.length;
 
-      const isDark = this.isDarkColor(color);
+          const isDark = this.isDarkColor(color);
 
-      const cubeGeo = new THREE.BoxGeometry(w, h, l);
-      const cubeMat = new THREE.MeshPhongMaterial({ color });
-      const mesh = new THREE.Mesh(cubeGeo, cubeMat);
+          const cubeGeo = new THREE.BoxGeometry(w, h, l);
+          const cubeMat = new THREE.MeshPhongMaterial({ color });
+          const mesh = new THREE.Mesh(cubeGeo, cubeMat);
 
-      const geo = new THREE.EdgesGeometry(mesh.geometry);
-      const mat = new THREE.LineBasicMaterial({
-        color: isDark ? 0xffffff : 0x000000,
-      });
-      const wireframe = new THREE.LineSegments(geo, mat);
+          const geo = new THREE.EdgesGeometry(mesh.geometry);
+          const mat = new THREE.LineBasicMaterial({
+            color: isDark ? 0xffffff : 0x000000,
+          });
+          const wireframe = new THREE.LineSegments(geo, mat);
 
-      mesh.add(wireframe);
-      mesh.receiveShadow = true;
-      mesh.castShadow = true;
+          mesh.add(wireframe);
+          mesh.receiveShadow = true;
+          mesh.castShadow = true;
 
-      if (area) {
-        const { value, columnIndex, rowIndex } = area;
+          if (area) {
+            const { value, columnIndex, rowIndex } = area;
 
-        const x = -boxWidth / 2 + w / 2 + rowIndex;
-        const y = h / 2 + value;
-        const z = -boxLength / 2 + l / 2 + columnIndex;
+            const x = -boxWidth / 2 + w / 2 + rowIndex;
+            const y = h / 2 + value;
+            const z = -boxLength / 2 + l / 2 + columnIndex;
 
-        this.position(mesh, { x, y, z });
-      } else {
-        const y = h / 2;
-        this.position(mesh, { y });
+            this.position(mesh, { x, y, z });
+          } else {
+            const y = h / 2;
+            this.position(mesh, { y });
+          }
+
+          const { uuid } = mesh;
+          this.itemsUuids.push(uuid);
+
+          box.add(mesh);
+        }
       }
-
-      const { uuid } = mesh;
-      this.itemsUuids.push(uuid);
-
-      box.add(mesh);
     },
     addLight: function () {
-      const color = 0xffffff;
+      if (this.scene) {
+        const color = 0xffffff;
 
-      const hemiLight = new THREE.HemisphereLight(color, 0x444444);
-      hemiLight.position.set(0, 20, 0);
-      this.scene.add(hemiLight);
+        const hemiLight = new THREE.HemisphereLight(color, 0x444444);
+        hemiLight.position.set(0, 20, 0);
+        this.scene.add(hemiLight);
 
-      const dirLight = new THREE.DirectionalLight(color, 0.5);
-      dirLight.position.set(3, 10, 10);
-      dirLight.castShadow = true;
-      dirLight.shadow.camera.top = 2;
-      dirLight.shadow.camera.bottom = -2;
-      dirLight.shadow.camera.left = -2;
-      dirLight.shadow.camera.right = 2;
-      dirLight.shadow.camera.near = 0.1;
-      dirLight.shadow.camera.far = 40;
+        const dirLight = new THREE.DirectionalLight(color, 0.5);
+        dirLight.position.set(3, 10, 10);
+        dirLight.castShadow = true;
+        dirLight.shadow.camera.top = 2;
+        dirLight.shadow.camera.bottom = -2;
+        dirLight.shadow.camera.left = -2;
+        dirLight.shadow.camera.right = 2;
+        dirLight.shadow.camera.near = 0.1;
+        dirLight.shadow.camera.far = 40;
 
-      this.scene.add(dirLight);
+        this.scene.add(dirLight);
+      }
     },
     addCamera: function () {
       this.view1Elem = this.$refs.view1;
@@ -710,15 +795,19 @@ export default {
       this.camera.position.set(0, 10, 20);
     },
     addControlls: function () {
-      const controls = new OrbitControls(this.camera, this.view1Elem);
-      // comment 4 below lines for rotate scene in all directions
-      controls.minPolarAngle = 0;
-      controls.maxPolarAngle = Math.PI * 0.5;
-      controls.minDistance = 15;
-      controls.maxDistance = 40;
-      // comment 4 above lines for rotate scene in all directions
-      controls.target.set(0, 5, 0);
-      controls.update();
+      const { camera, view1Elem } = this;
+
+      if (view1Elem && camera) {
+        const controls = new OrbitControls(camera, view1Elem);
+        // comment 4 below lines for rotate scene in all directions
+        controls.minPolarAngle = 0;
+        controls.maxPolarAngle = Math.PI * 0.5;
+        controls.minDistance = 15;
+        controls.maxDistance = 40;
+        // comment 4 above lines for rotate scene in all directions
+        controls.target.set(0, 5, 0);
+        controls.update();
+      }
     },
     addScene: function () {
       this.scene = new THREE.Scene();
@@ -727,24 +816,28 @@ export default {
     resizeRendererToDisplaySize: function () {
       const { renderer } = this;
 
-      this.canvas = renderer.domElement;
-      const width = this.canvas.clientWidth;
-      const height = this.canvas.clientHeight;
-      const needResize =
-        this.canvas.width !== width || this.canvas.height !== height;
-      if (needResize) {
-        renderer.setSize(width, height, false);
+      if (renderer) {
+        this.canvas = renderer.domElement;
+        const width = this.canvas.clientWidth;
+        const height = this.canvas.clientHeight;
+        const needResize =
+          this.canvas.width !== width || this.canvas.height !== height;
+        if (needResize) {
+          renderer.setSize(width, height, false);
+        }
+        return needResize;
       }
-      return needResize;
     },
     render: function () {
       const { renderer, camera, scene } = this;
       this.resizeRendererToDisplaySize();
 
-      camera.updateProjectionMatrix();
-      renderer.render(scene, camera);
+      if (renderer && scene && camera) {
+        camera.updateProjectionMatrix();
+        renderer.render(scene, camera);
 
-      requestAnimationFrame(this.render);
+        requestAnimationFrame(this.render);
+      }
     },
     addRenderer: function () {
       this.canvas = this.$refs.canvas;
@@ -753,6 +846,27 @@ export default {
     initBoxes: function () {
       if (!this.variant) {
         return;
+      }
+
+      const { convertSizes, scaleSizes, addBox, positionByIndex } = this;
+      //remove old boxes
+      this.boxUuids.map((uuid) => {
+        if (this.scene) {
+          const object = this.scene.getObjectByProperty("uuid", uuid);
+          if (object) {
+            object.clear();
+            object.removeFromParent();
+            delete this.boxesData[uuid];
+          }
+        }
+      });
+
+      this.boxUuids = [];
+
+      if (!Array.isArray(this.variant)) {
+        initBox(this.variant);
+      } else {
+        this.variant.map((v, index) => initBox(v, index));
       }
 
       function checkColor(color) {
@@ -764,40 +878,12 @@ export default {
         return color;
       }
 
-      //remove old boxes
-      this.boxUuids.map((uuid) => {
-        const object = this.scene.getObjectByProperty("uuid", uuid);
-        object.clear();
-        object.removeFromParent();
-        delete this.boxesData[uuid];
-      });
-      this.boxUuids = [];
+      function initBox(box, index) {
+        const { width, lengthy, height, color } = convertSizes(box);
+        const { ws, ls } = scaleSizes(width, lengthy, height);
 
-      if (this.variant.length > 1) {
-        this.variant.map((v, index) => {
-          const { w, l, h, color } = this.convertSizes(v);
-          const { ws, ls } = this.scaleSizes(w, l, h);
-
-          const boxHeight = Math.floor(h);
-          const pos = this.positionByIndex(index, w, l);
-
-          const currentColor = checkColor(color);
-          const changes = {
-            color: currentColor,
-            w: ws,
-            l: ls,
-            h: boxHeight,
-          };
-
-          const newItem = { ...v, ...changes };
-
-          this.addBox(newItem, pos);
-        });
-      } else if (this.variant.length === 1) {
-        const { w, l, h, color } = this.convertSizes(this.variant[0]);
-        const { ws, ls } = this.scaleSizes(w, l, h);
-
-        const boxHeight = Math.floor(h);
+        const boxHeight = Math.floor(height);
+        const pos = index && positionByIndex(index, width, lengthy);
 
         const currentColor = checkColor(color);
         const changes = {
@@ -807,17 +893,23 @@ export default {
           h: boxHeight,
         };
 
-        const newItem = { ...this.variant[0], ...changes };
-        this.addBox(newItem);
+        const newItem = { ...box, ...changes };
+
+        addBox(newItem, pos);
       }
     },
     clearAllItems: function () {
       //remove items cubicles
       this.itemsUuids.map((uuid) => {
-        const object = this.scene.getObjectByProperty("uuid", uuid);
-        object.clear();
-        object.removeFromParent();
+        if (this.scene) {
+          const object = this.scene.getObjectByProperty("uuid", uuid);
+          if (object) {
+            object.clear();
+            object.removeFromParent();
+          }
+        }
       });
+
       this.itemsUuids = [];
     },
     init: function () {
@@ -865,6 +957,8 @@ export default {
       if (!this.autoPack) {
         this.clearAllItems();
         this.initBoxes();
+        this.initItems();
+        this.boxFilled = [];
       }
     },
     initPackedItems: function () {

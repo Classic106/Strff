@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-column">
-    <div class="row">
+    <div class="row m-0">
       <div class="col-9 d-flex">
         <div v-if="!deliveries.length">
           <p>Deliveries is not found</p>
@@ -40,36 +40,55 @@
           </ul>
         </div>
         <div class="d-flex flex-column position-relative">
-          <button v-on:click="isVariants = !isVariants" class="btn btn-primary">
-            Variants
+          <button
+            v-on:click="isVariants = !isVariants"
+            class="btn btn-primary text-center"
+          >
+            {{ activeVariant ? activeVariant : "Variants" }}
           </button>
           <ul
             :class="isVariants ? 'd-flex' : 'd-none'"
             class="w-100 flex-column position-absolute p-0 m-0"
           >
             <li
-              :class="sameVolumes.length ? 'd-flex' : 'd-none'"
+              :class="
+                sameVolumes.length && activeVariant !== 'Same'
+                  ? 'd-flex'
+                  : 'd-none'
+              "
               class="text-center p-1"
               v-on:click="setVariant('same')"
             >
               Same box
             </li>
             <li
-              :class="upperVolumes.length ? 'd-flex' : 'd-none'"
+              :class="
+                upperVolumes.length && activeVariant !== 'Upper'
+                  ? 'd-flex'
+                  : 'd-none'
+              "
               class="text-center p-1"
               v-on:click="setVariant('upper')"
             >
               Upper box
             </li>
             <li
-              :class="equalsVolumes.length ? 'd-flex' : 'd-none'"
+              :class="
+                equalsVolumes.length && activeVariant !== 'Equals'
+                  ? 'd-flex'
+                  : 'd-none'
+              "
               class="text-center p-1"
               v-on:click="setVariant('equals')"
             >
               Equals boxes
             </li>
             <li
-              :class="combineVolumes.length ? 'd-flex' : 'd-none'"
+              :class="
+                combineVolumes.length && activeVariant !== 'Combines'
+                  ? 'd-flex'
+                  : 'd-none'
+              "
               class="text-center p-1"
               v-on:click="setVariant('combines')"
             >
@@ -79,7 +98,7 @@
         </div>
       </div>
     </div>
-    <PlannerVisual :variant="variant" :items="items" class="mt-4" />
+    <PlannerVisual :variant="variant" :items="items" class="mt-4 p-2" />
   </div>
 </template>
 
@@ -102,6 +121,7 @@ export default {
   },
   data: () => ({
     isVariants: false,
+    activeVariant: "",
     isPersentage: false,
     middles: {
       midH: 0,
@@ -161,15 +181,19 @@ export default {
 
       switch (variant) {
         case "same":
+          this.activeVariant = "Same";
           this.variant = sameVolumes;
           break;
         case "upper":
+          this.activeVariant = "Upper";
           this.variant = upperVolumes;
           break;
         case "equals":
-          this.variant = equalsVolumes;
+          this.activeVariant = "Equals";
+          this.variant = equalsVolumes[0];
           break;
-        case "combine":
+        case "combines":
+          this.activeVariant = "Combine";
           this.variant = combineVolumes;
           break;
       }
@@ -244,54 +268,58 @@ export default {
       return (+d / 100) * persentage;
     },
     sortByVolume: function (a, b) {
-      if (a.v < b.v) {
+      if (a.volume < b.volume) {
         return -1;
       }
-      if (a.v > b.v) {
+      if (a.volume > b.volume) {
         return 1;
       }
       return 0;
     },
     checkMaximums: function (box) {
       //check if can fit biggest item in box
-      const { h, w, l, weight } = box;
+      const { height, width, lengthy, weight } = box;
       const { maxH, maxW, maxL, maxWeight } = this.maximums;
 
       const isWeight = weight >= maxWeight;
 
-      const checkValues_lenghtAsHeight = l >= maxH && w >= maxW && h >= maxL;
+      const checkValues_lenghtAsHeight =
+        lengthy >= maxH && width >= maxW && height >= maxL;
 
       if (checkValues_lenghtAsHeight && isWeight) {
         return true;
       }
 
-      const checkValues_widthAsHeight = w >= maxH && h >= maxW && l >= maxL;
+      const checkValues_widthAsHeight =
+        width >= maxH && height >= maxW && lengthy >= maxL;
 
       if (checkValues_widthAsHeight && isWeight) {
         return true;
       }
 
-      const checkValue_widthAsLenght = h >= maxH && l >= maxW && w >= maxL;
+      const checkValue_widthAsLenght =
+        height >= maxH && lengthy >= maxW && width >= maxL;
 
       if (checkValue_widthAsLenght && isWeight) {
         return true;
       }
 
       const checkValues_widthAsHeight_heightAsLenght =
-        w >= maxH && l >= maxW && h >= maxL;
+        width >= maxH && lengthy >= maxW && height >= maxL;
 
       if (checkValues_widthAsHeight_heightAsLenght && isWeight) {
         return true;
       }
 
       const checkValues_lenghtAsHeight_heightAsWidth =
-        l >= maxH && h >= maxW && w >= maxL;
+        lengthy >= maxH && height >= maxW && width >= maxL;
 
       if (checkValues_lenghtAsHeight_heightAsWidth && isWeight) {
         return true;
       }
 
-      const checkValues_same = h >= maxH && w >= maxW && l >= maxL;
+      const checkValues_same =
+        height >= maxH && width >= maxW && lengthy >= maxL;
       if (checkValues_same && isWeight) {
         return true;
       }
@@ -327,15 +355,16 @@ export default {
 
       const sameVolume = currentBoxes.filter(
         (box) =>
-          totalVolume < box.v &&
-          totalVolume >= box.v - calcPersentage(box.v) &&
+          totalVolume < box.volume &&
+          totalVolume >= box.volume - calcPersentage(box.volume) &&
           checkMaximums(box)
       );
 
       const upperVolume = currentBoxes
         .filter(
           (box) =>
-            box.v > totalVolume + calcPersentage(box.v) && checkMaximums(box)
+            box.volume > totalVolume + calcPersentage(box.volume) &&
+            checkMaximums(box)
         )
         .reverse();
 
@@ -407,20 +436,16 @@ export default {
 
         return {
           equalsCombines: equalsCombines.reverse(),
-          combines,
+          combines: items,
         };
       }
     },
-    init: async function () {
+    init: function () {
       this.currentItems = [...this.items].map((item) => {
         const box = this.convertSizes(item);
         this.setMaxs(box);
         return item;
       });
-
-      if (!this.deliveries.length) {
-        await this.getDeliveries();
-      }
 
       if (this.deliveries.length) {
         // this.currentBoxes = [...this.deliveries[0].boxes]
@@ -434,27 +459,30 @@ export default {
       this.findBoxes();
 
       if (this.sameVolumes.length) {
-        this.variant = [this.sameVolumes[0]];
+        this.setVariant("same");
         return;
       }
 
       if (this.equalsVolumes.length) {
-        this.variant = this.equalsVolumes[0];
+        this.setVariant("equals");
         return;
       }
 
       if (this.upperVolumes.length) {
-        this.variant = [this.upperVolumes[0]];
+        this.setVariant("upper");
         return;
       }
 
       if (this.combineVolumes.length) {
-        this.variant = this.combineVolumes[0];
+        this.setVariant("combines");
         return;
       }
     },
   },
   async mounted() {
+    if (!this.deliveries.length) {
+      await this.getDeliveries();
+    }
     await this.init();
   },
 };

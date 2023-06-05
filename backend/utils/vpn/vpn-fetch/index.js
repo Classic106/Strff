@@ -82,7 +82,7 @@ module.exports.VPNFetch = class VPNFetch {
     });
   }
 
-  disconnect() {
+  async disconnect() {
     try {
       if (!this.pkillFind) return false;
       const command = `sudo pkill -SIGTERM -f '${this.pkillFind}'`;

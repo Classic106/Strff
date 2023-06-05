@@ -12,22 +12,23 @@ export function pad(num, size) {
 }
 
 export function convertSizes(box) {
-  const { dimension, weight_dimension } = box;
-
   let sizes = {};
 
-  if (dimension === "inch") {
+  if (box.dimension === "inch") {
     const width = box.width * 2.54;
     const lengthy = box.lengthy * 2.54;
     const height = box.height * 2.54;
     const volume = box.volume * 2.54;
+    const dimension = "cm";
 
-    sizes = { width, lengthy, height, volume };
+    sizes = { width, lengthy, height, volume, dimension };
   }
 
-  if (weight_dimension === "lbs") {
+  if (box.weight_dimension === "lbs") {
     const weight = box.weight * 0.453592;
-    sizes = { ...sizes, weight };
+    const weight_dimension = "kilo";
+
+    sizes = { ...sizes, weight, weight_dimension };
   }
 
   return { ...box, ...sizes };
