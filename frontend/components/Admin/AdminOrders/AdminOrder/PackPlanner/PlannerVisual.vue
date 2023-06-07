@@ -38,11 +38,7 @@
 </template>
 
 <script>
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { convertSizes } from "~/utils/functions";
-import isDarkColor from "is-dark-color";
-
+import ManageBoxes from "./ManageBoxes";
 import Items from "./Items.vue";
 
 export default {
@@ -53,28 +49,16 @@ export default {
   },
   components: { Items },
   data: () => ({
-    autoPack: true,
+    autoPack: false,
     nextItem: false,
-    canvas: null,
-    renderer: null,
-    camera: null,
-    scene: null,
-    view1Elem: null,
-    scale: 1, //1 full size, number < 1 less sizes
     packedItems: [],
-    floorPlaneSize: 40,
     currentItems: [],
-    copiedItems: [],
-    boxUuids: [],
-    itemsUuids: [],
-    boxesData: {},
     boxFilled: [],
+    ManageBoxes: null,
   }),
   watch: {
     autoPack: function () {
-      this.clearAllItems();
-      this.initBoxes();
-      this.initItems();
+      this.ManageBoxes.clearAllPacks();
 
       if (this.autoPack) {
         this.packItems();
@@ -83,8 +67,8 @@ export default {
       }
     },
     nextItem: function () {
-      if (this.boxFilled.length) {
-        const boxes = [...this.boxUuids].filter(
+      if (this.ManageBoxes.boxUuids.length) {
+        const boxes = [...this.ManageBoxes.boxUuids].filter(
           (box) => !this.boxFilled.includes(box)
         );
 
@@ -92,8 +76,9 @@ export default {
           this.packBox(boxes[0]);
         }
       } else {
-        this.packBox(this.boxUuids[0]);
+        this.packBox(this.ManageBoxes.boxUuids[0]);
       }
+      this.initPackedItems();
     },
     currentItems: {
       handler() {
@@ -102,133 +87,23 @@ export default {
       deep: true,
     },
     variant: function () {
+      this.currentItems = [...this.items];
       this.clearAllItems();
-      this.setCurrentItems();
       this.initBoxes();
-      this.packItems();
+      if (this.autoPack) {
+        this.packItems();
+      }
     },
     items: function () {
-      this.initBoxes();
-      this.initItems();
       this.packItems();
     },
   },
   methods: {
-    isDarkColor,
-    convertSizes,
-    colorParse: function (color) {
-      return parseInt(color.replace("#", "0x"), 16);
-    },
-    scaleSizes: function (w, l, h) {
-      const ws = Math.ceil(w * this.scale) || 0;
-      const hs = Math.ceil(h * this.scale) || 0;
-      const ls = Math.ceil(l * this.scale) || 0;
-
-      return { ws, ls, hs };
-    },
-    positionByIndex: function (index, w, l) {
-      if (!Array.isArray(this.variant)) {
-        return;
-      }
-
-      const { length } = this.variant;
-      let result = null;
-
-      if (length === 2) {
-        switch (index) {
-          case 0:
-            result = {
-              x: -(w + this.scale) + (w / 2) * this.scale,
-            };
-            break;
-          case 1:
-            result = {
-              x: w + this.scale - (w / 2) * this.scale,
-            };
-            break;
-        }
-      }
-
-      if (length === 3) {
-        switch (index) {
-          case 0:
-            result = {
-              x: -(w + this.scale) + (w / 2) * this.scale,
-              z: l + this.scale - (l / 2) * this.scale,
-            };
-            break;
-          case 1:
-            result = {
-              x: w + this.scale - (w / 2) * this.scale,
-              z: l + this.scale - (l / 2) * this.scale,
-            };
-            break;
-          case 2:
-            result = {
-              z: -(l + this.scale) + (l / 2) * this.scale,
-            };
-            break;
-        }
-      }
-
-      if (length === 4) {
-        switch (index) {
-          case 0:
-            result = {
-              x: -(w + this.scale) + (w / 2) * this.scale,
-              z: -(l + this.scale) + (l / 2) * this.scale,
-            };
-            break;
-          case 1:
-            result = {
-              x: w + this.scale - (w / 2) * this.scale,
-              z: -(l + this.scale) + (l / 2) * this.scale,
-            };
-            break;
-          case 2:
-            result = {
-              x: -(w + this.scale) + (w / 2) * this.scale,
-              z: l + this.scale - (l / 2) * this.scale,
-            };
-            break;
-          case 3:
-            result = {
-              x: w + this.scale - (w / 2) * this.scale,
-              z: l + this.scale - (l / 2) * this.scale,
-            };
-            break;
-        }
-      }
-
-      return result;
-    },
-    rotate: function (mesh, rotate) {
-      const { x, y, z } = rotate;
-
-      if (x) {
-        mesh.rotation.x = x;
-      }
-      if (y) {
-        mesh.rotation.y = y;
-      }
-      if (z) {
-        mesh.rotation.z = z;
-      }
-      return mesh;
-    },
-    position: function (mesh, position) {
-      const { x, y, z } = position;
-
-      if (x) {
-        mesh.position.x = x;
-      }
-      if (y) {
-        mesh.position.y = y;
-      }
-      if (z) {
-        mesh.position.z = z;
-      }
-      return mesh;
+    clearAllItems: function () {
+      const { ManageBoxes } = this;
+      ManageBoxes.clearAllPacks();
+      ManageBoxes.clearAllBoxes();
+      this.boxFilled = [];
     },
     packBox: function (boxUuid) {
       const { itemForArea, currentItems } = this;
@@ -236,8 +111,7 @@ export default {
       if (!currentItems.length) {
         return;
       }
-
-      const { volume, height } = this.boxesData[boxUuid];
+      const { volume, height } = this.ManageBoxes.boxesData[boxUuid];
 
       const widthAreas = this.findWidthSquare(volume);
       const lengthAreas = this.findLengthSquare(volume);
@@ -263,32 +137,28 @@ export default {
 
         if (width_value < length_value) {
           this.currentItems.splice(length_item_index, 1);
-          this.fillBox(boxUuid, length_area, length_cube);
-          this.addCube(length_cube, length_area, boxUuid);
+          this.ManageBoxes.addPack(length_cube, length_area, boxUuid);
         } else {
           this.currentItems.splice(width_item_index, 1);
-          this.fillBox(boxUuid, width_area, width_cube);
-          this.addCube(width_cube, width_area, boxUuid);
+          this.ManageBoxes.addPack(width_cube, width_area, boxUuid);
         }
       } else if (width_result) {
         const { area, cube, item_index } = width_result;
 
         this.currentItems.splice(item_index, 1);
-        this.fillBox(boxUuid, area, cube);
-        this.addCube(cube, area, boxUuid);
+        this.ManageBoxes.addPack(cube, area, boxUuid);
       } else if (length_result) {
         const { area, cube, item_index } = length_result;
 
         this.currentItems.splice(item_index, 1);
-        this.fillBox(boxUuid, area, cube);
-        this.addCube(cube, area, boxUuid);
+        this.ManageBoxes.addPack(cube, area, boxUuid);
       }
 
       if (
         this.currentItems.length &&
         this.currentItems.length === current_items_length
       ) {
-        if (!this.autoPack && this.boxUuids.length) {
+        if (!this.autoPack && this.ManageBoxes.boxUuids.length) {
           this.nextItem = !this.nextItem;
         }
 
@@ -308,7 +178,8 @@ export default {
 
       function itemInArea(areas) {
         const free_areas = [];
-
+        currentItems;
+        // debugger;
         areas
           .filter((area) => area.value < height)
           .map((area) => {
@@ -325,7 +196,7 @@ export default {
             });
 
             if (!result.length) {
-              areas.push(area);
+              free_areas.push(area);
             }
           });
 
@@ -372,22 +243,10 @@ export default {
         return data;
       }
     },
-    fillBox: function (boxUuid, area, item) {
-      const { value, rowIndex, columnIndex } = area;
-      const { w, l, h } = item;
-
-      const rowTo = rowIndex + w;
-      const columnTo = columnIndex + l;
-      const height = value + h;
-
-      for (let i = columnIndex; i < columnTo; i++) {
-        for (let j = rowIndex; j < rowTo; j++) {
-          this.boxesData[boxUuid].volume[i][j] = height;
-        }
-      }
-    },
     packItems: function () {
-      for (const [key, value] of Object.entries(this.boxesData)) {
+      const { ManageBoxes } = this;
+
+      for (const [key, value] of Object.entries(ManageBoxes.boxesData)) {
         if (!this.currentItems.length) {
           break;
         }
@@ -397,14 +256,18 @@ export default {
     itemForArea: function (item, area, boxHeight) {
       const { width, lengthy, height, color } = item;
       const { value, rowCount, columnCount } = area;
-      const { ws, ls, hs } = this.scaleSizes(width, lengthy, height);
+      const { ws, ls, hs } = this.ManageBoxes.scaleSizes(
+        width,
+        lengthy,
+        height
+      );
 
       const areaLenght = columnCount + 1;
       const areaWidth = rowCount + 1;
 
       const checkValues_lenghtAsHeight =
         value + ls <= boxHeight && areaLenght >= hs && areaWidth >= ws;
-
+      // debugger
       if (checkValues_lenghtAsHeight) {
         return { w: ws, l: hs, h: ls, color };
       }
@@ -447,14 +310,14 @@ export default {
       return null;
     },
     findLengthSquare: function (box) {
-      const squares = []; // Главный претендент на самый длинный
+      const squares = [];
       let temp = {
         value: 0,
         rowCount: 0,
         rowIndex: 0,
         columnCount: 0,
         columnIndex: 0,
-      }; // Временное хранилище текущей цепочки
+      };
       const columns = [];
 
       for (let i = 0; i < box[0].length; i++) {
@@ -522,14 +385,14 @@ export default {
       return squares;
     },
     findWidthSquare: function (box) {
-      const squares = []; // Главный претендент на самый длинный
+      const squares = [];
       let temp = {
         value: 0,
         rowCount: 0,
         rowIndex: 0,
         columnCount: 0,
         columnIndex: 0,
-      }; // Временное хранилище текущей цепочки
+      };
       const lines = [];
 
       for (let i = 0; i < box.length; i++) {
@@ -606,365 +469,10 @@ export default {
 
       return squares;
     },
-    addBox: function ({ w, l, h, color }, position) {
-      if (this.scene) {
-        const group = new THREE.Group();
-
-        const frontPosition = { z: l / 2, y: h / 2 };
-        const backPosition = { z: -l / 2, y: h / 2 };
-        const rightPosition = { x: w / 2, y: h / 2 };
-        const leftPosition = { x: -w / 2, y: h / 2 };
-        const floorPosition = { y: 0 };
-
-        const leftRightRotate = { y: Math.PI * 0.5 };
-        const floorRotate = { x: Math.PI * 0.5 };
-
-        const frontBorder = this.addPlane(w, h, frontPosition, null, color);
-        const backBorder = this.addPlane(w, h, backPosition, null, color);
-        const rightBorder = this.addPlane(
-          l,
-          h,
-          rightPosition,
-          leftRightRotate,
-          color
-        );
-        const leftBorder = this.addPlane(
-          l,
-          h,
-          leftPosition,
-          leftRightRotate,
-          color
-        );
-        const floorBorder = this.addPlane(w, l, floorPosition, floorRotate);
-        floorBorder.material.color.setHex(color);
-
-        group.add(frontBorder);
-        group.add(backBorder);
-        group.add(rightBorder);
-        group.add(leftBorder);
-        group.add(floorBorder);
-
-        if (position) {
-          const pos = { y: 0.05 };
-          this.position(group, { ...position, ...pos });
-        }
-
-        group.position.y = 0.05;
-        const { uuid } = group;
-
-        const volume = new Array(Math.ceil(l));
-        for (var i = 0; i < l; i++) {
-          volume[i] = new Array(w).fill(0);
-        }
-
-        this.boxesData[uuid] = {
-          volume,
-          height: h,
-        };
-
-        this.boxUuids.push(uuid);
-        this.scene.add(group);
-      }
-    },
-    addPlane: function (w, l, position, rotate, edge) {
-      const planeGeo = new THREE.PlaneGeometry(w, l);
-      let mesh = null;
-
-      if (edge) {
-        const color = +edge || 0xff9a00;
-        const edges = new THREE.EdgesGeometry(planeGeo);
-        mesh = new THREE.LineSegments(
-          edges,
-          new THREE.LineBasicMaterial({ color })
-        );
-      } else {
-        const planeMat = new THREE.MeshPhongMaterial({
-          side: THREE.DoubleSide,
-        });
-        mesh = new THREE.Mesh(planeGeo, planeMat);
-      }
-
-      if (rotate) {
-        this.rotate(mesh, rotate);
-      }
-      if (position) {
-        this.position(mesh, position);
-      }
-      return mesh;
-    },
-    addFloorPlane: function () {
-      if (this.scene) {
-        const loader = new THREE.TextureLoader();
-        const texture = loader.load(
-          "https://threejsfundamentals.org/threejs/resources/images/checker.png"
-        );
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-        texture.magFilter = THREE.NearestFilter;
-        const repeats = this.floorPlaneSize / 2;
-        texture.repeat.set(repeats, repeats);
-
-        const planeGeo = new THREE.PlaneGeometry(
-          this.floorPlaneSize,
-          this.floorPlaneSize
-        );
-        const planeMat = new THREE.MeshPhongMaterial({
-          map: texture,
-          side: THREE.DoubleSide,
-        });
-        const mesh = new THREE.Mesh(planeGeo, planeMat);
-        mesh.rotation.x = Math.PI * -0.5;
-        this.scene.add(mesh);
-      }
-    },
-    addCube: function (item, area, boxUuid) {
-      const { w, l, h, color } = item;
-
-      if (this.scene) {
-        const box = this.scene.getObjectByProperty("uuid", boxUuid);
-
-        if (box) {
-          const boxWidth = this.boxesData[boxUuid].volume[0].length;
-          const boxLength = this.boxesData[boxUuid].volume.length;
-
-          const isDark = this.isDarkColor(color);
-
-          const cubeGeo = new THREE.BoxGeometry(w, h, l);
-          const cubeMat = new THREE.MeshPhongMaterial({ color });
-          const mesh = new THREE.Mesh(cubeGeo, cubeMat);
-
-          const geo = new THREE.EdgesGeometry(mesh.geometry);
-          const mat = new THREE.LineBasicMaterial({
-            color: isDark ? 0xffffff : 0x000000,
-          });
-          const wireframe = new THREE.LineSegments(geo, mat);
-
-          mesh.add(wireframe);
-          mesh.receiveShadow = true;
-          mesh.castShadow = true;
-
-          if (area) {
-            const { value, columnIndex, rowIndex } = area;
-
-            const x = -boxWidth / 2 + w / 2 + rowIndex;
-            const y = h / 2 + value;
-            const z = -boxLength / 2 + l / 2 + columnIndex;
-
-            this.position(mesh, { x, y, z });
-          } else {
-            const y = h / 2;
-            this.position(mesh, { y });
-          }
-
-          const { uuid } = mesh;
-          this.itemsUuids.push(uuid);
-
-          box.add(mesh);
-        }
-      }
-    },
-    addLight: function () {
-      if (this.scene) {
-        const color = 0xffffff;
-
-        const hemiLight = new THREE.HemisphereLight(color, 0x444444);
-        hemiLight.position.set(0, 20, 0);
-        this.scene.add(hemiLight);
-
-        const dirLight = new THREE.DirectionalLight(color, 0.5);
-        dirLight.position.set(3, 10, 10);
-        dirLight.castShadow = true;
-        dirLight.shadow.camera.top = 2;
-        dirLight.shadow.camera.bottom = -2;
-        dirLight.shadow.camera.left = -2;
-        dirLight.shadow.camera.right = 2;
-        dirLight.shadow.camera.near = 0.1;
-        dirLight.shadow.camera.far = 40;
-
-        this.scene.add(dirLight);
-      }
-    },
-    addCamera: function () {
-      this.view1Elem = this.$refs.view1;
-      const fov = 45;
-      const aspect = 2; // the canvas default
-      const near = 5;
-      const far = 100;
-
-      this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-      this.camera.position.set(0, 10, 20);
-    },
-    addControlls: function () {
-      const { camera, view1Elem } = this;
-
-      if (view1Elem && camera) {
-        const controls = new OrbitControls(camera, view1Elem);
-        // comment 4 below lines for rotate scene in all directions
-        controls.minPolarAngle = 0;
-        controls.maxPolarAngle = Math.PI * 0.5;
-        controls.minDistance = 15;
-        controls.maxDistance = 40;
-        // comment 4 above lines for rotate scene in all directions
-        controls.target.set(0, 5, 0);
-        controls.update();
-      }
-    },
-    addScene: function () {
-      this.scene = new THREE.Scene();
-      this.scene.background = new THREE.Color("grey");
-    },
-    resizeRendererToDisplaySize: function () {
-      const { renderer } = this;
-
-      if (renderer) {
-        this.canvas = renderer.domElement;
-        const width = this.canvas.clientWidth;
-        const height = this.canvas.clientHeight;
-        const needResize =
-          this.canvas.width !== width || this.canvas.height !== height;
-        if (needResize) {
-          renderer.setSize(width, height, false);
-        }
-        return needResize;
-      }
-    },
-    render: function () {
-      const { renderer, camera, scene } = this;
-      this.resizeRendererToDisplaySize();
-
-      if (renderer && scene && camera) {
-        camera.updateProjectionMatrix();
-        renderer.render(scene, camera);
-
-        requestAnimationFrame(this.render);
-      }
-    },
-    addRenderer: function () {
-      this.canvas = this.$refs.canvas;
-      this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas });
-    },
-    initBoxes: function () {
-      if (!this.variant) {
-        return;
-      }
-
-      const { convertSizes, scaleSizes, addBox, positionByIndex } = this;
-      //remove old boxes
-      this.boxUuids.map((uuid) => {
-        if (this.scene) {
-          const object = this.scene.getObjectByProperty("uuid", uuid);
-          if (object) {
-            object.clear();
-            object.removeFromParent();
-            delete this.boxesData[uuid];
-          }
-        }
-      });
-
-      this.boxUuids = [];
-
-      if (!Array.isArray(this.variant)) {
-        initBox(this.variant);
-      } else {
-        this.variant.map((v, index) => initBox(v, index));
-      }
-
-      function checkColor(color) {
-        if (!color) {
-          const col = THREE.MathUtils.randInt(0, 0xffffff);
-          const c = new THREE.Color().set(col).getHexString();
-          return `0x${c}`;
-        }
-        return color;
-      }
-
-      function initBox(box, index) {
-        const { width, lengthy, height, color } = convertSizes(box);
-        const { ws, ls } = scaleSizes(width, lengthy, height);
-
-        const boxHeight = Math.floor(height);
-        const pos = index && positionByIndex(index, width, lengthy);
-
-        const currentColor = checkColor(color);
-        const changes = {
-          color: currentColor,
-          w: ws,
-          l: ls,
-          h: boxHeight,
-        };
-
-        const newItem = { ...box, ...changes };
-
-        addBox(newItem, pos);
-      }
-    },
-    clearAllItems: function () {
-      //remove items cubicles
-      this.itemsUuids.map((uuid) => {
-        if (this.scene) {
-          const object = this.scene.getObjectByProperty("uuid", uuid);
-          if (object) {
-            object.clear();
-            object.removeFromParent();
-          }
-        }
-      });
-
-      this.itemsUuids = [];
-    },
-    init: function () {
-      this.addRenderer();
-      this.addCamera();
-      this.addControlls();
-      this.addScene();
-
-      this.addFloorPlane();
-      this.addLight();
-    },
-    initItems: function () {
-      const copiedItems = [...this.items]
-        .map((item) => {
-          const newItem = { ...item };
-          const { color } = newItem;
-
-          if (!color) {
-            const col = THREE.MathUtils.randInt(0, 0xffffff);
-            const colorValue = new THREE.Color().set(col).getHexString();
-            newItem.color = `#${colorValue}`;
-          }
-          newItem.packed = false;
-
-          return this.convertSizes(newItem);
-        })
-        .sort(this.sortByVolume);
-
-      this.copiedItems = copiedItems;
-      this.setCurrentItems();
-    },
-    setCurrentItems: function () {
-      this.currentItems = [...this.copiedItems];
-    },
-    sortByVolume: function (a, b) {
-      if (a.volume > b.volume) {
-        return -1;
-      }
-      if (a.volume < b.volume) {
-        return 1;
-      }
-      return 0;
-    },
-    reset: function () {
-      if (!this.autoPack) {
-        this.clearAllItems();
-        this.initBoxes();
-        this.initItems();
-        this.boxFilled = [];
-      }
-    },
     initPackedItems: function () {
-      const ids = this.currentItems.map((item) => item.id);
+      const ids = this.currentItems.map(({ id }) => id);
 
-      this.packedItems = [...this.copiedItems].map((item) => {
+      this.packedItems = [...this.items].map((item) => {
         const { id } = item;
         const isExist = ids.includes(id);
 
@@ -973,13 +481,27 @@ export default {
         return item;
       });
     },
+    initBoxes: function () {
+      if (!this.variant) {
+        return;
+      }
+
+      if (!Array.isArray(this.variant)) {
+        this.ManageBoxes.addBox(this.variant);
+      } else {
+        this.variant.map((v, index) => this.ManageBoxes.addBox(v, index));
+      }
+    },
+    reset: function () {
+      this.ManageBoxes.clearAllBoxesData();
+      this.ManageBoxes.clearAllPacks();
+      this.packedItems = [];
+      this.currentItems = [...this.items];
+    },
   },
   mounted() {
-    this.init();
-    this.render();
-    this.initItems();
-    this.initBoxes();
-    this.packItems();
+    const { $refs } = this;
+    this.ManageBoxes = new ManageBoxes($refs.canvas, $refs.view1);
   },
 };
 </script>
