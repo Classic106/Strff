@@ -446,7 +446,7 @@ export default {
       this.currentItems = [...this.items].map((item) => {
         const box = this.convertSizes(item);
         this.setMaxs(box);
-        return item;
+        return box;
       });
 
       if (this.deliveries.length) {
