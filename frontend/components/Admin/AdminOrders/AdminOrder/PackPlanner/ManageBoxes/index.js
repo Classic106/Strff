@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import isDarkColor from "is-dark-color";
-import { convertSizes } from "~/utils/functions";
 
 import Scene from "./Scene";
 
@@ -159,8 +158,7 @@ export default class ManageBoxes {
   }
   addBox(box, index) {
     const { w, l, h, color } = this.initBox(box);
-
-    const position = index && this.positionByIndex(index, width, lengthy);
+    const position = index && this.positionByIndex(index, w, l);
 
     if (this.scene) {
       const group = new THREE.Group();
@@ -191,8 +189,9 @@ export default class ManageBoxes {
         color
       );
       const floorBorder = this.addPlane(w, l, floorPosition, floorRotate);
-      floorBorder.material.color.setHex(color);
-
+      if (color) {
+        floorBorder.material.color.setHex(color);
+      }
       group.add(frontBorder);
       group.add(backBorder);
       group.add(rightBorder);
@@ -222,10 +221,9 @@ export default class ManageBoxes {
     }
   }
   addPack(pack, area, boxUuid) {
-    const init_pack = this.initPack(pack);
-    this.fillBox(boxUuid, area, init_pack);
+    this.fillBox(boxUuid, area, pack);
 
-    const { w, l, h, color } = init_pack;
+    const { w, l, h, color } = pack;
 
     if (this.scene) {
       const box = this.scene.getObjectByProperty("uuid", boxUuid);
@@ -272,7 +270,7 @@ export default class ManageBoxes {
     }
   }
   initBox(box) {
-    const { width, lengthy, height, color } = convertSizes(box);
+    const { width, lengthy, height, color } = box;
     const { ws, ls } = this.scaleSizes(width, lengthy, height);
 
     const boxHeight = Math.floor(height);
@@ -298,17 +296,17 @@ export default class ManageBoxes {
   }
   initPack(pack) {
     const newPack = { ...pack };
-    const { width, lengthy, height, color } = newPack;
+    const { width, lengthy, height, color } = pack;
     const { ws, ls, hs } = this.scaleSizes(width, lengthy, height);
 
     if (!color) {
       const col = THREE.MathUtils.randInt(0, 0xffffff);
       const colorValue = new THREE.Color().set(col).getHexString();
-      newItem.color = `#${colorValue}`;
+      newPack.color = `#${colorValue}`;
     }
     newPack.packed = false;
 
-    return convertSizes({ ...newPack, width: ws, lengthy: ls, height: hs });
+    return { ...newPack, w: ws, l: ls, h: hs };
   }
   sortByVolume(a, b) {
     if (a.volume > b.volume) {
@@ -343,6 +341,8 @@ export default class ManageBoxes {
       });
       this.itemsUuids = [];
     }
+
+    this.clearAllBoxesData();
   }
   clearAllBoxesData() {
     for (const [key, value] of Object.entries(this.boxesData)) {
@@ -358,7 +358,7 @@ export default class ManageBoxes {
   }
   clearAllBoxes() {
     //remove old boxes
-    if (this.boxUuids) {
+    if (this.boxUuids.length) {
       this.boxUuids.map((uuid) => {
         if (this.scene) {
           const object = this.scene.getObjectByProperty("uuid", uuid);
@@ -370,6 +370,7 @@ export default class ManageBoxes {
       });
 
       this.boxUuids = [];
+      this.boxesData = {};
     }
   }
 }

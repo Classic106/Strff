@@ -44,22 +44,21 @@ import Items from "./Items.vue";
 export default {
   name: "PlannerVisual",
   props: {
-    variant: [Object, Array],
+    variant: [Object, Array, null],
     items: Array,
   },
   components: { Items },
   data: () => ({
-    autoPack: false,
+    autoPack: true,
     nextItem: false,
     packedItems: [],
     currentItems: [],
+    copiedItems: [],
     boxFilled: [],
     ManageBoxes: null,
   }),
   watch: {
     autoPack: function () {
-      this.ManageBoxes.clearAllPacks();
-
       if (this.autoPack) {
         this.packItems();
       } else {
@@ -67,6 +66,10 @@ export default {
       }
     },
     nextItem: function () {
+      if (!this.ManageBoxes) {
+        return;
+      }
+
       if (this.ManageBoxes.boxUuids.length) {
         const boxes = [...this.ManageBoxes.boxUuids].filter(
           (box) => !this.boxFilled.includes(box)
@@ -87,25 +90,41 @@ export default {
       deep: true,
     },
     variant: function () {
-      this.currentItems = [...this.items];
-      this.clearAllItems();
-      this.initBoxes();
+      this.initAll();
       if (this.autoPack) {
         this.packItems();
       }
     },
     items: function () {
-      this.packItems();
+      this.initAll();
+      if (this.autoPack) {
+        this.packItems();
+      }
     },
   },
   methods: {
     clearAllItems: function () {
       const { ManageBoxes } = this;
+      if (!ManageBoxes) {
+        return;
+      }
       ManageBoxes.clearAllPacks();
       ManageBoxes.clearAllBoxes();
       this.boxFilled = [];
     },
+    add_Pack: function (boxUuid, obj) {
+      if (this.ManageBoxes && obj) {
+        const { area, cube, item_index } = obj;
+
+        this.currentItems.splice(item_index, 1);
+        this.ManageBoxes.addPack(cube, area, boxUuid);
+      }
+    },
     packBox: function (boxUuid) {
+      if (!this.ManageBoxes) {
+        return;
+      }
+
       const { itemForArea, currentItems } = this;
 
       if (!currentItems.length) {
@@ -121,37 +140,30 @@ export default {
       const length_result = itemInArea(lengthAreas);
 
       if (width_result && length_result) {
-        const {
-          area: width_area,
-          cube: width_cube,
-          item_index: width_item_index,
-        } = width_result;
-        const {
-          area: length_area,
-          cube: length_cube,
-          item_index: length_item_index,
-        } = length_result;
+        const { area: width_area, cube: width_cube } = width_result;
+        const { area: length_area, cube: length_cube } = length_result;
 
         const width_value = width_area.value;
         const length_value = length_area.value;
 
-        if (width_value < length_value) {
-          this.currentItems.splice(length_item_index, 1);
-          this.ManageBoxes.addPack(length_cube, length_area, boxUuid);
+        const width_volume = width_cube.volume;
+        const length_volume = length_cube.volume;
+
+        if (width_value === length_value) {
+          if (width_volume <= length_volume) {
+            this.add_Pack(boxUuid, length_result);
+          } else {
+            this.add_Pack(boxUuid, width_result);
+          }
+        } else if (width_value > length_value) {
+          this.add_Pack(boxUuid, length_result);
         } else {
-          this.currentItems.splice(width_item_index, 1);
-          this.ManageBoxes.addPack(width_cube, width_area, boxUuid);
+          this.add_Pack(boxUuid, width_result);
         }
       } else if (width_result) {
-        const { area, cube, item_index } = width_result;
-
-        this.currentItems.splice(item_index, 1);
-        this.ManageBoxes.addPack(cube, area, boxUuid);
+        this.add_Pack(boxUuid, width_result);
       } else if (length_result) {
-        const { area, cube, item_index } = length_result;
-
-        this.currentItems.splice(item_index, 1);
-        this.ManageBoxes.addPack(cube, area, boxUuid);
+        this.add_Pack(boxUuid, length_result);
       }
 
       if (
@@ -178,8 +190,6 @@ export default {
 
       function itemInArea(areas) {
         const free_areas = [];
-        currentItems;
-        // debugger;
         areas
           .filter((area) => area.value < height)
           .map((area) => {
@@ -244,67 +254,68 @@ export default {
       }
     },
     packItems: function () {
-      const { ManageBoxes } = this;
+      if (!this.ManageBoxes) {
+        return;
+      }
 
-      for (const [key, value] of Object.entries(ManageBoxes.boxesData)) {
+      for (const [key, value] of Object.entries(this.ManageBoxes.boxesData)) {
         if (!this.currentItems.length) {
           break;
         }
         this.packBox(key);
       }
     },
-    itemForArea: function (item, area, boxHeight) {
-      const { width, lengthy, height, color } = item;
+    itemForArea: function (pack, area, boxHeight) {
+      if (!this.ManageBoxes) {
+        return;
+      }
+
       const { value, rowCount, columnCount } = area;
-      const { ws, ls, hs } = this.ManageBoxes.scaleSizes(
-        width,
-        lengthy,
-        height
-      );
+      const { w, l, h } = pack;
 
       const areaLenght = columnCount + 1;
       const areaWidth = rowCount + 1;
 
       const checkValues_lenghtAsHeight =
-        value + ls <= boxHeight && areaLenght >= hs && areaWidth >= ws;
-      // debugger
+        value + l <= boxHeight && areaLenght >= h && areaWidth >= w;
+
       if (checkValues_lenghtAsHeight) {
-        return { w: ws, l: hs, h: ls, color };
+        return { ...pack, w, l: h, h: l };
       }
 
       const checkValues_widthAsHeight =
-        value + ws <= boxHeight && areaLenght >= ls && areaWidth >= hs;
+        value + w <= boxHeight && areaLenght >= l && areaWidth >= h;
 
       if (checkValues_widthAsHeight) {
-        return { w: hs, l: ls, h: ws, color };
+        return { ...pack, w: h, l, h: w };
       }
 
       const checkValue_widthAsLenght =
-        value + hs <= boxHeight && areaLenght >= ws && areaWidth >= ls;
+        value + h <= boxHeight && areaLenght >= w && areaWidth >= l;
 
       if (checkValue_widthAsLenght) {
-        return { w: ls, l: ws, h: hs, color };
+        return { ...pack, w: l, l: w, h };
       }
 
       const checkValues_widthAsHeight_heightAsLenght =
-        value + ws <= boxHeight && areaLenght >= hs && areaWidth >= ls;
+        value + w <= boxHeight && areaLenght >= h && areaWidth >= l;
 
       if (checkValues_widthAsHeight_heightAsLenght) {
-        return { w: ls, l: hs, h: ws, color };
+        return { ...pack, w: l, l: h, h: w };
       }
 
       const checkValues_lenghtAsHeight_heightAsWidth =
-        value + ls <= boxHeight && areaLenght >= ws && areaWidth >= hs;
+        value + l <= boxHeight && areaLenght >= w && areaWidth >= h;
 
       if (checkValues_lenghtAsHeight_heightAsWidth) {
-        return { w: hs, l: ws, h: ls, color };
+        return { ...pack, w: h, l: w, h: l };
       }
 
       const checkValues_same =
-        value + hs <= boxHeight && areaLenght >= ls && areaWidth >= ws;
+        value + h <= boxHeight && areaLenght >= l && areaWidth >= w;
 
       if (checkValues_same) {
-        return { w: ws, l: ls, h: hs, color };
+        return pack;
       }
 
       return null;
@@ -472,7 +483,7 @@ export default {
     initPackedItems: function () {
       const ids = this.currentItems.map(({ id }) => id);
 
-      this.packedItems = [...this.items].map((item) => {
+      this.packedItems = [...this.copiedItems].map((item) => {
         const { id } = item;
         const isExist = ids.includes(id);
 
@@ -482,26 +493,56 @@ export default {
       });
     },
     initBoxes: function () {
-      if (!this.variant) {
+      if (!this.variant || !this.ManageBoxes) {
         return;
       }
 
       if (!Array.isArray(this.variant)) {
         this.ManageBoxes.addBox(this.variant);
       } else {
-        this.variant.map((v, index) => this.ManageBoxes.addBox(v, index));
+        this.variant.map((v, index) => {
+          if (this.ManageBoxes) {
+            this.ManageBoxes.addBox(v, index);
+          }
+        });
       }
     },
+    initAll: function () {
+      this.copiedItems = [...this.items]
+        .sort(this.ManageBoxes?.sortByVolume)
+        .map((pack) => {
+          if (this.ManageBoxes) {
+            return this.ManageBoxes.initPack(pack);
+          }
+          return pack;
+        });
+      this.currentItems = [...this.copiedItems];
+
+      this.ManageBoxes?.clearAllBoxes();
+      this.clearAllItems();
+
+      this.initBoxes();
+    },
     reset: function () {
-      this.ManageBoxes.clearAllBoxesData();
-      this.ManageBoxes.clearAllPacks();
-      this.packedItems = [];
-      this.currentItems = [...this.items];
+      if (this.ManageBoxes) {
+        this.ManageBoxes.clearAllPacks();
+        this.packedItems = [];
+        this.currentItems = [...this.copiedItems]
+          .sort(this.ManageBoxes?.sortByVolume)
+          .map((pack) => {
+            if (this.ManageBoxes) {
+              return this.ManageBoxes.initPack(pack);
+            }
+            return pack;
+          });
+      }
     },
   },
   mounted() {
     const { $refs } = this;
-    this.ManageBoxes = new ManageBoxes($refs.canvas, $refs.view1);
+    if ($refs.canvas && $refs.view1) {
+      this.ManageBoxes = new ManageBoxes($refs.canvas, $refs.view1);
+    }
   },
 };
 </script>
