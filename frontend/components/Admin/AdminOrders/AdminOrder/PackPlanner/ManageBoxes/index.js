@@ -117,15 +117,15 @@ export default class ManageBoxes {
     return mesh;
   }
   fillBox(boxUuid, area, item) {
-    const { value, rowIndex, columnIndex } = area;
+    const { value, topLeft } = area;
     const { w, l, h } = item;
 
-    const rowTo = rowIndex + w;
-    const columnTo = columnIndex + l;
+    const rowTo = topLeft[0] + l;
+    const columnTo = topLeft[1] + w;
     const height = value + h;
 
-    for (let i = columnIndex; i < columnTo; i++) {
-      for (let j = rowIndex; j < rowTo; j++) {
+    for (let i = topLeft[0]; i < rowTo; i++) {
+      for (let j = topLeft[1]; j < columnTo; j++) {
         this.boxesData[boxUuid].volume[i][j] = height;
       }
     }
@@ -249,11 +249,11 @@ export default class ManageBoxes {
         mesh.castShadow = true;
 
         if (area) {
-          const { value, columnIndex, rowIndex } = area;
+          const { value, topLeft } = area;
 
-          const x = -boxWidth / 2 + w / 2 + rowIndex;
+          const x = -boxWidth / 2 + w / 2 + topLeft[1];
           const y = h / 2 + value;
-          const z = -boxLength / 2 + l / 2 + columnIndex;
+          const z = -boxLength / 2 + l / 2 + topLeft[0];
 
           this.position(mesh, { x, y, z });
         } else {

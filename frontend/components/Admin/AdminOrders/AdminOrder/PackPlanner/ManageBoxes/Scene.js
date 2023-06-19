@@ -10,8 +10,8 @@ export default class Scene {
   floorPlaneSize = 40;
 
   constructor(canvas, view1Elem) {
-    this.view1Elem = view1Elem;
     this.canvas = canvas;
+    this.view1Elem = view1Elem;
 
     if (view1Elem && canvas) {
       this.init();
@@ -114,7 +114,7 @@ export default class Scene {
     this.resizeRendererToDisplaySize();
 
     if (this && renderer && scene && camera) {
-      this.camera.updateProjectionMatrix();
+      camera.updateProjectionMatrix();
       renderer.render(scene, camera);
 
       requestAnimationFrame(this.render.bind(this));
@@ -122,9 +122,11 @@ export default class Scene {
   }
   addRenderer() {
     const { canvas } = this;
-    this.renderer = new THREE.WebGLRenderer({ canvas });
+    if (canvas) {
+      this.renderer = new THREE.WebGLRenderer({ canvas });
+    }
   }
-  init () {
+  init() {
     this.addRenderer();
     this.addCamera();
     this.addControlls();

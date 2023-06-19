@@ -125,45 +125,44 @@ export default {
         return;
       }
 
-      const { itemForArea, currentItems } = this;
+      const { findAreas, currentItems } = this;
 
       if (!currentItems.length) {
         return;
       }
-      const { volume, height } = this.ManageBoxes.boxesData[boxUuid];
 
-      const widthAreas = this.findWidthSquare(volume);
-      const lengthAreas = this.findLengthSquare(volume);
+      const { volume, height } = this.ManageBoxes.boxesData[boxUuid];
       const current_items_length = this.currentItems.length;
 
-      const width_result = itemInArea(widthAreas);
-      const length_result = itemInArea(lengthAreas);
+      const areas = findAreas(volume)
+        .filter(({ value }) => value < height)
+        .sort((a, b) => {
+          const square_A = a.length * a.width;
+          const square_B = b.length * b.width;
 
-      if (width_result && length_result) {
-        const { area: width_area, cube: width_cube } = width_result;
-        const { area: length_area, cube: length_cube } = length_result;
-
-        const width_value = width_area.value;
-        const length_value = length_area.value;
-
-        const width_volume = width_cube.volume;
-        const length_volume = length_cube.volume;
-
-        if (width_value === length_value) {
-          if (width_volume <= length_volume) {
-            this.add_Pack(boxUuid, length_result);
-          } else {
-            this.add_Pack(boxUuid, width_result);
+          if (square_A > square_B) {
+            return -1;
+          } else if (square_A > square_B) {
+            return 1;
           }
-        } else if (width_value > length_value) {
-          this.add_Pack(boxUuid, length_result);
-        } else {
-          this.add_Pack(boxUuid, width_result);
-        }
-      } else if (width_result) {
-        this.add_Pack(boxUuid, width_result);
-      } else if (length_result) {
-        this.add_Pack(boxUuid, length_result);
+          return 0;
+        })
+        .sort((a, b) => {
+          const val_A = a.value;
+          const val_B = b.value;
+
+          if (val_A < val_B) {
+            return -1;
+          } else if (val_A > val_B) {
+            return 1;
+          }
+          return 0;
+        });
+
+      const data = this.findPack(areas, height);
+
+      if (data) {
+        this.add_Pack(boxUuid, data);
       }
 
       if (
@@ -187,71 +186,6 @@ export default {
           return;
         }
       }
-
-      function itemInArea(areas) {
-        const free_areas = [];
-        areas
-          .filter((area) => area.value < height)
-          .map((area) => {
-            const { value, rowIndex, rowCount, columnIndex, columnCount } =
-              area;
-            const result = areas.filter((a) => {
-              return (
-                a.value === value &&
-                a.rowIndex === rowIndex &&
-                a.rowCount === rowCount &&
-                a.columnIndex === columnIndex &&
-                a.columnCount === columnCount
-              );
-            });
-
-            if (!result.length) {
-              free_areas.push(area);
-            }
-          });
-
-        free_areas.sort((a, b) => {
-          const { value: val_A, columnCount: colC_A, rowCount: rowC_A } = a;
-          const { value: val_B, columnCount: colC_B, rowCount: rowC_B } = b;
-
-          const square_A = colC_A * rowC_A;
-          const square_B = colC_B * rowC_B;
-
-          if (val_A < val_B && square_A < square_B) {
-            return -1;
-          } else if (val_A > val_B && square_A > square_B) {
-            return 1;
-          } else {
-            if (square_A < square_B) {
-              return -1;
-            } else if (square_A > square_B) {
-              return 1;
-            } else {
-              return 0;
-            }
-          }
-        });
-
-        let data = null;
-
-        for (let i = 0; i < areas.length; i++) {
-          if (!currentItems.length) {
-            break;
-          }
-
-          for (let j = 0; j < currentItems.length; j++) {
-            const item = currentItems[j];
-            const area = areas[i];
-            const cube = itemForArea(item, area, height);
-
-            if (cube) {
-              data = { cube, item_index: j, area };
-              break;
-            }
-          }
-        }
-        return data;
-      }
     },
     packItems: function () {
       if (!this.ManageBoxes) {
@@ -265,54 +199,75 @@ export default {
         this.packBox(key);
       }
     },
+    findPack: function (areas, height) {
+      const { currentItems, itemForArea } = this;
+
+      let data = null;
+
+      for (let i = 0; i < areas.length && !data; i++) {
+        if (!currentItems.length) {
+          break;
+        }
+
+        for (let j = 0; j < currentItems.length; j++) {
+          const item = currentItems[j];
+          const area = areas[i];
+          const cube = itemForArea(item, area, height);
+
+          if (cube) {
+            data = { cube, item_index: j, area };
+            break;
+          }
+        }
+      }
+
+      return data;
+    },
     itemForArea: function (pack, area, boxHeight) {
       if (!this.ManageBoxes) {
         return;
       }
 
-      const { value, rowCount, columnCount } = area;
+      const { value, width, length } = area;
       const { w, l, h } = pack;
 
-      const areaLenght = columnCount + 1;
-      const areaWidth = rowCount + 1;
-
       const checkValues_lenghtAsHeight =
-        value + l <= boxHeight && areaLenght >= h && areaWidth >= w;
+        value + l <= boxHeight && length >= h && width >= w;
 
       if (checkValues_lenghtAsHeight) {
         return { ...pack, w, l: h, h: l };
       }
 
       const checkValues_widthAsHeight =
-        value + w <= boxHeight && areaLenght >= l && areaWidth >= h;
+        value + w <= boxHeight && length >= l && width >= h;
 
       if (checkValues_widthAsHeight) {
         return { ...pack, w: h, l, h: w };
       }
 
       const checkValue_widthAsLenght =
-        value + h <= boxHeight && areaLenght >= w && areaWidth >= l;
+        value + h <= boxHeight && length >= w && width >= l;
 
       if (checkValue_widthAsLenght) {
         return { ...pack, w: l, l: w, h };
       }
 
       const checkValues_widthAsHeight_heightAsLenght =
-        value + w <= boxHeight && areaLenght >= h && areaWidth >= l;
+        value + w <= boxHeight && length >= h && width >= l;
 
       if (checkValues_widthAsHeight_heightAsLenght) {
         return { ...pack, w: l, l: h, h: w };
       }
 
       const checkValues_lenghtAsHeight_heightAsWidth =
-        value + l <= boxHeight && areaLenght >= w && areaWidth >= h;
+        value + l <= boxHeight && length >= w && width >= h;
 
       if (checkValues_lenghtAsHeight_heightAsWidth) {
         return { ...pack, w: h, l: w, h: l };
       }
 
       const checkValues_same =
-        value + h <= boxHeight && areaLenght >= l && areaWidth >= w;
+        value + h <= boxHeight && length >= l && width >= w;
 
       if (checkValues_same) {
         return pack;
@@ -320,163 +275,82 @@ export default {
 
       return null;
     },
-    findLengthSquare: function (box) {
-      const squares = [];
-      let temp = {
-        value: 0,
-        rowCount: 0,
-        rowIndex: 0,
-        columnCount: 0,
-        columnIndex: 0,
-      };
-      const columns = [];
+    findAreas: function (arr) {
+      const planes = [];
 
-      for (let i = 0; i < box[0].length; i++) {
-        for (let j = 1; j < box.length; j++) {
-          const colValPr = box[j - 1][i];
-          const colValNext = box[j][i];
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < arr[i].length; j++) {
+          const currentValue = arr[i][j];
+          let width = 1;
+          let length = 1;
 
-          if (colValPr === colValNext) {
-            temp.value = colValNext;
-            temp.columnCount++;
-            temp.rowIndex = i;
+          while (
+            j + width < arr[i].length &&
+            arr[i][j + width] === currentValue
+          ) {
+            width++;
+          }
 
-            if (!columns.length) {
-              columns.push({ ...temp });
-            } else {
-              columns[columns.length - 1].columnCount++;
-            }
-          } else {
-            temp.value = colValNext;
-            temp.rowIndex = i;
-            temp.columnCount = 0;
-            temp.columnIndex = j;
+          while (
+            i + length < arr.length &&
+            arr.slice(i, i + length + 1).every((row) => row[j] === currentValue)
+          ) {
+            length++;
+          }
 
-            columns.push({ ...temp });
+          const planeHasEqualValues = arr
+            .slice(i, i + length)
+            .every((row) =>
+              row.slice(j, j + width).every((value) => value === currentValue)
+            );
+
+          if (planeHasEqualValues) {
+            planes.push({
+              topLeft: [i, j],
+              bottomRight: [i + length - 1, j + width - 1],
+              width,
+              length,
+              value: arr[i][j],
+            });
           }
         }
-
-        if (!squares.length && columns.length) {
-          columns.map((column) => squares.push(column));
-
-          columns.length = 0;
-          temp.columnCount = 0;
-          temp.columnIndex = 0;
-          continue;
-        }
-
-        if (squares.length) {
-          columns.map((column) => {
-            const index = squares.findIndex((sq) => {
-              const { value, rowIndex, rowCount, columnIndex, columnCount } =
-                sq;
-
-              const isValue = value === column.value;
-              const isColumn = columnIndex === column.columnIndex;
-              const isColumnCount = columnCount === column.columnCount;
-              const isRow =
-                rowIndex + rowCount + 1 === column.rowIndex ||
-                rowIndex === column.rowIndex;
-
-              return isValue && isColumnCount && isRow && isColumn;
-            });
-
-            if (index !== -1) {
-              squares[index].rowCount++;
-            } else {
-              squares.push(column);
-            }
-          });
-        }
-        columns.length = 0;
-        temp.columnCount = 0;
-        temp.columnIndex = 0;
       }
 
-      return squares;
-    },
-    findWidthSquare: function (box) {
-      const squares = [];
-      let temp = {
-        value: 0,
-        rowCount: 0,
-        rowIndex: 0,
-        columnCount: 0,
-        columnIndex: 0,
-      };
-      const lines = [];
+      const squares = planes.reduce((acc, item) => {
+        const { topLeft, bottomRight } = item;
+        const [b_l, b_w] = bottomRight;
+        const [t_l, t_w] = topLeft;
 
-      for (let i = 0; i < box.length; i++) {
-        for (let j = 1; j < box[i].length; j++) {
-          const valuePr = box[i][j - 1];
-          const valueNext = box[i][j];
+        const index = acc.findIndex(({ topLeft, bottomRight, value }) => {
+          const [l_b, w_b] = bottomRight;
+          const [l_t, w_t] = topLeft;
 
-          if (valuePr === valueNext) {
-            temp.rowCount++;
-            temp.value = valueNext;
-            temp.columnIndex = i;
+          const isValue = item.value === value;
+          const w = t_w >= w_t && t_w <= w_b;
+          const l = t_l >= l_t && t_l <= l_b;
+          const isBottom = w_b === b_w && l_b === b_l;
 
-            if (!lines.length) {
-              lines.push({ ...temp });
-            } else {
-              lines[lines.length - 1].rowCount++;
-            }
-          } else {
-            temp.rowCount = 0;
-            temp.value = valueNext;
-            temp.rowIndex = j;
-            temp.columnIndex = i;
+          return isValue && w && l && isBottom;
+        });
 
-            lines.push({ ...temp });
+        if (index !== -1) {
+          const { topLeft } = acc[index];
+
+          const [w, l] = topLeft;
+
+          if (t_w > w) {
+            acc[index].topLeft[0] = w;
           }
+
+          if (t_l > l) {
+            acc[index].topLeft[1] = l;
+          }
+        } else {
+          acc.push(item);
         }
 
-        if (!squares.length && lines.length) {
-          lines.map((line) => squares.push(line));
-          temp = {
-            value: 0,
-            rowCount: 0,
-            rowIndex: 0,
-            columnCount: 0,
-            columnIndex: 0,
-          };
-          lines.length = 0;
-          continue;
-        }
-
-        if (squares.length) {
-          lines.map((line) => {
-            const index = squares.findIndex((sq) => {
-              const { value, rowIndex, rowCount, columnIndex, columnCount } =
-                sq;
-
-              const isValue = value === line.value;
-              const isRow = rowIndex === line.rowIndex;
-              const isRowCount = rowCount === line.rowCount;
-              const isColumn =
-                columnIndex + columnCount + 1 === line.columnIndex ||
-                columnIndex === line.columnIndex;
-
-              return isValue && isRowCount && isRow && isColumn;
-            });
-
-            if (index !== -1) {
-              squares[index].columnCount++;
-            } else {
-              squares.push(line);
-            }
-          });
-        }
-
-        lines.length = 0;
-        temp = {
-          value: 0,
-          rowCount: 0,
-          rowIndex: 0,
-          columnCount: 0,
-          columnIndex: 0,
-        };
-      }
+        return acc;
+      }, []);
 
       return squares;
     },
@@ -527,6 +401,7 @@ export default {
       if (this.ManageBoxes) {
         this.ManageBoxes.clearAllPacks();
         this.packedItems = [];
+        this.boxFilled = [];
         this.currentItems = [...this.copiedItems]
           .sort(this.ManageBoxes?.sortByVolume)
           .map((pack) => {
@@ -540,7 +415,9 @@ export default {
   },
   mounted() {
     const { $refs } = this;
-    if ($refs.canvas && $refs.view1) {
+    const { canvas, view1 } = $refs;
+
+    if (canvas && view1) {
       this.ManageBoxes = new ManageBoxes($refs.canvas, $refs.view1);
     }
   },
