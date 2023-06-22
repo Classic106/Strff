@@ -98,7 +98,7 @@
         </div>
       </div>
     </div>
-    <PlannerVisual :variant="variant" :items="currentItems" class="mt-4 p-2" />
+    <PlannerVisual :variant="variant" :items="items" class="mt-4 p-2" />
   </div>
 </template>
 
@@ -106,7 +106,6 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { convertSizes } from "~/utils/functions";
 // import { delivery_boxes } from "~/static/delivery_boxes_examples";
-// import { productItems } from "~/static/product_Items_Examples";
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
 import PlannerVisual from "./PlannerVisual.vue";
 
@@ -183,7 +182,7 @@ export default {
       switch (variant) {
         case "same":
           this.activeVariant = "Same";
-          this.variant = sameVolumes[0];
+          this.variant = sameVolumes;
           break;
         case "upper":
           this.activeVariant = "Upper";
@@ -442,16 +441,15 @@ export default {
       }
     },
     init: function () {
-      // this.currentItems = [...productItems].map((item) => {
       this.currentItems = [...this.items].map((item) => {
         const box = this.convertSizes(item);
         this.setMaxs(box);
-        return box;
+        return item;
       });
 
       if (this.deliveries.length) {
-        this.currentBoxes = [...this.deliveries[0].boxes]
-          // this.currentBoxes = [...delivery_boxes]
+        // this.currentBoxes = [...this.deliveries[0].boxes]
+        this.currentBoxes = [...delivery_boxes]
           .map((box) => this.convertSizes(box))
           .sort((a, b) => this.sortByVolume(b, a));
       }

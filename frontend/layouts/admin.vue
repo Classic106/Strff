@@ -25,7 +25,6 @@
           <Nuxt class="p-0 m-0" />
         </vueCustomScrollbar>
       </main>
-      <LightBox />
       <notifications group="all" position="top center" />
     </div>
   </DefaultLayout>
@@ -36,11 +35,10 @@ import DefaultLayout from "~/layouts/default.vue";
 
 import AdminHeader from "~/components/Admin/AdminHeader";
 import AdminMenu from "~/components/Admin/AdminMenu.vue";
-import LightBox from "@/components/common/LightBox.vue";
 
 export default {
   name: "AdminLayout",
-  components: { DefaultLayout, AdminHeader, AdminMenu, LightBox },
+  components: { DefaultLayout, AdminHeader, AdminMenu },
   data: () => ({
     isOpenMenu: false,
     isMobile: true,

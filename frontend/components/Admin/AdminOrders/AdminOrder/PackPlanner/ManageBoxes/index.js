@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import isDarkColor from "is-dark-color";
+import { convertSizes } from "~/utils/functions";
 
 import Scene from "./Scene";
 
@@ -117,15 +118,15 @@ export default class ManageBoxes {
     return mesh;
   }
   fillBox(boxUuid, area, item) {
-    const { value, topLeft } = area;
+    const { value, rowIndex, columnIndex } = area;
     const { w, l, h } = item;
 
-    const rowTo = topLeft[0] + l;
-    const columnTo = topLeft[1] + w;
+    const rowTo = rowIndex + w;
+    const columnTo = columnIndex + l;
     const height = value + h;
 
-    for (let i = topLeft[0]; i < rowTo; i++) {
-      for (let j = topLeft[1]; j < columnTo; j++) {
+    for (let i = columnIndex; i < columnTo; i++) {
+      for (let j = rowIndex; j < rowTo; j++) {
         this.boxesData[boxUuid].volume[i][j] = height;
       }
     }
@@ -158,7 +159,8 @@ export default class ManageBoxes {
   }
   addBox(box, index) {
     const { w, l, h, color } = this.initBox(box);
-    const position = index && this.positionByIndex(index, w, l);
+
+    const position = index && this.positionByIndex(index, width, lengthy);
 
     if (this.scene) {
       const group = new THREE.Group();
@@ -189,9 +191,8 @@ export default class ManageBoxes {
         color
       );
       const floorBorder = this.addPlane(w, l, floorPosition, floorRotate);
-      if (color) {
-        floorBorder.material.color.setHex(color);
-      }
+      floorBorder.material.color.setHex(color);
+
       group.add(frontBorder);
       group.add(backBorder);
       group.add(rightBorder);
@@ -221,9 +222,10 @@ export default class ManageBoxes {
     }
   }
   addPack(pack, area, boxUuid) {
-    this.fillBox(boxUuid, area, pack);
+    const init_pack = this.initPack(pack);
+    this.fillBox(boxUuid, area, init_pack);
 
-    const { w, l, h, color } = pack;
+    const { w, l, h, color } = init_pack;
 
     if (this.scene) {
       const box = this.scene.getObjectByProperty("uuid", boxUuid);
@@ -249,11 +251,11 @@ export default class ManageBoxes {
         mesh.castShadow = true;
 
         if (area) {
-          const { value, topLeft } = area;
+          const { value, columnIndex, rowIndex } = area;
 
-          const x = -boxWidth / 2 + w / 2 + topLeft[1];
+          const x = -boxWidth / 2 + w / 2 + rowIndex;
           const y = h / 2 + value;
-          const z = -boxLength / 2 + l / 2 + topLeft[0];
+          const z = -boxLength / 2 + l / 2 + columnIndex;
 
           this.position(mesh, { x, y, z });
         } else {
@@ -270,7 +272,7 @@ export default class ManageBoxes {
     }
   }
   initBox(box) {
-    const { width, lengthy, height, color } = box;
+    const { width, lengthy, height, color } = convertSizes(box);
     const { ws, ls } = this.scaleSizes(width, lengthy, height);
 
     const boxHeight = Math.floor(height);
@@ -296,17 +298,17 @@ export default class ManageBoxes {
   }
   initPack(pack) {
     const newPack = { ...pack };
-    const { width, lengthy, height, color } = pack;
+    const { width, lengthy, height, color } = newPack;
     const { ws, ls, hs } = this.scaleSizes(width, lengthy, height);
 
     if (!color) {
       const col = THREE.MathUtils.randInt(0, 0xffffff);
       const colorValue = new THREE.Color().set(col).getHexString();
-      newPack.color = `#${colorValue}`;
+      newItem.color = `#${colorValue}`;
     }
     newPack.packed = false;
 
-    return { ...newPack, w: ws, l: ls, h: hs };
+    return convertSizes({ ...newPack, width: ws, lengthy: ls, height: hs });
   }
   sortByVolume(a, b) {
     if (a.volume > b.volume) {
@@ -341,8 +343,6 @@ export default class ManageBoxes {
       });
       this.itemsUuids = [];
     }
-
-    this.clearAllBoxesData();
   }
   clearAllBoxesData() {
     for (const [key, value] of Object.entries(this.boxesData)) {
@@ -358,7 +358,7 @@ export default class ManageBoxes {
   }
   clearAllBoxes() {
     //remove old boxes
-    if (this.boxUuids.length) {
+    if (this.boxUuids) {
       this.boxUuids.map((uuid) => {
         if (this.scene) {
           const object = this.scene.getObjectByProperty("uuid", uuid);
@@ -370,7 +370,6 @@ export default class ManageBoxes {
       });
 
       this.boxUuids = [];
-      this.boxesData = {};
     }
   }
 }

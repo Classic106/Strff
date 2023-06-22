@@ -2,15 +2,7 @@
   <div>
     <h6 class="col-black p-4 text-center text-uppercase">articles</h6>
     <div
-      class="
-        row
-        flex-column flex-md-row
-        mb-5
-        px-4 px-md-0
-        justify-content-center
-        w-100
-        mx-auto
-      "
+      class="row flex-column flex-md-row mb-5 px-4 px-md-0 justify-content-center w-100 mx-auto"
     >
       <div
         class="article col col-lg-6 m-1 p-0"
@@ -19,31 +11,17 @@
       >
         <nuxt-link
           class="d-flex position-relative p-0"
-          :to="`article/${article.id}`"
+          :to="`articles/${article.id}`"
         >
           <img :src="`${getStrapiMedia(article.image.url)}`" alt="image" />
           <div
-            class="
-              inf
-              d-flex
-              flex-column
-              position-absolute
-              justify-content-center
-            "
+            class="inf d-flex flex-column position-absolute justify-content-center"
           >
             <h5 class="w-100 text-center text-uppercase">
               {{ article.name }}
             </h5>
             <div
-              class="
-                date
-                d-flex
-                flex-row flex-lg-column
-                position-absolute
-                px-5
-                py-2
-                mb-lg-3 mb-xl-5
-              "
+              class="date d-flex flex-row flex-lg-column position-absolute px-5 py-2 mb-lg-3 mb-xl-5"
             >
               <h6 class="text-center text-uppercase mr-1">
                 {{ new Date(article.created_at).getDate() | formatDate }}
@@ -60,14 +38,14 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 import "~/utils/filters";
+
 import { getStrapiMedia } from "~/utils/medias";
 
 export default {
   data: () => ({
     articles: [],
-    allArticles: []
+    allArticles: [],
   }),
   methods: { getStrapiMedia },
   async mounted() {
@@ -78,7 +56,7 @@ export default {
         return dateA - dateB;
       })
       .reverse();
-    this.articles = await this.$strapi.find('articles');
+    this.articles = await this.$strapi.find("articles");
     this.articles.length = 2;
   },
 };

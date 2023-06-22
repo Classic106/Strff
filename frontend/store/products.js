@@ -3,7 +3,6 @@ import { error } from "~/utils/error";
 
 export const state = () => ({
   products: [],
-  product: null,
   total: 0,
 });
 
@@ -25,6 +24,7 @@ export const actions = {
       const queryData = {
         _start: (currentPage - 1) * perPage,
         _limit: perPage,
+        _publicationState: "live",
       };
 
       if (search) {
@@ -38,14 +38,13 @@ export const actions = {
       commit("setTotal", total.data);
       commit("setProducts", products.data);
     } catch (e) {
-
       error(e);
     }
   },
-  async getProduct({ commit }, id) {
+  async getProduct(_, id) {
     try {
       const { data } = await this.$axios.get(`/products/${id}`);
-      commit("setProduct", data);
+      return data;
     } catch (e) {
       error(e);
     }
@@ -55,9 +54,6 @@ export const actions = {
 export const mutations = {
   setProducts(state, products) {
     state.products = products;
-  },
-  setProduct(state, product) {
-    state.product = product;
   },
   setTotal(state, total) {
     state.total = total;
@@ -72,9 +68,6 @@ export const mutations = {
 export const getters = {
   products: (state) => {
     return state.products;
-  },
-  product: (state) => {
-    return state.product;
   },
   total(state) {
     return state.total;
