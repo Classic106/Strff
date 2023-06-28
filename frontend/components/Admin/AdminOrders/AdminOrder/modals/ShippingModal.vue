@@ -157,7 +157,7 @@
 </template>
 
 <script>
-import { states } from "@/data";
+import { states } from "@/assets/states";
 
 export default {
   name: "ShippingModal",

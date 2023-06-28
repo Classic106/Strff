@@ -115,7 +115,7 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
-import { states } from "@/data";
+import { states } from "@/assets/states";
 
 export default {
   props: {

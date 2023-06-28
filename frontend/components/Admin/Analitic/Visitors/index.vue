@@ -2,7 +2,7 @@
   <div class="col">
     <ChoseDates class="mt-2" v-on:setRange="setRange" label="Chose dates" />
     <Attendance class="mt-2" />
-    <Cities class="mt-2" />
+    <Cities class="my-2" />
   </div>
 </template>
 

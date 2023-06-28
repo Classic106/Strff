@@ -215,7 +215,7 @@
   import { v4 as uuidv4 } from 'uuid';
   import PayWithAuthorizeNet from '~/utils/payments/authorize-net';
   // import ShipWithUsps from '~/utils/shippings/usps';
-  import { states } from "@/data";
+  import { states } from "@/assets/states";
   import Creditcard from '~/components/Creditcard';
 
   export default {

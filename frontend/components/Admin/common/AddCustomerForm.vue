@@ -206,7 +206,7 @@
 <script>
 import { mapActions } from "vuex";
 
-import { states } from "@/data";
+import { states } from "@/assets/states";
 import { isValidPhone } from "~/utils/functions";
 
 export default {

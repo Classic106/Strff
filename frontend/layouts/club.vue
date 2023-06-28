@@ -23,7 +23,7 @@
 
 <script>
 import DefaultLayout from "~/layouts/default.vue";
-import { search_US_City } from "~/utils/search_US_City";
+import { search_US_City } from "~/utils/search_US";
 
 import ClubHeader from "@/components/Header";
 import ClubFooter from "@/components/Footer";
