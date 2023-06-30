@@ -49,3 +49,5 @@ export function by_state_or_city(by_state, acc, { city, state }, tmp) {
 
   return [acc, tmp];
 }
+
+export default { by_state_or_city };

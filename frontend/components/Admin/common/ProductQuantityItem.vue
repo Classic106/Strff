@@ -40,7 +40,7 @@ export default {
   }),
   methods: {
     deleteProduct: function () {
-      const { id } = this.item;
+      const { id } = this.product;
 
       this.$emit("deleteProduct", id);
     },

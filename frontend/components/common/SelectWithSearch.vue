@@ -1,6 +1,11 @@
 <template>
   <div class="position-relative">
-    <div class="d-flex flex-column align-items-center">
+    <div
+      class="d-flex flex-column align-items-center"
+      :tabindex="tabindex - 100"
+      v-on:mouseenter="mouseenter"
+      v-on:mouseleave="mouseleave"
+    >
       <BPagination
         v-model="page"
         aria-controls="my-table"
@@ -8,40 +13,39 @@
         :class="page < 2 && total <= currentPerPage && 'd-none'"
         :total-rows="total"
         :per-page="currentPerPage"
-      ></BPagination>
+      />
       <div class="custom-select" :tabindex="tabindex">
-        <div class="text-ellipsis selected" @click="open = !open">
-          <input
-            type="text"
-            v-model.trim="text"
-            :placeholder="placeholder || 'Search...'"
-            class="p-0"
-            v-on:input="$emit('setSearchText', text)"
-          />
-        </div>
+        <input
+          type="text"
+          class="p-0 w-100"
+          v-model.trim="text"
+          :placeholder="placeholder || 'Search...'"
+          v-on:click="open = !open"
+          v-on:input="$emit('setSearchText', text)"
+        />
       </div>
-    </div>
-    <ul
-      class="block items p-1 position-absolute w-100"
-      :class="open ? 'd-flex flex-column align-self-end' : 'd-none'"
-    >
-      <div v-if="text && !data.length">
-        <p class="m-0 p-3 w-100 text-center">Nothing not found</p>
-      </div>
-      <vueCustomScrollbar
-        v-else
-        class="scroll w-100 overflow-auto"
-        :settings="scrollSettings"
+      <ul
+        class="block items p-1 position-absolute w-100"
+        :class="open ? 'd-flex flex-column align-self-end' : 'd-none'"
       >
-        <li
-          v-for="(option, i) of data"
-          :key="i"
-          v-on:click="clickOnItem(option)"
+        <div v-if="text && !data.length">
+          <p class="m-0 p-3 w-100 text-center">Nothing not found</p>
+        </div>
+        <vueCustomScrollbar
+          v-else
+          class="scroll w-100 overflow-auto"
+          :settings="scrollSettings"
         >
-          <slot name="item" :item="option"></slot>
-        </li>
-      </vueCustomScrollbar>
-    </ul>
+          <li
+            v-for="(option, i) of data"
+            :key="i"
+            v-on:click="clickOnItem(option)"
+          >
+            <slot name="item" :item="option"></slot>
+          </li>
+        </vueCustomScrollbar>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -78,6 +82,8 @@ export default {
       wheelPropagation: false,
     },
     page: 1,
+    focused: false,
+    timer: null,
   }),
   watch: {
     data: function () {
@@ -88,10 +94,32 @@ export default {
     },
   },
   methods: {
+    mouseenter: function () {
+      this.open = true;
+      this.focused = true;
+    },
+    mouseleave: function () {
+      clearTimeout(this.timer);
+      this.timer = null;
+
+      this.focused = false;
+
+      this.timer = setTimeout(() => {
+        if (!this.focused) {
+          this.open = false;
+        }
+      }, 300);
+    },
     clickOnItem: function (item) {
       this.$emit("clickItem", item);
       this.open = false;
     },
+  },
+  destroyed() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
   },
 };
 </script>
@@ -111,28 +139,6 @@ input {
   z-index: 1;
 }
 
-.custom-select {
-  position: relative;
-  width: 100%;
-}
-
-.custom-select .selected {
-  border-radius: 6px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.custom-select .selected:after {
-  position: absolute;
-  content: "";
-  top: 22px;
-  right: 1em;
-  width: 0;
-  height: 0;
-  border: 5px solid transparent;
-  border-color: #fff transparent transparent transparent;
-}
-
 .items {
   color: #000;
   border-radius: 0px 0px 6px 6px;
@@ -146,12 +152,6 @@ input {
   right: 0;
   top: calc(100% + 2px);
   z-index: 4;
-}
-
-.custom-select .items div {
-  color: #000;
-  cursor: pointer;
-  user-select: none;
 }
 
 li:hover {

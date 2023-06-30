@@ -4,7 +4,7 @@
       :data="products"
       :total="total"
       :currentPerPage="currentPerPage"
-      :placeholder="'Serch products'"
+      :placeholder="'Search products'"
       v-on:clickItem="addProduct"
       v-on:setPage="setPage"
       v-on:setSearchText="setSearchText"
