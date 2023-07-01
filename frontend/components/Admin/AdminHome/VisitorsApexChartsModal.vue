@@ -8,28 +8,12 @@
     hide-footer
   >
     <div class="d-flex flex-column justify-content-center align-items-center">
-      <div class="d-flex justify-content-start w-100">
-        <button
-          class="btn mx-1"
-          :class="active === 'month' ? 'btn-success' : 'btn-primary'"
-          v-on:click="byMonth"
-        >
-          month
-        </button>
-        <button
-          class="btn btn-primary mx-1"
-          :class="active === 'half year' ? 'btn-success' : 'btn-primary'"
-          v-on:click="byHalfYear"
-        >
-          half year</button
-        ><button
-          class="btn btn-primary mx-1"
-          :class="active === 'year' ? 'btn-success' : 'btn-primary'"
-          v-on:click="byYear"
-        >
-          year
-        </button>
-      </div>
+      <DatesButtons
+        :byMonth="setVisitors"
+        :byHalfYear="setVisitors"
+        :byYear="setVisitors"
+        init
+      />
       <VueApexCharts
         ref="realtimeChart"
         class="w-100"
@@ -44,11 +28,13 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 
+import DatesButtons from "~/components/common/DatesButtons";
+
 export default {
   name: "VisitorsApexChartsModal",
+  components: { DatesButtons },
   data: () => ({
     show: false,
-    active: "month",
     chartOptions: {
       chart: {
         id: "vuechart-example",
@@ -65,37 +51,10 @@ export default {
       visitors: "admin_visitors/visitors",
     }),
   },
-  watch: {
-    show: function () {
-      if (this.show) {
-        this.byMonth();
-      }
-    },
-  },
   methods: {
     ...mapActions({
       getVisitors: "admin_visitors/getVisitors",
     }),
-    byMonth: function () {
-      const fromDate = new Date(new Date().setMonth(new Date().getMonth() - 1));
-
-      this.setVisitors(fromDate);
-      this.active = "month";
-    },
-    byHalfYear: function () {
-      const fromDate = new Date(new Date().setMonth(new Date().getMonth() - 6));
-
-      this.setVisitors(fromDate);
-      this.active = "half year";
-    },
-    byYear: function () {
-      const fromDate = new Date(
-        new Date().setFullYear(new Date().getFullYear() - 1)
-      );
-
-      this.setVisitors(fromDate);
-      this.active = "year";
-    },
     setVisitors: async function (from) {
       await this.getVisitors({ from });
 

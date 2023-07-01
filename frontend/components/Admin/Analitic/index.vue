@@ -1,36 +1,36 @@
 <template>
   <div class="col p-2">
-    <div class="row m-0">
+    <div class="row m-0 justify-content-md-start justify-content-center">
       <button
-        class="btn mr-1"
+        class="btn mr-1 mt-1"
         :class="page === 'visitors' ? 'btn-success' : 'btn-primary'"
         v-on:click="page = 'visitors'"
       >
         Visitors
       </button>
       <button
-        class="btn mr-1"
+        class="btn mr-1 mt-1"
         :class="page === 'orders' ? 'btn-success' : 'btn-primary'"
         v-on:click="page = 'orders'"
       >
         Orders
       </button>
       <button
-        class="btn mr-1"
+        class="btn mr-1 mt-1"
         :class="page === 'products' ? 'btn-success' : 'btn-primary'"
         v-on:click="page = 'products'"
       >
         Products
       </button>
       <button
-        class="btn mr-1"
+        class="btn mr-1 mt-1"
         :class="page === 'bundles' ? 'btn-success' : 'btn-primary'"
         v-on:click="page = 'bundles'"
       >
         Bundles
       </button>
       <button
-        class="btn mr-1"
+        class="btn mr-md-1 mr-0 mt-1"
         :class="page === 'customers' ? 'btn-success' : 'btn-primary'"
         v-on:click="page = 'customers'"
       >

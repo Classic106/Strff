@@ -56,7 +56,7 @@
                   ? 'd-flex'
                   : 'd-none'
               "
-              class="text-center p-1"
+              class="justify-content-center p-1"
               v-on:click="setVariant('same')"
             >
               Same box
@@ -67,7 +67,7 @@
                   ? 'd-flex'
                   : 'd-none'
               "
-              class="text-center p-1"
+              class="justify-content-center p-1"
               v-on:click="setVariant('upper')"
             >
               Upper box
@@ -78,7 +78,7 @@
                   ? 'd-flex'
                   : 'd-none'
               "
-              class="text-center p-1"
+              class="justify-content-center p-1"
               v-on:click="setVariant('equals')"
             >
               Equals boxes
@@ -89,7 +89,7 @@
                   ? 'd-flex'
                   : 'd-none'
               "
-              class="text-center p-1"
+              class="justify-content-center p-1"
               v-on:click="setVariant('combines')"
             >
               Combine boxes
@@ -448,8 +448,8 @@ export default {
       });
 
       if (this.deliveries.length) {
-        // this.currentBoxes = [...this.deliveries[0].boxes]
-        this.currentBoxes = [...delivery_boxes]
+        this.currentBoxes = [...this.deliveries[0].boxes]
+          // this.currentBoxes = [...delivery_boxes]
           .map((box) => this.convertSizes(box))
           .sort((a, b) => this.sortByVolume(b, a));
       }

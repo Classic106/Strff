@@ -3,6 +3,7 @@ import {
   search_US_State_coordinates,
 } from "~/utils/search_US";
 
+//function is used to organize data according to map scale city or state
 export function by_state_or_city(by_state, acc, { city, state }, tmp) {
   const content = by_state ? state : city;
 

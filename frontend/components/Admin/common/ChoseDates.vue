@@ -1,27 +1,45 @@
 <template>
   <div
-    :class="column ? 'col' : 'row'"
+    :class="column ? 'd-flex flex-column' : 'row'"
     class="justify-content-between align-items-center m-0"
   >
     <p v-if="label" class="m-0 font-weight-bold">{{ label }}</p>
-    <div :class="column ? 'col' : 'row'" class="align-items-center">
-      <p class="m-0 mr-2 mb-2 text-center">
+    <div
+      :class="column ? 'd-flex flex-column' : 'row'"
+      class="align-items-center justify-content-md-between justify-content-center"
+    >
+      <p class="m-0 mr-2 my-2 text-center">
         {{ parseDate(range[0]) }} - {{ parseDate(range[1]) }}
       </p>
-      <DatePicker
-        v-model="range"
-        range
-        :inline="inline"
-        :disabled-date="disabledBeforeToday"
-        class="d-flex justify-content-center"
-      />
+      <div
+        class="w-100 row m-0 mt-1 justify-content-md-between justify-content-center align-items-center"
+      >
+        <DatePicker
+          v-model="range"
+          class="d-flex w-75 pr-2 justify-content-md-end justify-content-start"
+          :inline="inline"
+          :disabled-date="disabledBeforeToday"
+          range
+        />
+        <DatesButtons
+          class="justify-content-center w-25"
+          :byMonth="setRange"
+          :byHalfYear="setRange"
+          :byYear="setRange"
+          asList
+          init
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import DatesButtons from "~/components/common/DatesButtons";
+
 export default {
   name: "ChoseDates",
+  components: { DatesButtons },
   props: {
     label: String,
     column: Boolean,
@@ -30,6 +48,7 @@ export default {
   },
   data: () => ({
     range: [Date.now(), Date.now()],
+    reset: false,
   }),
   watch: {
     range: function () {
@@ -38,6 +57,10 @@ export default {
     },
   },
   methods: {
+    setRange: function (from) {
+      const to = new Date();
+      this.range = [from, to];
+    },
     disabledBeforeToday(date) {
       if (!this.from_today) {
         return false;

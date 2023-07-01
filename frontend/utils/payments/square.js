@@ -1,5 +1,3 @@
-import { loadSquare } from 'square-web-sdk'
-
 export default class PayWithSquare {
     constructor(order, axios) {
         this.order = order
@@ -14,7 +12,6 @@ export default class PayWithSquare {
     }
 
     async initialize() {
-        await loadSquare(true)
         if (!Square) {
             throw new Error('Square payment failed to load properly')
         }
