@@ -4,9 +4,6 @@
       <div class="w-full max-w-md my-0 mx-auto">
         <form
           class="px-8 pt-6 pb-8 mb-4"
-          :class="
-            username || email || password ? 'was-validated' : 'needs-validation'
-          "
           autocomplete="off"
           novalidate
           @submit.stop.prevent="handleSubmit"
@@ -20,18 +17,21 @@
               autocomplete="off"
               required
               autofocus="true"
-              :pattern="
-                isUsername ? '^[a-zA-Z0-9]{1000000}$' : '^[a-zA-Z0-9]{8,}$'
-              "
-              title="Invalid email address"
               class="form-control appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              :class="
+                username
+                  ? !isUsername && isMatchUserName
+                    ? 'is-valid'
+                    : 'is-invalid'
+                  : ''
+              "
             />
             <div class="valid-feedback">Looks good!</div>
             <div class="invalid-feedback">
               {{
-                isUsername
-                  ? "Username has been already exist"
-                  : "Username nust be least 8 or more characters"
+                (isUsername && "Username has been already exist") ||
+                (!isMatchUserName &&
+                  "Username must be least 8 or more characters")
               }}
             </div>
           </div>
@@ -44,20 +44,24 @@
               required
               autofocus="true"
               autocomplete="off"
-              :pattern="emailPattern"
-              title="Invalid email address"
-              class="form-control appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              :class="
+                email
+                  ? !isEmail && isMatchEmail
+                    ? 'is-valid'
+                    : 'is-invalid'
+                  : ''
+              "
+              class="form-control"
             />
             <div class="valid-feedback">Looks good!</div>
             <div class="invalid-feedback">
               {{
-                isEmail
-                  ? "Email has been already exist"
-                  : "Invalid email address"
+                (isEmail && "Email has been already exist") ||
+                (!isMatchEmail && "Invalid email address")
               }}
             </div>
           </div>
-          <div class="mb-4">
+          <div class="mb-4" :class="password && 'was-validated'">
             <input
               id="password"
               type="password"
@@ -98,7 +102,7 @@
 <script>
 import { mapActions } from "vuex";
 
-import { emailPattern } from "~/patterns";
+import { emailPattern, namePattern } from "~/patterns";
 
 export default {
   name: "SingUp",
@@ -108,9 +112,10 @@ export default {
     email: "",
     password: "",
     isUsername: false,
+    isMatchUserName: true,
     isEmail: false,
+    isMatchEmail: true,
     timer: null,
-    emailPattern,
   }),
   watch: {
     username: function () {
@@ -138,8 +143,13 @@ export default {
             email,
           });
 
+          const matchEmail = email.match(emailPattern);
+          const matchUserName = username.match(namePattern);
+
           this.isEmail = isEmail;
+          this.isMatchEmail = !!matchEmail;
           this.isUsername = isUsername;
+          this.isMatchUserName = !!matchUserName;
         }, 1000);
       } else {
         clearInterval(this.timer);
