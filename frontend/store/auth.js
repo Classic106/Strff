@@ -90,7 +90,7 @@ export const actions = {
   },
   async createCustomer({ commit }, customer) {
     try {
-      const { data } = this.$axios.post("/users", {
+      const { data } = await this.$axios.post("/auth/local/register", {
         ...customer,
         confirmed: false,
         blocked: false,

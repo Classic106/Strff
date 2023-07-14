@@ -58,60 +58,6 @@ module.exports = {
 
     return ctx.send(user);
   },
-  async create(ctx) {
-    const { body } = ctx.request;
-    const { username, email, role, password, blocked, confirmed } = body;
-
-    const users = await strapi
-      .query("user", "users-permissions")
-      .find({ _or: [{ username }, { email }] });
-
-    if (users.length) {
-      return ctx.badRequest(
-        null,
-        "User with username or email is alredy exist"
-      );
-    }
-
-    if (!password && role === 3) {
-      body.password = "Standard123456";
-    }
-
-    if (!body.password) {
-      return ctx.badRequest(null, "missing.password");
-    }
-
-    if (!email) {
-      return ctx.badRequest(null, "missing.email");
-    }
-
-    if (!username) {
-      return ctx.badRequest(null, "missing.username");
-    }
-
-    if (!role) {
-      body.role = 2;
-    }
-
-    if (!blocked) {
-      body.blocked = false;
-    }
-
-    if (!confirmed) {
-      body.confirmed = false;
-    }
-
-    const user = await strapi.query("user", "users-permissions").create(body);
-
-    ctx.send({
-      jwt: strapi.plugins["users-permissions"].services.jwt.issue({
-        id: user.id,
-      }),
-      user: sanitizeEntity(user.toJSON ? user.toJSON() : user, {
-        model: strapi.query("user", "users-permissions").model,
-      }),
-    });
-  },
   async update(ctx) {
     const { id } = ctx.params;
     const { body } = ctx.request;
