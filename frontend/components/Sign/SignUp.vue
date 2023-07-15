@@ -166,14 +166,14 @@ export default {
     async handleSubmit() {
       const { isEmail, isUsername, email, username, password } = this;
 
-      // if (!isEmail && !isUsername && email && username && password) {
+      if (!isEmail && !isUsername && email && username && password) {
         const data = {
-          email: "test1@gmail.com",
-          username: "sdfghjkl",
-          password: "test123456",
+          email,
+          username,
+          password,
         };
         await this.createCustomer(data);
-      // }
+      }
     },
   },
   destroyed() {

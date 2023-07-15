@@ -1,30 +1,9 @@
 <template>
   <header
-    class="
-      d-flex
-      flex-column
-      p-0
-      m-0
-      justify-content-center
-      align-items-center
-      w-100
-      position-sticky
-    "
+    class="d-flex flex-column p-0 m-0 justify-content-center align-items-center w-100 position-sticky"
   >
     <div
-      class="
-        head
-        d-flex
-        flex-column
-        px-4
-        my-4
-        mb-lg-2
-        justify-content-between
-        align-items-center
-        text-uppercase
-        w-100
-        position-relative
-      "
+      class="head d-flex flex-column px-4 my-4 mb-lg-2 justify-content-between align-items-center text-uppercase w-100 position-relative"
     >
       <div class="w-100 d-flex">
         <div
@@ -45,7 +24,7 @@
         <div class="d-flex align-items-center ml-sm-4 ml-1 justify-content-end">
           <div v-if="currentUserName" class="mr-3">
             Hi {{ currentUserName }}
-            <a href="#" class="gold" @click="logout">Logout</a>
+            <a href="#" class="gold" @click.prevent="logout">Logout</a>
           </div>
           <div v-if="!currentUserName" class="mr-3">
             <nuxt-link to="/login" class="gold">Login</nuxt-link>
@@ -70,15 +49,7 @@
         <div class="menu-wrap col-lg col-sm-8 m-0">
           <ul
             ref="menu"
-            class="
-              pl-sm-4 pl-1
-              text-uppercase
-              d-flex
-              w-100
-              m-0
-              flex-column flex-lg-row
-              justify-content-center
-            "
+            class="pl-sm-4 pl-1 text-uppercase d-flex w-100 m-0 flex-column flex-lg-row justify-content-center"
             :class="isMobile ? 'ul-mobile' : ''"
           >
             <li
@@ -104,14 +75,7 @@
             >
               <a
                 v-on:click.prevent="isOpen = !isOpen"
-                class="
-                  gold
-                  cursor-pointer
-                  d-flex
-                  align-items-center
-                  text-nowrap
-                  m-0
-                "
+                class="gold cursor-pointer d-flex align-items-center text-nowrap m-0"
               >
                 MAN`S CARE
                 <Icon
@@ -121,15 +85,7 @@
                 />
               </a>
               <vueCustomScrollbar
-                class="
-                  scroll-area
-                  position-realtive
-                  d-flex
-                  flex-column
-                  overflow-auto
-                  rounded
-                  p-3
-                "
+                class="scroll-area position-realtive d-flex flex-column overflow-auto rounded p-3"
                 :settings="scrollSettings"
                 v-if="isMobile ? true : isOpen"
                 :class="isMobile ? '' : 'position-absolute additional_menu'"
@@ -160,7 +116,7 @@
     </div>
     <span v-if="isTextBunner" class="p-3 text-center m-0 w-100">
       Last chance to shop holiday gifts. Buy online and pick up at an STRFF
-      Store or choose two‑hour courier or free delivery. Shop now
+      Store or choose twoU+002dhour courier or free delivery. Shop now
     </span>
   </header>
 </template>
@@ -227,6 +183,7 @@ export default {
     },
     logout() {
       this.$store.dispatch("auth/logout");
+      this.$router.replace("/");
     },
   },
   async mounted() {
