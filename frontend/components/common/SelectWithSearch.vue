@@ -1,41 +1,51 @@
 <template>
-  <div
-    class="custom-select"
-    :tabindex="tabindex"
-    @focus="open = true"
-    @focusout="open = false"
-  >
+  <div class="position-relative">
     <div
-      class="text-ellipsis selected"
-      :class="{ open: open }"
-      @click="open = !open"
+      class="d-flex flex-column align-items-center"
+      :tabindex="tabindex - 100"
+      v-on:mouseenter="mouseenter"
+      v-on:mouseleave="mouseleave"
     >
-      <input
-        type="text"
-        v-model.trim="text"
-        :placeholder="placeholder || 'Search...'"
-        class="w-100 p-0"
-        v-on:input="fiterData"
+      <BPagination
+        v-model="page"
+        aria-controls="my-table"
+        class="m-0 mb-3"
+        :class="page < 2 && total <= currentPerPage && 'd-none'"
+        :total-rows="total"
+        :per-page="currentPerPage"
       />
-    </div>
-    <ul
-      class="items p-1"
-      v-if="filteredData.length"
-      :class="open ? 'd-flex flex-column align-self-end' : 'd-none'"
-    >
-      <vueCustomScrollbar
-        class="scroll w-100 overflow-auto"
-        :settings="scrollSettings"
+      <div class="custom-select" :tabindex="tabindex">
+        <input
+          type="text"
+          class="p-0 w-100"
+          v-model.trim="text"
+          :placeholder="placeholder || 'Search...'"
+          v-on:click="open = !open"
+          v-on:input="$emit('setSearchText', text)"
+        />
+      </div>
+      <ul
+        class="block items p-1 position-absolute w-100"
+        :class="open ? 'd-flex flex-column align-self-end' : 'd-none'"
       >
-        <li
-          v-for="(option, i) of filteredData"
-          :key="i"
-          v-on:click="clickOnItem(option)"
+        <div v-if="text && !data.length">
+          <p class="m-0 p-3 w-100 text-center">Nothing not found</p>
+        </div>
+        <vueCustomScrollbar
+          v-else
+          class="scroll w-100 overflow-auto"
+          :settings="scrollSettings"
         >
-          <slot name="item" :item="option"></slot>
-        </li>
-      </vueCustomScrollbar>
-    </ul>
+          <li
+            v-for="(option, i) of data"
+            :key="i"
+            v-on:click="clickOnItem(option)"
+          >
+            <slot name="item" :item="option"></slot>
+          </li>
+        </vueCustomScrollbar>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -44,14 +54,6 @@ export default {
   name: "SelectWithSearch",
   props: {
     data: Array,
-    filter: {
-      type: Function,
-      required: false,
-    },
-    clickItem: {
-      type: Function,
-      required: false,
-    },
     tabindex: {
       type: Number,
       required: false,
@@ -60,41 +62,64 @@ export default {
     placeholder: {
       type: String,
     },
+    currentPerPage: {
+      type: Number,
+      required: true,
+      default: 10,
+    },
+    total: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
   data: () => ({
     selected: null,
     open: false,
     text: "",
-    filteredData: [],
     scrollSettings: {
       suppressScrollX: true,
       wheelPropagation: false,
     },
+    page: 1,
+    focused: false,
+    timer: null,
   }),
   watch: {
     data: function () {
       this.selected = this.data.length > 0 ? this.data[0] : null;
-      this.fiterData(this.text, this.data);
+    },
+    page: function () {
+      this.$emit("setPage", this.page);
     },
   },
   methods: {
+    mouseenter: function () {
+      this.open = true;
+      this.focused = true;
+    },
+    mouseleave: function () {
+      clearTimeout(this.timer);
+      this.timer = null;
+
+      this.focused = false;
+
+      this.timer = setTimeout(() => {
+        if (!this.focused) {
+          this.open = false;
+        }
+      }, 300);
+    },
     clickOnItem: function (item) {
-      if (this.clickItem) {
-        this.clickItem(item);
-      }
+      this.$emit("clickItem", item);
       this.open = false;
     },
-    fiterData: function () {
-      if (this.filter && this.text) {
-        this.filteredData = this.filter(this.text, this.data);
-        return;
-      }
-      if (this.text) {
-        this.filteredData = this.data.filter((item) => item === this.text);
-        return;
-      }
-      this.filteredData = this.data;
-    },
+  },
+  destroyed() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
   },
 };
 </script>
@@ -114,29 +139,7 @@ input {
   z-index: 1;
 }
 
-.custom-select {
-  position: relative;
-  width: 100%;
-}
-
-.custom-select .selected {
-  border-radius: 6px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.custom-select .selected:after {
-  position: absolute;
-  content: "";
-  top: 22px;
-  right: 1em;
-  width: 0;
-  height: 0;
-  border: 5px solid transparent;
-  border-color: #fff transparent transparent transparent;
-}
-
-.custom-select .items {
+.items {
   color: #000;
   border-radius: 0px 0px 6px 6px;
   overflow: hidden;
@@ -148,13 +151,7 @@ input {
   left: 0;
   right: 0;
   top: calc(100% + 2px);
-  z-index: 1;
-}
-
-.custom-select .items div {
-  color: #000;
-  cursor: pointer;
-  user-select: none;
+  z-index: 4;
 }
 
 li:hover {

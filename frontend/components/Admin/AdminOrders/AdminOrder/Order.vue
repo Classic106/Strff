@@ -72,9 +72,9 @@
             <div class="d-flex justify-content-end p-3">
               <button
                 class="btn btn-success"
-                v-on:click="openModal('tracking-modal')"
+                v-on:click="openModal('package_planner')"
               >
-                Add tracking
+                Package planner
               </button>
             </div>
           </div>
@@ -134,14 +134,14 @@
               <a href="#" v-on:click.prevent="$emit('setCustomer')">
                 <p class="text-ellipsis m-0">{{ getCustomerName() }}</p>
               </a>
-              <p>{{ selected.customer.orders_count }} order</p>
+              <p>{{ getOrdersCount() }} order</p>
             </div>
             <div class="block-main p-3">
               <div class="d-flex justify-content-between align-items-center">
                 <h6 class="text-uppercase m-0">Contact information</h6>
                 <span v-on:click="openModal('contact-modal')">Edit</span>
               </div>
-              <p class="text-ellipsis">{{ selected.email }} customer</p>
+              <p class="text-ellipsis">{{ selected.billing_email }} customer</p>
             </div>
             <div class="block-main p-3">
               <div class="d-flex justify-content-between align-items-center">
@@ -194,7 +194,7 @@
         </div>
       </div>
     </div>
-    <AddTrackingModal />
+    <PackagePlannerModal :order="selected" />
     <ContactModal :order="selected" />
     <ShippingModal :order="selected" />
     <FraudAnalysisModal />
@@ -210,15 +210,15 @@ import "~/utils/filters";
 
 import ContactModal from "./modals/ContactModal.vue";
 import ShippingModal from "./modals/ShippingModal.vue";
-import AddTrackingModal from "./modals/AddTrackingModal.vue";
 import FraudAnalysisModal from "./modals/FraudAnalysisModal.vue";
+import PackagePlannerModal from "./modals/PackagePlannerModal.vue";
 
 export default {
   name: "Order",
   components: {
     ContactModal,
     ShippingModal,
-    AddTrackingModal,
+    PackagePlannerModal,
     FraudAnalysisModal,
   },
   computed: {
@@ -244,6 +244,11 @@ export default {
     }),
     openModal: function (modal) {
       this.$root.$emit("bv::show::modal", modal);
+    },
+    getOrdersCount: function () {
+      const { user } = this.selected;
+
+      return user?.orders_count || 0;
     },
     setNextOrder: async function () {
       const index = this.findIndex();
@@ -315,14 +320,18 @@ export default {
       return this.orders.findIndex((item) => item.id === this.selected.id);
     },
     getCustomerName: function () {
-      const { customer } = this.selected;
+      const { user } = this.selected;
 
-      if (customer) {
-        const { firstName, lastName } = customer;
-        return `${firstName} ${lastName}`;
+      if (user) {
+        const { username, first_name, last_name } = user;
+
+        if (first_name) {
+          return `${first_name} ${last_name}`;
+        }
+        return username;
       }
 
-      return "undefined undefined";
+      return "undefined";
     },
   },
   async destroyed() {

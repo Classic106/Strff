@@ -18,15 +18,7 @@
     </h6>
     <div class="products row justify-content-center m-0">
       <div
-        class="
-          product
-          d-flex
-          flex-column
-          justify-content-between
-          col-10 col-sm-6 col-md-4 col-lg-2
-          p-4 p-lg-3
-          m-2
-        "
+        class="product col-10 col-sm-6 col-md-4 col-lg-2 p-4 p-lg-3 m-2"
         v-for="product in relatedProducts"
         :key="product.id"
       >
@@ -38,7 +30,7 @@
 
 <script>
 import { colorTitleNumbers, shuffleArray } from "~/helpers";
-
+import PreloaderImage from "~/components/PreloaderImage";
 import ProductCard from "~/components/products/ProductCard";
 
 export default {
@@ -46,7 +38,7 @@ export default {
   props: {
     product: Object,
   },
-  components: { ProductCard },
+  components: { PreloaderImage, ProductCard },
   data: () => ({
     relatedProducts: [],
   }),

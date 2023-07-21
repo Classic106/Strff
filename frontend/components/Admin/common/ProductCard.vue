@@ -1,24 +1,20 @@
 <template>
-  <div class="row">
-    <div class="wrap-img d-flex col-3 position-relative px-2">
+  <div class="row m-0">
+    <div class="wrap-img d-flex col-2 p-0 position-relative">
       <span
         v-if="quantity"
-        class="
-          position-absolute
-          d-flex
-          justify-content-center
-          align-items-center
-          p-2
-        "
+        class="position-absolute d-flex justify-content-center align-items-center p-2"
         >{{ quantity }}</span
       >
       <PreloaderImage :image="product.image[0].url" />
     </div>
-    <div class="col-6 d-flex align-items-center px-2">
-      <p class="text-ellipsis m-0">{{ product.title }}</p>
-    </div>
-    <div class="col-3 d-flex justify-content-end align-items-center px-2">
-      <p class="m-0 text-nowrap pr-2">$ {{ product.price | formatNumber }}</p>
+    <div class="col-10 row m-0 p-0 justify-content-between">
+      <div class="col-9 d-flex align-items-center px-2">
+        <p class="text-ellipsis m-0">{{ product.title }}</p>
+      </div>
+      <div class="col-3 d-flex justify-content-end align-items-center px-2">
+        <p class="m-0 text-nowrap pr-2">$ {{ product.price | formatNumber }}</p>
+      </div>
     </div>
   </div>
 </template>

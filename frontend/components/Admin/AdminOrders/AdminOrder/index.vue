@@ -27,9 +27,10 @@ export default {
     },
   },
   beforeMount() {
-    const { customer } = this.selected;
-    const { id } = customer;
-    this.customer = id;
+    const { user } = this.selected;
+    if (user) {
+      this.customer = user.id;
+    }
   },
 };
 </script>

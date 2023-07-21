@@ -24,6 +24,15 @@
     },
     "price": {
       "type": "decimal"
+    },
+    "sales": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "discounts": {
+      "via": "bundles",
+      "collection": "discount"
     }
   }
 }

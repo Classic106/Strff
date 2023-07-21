@@ -1,105 +1,87 @@
 <template>
   <section class="container">
-    <div class="grid md:grid-cols-1 mt-3">
+    <div class="grid md:grid-cols-1 mt-5 mb-5">
       <div class="w-full max-w-md my-0 mx-auto">
         <form
           class="px-8 pt-6 pb-8 mb-4"
           autocomplete="off"
+          novalidate
           @submit.stop.prevent="handleSubmit"
         >
           <div class="mb-4">
-            <label
-              class="block text-gray-700 text-sm font-bold mb-2"
-              for="username"
-            >
-              Username
-            </label>
             <input
               id="username"
               type="text"
               placeholder="Enter your username"
-              v-model="username"
+              v-model.trim="username"
+              autocomplete="off"
               required
               autofocus="true"
-              class="
-                appearance-none
-                border
-                rounded
-                w-full
-                py-2
-                px-3
-                text-gray-700
-                leading-tight
-                focus:outline-none focus:shadow-outline
+              class="form-control appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              :class="
+                username
+                  ? !isUsername && isMatchUserName
+                    ? 'is-valid'
+                    : 'is-invalid'
+                  : ''
               "
             />
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">
+              {{
+                (isUsername && "Username has been already exist") ||
+                (!isMatchUserName &&
+                  "Username must be least 8 or more characters")
+              }}
+            </div>
           </div>
           <div class="mb-4">
-            <label
-              class="block text-gray-700 text-sm font-bold mb-2"
-              for="email"
-            >
-              Email
-            </label>
             <input
               id="email"
               type="email"
               placeholder="Enter your email"
-              v-model="email"
+              v-model.trim="email"
               required
               autofocus="true"
-              class="
-                appearance-none
-                border
-                rounded
-                w-full
-                py-2
-                px-3
-                text-gray-700
-                leading-tight
-                focus:outline-none focus:shadow-outline
+              autocomplete="off"
+              :class="
+                email
+                  ? !isEmail && isMatchEmail
+                    ? 'is-valid'
+                    : 'is-invalid'
+                  : ''
               "
+              class="form-control"
             />
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">
+              {{
+                (isEmail && "Email has been already exist") ||
+                (!isMatchEmail && "Invalid email address")
+              }}
+            </div>
           </div>
-          <div class="mb-4">
-            <label
-              class="block text-gray-700 text-sm font-bold mb-2"
-              for="password"
-            >
-              Password
-            </label>
+          <div class="mb-4" :class="password && 'was-validated'">
             <input
               id="password"
               type="password"
               placeholder="Enter your password"
-              v-model="password"
+              v-model.trim="password"
               required
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
               autofocus="true"
-              class="
-                appearance-none
-                border
-                rounded
-                w-full
-                py-2
-                px-3
-                text-gray-700
-                leading-tight
-                focus:outline-none focus:shadow-outline
-              "
+              autocomplete="off"
+              class="form-control appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">
+              Must contain at least one number and one uppercase and lowercase
+              letter, and at least 8 or more characters
+            </div>
           </div>
           <div class="flex items-center justify-between">
             <button
-              class="
-                bg-blue-500
-                hover:bg-blue-700
-                text-white
-                font-bold
-                py-2
-                px-4
-                rounded
-                focus:outline-none focus:shadow-outline
-              "
+              class="border-0 bg-blue-500 hover:bg-blue-700 text-white gold-background font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
               Submit
@@ -107,7 +89,7 @@
           </div>
           <p class="text-center mt-3">
             Already have an account?
-            <nuxt-link event="" v-on:click.native="linkClick" to="/signin">
+            <nuxt-link event="" v-on:click.native="linkClick" to="/login">
               Login
             </nuxt-link>
           </p>
@@ -118,46 +100,94 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapActions } from "vuex";
+
+import { emailPattern, namePattern } from "~/patterns";
 
 export default {
   name: "SingUp",
   props: { isMenu: Boolean, toggle: Function },
-  data() {
-    return {
-      email: "",
-      password: "",
-      username: "",
-      loading: false,
-    };
+  data: () => ({
+    username: "",
+    email: "",
+    password: "",
+    isUsername: false,
+    isMatchUserName: true,
+    isEmail: false,
+    isMatchEmail: true,
+    timer: null,
+  }),
+  watch: {
+    username: function () {
+      this.checkUs();
+    },
+    email: function () {
+      this.checkUs();
+    },
   },
   methods: {
+    ...mapActions({
+      createCustomer: "auth/createCustomer",
+      checkUser: "auth/checkUser",
+    }),
+    checkUs: async function () {
+      const { username, email } = this;
+
+      if (username || email) {
+        clearInterval(this.timer);
+        this.timer = null;
+
+        this.timer = setTimeout(async () => {
+          const { isUsername, isEmail } = await this.checkUser({
+            username,
+            email,
+          });
+
+          const matchEmail = email.match(emailPattern);
+          const matchUserName = username.match(namePattern);
+
+          this.isEmail = isEmail;
+          this.isMatchEmail = !!matchEmail;
+          this.isUsername = isUsername;
+          this.isMatchUserName = !!matchUserName;
+        }, 1000);
+      } else {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+    },
     linkClick() {
       if (this.isMenu) {
         this.toggle();
         return;
       }
-      this.$router.push("/signin");
+      this.$router.push("/login");
     },
     async handleSubmit() {
-      try {
-        this.loading = true;
-        const response = await this.$strapi.register({
-          email: this.email,
-          username: this.username,
-          password: this.password,
-        });
-        this.loading = false;
-        this.setUser(response.user);
-        this.$router.push("/");
-      } catch (err) {
-        this.loading = false;
-        alert(err.message || "An error occurred.");
+      const { isEmail, isUsername, email, username, password } = this;
+
+      if (!isEmail && !isUsername && email && username && password) {
+        const data = {
+          email,
+          username,
+          password,
+        };
+        await this.createCustomer(data);
       }
     },
-    ...mapMutations({
-      setUser: "auth/setUser",
-    }),
+  },
+  destroyed() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
   },
 };
 </script>
+
+<style lang="scss" scoped>
+input {
+  width: 100%;
+  max-width: 450px;
+}
+</style>

@@ -56,7 +56,7 @@ import { getStrapiMedia } from "~/utils/medias";
 import { warn } from "~/utils/warn";
 
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
-import ConfirmModal from "./ConfirmModal.vue";
+import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
 
 export default {
   name: "ProductMedia",

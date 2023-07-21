@@ -35,7 +35,7 @@ import { mapMutations, mapActions, mapGetters } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
 
 import PreloaderImage from "~/components/common/PreloaderImage.vue";
-import ConfirmModal from "./ConfirmModal.vue";
+import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
 
 export default {
   name: "ArticleMedia",

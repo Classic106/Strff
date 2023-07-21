@@ -1,6 +1,6 @@
 import qs from "qs";
-import { error } from "../utils/error";
-import { success } from "../utils/success";
+import { error } from "~/utils/error";
+import { success } from "~/utils/success";
 
 export const state = () => ({
   total: 0,
@@ -18,6 +18,7 @@ export const state = () => ({
   next: null,
   previous: null,
   todayOrders: [],
+  countOrders: 0,
 });
 
 export const actions = {
@@ -57,6 +58,25 @@ export const actions = {
       error(e);
     }
   },
+  async getAnaliticOrders({ commit }, { from, to }) {
+    try {
+      const queryData = {
+        created_at_gte: from.toISOString(),
+      };
+
+      if (to) {
+        queryData.created_at_lte = to.toISOString();
+      }
+
+      const query = qs.stringify(queryData);
+
+      const { data } = await this.$axios.get(`/orders?${query}`);
+
+      commit("setOrders", data);
+    } catch (e) {
+      error(e);
+    }
+  },
   async getOrdersByTime(_, fromDate = new Date()) {
     try {
       const queryData = {
@@ -71,10 +91,10 @@ export const actions = {
       error(e);
     }
   },
-  async getCountOrders() {
+  async getCountOrders({ commit }) {
     try {
       const { data } = await this.$axios.get(`/orders/count`);
-      return data;
+      commit("setCountOrders", data);
     } catch (e) {
       error(e);
     }
@@ -94,19 +114,18 @@ export const actions = {
       error(e);
     }
   },
-  async getCustomers() {
-    try {
-      const { data } = await this.$axios.get(`/customers`);
-      return data;
-    } catch (e) {
-      error(e);
-    }
-  },
   async createOrder({ commit }, order) {
+    const { order_bundles, order_items } = order;
+
+    if (!order_items.length && !order_bundles.length) {
+      error("Order hasn't any items");
+      return;
+    }
+
     try {
       const { data } = await this.$axios.post(`/orders`, {
         ...order,
-        order_status: 4,
+        order_status: 5,
       });
 
       commit("addOrder", data);
@@ -169,6 +188,9 @@ export const mutations = {
     }, []);
     state.orders = newOrders;
   },
+  setCountOrders(state, countOrders) {
+    state.countOrders = countOrders;
+  },
   setSelectedOrders(state, data) {
     const { selected, previous, next } = data;
 
@@ -219,5 +241,8 @@ export const getters = {
   },
   previous: (state) => {
     return state.previous;
+  },
+  countOrders: (state) => {
+    return state.countOrders;
   },
 };

@@ -35,7 +35,7 @@ export default {
     script: [],
   },
   router: {
-    middleware: ["isAdminAuthenticated"],
+    middleware: ["isAuthenticated"],
   },
   /*
    ** Global CSS
@@ -48,11 +48,14 @@ export default {
   plugins: [
     "~/plugins/axios.js",
     "~/plugins/text-mask.js",
-    "~/plugins/country-region-select.js",
+    "~/plugins/v-money.js",
     "~/plugins/vue-custom-scrollbar.js",
     "~/plugins/vue-good-table",
     "~/plugins/vue-cool-lightbox.js",
-    "~/plugins/v-select.js",
+    "~/plugins/VBTooltip.js",
+    "~/plugins/datepicker.js",
+    { src: "~/plugins/leaflet.js", ssr: false },
+    { src: "~/plugins/vue-color.js", mode: "client" },
     { src: "~/plugins/fingerprint.js", mode: "client" },
     { src: "~/plugins/notify.client", mode: "client" },
     { src: "~/plugins/notify.server", mode: "server" },
@@ -111,12 +114,18 @@ export default {
       "BIconCheckCircle",
       "BIconEyeFill",
       "BIconEyeSlashFill",
+      "BIconCart",
+      "BIconFileBarGraph",
+      "BIconPercent",
+      "BIconEnvelope",
       "BAvatar",
       "BProgress",
       "BProgressBar",
       "BModal",
       "BDropdown",
       "BDropdownItem",
+      "BPagination",
+      "BFormCheckbox",
     ],
   },
   axios: {
@@ -172,7 +181,6 @@ export default {
     entities: [
       "appointment-orders",
       "appointments",
-      "bestsellers",
       "articles",
       "categories",
       "sizes",
@@ -191,7 +199,7 @@ export default {
    ** See https://nuxtjs.org/api/configuration-build/
    */
   build: {
-    transpile: ["vue-upload-drop-images"],
+    transpile: ["vue-upload-drop-images", "three"],
     vendor: ["@johmun/vue-tags-input", "vue-apexchart"],
   },
   buildModules: ["vue-ssr-carousel/nuxt"],

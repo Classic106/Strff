@@ -5,7 +5,7 @@
         <h6 class="p-3 text-center">BEST SELLERS</h6>
         <div class="row px-3">
           <div
-            v-for="bestSeller in products"
+            v-for="bestSeller in best_sellers"
             :key="bestSeller.id"
             class="product col-12 col-sm-6 mb-3"
           >
@@ -41,18 +41,24 @@
 </template>
 
 <script>
-import PreloaderImage from "~/components/common/PreloaderImage";
+import { mapGetters } from "vuex";
+
+import PreloaderImage from "~/components/PreloaderImage";
 
 export default {
   name: "SearchBestSellers",
   components: { PreloaderImage },
-  props: { products: Array },
   data: () => ({
     itemsSettings: {
       suppressScrollX: true,
       wheelPropagation: false,
     },
   }),
+  computed: {
+    ...mapGetters({
+      best_sellers: "best_sellers/best_sellers",
+    }),
+  },
 };
 </script>
 

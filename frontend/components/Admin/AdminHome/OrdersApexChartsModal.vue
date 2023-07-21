@@ -8,29 +8,14 @@
     hide-footer
   >
     <div class="d-flex flex-column justify-content-center align-items-center">
-      <div class="d-flex justify-content-start w-100">
-        <button
-          class="btn mx-1"
-          :class="active === 'month' ? 'btn-success' : 'btn-primary'"
-          v-on:click="byMonth"
-        >
-          month
-        </button>
-        <button
-          class="btn btn-primary mx-1"
-          :class="active === 'half year' ? 'btn-success' : 'btn-primary'"
-          v-on:click="byHalfYear"
-        >
-          half year</button
-        ><button
-          class="btn btn-primary mx-1"
-          :class="active === 'year' ? 'btn-success' : 'btn-primary'"
-          v-on:click="byYear"
-        >
-          year
-        </button>
-      </div>
+      <DatesButtons
+        :byMonth="setOrdersByTime"
+        :byHalfYear="setOrdersByTime"
+        :byYear="setOrdersByTime"
+        init
+      />
       <VueApexCharts
+        ref="realtimeChart"
         class="w-100"
         height="400"
         :options="chartOptions"
@@ -41,13 +26,15 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
+
+import DatesButtons from "~/components/common/DatesButtons";
 
 export default {
   name: "OrdersApexChartsModal",
+  components: { DatesButtons },
   data: () => ({
     show: false,
-    active: "month",
     chartOptions: {
       chart: {
         id: "vuechart-example",
@@ -63,26 +50,6 @@ export default {
     ...mapActions({
       getOrdersByTime: "admin_orders/getOrdersByTime",
     }),
-    byMonth: function () {
-      const fromDate = new Date(new Date().setMonth(new Date().getMonth() - 1));
-
-      this.setOrdersByTime(fromDate);
-      this.active = "month";
-    },
-    byHalfYear: function () {
-      const fromDate = new Date(new Date().setMonth(new Date().getMonth() - 6));
-
-      this.setOrdersByTime(fromDate);
-      this.active = "half year";
-    },
-    byYear: function () {
-      const fromDate = new Date(
-        new Date().setFullYear(new Date().getFullYear() - 1)
-      );
-
-      this.setOrdersByTime(fromDate);
-      this.active = "year";
-    },
     setOrdersByTime: async function (fromDate) {
       const result = await this.getOrdersByTime(fromDate);
 
@@ -104,11 +71,13 @@ export default {
         return acc;
       }, []);
 
-      this.series[0].data = data;
+      this.updateSeriesLine(data);
     },
-  },
-  async mounted() {
-    this.byMonth();
+    updateSeriesLine(data) {
+      if (this.$refs.realtimeChart) {
+        this.$refs.realtimeChart.updateSeries([{ data }], false, true);
+      }
+    },
   },
 };
 </script>

@@ -33,6 +33,11 @@ module.exports = (strapi) => {
                 { visits: visits + 1 }
               );
             }
+          } else {
+            await strapi.services.visitor.create({
+              ...visitor,
+              visits: 1,
+            });
           }
         });
       });

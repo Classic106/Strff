@@ -7,7 +7,7 @@
           <input
             id="customer-email"
             type="text"
-            v-model="order.customer.email"
+            v-model="userEmail"
             required
             autofocus="true"
             disabled
@@ -90,6 +90,7 @@ export default {
   props: { order: Object },
   data: () => ({
     show: false,
+    userEmail: "",
     fromMails: [
       "test@gmail.com",
       "test1@gmail.com",
@@ -116,6 +117,9 @@ export default {
         this.chosedSupportEmails
       );
     },
+  },
+  mounted() {
+    this.userEmail = this.order?.user?.email || "";
   },
 };
 </script>

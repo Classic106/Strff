@@ -23,7 +23,6 @@ export const actions = {
   async getBundles({ commit, state }) {
     try {
       const { sort, search, page, currentPerPage } = state.params;
-      const { field, type } = sort;
 
       const token = this.$cookies.get("token");
 
@@ -33,23 +32,23 @@ export const actions = {
         _publicationState: token ? "preview" : "live",
       };
 
-      if (sort && type !== "none") {
-        if (field === "products") {
-          queryData._sort = `id:${type.toUpperCase()}`;
-        } else {
-          queryData._sort = `${field}:${type.toUpperCase()}`;
+      if (sort) {
+        const { field, type } = sort;
+
+        if (type !== "none") {
+          if (field === "products") {
+            queryData._sort = `id:${type.toUpperCase()}`;
+          } else {
+            queryData._sort = `${field}:${type.toUpperCase()}`;
+          }
         }
       }
 
       if (search) {
         if (!isNaN(+search)) {
-          if (field === "products") {
-            queryData.id = search;
-          } else {
-            queryData.price = search;
-          }
+          queryData._or = [{ id: search, price: search }];
         } else {
-          queryData.title = search;
+          queryData.title_containss = search;
         }
       }
 

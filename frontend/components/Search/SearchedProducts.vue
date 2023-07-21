@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import Loader from "@/components/common/Loader";
-import PreloaderImage from "~/components/common/PreloaderImage";
+import Loader from "@/components/common/Loader.vue";
+import PreloaderImage from "~/components/PreloaderImage";
 
 export default {
   name: "SearchedProducts",

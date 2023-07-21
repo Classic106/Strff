@@ -36,14 +36,7 @@
           </div>
         </div>
         <div
-          class="
-            col-md-6 col-12
-            pt-0
-            pl-md-5
-            py-2
-            flex flex-col
-            justify-content-between
-          "
+          class="col-md-6 col-12 pt-0 pl-md-5 py-2 flex flex-col justify-content-between"
         >
           <div>
             <h5
@@ -51,12 +44,7 @@
               class="font-weight-bold text-md-left text-uppercase"
             ></h5>
             <h6
-              class="
-                product-price
-                mt-3
-                font-weight-bold
-                text-md-left text-center
-              "
+              class="product-price mt-3 font-weight-bold text-md-left text-center"
             >
               <span class="position-relative" :class="discount && 'cross-out'"
                 >${{ calcPrice() | formatNumber }}</span
@@ -74,12 +62,7 @@
               </div>
             </div>
             <div
-              class="
-                d-flex
-                mt-1
-                mb-5
-                justify-content-md-start justify-content-center
-              "
+              class="d-flex mt-1 mb-5 justify-content-md-start justify-content-center"
             >
               <div class="d-flex">
                 <div class="d-flex border position-relative quantity mr-2">
@@ -89,13 +72,7 @@
                     class="px-2 w-100"
                   />
                   <div
-                    class="
-                      d-flex
-                      flex-column
-                      position-absolute
-                      number-input-buttons
-                      justify-content-center
-                    "
+                    class="d-flex flex-column position-absolute number-input-buttons justify-content-center"
                   >
                     <button
                       v-on:click="quantityPlus"
@@ -112,17 +89,7 @@
                   </div>
                 </div>
                 <button
-                  class="
-                    py-2
-                    px-4
-                    rounded
-                    btn btn-dark
-                    d-flex
-                    justify-content-center
-                    align-items-center
-                    text-uppercase text-nowrap
-                    add-cart-button
-                  "
+                  class="py-2 px-4 rounded btn btn-dark d-flex justify-content-center align-items-center text-uppercase text-nowrap add-cart-button"
                   v-on:click="addToCart"
                 >
                   <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
@@ -132,8 +99,8 @@
             </div>
             <PurchaseTypes
               v-on:setTypes="setTypes"
-              :purType="selected.purchase_type"
-              :subType="selected.subscription_type"
+              :purType="selected.purchaseTypeId"
+              :subType="selected.subscriptionTypeId"
             />
             <div class="mt-1 items-baseline text-gray-600">
               {{ product.description }}
@@ -159,7 +126,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { getStrapiMedia } from "~/utils/medias";
 import { colorTitleNumbers } from "~/helpers";
 
@@ -180,10 +147,10 @@ export default {
     discount: null,
     included: [],
     selected: {
-      product: null,
+      productId: null,
       quantity: 1,
-      purchase_type: 1,
-      subscription_type: null,
+      purchaseTypeId: 1,
+      subscriptionTypeId: null,
       total: 0,
     },
     index: 0,
@@ -194,29 +161,12 @@ export default {
       purchaseTypes: "purchase-types/getTypes",
     }),
   },
-  async mounted() {
-    try {
-      this.product = await this.$strapi.findOne(
-        "products",
-        this.$route.params.id
-      );
-
-      this.selected.product = this.product;
-      this.selected.total = this.product.price;
-      this.images = this.product.image.map((item) => this.getImage(item));
-
-      this.setImages(this.images);
-
-      if (this.product.included) {
-        this.included = this.product.included;
-      }
-    } catch (error) {
-      this.error = error;
-    }
-  },
   methods: {
     getStrapiMedia,
     colorTitleNumbers,
+    ...mapActions({
+      getProduct: "products/getProduct",
+    }),
     ...mapMutations({
       setImages: "cool_light_box/setImages",
       setImageIndex: "cool_light_box/setImageIndex",
@@ -231,7 +181,8 @@ export default {
       return this.getStrapiMedia("/uploads/image_not_found_8c8e4b17cc.jpg");
     },
     setTypes: function (types) {
-      this.selected = { ...this.selected, ...types };
+      this.selected.purchaseTypeId = types.purchase_type;
+      this.selected.subscriptionTypeId = types.subscription_type;
       this.calcDiscoutPrice();
     },
     quantityPlus: function () {
@@ -247,17 +198,14 @@ export default {
       }
     },
     calcPrice: function () {
-      const { product, quantity } = this.selected;
-      return product.price * quantity;
+      return this.product.price * this.selected.quantity;
     },
     calcDiscoutPrice: function () {
-      const { product, quantity } = this.selected;
-
       const purchaseType = this.purchaseTypes.filter(
-        (item) => item.id === this.selected.purchase_type
+        (item) => item.id === this.selected.purchaseTypeId
       );
 
-      const price = product.price * quantity;
+      const price = this.product.price * this.selected.quantity;
 
       if (purchaseType.length && purchaseType[0].title) {
         const { description } = purchaseType[0];
@@ -297,6 +245,23 @@ export default {
     addToCart: async function () {
       await this.$store.dispatch("order/addProduct", this.selected);
     },
+  },
+  async mounted() {
+    try {
+      this.product = await this.getProduct(this.$route.params.id);
+
+      this.selected.productId = this.product.id;
+      this.selected.total = this.product.price;
+      this.images = this.product.image.map((item) => this.getImage(item));
+
+      this.setImages(this.images);
+
+      if (this.product.included) {
+        this.included = this.product.included;
+      }
+    } catch (error) {
+      this.error = error;
+    }
   },
 };
 </script>

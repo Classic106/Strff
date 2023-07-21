@@ -13,7 +13,7 @@
       <li
         v-on:click="setPage('orders')"
         class="menu-item cursor-pointer d-flex align-items-center"
-        :class="currentPage === 'orders' && 'active'"
+        :class="currentPage === '/orders' && 'active'"
       >
         <span class="d-flex align-items-center w-100 p-1"
           ><BIconInboxFill class="mr-2" />Orders</span
@@ -22,7 +22,7 @@
       <li
         v-on:click="setPage('products')"
         class="menu-item cursor-pointer d-flex align-items-center"
-        :class="currentPage === 'products' && 'active'"
+        :class="currentPage === '/products' && 'active'"
       >
         <span class="d-flex cursor-pointer align-items-center w-100 p-1"
           ><BIconTagFill class="mr-2" />Products</span
@@ -31,7 +31,7 @@
       <li
         v-on:click="setPage('bundles')"
         class="menu-item cursor-pointer d-flex align-items-center"
-        :class="currentPage === 'bundles' && 'active'"
+        :class="currentPage === '/bundles' && 'active'"
       >
         <span class="d-flex align-items-center w-100 p-1"
           ><BIconTagsFill class="mr-2" />Bundles</span
@@ -40,7 +40,7 @@
       <li
         v-on:click="setPage('customers')"
         class="menu-item cursor-pointer d-flex align-items-center"
-        :class="currentPage === 'customers' && 'active'"
+        :class="currentPage === '/customers' && 'active'"
       >
         <span class="d-flex align-items-center w-100 p-1"
           ><BIconPersonFill class="mr-2" />Customers</span
@@ -49,7 +49,7 @@
       <li
         v-on:click="setPage('categories')"
         class="menu-item cursor-pointer d-flex align-items-center"
-        :class="currentPage === 'categories' && 'active'"
+        :class="currentPage === '/categories' && 'active'"
       >
         <span class="d-flex align-items-center w-100 p-1"
           ><BIconStack class="mr-2" />Categories</span
@@ -58,7 +58,7 @@
       <li
         v-on:click="setPage('types')"
         class="menu-item cursor-pointer d-flex align-items-center"
-        :class="currentPage === 'types' && 'active'"
+        :class="currentPage === '/types' && 'active'"
       >
         <span class="d-flex align-items-center w-100 p-1"
           ><BIconClipboard class="mr-2" />Types</span
@@ -67,10 +67,46 @@
       <li
         v-on:click="setPage('articles')"
         class="menu-item cursor-pointer d-flex align-items-center"
-        :class="currentPage === 'articles' && 'active'"
+        :class="currentPage === '/articles' && 'active'"
       >
         <span class="d-flex align-items-center w-100 p-1"
           ><BIconJournalText class="mr-2" />Articles</span
+        >
+      </li>
+      <li
+        v-on:click="setPage('deliveries')"
+        class="menu-item cursor-pointer d-flex align-items-center"
+        :class="currentPage === '/deliveries' && 'active'"
+      >
+        <span class="d-flex align-items-center w-100 p-1"
+          ><BIconCart class="mr-2" />Deliveries</span
+        >
+      </li>
+      <li
+        v-on:click="setPage('discounts')"
+        class="menu-item cursor-pointer d-flex align-items-center"
+        :class="currentPage === '/discounts' && 'active'"
+      >
+        <span class="d-flex align-items-center w-100 p-1"
+          ><BIconPercent class="mr-2" />Discounts</span
+        >
+      </li>
+      <li
+        v-on:click="setPage('analitic')"
+        class="menu-item cursor-pointer d-flex align-items-center"
+        :class="currentPage === '/analitic' && 'active'"
+      >
+        <span class="d-flex align-items-center w-100 p-1"
+          ><BIconFileBarGraph class="mr-2" />Analitic</span
+        >
+      </li>
+      <li
+        v-on:click="setPage('emails')"
+        class="menu-item cursor-pointer d-flex align-items-center"
+        :class="currentPage === '/emails' && 'active'"
+      >
+        <span class="d-flex align-items-center w-100 p-1"
+          ><BIconEnvelope class="mr-2" />Emails</span
         >
       </li>
     </ul>
@@ -81,10 +117,15 @@
 export default {
   name: "AdminMenu",
   data: () => ({ currentPage: "" }),
+  watch: {
+    $route(to, from) {
+      const { fullPath } = to;
+      this.currentPage = fullPath.replace("/admin", "");
+    },
+  },
   methods: {
     setPage: function (page = "") {
       this.$emit("isOpen", false);
-      this.currentPage = page;
       this.$router.push(`/admin/${page}`);
     },
     popstate: function () {
@@ -93,6 +134,10 @@ export default {
   },
   beforeMount() {
     this.popstate();
+  },
+  beforeMount() {
+    const { fullPath } = this.$route;
+    this.currentPage = fullPath.replace("/admin", "");
   },
   mounted() {
     window.addEventListener("popstate", this.popstate);

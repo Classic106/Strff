@@ -30,26 +30,62 @@
       >
         <div class="col-9 p-0">
           <div class="d-flex flex-column">
-            <div class="block d-flex flex-column p-2 mt-2">
+            <div class="block was-validated d-flex flex-column p-2 mt-2">
               <label class="d-flex font-weight-bold" for="title">Title</label>
               <textarea
                 id="title"
                 type="text"
                 required
+                pattern="^[a-zA-Z\s.,-:]{10,100}$"
+                class="form-control"
                 v-model.trim="currentProduct.title"
               />
+              <div class="invalid-feedback">
+                <div class="d-flex align-items-center">
+                  Title must be from 10 to 100 symbols and may contain &nbsp;
+                  <h6>. , - :</h6>
+                </div>
+              </div>
             </div>
-            <div class="block d-flex flex-column p-2 mt-2">
+            <div class="block was-validated d-flex flex-column p-2 mt-2">
               <label class="d-flex font-weight-bold" for="title"
                 >Description</label
               >
               <textarea
                 id="title"
                 type="text"
+                class="form-control"
                 required
+                pattern="^[a-zA-Z\s.,-:]{10,100}$"
                 v-model.trim="currentProduct.description"
               />
+              <div v-if="currentProduct.description" class="invalid-feedback">
+                <div class="d-flex align-items-center">
+                  Description must be from 10 to 100 symbols and may contain
+                  &nbsp;
+                  <h6>. , - :</h6>
+                </div>
+              </div>
             </div>
+            <div class="block mt-2 p-2">
+              <label class="d-flex font-weight-bold" for="price">
+                Price $</label
+              >
+              <InputDecimal
+                id="price"
+                class="form-control w-100"
+                :value="currentProduct.price"
+                v-on:setDecimal="setPrice"
+                required
+              />
+              <div class="invalid-feedback">Price mustn't be zero</div>
+            </div>
+            <ChoseColor
+              class="block p-2 mt-2"
+              :color="currentProduct.color"
+              boldTitle
+              v-on:setColor="setColor"
+            />
             <ProductMedia class="mt-2" />
           </div>
         </div>
@@ -58,7 +94,7 @@
             <label class="d-flex font-weight-bold" for="status"
               >Product status</label
             >
-            <select id="status" required v-model="status">
+            <select id="status" required v-model="status" class="form-control">
               <option value="published">published</option>
               <option value="null">draft</option>
             </select>
@@ -69,6 +105,7 @@
             >
             <select
               id="categories"
+              class="form-control"
               multiple
               v-model="currentProduct.categories"
             >
@@ -80,6 +117,98 @@
                 {{ category.name }}
               </option>
             </select>
+          </div>
+          <div class="block p-2 mt-2">
+            <label class="d-flex font-weight-bold">Sizes</label>
+            <div class="mb-2">
+              <label class="d-flex" for="title"> Dimension </label>
+              <select
+                v-model="currentProduct.dimension"
+                required
+                class="form-control w-100"
+              >
+                <option value="cm">cm</option>
+                <option value="inch">inch</option>
+              </select>
+            </div>
+            <div class="mb-2">
+              <label class="d-flex" for="title"> Length </label>
+              <input
+                id="length"
+                type="number"
+                placeholder="Enter length"
+                v-model.trim="currentProduct.lengthy"
+                required
+                min="1"
+                max="100"
+                autofocus="true"
+                class="form-control w-100"
+              />
+            </div>
+            <div class="mb-2">
+              <label class="d-flex" for="width"> Width </label>
+              <input
+                id="width"
+                type="number"
+                placeholder="Enter width"
+                v-model.trim="currentProduct.width"
+                required
+                min="1"
+                max="100"
+                autofocus="true"
+                class="form-control w-100"
+              />
+            </div>
+            <div class="mb-2">
+              <label class="d-flex" for="height"> Height </label>
+              <input
+                id="height"
+                type="number"
+                placeholder="Enter height"
+                v-model.trim="currentProduct.height"
+                required
+                min="1"
+                max="100"
+                autofocus="true"
+                class="form-control w-100"
+              />
+            </div>
+            <div class="mb-2">
+              <label class="d-flex" for="volume"> Volume </label>
+              <input
+                id="volume"
+                type="number"
+                placeholder="Volume"
+                v-model.trim="currentProduct.volume"
+                disabled
+                autofocus="false"
+                class="form-control w-100"
+              />
+            </div>
+            <div class="mb-2">
+              <label class="d-flex" for="weight_dimension">
+                Weight dimension
+              </label>
+              <select
+                id="weight_dimension"
+                v-model="currentProduct.weight_dimension"
+                required
+                class="form-control w-100"
+              >
+                <option value="kilo">kilo</option>
+                <option value="lbs">lbs</option>
+              </select>
+            </div>
+            <div class="mb-2">
+              <label class="d-flex" for="weight"> Weight </label>
+              <InputDecimal
+                id="weight"
+                class="form-control w-100"
+                :value="currentProduct.weight"
+                v-on:setDecimal="setWeight"
+                required
+              />
+            </div>
           </div>
         </div>
       </form>
@@ -108,12 +237,14 @@ import { mapMutations, mapGetters, mapActions } from "vuex";
 
 import { prevCurrNextItems } from "~/helpers";
 
+import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
+import InputDecimal from "~/components/Admin/common/InputDecimal.vue";
+import ChoseColor from "~/components/Admin/common/ChoseColor.vue";
 import ProductMedia from "./ProductMedia.vue";
-import ConfirmModal from "./ConfirmModal.vue";
 
 export default {
   name: "AdminProduct",
-  components: { ProductMedia, ConfirmModal },
+  components: { ProductMedia, ConfirmModal, InputDecimal, ChoseColor },
   data: () => ({
     status: "null",
     currentProduct: null,
@@ -139,6 +270,13 @@ export default {
         this.status = "published";
       }
     },
+    currentProduct: {
+      handler: function () {
+        const { lengthy, width, height } = this.currentProduct;
+        this.currentProduct.volume = lengthy * width * height;
+      },
+      deep: true,
+    },
   },
   methods: {
     prevCurrNextItems,
@@ -154,6 +292,15 @@ export default {
       setImages: "cool_light_box/setImages",
       setImageIndex: "cool_light_box/setImageIndex",
     }),
+    setColor: function (color) {
+      this.currentProduct.color = color;
+    },
+    setPrice: function (val) {
+      this.currentProduct.price = val;
+    },
+    setWeight: function (val) {
+      this.currentProduct.weight = val;
+    },
     setNextProduct: async function () {
       const index = this.findIndex();
 
@@ -245,6 +392,7 @@ export default {
   },
   beforeMount() {
     const { image, published_at } = this.selected;
+
     this.currentProduct = JSON.parse(JSON.stringify(this.selected));
     this.currentProduct.categories = this.currentProduct.categories.map(
       (item) => item.id

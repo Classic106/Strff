@@ -17,10 +17,27 @@ export const actions = {
       //console.log(this.$axios.defaults.baseURL)
       const { jwt, user } = await this.$axios.$post("auth/local", login);
 
-      this.$axios.setHeader("Authorization", `Bearer ${jwt}`);
-      this.$cookies.set("token", jwt);
+      if (jwt) {
+        this.$axios.setHeader("Authorization", `Bearer ${jwt}`);
+        this.$cookies.set("token", jwt);
+      }
 
-      commit("setUser", user);
+      if (user) {
+        const { role } = user;
+        const { type } = role;
+
+        if (type === "authenticated") {
+          this.$router.push("/admin");
+        }
+
+        if (type === "customer") {
+          this.$router.push("/profile");
+        }
+
+        commit("setUser", user);
+      }
+
+      return user;
     } catch (e) {
       error(e);
     }
@@ -70,6 +87,54 @@ export const actions = {
       return;
     }
     error("User is undefined");
+  },
+  async createCustomer({ commit }, customer) {
+    try {
+      const { data } = await this.$axios.post("/auth/local/register", {
+        ...customer,
+        confirmed: false,
+        blocked: false,
+        role: 3, //customer role
+      });
+
+      const { user, jwt } = data;
+
+      this.$axios.setHeader("Authorization", `Bearer ${jwt}`);
+      this.$cookies.set("token", jwt);
+
+      this.$router.push("/profile");
+
+      commit("setUser", user);
+    } catch (e) {
+      error(e);
+    }
+  },
+  async updateUser({ commit }, updatedUser) {
+    try {
+      const { id } = updatedUser;
+      const { data } = await this.$axios.put(`/users/${id}`, updatedUser);
+      const { user, jwt } = data;
+
+      this.$axios.setHeader("Authorization", `Bearer ${jwt}`);
+      this.$cookies.set("token", jwt);
+
+      commit("setUser", user);
+      success("User was succesfully updated");
+    } catch (e) {
+      error(e);
+    }
+  },
+  async checkUser(_, { username, email }) {
+    try {
+      const { data } = await this.$axios.post("/users/check_user", {
+        username,
+        email,
+      });
+
+      return data;
+    } catch (e) {
+      error(e);
+    }
   },
 };
 

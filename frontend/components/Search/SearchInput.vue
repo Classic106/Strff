@@ -6,7 +6,6 @@
       id="search_text"
       placeholder="Enter a search term"
       v-model.trim="text"
-      v-on:input="$emit('setText', text)"
     />
     <label for="search_text" class="form__label">Enter a search term</label>
   </div>
@@ -15,7 +14,38 @@
 <script>
 export default {
   name: "SearchInput",
-  data: () => ({ text: "" }),
+  data: () => ({
+    text: "",
+    timer: null,
+  }),
+  watch: {
+    text: function () {
+      const { text } = this;
+
+      if (text) {
+        clearInterval(this.timer);
+        this.timer = null;
+
+        this.timer = setTimeout(() => {
+          this.$emit("setText", text);
+        }, 1000);
+      } else {
+        const { timer } = this;
+
+        if (timer) {
+          clearInterval(timer);
+          this.timer = null;
+        }
+        this.$emit("setText", text);
+      }
+    },
+  },
+  destroyed() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+  },
 };
 </script>
 

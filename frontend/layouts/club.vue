@@ -3,14 +3,7 @@
     <div class="flex justify-center h-100">
       <div
         v-if="loading"
-        class="
-          loading
-          w-100
-          h-100vh
-          d-flex
-          justify-content-center
-          align-items-center
-        "
+        class="loading w-100 h-100vh d-flex justify-content-center align-items-center"
       >
         <Loader />
       </div>
@@ -24,13 +17,13 @@
         id="snipcart"
         data-api-key="ODhhNWUxOGEtNTk0OC00OTQwLWJkOWMtM2M1ZmNjODU1ZDJhNjM3MzMyNzM0NjM1OTMyNjcz"
       ></div>
-      <notifications group="all" position="bottom right" />
     </div>
   </DefaultLayout>
 </template>
 
 <script>
 import DefaultLayout from "~/layouts/default.vue";
+import { search_US_City } from "~/utils/search_US";
 
 import ClubHeader from "@/components/Header";
 import ClubFooter from "@/components/Footer";
@@ -44,11 +37,24 @@ export default {
     Loader,
   },
   data: () => ({ loading: true }),
-  async mounted() {
+  mounted() {
     try {
       const finger_print = this.fingerprint();
-      this.socket = this.$nuxtSocket({ channel: "/" });
-      this.socket.emit("addVisitor", { finger_print });
+
+      const getCity = (position) => {
+        const city = search_US_City(position);
+        if (city) {
+          this.socket = this.$nuxtSocket({ channel: "/" });
+          this.socket.emit("addVisitor", { finger_print, ...city });
+        }
+      };
+
+      const error = (e) => {
+        this.socket = this.$nuxtSocket({ channel: "/" });
+        this.socket.emit("addVisitor", { finger_print });
+      };
+
+      window.navigator.geolocation.getCurrentPosition(getCity, error);
     } catch (e) {
       console.warn(e);
     }

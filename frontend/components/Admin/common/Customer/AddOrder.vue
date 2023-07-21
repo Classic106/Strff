@@ -10,7 +10,7 @@
       <div>
         <div class="block p-3 mb-3">
           <h6>Products</h6>
-          <ProductsBlock v-on:setProducts="setProducts" />
+          <ProductsBlock v-on:setProducts="setProducts" quantity />
         </div>
         <div class="block p-3 mb-3">
           <h6>Bundles</h6>
@@ -19,11 +19,11 @@
         <div class="d-flex flex-column">
           <div class="block mb-3 d-flex flex-column p-3">
             <h6>Customer</h6>
-            <p>{{ selected.email }}</p>
+            <p>{{ customer.email }}</p>
             <p>{{ getCustomerName() }}</p>
-            <p>{{ selected.address1 && selected.address2 }}</p>
-            <p>{{ selected.state }}</p>
-            <p>{{ selected.cellphone }}</p>
+            <p>{{ customer.address1 && customer.address2 }}</p>
+            <p>{{ customer.state }}</p>
+            <p>{{ customer.cellphone }}</p>
           </div>
         </div>
         <div class="block p-3 mb-3">
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 
 import ProductsBlock from "~/components/Admin/common/ProductsBlock.vue";
 import BundlesBlock from "~/components/Admin/common/BundlesBlock.vue";
@@ -54,6 +54,9 @@ import BundlesBlock from "~/components/Admin/common/BundlesBlock.vue";
 export default {
   name: "AddOrder",
   components: { ProductsBlock, BundlesBlock },
+  props: {
+    customer: Object,
+  },
   data: () => ({
     order: {
       total: 0,
@@ -61,14 +64,9 @@ export default {
       order_bundles: [],
       order_items: [],
       paid: false,
-      customer: null,
+      user: null,
     },
   }),
-  computed: {
-    ...mapGetters({
-      selected: "admin_customers/selected",
-    }),
-  },
   methods: {
     ...mapActions({
       createOrder: "admin_orders/createOrder",
@@ -82,9 +80,15 @@ export default {
       this.order.total = this.calcTotal();
     },
     getCustomerName: function () {
-      const { firstName, lastName } = this.selected;
+      const { first_name, last_name, username } = this.customer;
 
-      return `${firstName} ${lastName}`;
+      if (first_name && last_name) {
+        return `${first_name} ${last_name}`;
+      }
+      if (username) {
+        return username;
+      }
+      return "undefined";
     },
     calcTotal: function () {
       const totalProducts = this.order.order_items.reduce(
@@ -100,7 +104,7 @@ export default {
       return totalProducts + totalBundles;
     },
     send: async function () {
-      await this.createOrder({ ...this.order, customer: this.selected.id });
+      await this.createOrder({ ...this.order, user: this.customer.id });
       this.$emit("closeCreateOrder");
     },
   },

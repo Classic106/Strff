@@ -1,42 +1,68 @@
 <template>
-  <form class="d-flex flex-column" v-on:submit.stop.prevent="submit">
-    <div class="block d-flex flex-column p-2 mt-2">
+  <form class="was-validated col p-0" v-on:submit.stop.prevent="submit">
+    <div class="block d-flex flex-column p-3 mt-2">
       <label class="d-flex font-weight-bold" for="name">Name</label>
       <input
         id="name"
         type="text"
+        class="form-control"
+        pattern="^[a-zA-Z\s.,-:&]{1,100}$"
         required
         v-model.trim="currentArticle.name"
       />
+      <div class="invalid-feedback">
+        <div class="d-flex align-items-center">
+          Name must be from 1 to 100 symbols and may contain &nbsp;
+          <h6>. , - : &</h6>
+        </div>
+      </div>
     </div>
-    <div class="block d-flex flex-column p-2 mt-2">
+    <div class="block d-flex flex-column p-3 mt-2">
       <label class="d-flex font-weight-bold" for="title">Title</label>
-      <input
+      <textarea
         id="title"
         type="text"
+        rows="3"
+        class="form-control"
+        pattern="^[a-zA-Z\s.,-:]{1,200}$"
         required
         v-model.trim="currentArticle.title"
       />
+      <div class="invalid-feedback">
+        <div class="d-flex align-items-center">
+          Title must be from 1 to 200 symbols and may contain &nbsp;
+          <h6>. , - :</h6>
+        </div>
+      </div>
     </div>
-    <div class="block d-flex flex-column p-2 mt-2">
+    <div class="block d-flex flex-column p-3 mt-2">
       <label class="d-flex font-weight-bold" for="article">Article</label>
       <textarea
         id="article"
         type="text"
+        rows="10"
+        class="form-control"
+        pattern="^[a-zA-Z\s.,-:?]{1,500}$"
         required
         v-model.trim="currentArticle.article"
       />
+      <div class="invalid-feedback">
+        <div class="d-flex align-items-center">
+          Title must be from 1 to 500 symbols and may contain &nbsp;
+          <h6>. , - : ?</h6>
+        </div>
+      </div>
     </div>
-    <div class="block d-flex flex-column p-2 mt-2">
+    <div class="block d-flex flex-column p-3 mt-2">
       <label class="d-flex font-weight-bold" for="published_at"
         >Article status</label
       >
-      <select id="published_at" required v-model="status">
+      <select id="published_at" class="form-control" required v-model="status">
         <option value="published">published</option>
         <option value="null">draft</option>
       </select>
     </div>
-    <div class="block mt-2 p-2 d-flex flex-column">
+    <div class="block mt-2 p-3 d-flex flex-column">
       <label class="d-flex font-weight-bold" for="media">Media</label>
       <ArticleMedia
         v-if="article && currentArticle.image && currentArticle.image.id"
@@ -44,7 +70,7 @@
       />
       <UploadImages v-else v-on:changed="handleImages" :max="1" id="media" />
     </div>
-    <div class="d-flex">
+    <div class="d-flex mb-3">
       <button
         class="w-100 m-1 btn btn-success text-uppercase my-2"
         type="submit"
@@ -69,7 +95,7 @@ import { mapActions } from "vuex";
 import UploadImages from "vue-upload-drop-images";
 
 import ArticleMedia from "./ArticleMedia.vue";
-import ConfirmModal from "./ConfirmModal.vue";
+import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
 
 export default {
   name: "ArticleForm",
@@ -153,4 +179,8 @@ export default {
 </script>
 
 <style scoped>
+#title, #article {
+  min-height: 6rem;
+  max-height: 16rem;
+}
 </style>

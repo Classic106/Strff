@@ -7,7 +7,7 @@
       </div>
       <div class="container-height d-flex flex-column">
         <SearchInput v-on:setText="setText" />
-        <SearchBestSellers v-if="!text" :products="bestSellers" />
+        <SearchBestSellers v-if="!text" />
         <div v-else class="d-flex flex-column mt-5 h-100">
           <Loader
             v-if="isLoading"
@@ -20,27 +20,60 @@
             "
           />
           <div
-            v-if="
-              text.length && !resultProducts.length && !resultArticles.length
-            "
+            v-if="text.length && !products.length && !articles.length"
             class="text-uppercase text-center p-3 w-100"
           >
             nothing not found
           </div>
-          <div v-else class="container-height overflow-hidden px-4">
+          <div
+            v-else-if="!isLoading"
+            class="container-height overflow-hidden px-4"
+          >
             <vueCustomScrollbar
               class="overflow-auto h-100"
               :settings="itemsSettings"
             >
               <div class="d-flex flex-column px-3">
-                <SearchedProducts
-                  v-if="resultProducts.length"
-                  :products="resultProducts"
-                />
-                <SearchedArticles
-                  v-if="resultArticles.length"
-                  :articles="resultArticles"
-                />
+                <div class="row">
+                  <p
+                    class="gold col-6 text-center"
+                    :class="!isSearchedArticles ? 'line' : ''"
+                    v-on:click="isSearchedArticles = !isSearchedArticles"
+                  >
+                    products
+                  </p>
+                  <p
+                    class="gold col-6 text-center"
+                    :class="isSearchedArticles ? 'line' : ''"
+                    v-on:click="isSearchedArticles = !isSearchedArticles"
+                  >
+                    articles
+                  </p>
+                </div>
+                <div v-if="isSearchedArticles">
+                  <SearchedArticles
+                    v-if="articles.length"
+                    :articles="articles"
+                  />
+                  <div
+                    v-if="!articles.length"
+                    class="text-uppercase text-center p-3 w-100"
+                  >
+                    nothing not found
+                  </div>
+                </div>
+                <div v-if="!isSearchedArticles">
+                  <SearchedProducts
+                    v-if="products.length"
+                    :products="products"
+                  />
+                  <div
+                    v-if="!products.length"
+                    class="text-uppercase text-center p-3 w-100"
+                  >
+                    nothing not found
+                  </div>
+                </div>
               </div>
             </vueCustomScrollbar>
           </div>
@@ -51,7 +84,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import { shuffleArray } from "~/helpers";
 
 import Loader from "@/components/common/Loader";
@@ -73,12 +106,8 @@ export default {
   props: ["isOpen"],
   data: () => ({
     text: "",
-    resultProducts: [],
-    resultArticles: [],
-    products: [],
-    articles: [],
-    bestSellers: [],
     isLoading: false,
+    isSearchedArticles: false,
     itemsSettings: {
       suppressScrollX: true,
       wheelPropagation: false,
@@ -86,50 +115,44 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      best_sellers: "best_sellers/best_sellers",
+      articles: "articles/articles",
+      products: "products/products",
     }),
   },
   watch: {
-    text: function () {
-      if (this.text === "") {
-        this.resultProducts = [];
-        this.resultArticles = [];
+    text: async function () {
+      const { text } = this;
+
+      if (text === "") {
+        this.clearArticles();
+        this.clearProducts();
         return;
       }
 
       this.isLoading = true;
 
-      this.resultProducts = this.products.filter((item) => {
-        const buyTitlle = item.title
-          .toLowerCase()
-          .includes(this.text.toLowerCase());
+      const getDataBy = {
+        search: text,
+        currentPage: 1,
+        perPage: -1,
+      };
 
-        if (buyTitlle) {
-          return item;
-        }
-        return false;
-      });
-
-      this.resultArticles = this.articles.filter((item) => {
-        const buyArticle = item.article
-          .toLowerCase()
-          .includes(this.text.toLowerCase());
-
-        const buyTitlle = item.title
-          .toLowerCase()
-          .includes(this.text.toLowerCase());
-
-        if (buyTitlle || buyArticle) {
-          return item;
-        }
-        return false;
-      });
+      await this.getArticles(getDataBy);
+      await this.getProducts(getDataBy);
 
       this.isLoading = false;
     },
   },
   methods: {
     shuffleArray,
+    ...mapActions({
+      getProducts: "products/getProducts",
+      getArticles: "articles/getArticles",
+    }),
+    ...mapMutations({
+      clearArticles: "articles/clearAll",
+      clearProducts: "products/clearAll",
+    }),
     redirect: function (to) {
       this.$router.push(to);
       this.$emit("close");
@@ -138,24 +161,9 @@ export default {
       this.text = text;
     },
   },
-  async mounted() {
-    this.isLoading = true;
-
-    try {
-      this.products = await this.$strapi.find("products");
-      this.articles = await this.$strapi.find("articles");
-
-      this.bestSellers = this.shuffleArray(this.best_sellers);
-    } catch (e) {
-      const { data } = e.response;
-      const messge = data.message[0].messages[0].id;
-      this.$notify({
-        group: "all",
-        type: "error",
-        text: messge,
-      });
-    }
-    this.isLoading = false;
+  destroyed() {
+    this.clearArticles();
+    this.clearProducts();
   },
 };
 </script>
@@ -163,6 +171,11 @@ export default {
 <style scoped>
 .icon {
   filter: brightness(0) invert(1);
+}
+
+.line {
+  border-bottom: solid;
+  border-color: #9e7d24;
 }
 
 .container-height {

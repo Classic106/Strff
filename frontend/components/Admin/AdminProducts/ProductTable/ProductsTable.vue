@@ -72,6 +72,7 @@
         </button>
       </div>
     </vue-good-table>
+    <ConfirmModal :id="'confirm-delete-products'" v-on:confirm="confirm" />
   </div>
 </template>
 
@@ -81,12 +82,14 @@ import { prevCurrNextItems } from "~/helpers";
 
 import ProductTableColumn from "./ProductTableColumn.vue";
 import CategoryTableColumn from "./CategoryTableColumn.vue";
+import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
 
 export default {
   name: "ProductsTable",
   components: {
     ProductTableColumn,
     CategoryTableColumn,
+    ConfirmModal,
   },
   data: () => ({
     selectedRows: [],
@@ -164,6 +167,9 @@ export default {
       this.getProducts();
     },
     deleteItems() {
+      this.$root.$emit("bv::show::modal", "confirm-delete-products");
+    },
+    confirm: async function () {
       const ids = this.selectedRows.map((item) => item.id);
       this.deleteProducts(ids);
     },

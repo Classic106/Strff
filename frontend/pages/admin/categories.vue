@@ -8,7 +8,6 @@ import Categories from "~/components/Admin/Categories";
 export default {
   name: "AdminPage",
   layout: "admin",
-  middleware: "isAdminAuthenticated",
   components: { Categories },
 };
 </script>

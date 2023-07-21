@@ -1,16 +1,45 @@
-import { error } from "../utils/error";
+import qs from "qs";
+import { error } from "~/utils/error";
 
 export const state = () => ({
   articles: [],
   article: null,
+  total: 0,
 });
 
 export const actions = {
-  async getArticles({ commit }) {
+  async getArticles({ commit }, data) {
     try {
-      const { data } = await this.$axios.get(`/articles`);
+      let newData = data;
 
-      commit("setArticles", data);
+      if (!newData) {
+        newData = {
+          search: "",
+          currentPage: 1,
+          perPage: 3,
+        };
+      }
+
+      const { search, currentPage, perPage } = newData;
+
+      const queryData = {
+        _start: (currentPage - 1) * perPage,
+        _limit: perPage,
+      };
+
+      if (search) {
+        queryData._or = [
+          { article_containss: search },
+          { title_containss: search },
+        ];
+      }
+      const query = qs.stringify(queryData);
+
+      const total = await this.$axios.get(`/articles/count?${query}`);
+      const articles = await this.$axios.get(`/articles?${query}`);
+
+      commit("setTotal", total.data);
+      commit("setArticles", articles.data);
     } catch (e) {
       error(e);
     }
@@ -34,6 +63,14 @@ export const mutations = {
   setArticle(state, article) {
     state.article = article;
   },
+  setTotal(state, total) {
+    state.total = total;
+  },
+  clearAll(state) {
+    state.articles = [];
+    state.article = null;
+    state.total = 0;
+  },
 };
 
 export const getters = {
@@ -42,5 +79,8 @@ export const getters = {
   },
   article: (state) => {
     return state.article;
+  },
+  total(state) {
+    return state.total;
   },
 };

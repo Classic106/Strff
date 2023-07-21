@@ -1,10 +1,23 @@
 <template>
-  <div class="lds-dual-ring"></div>
+  <div :class="setClass()"></div>
 </template>
 
 <script>
 export default {
   name: "Loader",
+  props: {
+    small: Boolean,
+  },
+  methods: {
+    setClass: function () {
+      const { small } = this;
+
+      if (small) {
+        return "lds-dual-ring sm";
+      }
+      return "lds-dual-ring";
+    },
+  },
 };
 </script>
 
@@ -17,13 +30,22 @@ export default {
 .lds-dual-ring:after {
   content: " ";
   display: block;
-  width: 46px;
-  height: 46px;
-  margin: 1px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   border: 5px solid #cef;
   border-color: #cef transparent #cef transparent;
   animation: lds-dual-ring 1.2s linear infinite;
+}
+
+.sm {
+  width: 30px;
+  height: 30px;
+}
+
+.sm:after {
+  width: 30px;
+  height: 30px;
 }
 @keyframes lds-dual-ring {
   0% {

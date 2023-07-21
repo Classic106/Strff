@@ -78,6 +78,7 @@
         </button>
       </div>
     </vue-good-table>
+    <ConfirmModal :id="'confirm-delete-articles'" v-on:confirm="confirm" />
   </div>
 </template>
 
@@ -87,8 +88,11 @@ import "~/utils/filters";
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import { prevCurrNextItems } from "~/helpers";
 
+import ConfirmModal from "~/components/Admin/common/ConfirmModal.vue";
+
 export default {
   name: "ArticlesTable",
+  components: { ConfirmModal },
   data: () => ({
     selectedRows: [],
     timer: null,
@@ -169,6 +173,9 @@ export default {
       this.getArticles();
     },
     deleteItems() {
+      this.$root.$emit("bv::show::modal", "confirm-delete-articles");
+    },
+    confirm: async function () {
       const ids = this.selectedRows.map((item) => item.id);
       this.deleteArticles(ids);
     },

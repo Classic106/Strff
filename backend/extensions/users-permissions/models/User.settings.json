@@ -64,6 +64,45 @@
     },
     "first_name": {
       "type": "string"
+    },
+    "orders": {
+      "via": "user",
+      "collection": "order"
+    },
+    "orders_count": {
+      "type": "integer",
+      "min": 0,
+      "default": 0
+    },
+    "total_price": {
+      "type": "decimal",
+      "min": 0,
+      "default": 0
+    },
+    "state": {
+      "type": "string"
+    },
+    "company": {
+      "type": "string"
+    },
+    "address_1": {
+      "type": "text"
+    },
+    "address_2": {
+      "type": "text"
+    },
+    "city": {
+      "type": "string"
+    },
+    "contact_no": {
+      "type": "string"
+    },
+    "zip_code": {
+      "type": "string"
+    },
+    "discounts": {
+      "via": "customers",
+      "collection": "discount"
     }
   }
 }

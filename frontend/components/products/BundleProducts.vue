@@ -50,15 +50,7 @@
                 </div>
               </div>
               <div
-                class="
-                  wrap-plus
-                  col-2
-                  p-0
-                  mx-auto
-                  d-flex
-                  align-items-center
-                  justify-content-center
-                "
+                class="wrap-plus col-2 p-0 mx-auto d-flex align-items-center justify-content-center"
               >
                 <p class="text-center plus">+</p>
               </div>
@@ -128,17 +120,7 @@
           </p>
           <button
             v-if="product.status === 'published'"
-            class="
-              py-2
-              px-4
-              rounded
-              btn btn-dark
-              d-flex
-              justify-content-center
-              align-items-center
-              text-uppercase text-nowrap
-              add-cart-button
-            "
+            class="py-2 px-4 rounded btn btn-dark d-flex justify-content-center align-items-center text-uppercase text-nowrap add-cart-button"
             v-on:click="addToCart(bundleProduct)"
           >
             <span class="icon icon-bag mr-2 d-none d-lg-flex"></span>
@@ -153,7 +135,8 @@
 <script>
 import { mapActions } from "vuex";
 import { colorTitleNumbers } from "~/helpers";
-import PreloaderImage from "~/components/common/PreloaderImage";
+
+import PreloaderImage from "~/components/PreloaderImage";
 
 export default {
   name: "BundleProducts",
@@ -175,14 +158,22 @@ export default {
   },
   async mounted() {
     try {
-      const result = await this.$strapi.$bundles.findOne(
-        this.product.bundle.id
-      );
-      this.bundleProducts = [result];
-      this.bundleProducts = this.bundleProducts.map((item) => {
-        item.products.length = 2;
-        return item;
-      });
+      if (this.product.bundle.id) {
+        const result = await this.$strapi.$bundles.findOne(
+          this.product.bundle.id
+        );
+        this.bundleProducts = [result];
+
+        this.bundleProducts = this.bundleProducts.map((item) => {
+          if (item.products.length === 1) {
+            item.products.push(item.products[0]);
+          }
+          if (item.products.length > 2) {
+            item.products.length = 2;
+          }
+          return item;
+        });
+      }
     } catch (error) {}
   },
 };

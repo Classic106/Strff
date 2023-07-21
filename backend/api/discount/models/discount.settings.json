@@ -1,0 +1,60 @@
+{
+  "kind": "collectionType",
+  "collectionName": "discounts",
+  "info": {
+    "name": "Discount",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "value": {
+      "type": "decimal",
+      "required": true,
+      "min": 0.01,
+      "default": 0.01
+    },
+    "from_date": {
+      "type": "date",
+      "required": true
+    },
+    "to_date": {
+      "type": "date",
+      "required": true
+    },
+    "percent": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "products": {
+      "model": "product",
+      "via": "discounts"
+    },
+    "bundles": {
+      "model": "bundle",
+      "via": "discounts"
+    },
+    "customers": {
+      "plugin": "users-permissions",
+      "model": "user",
+      "via": "discounts"
+    },
+    "used": {
+      "type": "boolean",
+      "default": false
+    },
+    "code": {
+      "type": "string",
+      "required": true,
+      "regex": "^[a-zA-Z0-9]{12}$",
+      "minLength": 12,
+      "maxLength": 12,
+      "unique": true
+    }
+  }
+}

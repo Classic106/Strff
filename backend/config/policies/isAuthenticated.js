@@ -1,13 +1,4 @@
 module.exports = async (ctx, next) => {
-  if (ctx.params[0] === "customers") {
-    const { cellphone, email } = ctx.query;
-
-    if (cellphone && email) {
-      next();
-      return;
-    }
-  }
-
   if (ctx.request && ctx.request.header && ctx.request.header.authorization) {
     const decoded = await strapi.plugins[
       "users-permissions"
@@ -23,7 +14,5 @@ module.exports = async (ctx, next) => {
     }
   }
 
-  return ctx.badRequest(null, [
-    { messages: [{ message: "No authorization header was found" }] },
-  ]);
+  return ctx.badRequest(null, "No authorizated user");
 };

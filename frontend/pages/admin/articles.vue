@@ -6,9 +6,8 @@
 import Articles from "~/components/Admin/Articles";
 
 export default {
-  name: "AdminArticles",
+  name: "AdminPage",
   layout: "admin",
-  middleware: "isAdminAuthenticated",
   components: { Articles },
 };
 </script>

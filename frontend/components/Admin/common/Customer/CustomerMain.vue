@@ -5,14 +5,20 @@
         <button v-on:click="back" class="button">
           <BIconArrowLeft />
         </button>
-        <div class="w-100 px-3">
+        <div v-if="customer" class="w-100 px-3">
           <div class="d-flex flex-column">
             <h6 class="m-0 px-2 font-weight-bold">{{ getCustomerName() }}</h6>
             <span>{{ customer.state }} {{ customerDuration() }}</span>
           </div>
         </div>
       </div>
-      <div class="row mb-3">
+      <div
+        v-if="!customer"
+        class="h-100 d-flex justify-content-center align-items-center"
+      >
+        <p>User wasn't find</p>
+      </div>
+      <div v-else class="row mb-3">
         <div class="col-9">
           <div class="block w-100 d-flex justify-content-between mb-3 p-3">
             <div>
@@ -82,7 +88,6 @@
 
 <script>
 import { prevCurrNextItems } from "~/helpers";
-import { states_hashes } from "@/data";
 import "~/utils/filters";
 
 import CustomerOrder from "./CustomerOrder.vue";
@@ -102,7 +107,6 @@ export default {
     viewAll: false,
     customerOrders: [],
     ordersSpent: 0,
-    states_hashes,
   }),
   methods: {
     prevCurrNextItems,
@@ -129,23 +133,31 @@ export default {
       return `${count} ${interval.label}${count !== 1 ? "s" : ""} ago`;
     },
     getCustomerName: function () {
-      const { firstName, lastName } = this.customer;
+      const { first_name, last_name, username } = this.customer;
 
-      return `${firstName} ${lastName}`;
+      if (first_name && last_name) {
+        return `${first_name} ${last_name}`;
+      }
+      if (username) {
+        return username;
+      }
+      return "undefined";
     },
   },
-  async beforeMount() {
-    const { orders } = this.customer;
+  async mounted() {
+    if (this.customer) {
+      const { orders } = this.customer;
 
-    if (orders && orders.length) {
-      this.customerOrders = orders.sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at)
-      );
+      if (orders && orders.length) {
+        this.customerOrders = orders.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
 
-      this.ordersSpent = this.customerOrders.reduce(
-        (acc, order) => (acc += order.total),
-        0
-      );
+        this.ordersSpent = this.customerOrders.reduce(
+          (acc, order) => (acc += order.total),
+          0
+        );
+      }
     }
   },
 };

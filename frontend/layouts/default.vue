@@ -4,12 +4,17 @@
       <Nuxt v-if="!$slots.default" />
       <slot />
     </div>
+    <LightBox />
     <notifications group="all" position="top center" />
   </div>
 </template>
 
 <script>
-export default {};
+import LightBox from "@/components/common/LightBox.vue";
+
+export default {
+  components: { LightBox },
+};
 </script>
 
 <style>
